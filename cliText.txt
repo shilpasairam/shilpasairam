@@ -1,0 +1,21 @@
+pytest -v -s -n=2 --html=Reports\report.html  .\testCases\test_LoginPage.py
+
+pytest -v -s --html=Reports\report.html  .\testCases\test_LoginPage.py
+
+pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
+
+pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_LoginPage.py
+
+pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_LiveSLRPageElements.py
+
+pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_SLRCustomReport.py
+
+pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_LiveNMAPageElements.py
+
+# log in report 
+pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
+
+# no log
+pytest -v -s -p no:logging --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
+
+pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\assets\style.css .\testCases\test_LoginPage.py

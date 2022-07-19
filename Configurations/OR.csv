@@ -1,0 +1,92 @@
+Module,Object,Type,Path
+login,username_textbox,ID,Email
+login,password_textbox,ID,Password
+login,login_button,CSS_SELECTOR,.btn.btn-block.btn-primary.mt-3.mb-3
+logout,logout_button,XPATH,"//a[@title=""Sign out""]"
+SLRPAGE,SLR_Homepage,LINK_TEXT,Search LiveSLR
+SLRPAGE,SLR_Population,XPATH,//*[text()='1. Select SLR Population']
+SLRPAGE,SLR_Type,XPATH,//*[text()='2. Select Type of SLR']
+SLRPAGE,Data_Report,XPATH,//*[text()='3. Select Data to Report']
+SLRPAGE,NMA_Button,XPATH,//button[@type='button' and text()='Select Data for NMA']
+SLRPAGE,Preview_Button,XPATH,//button[text()='Preview Results (0)']
+Population,IC AML,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=12]/following::span[1]
+Population,IC AML_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=12]
+Population,mCRPC,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=13]/following::span[1]
+Population,mCRPC_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=13]
+Population,Melanoma,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=5]/following::span[1]
+Population,Melanoma_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=5]
+Population,MM Maintenance,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=17]/following::span[1]
+Population,MM Maintenance_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=17]
+Population,NDMM,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=8]/following::span[1]
+Population,NDMM_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=8]
+Population,NIC AML,XPATH,//input[@type='radio' and @name='populationFilters' and @value=1]/following::span[1]
+Population,NIC AML_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=1]
+Population,RR ALL,XPATH,//input[@type='radio' and @name='populationFilters' and @value=3]/following::span[1]
+Population,RR ALL_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=3]
+Population,RRMM,XPATH,//input[@type='radio' and @name='populationFilters' and @value=10]/following::span[1]
+Population,RRMM_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=10]
+SLRType,Interventional,XPATH,//label//input[@type='radio' and @name='slrType' and @value=1]/following::span[1]
+SLRType,Interventional_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=1]
+SLRType,Economic,XPATH,//label//input[@type='radio' and @name='slrType' and @value=2]/following::span[1]
+SLRType,Economic_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=2]
+SLRType,Quality of Life,XPATH,//label//input[@type='radio' and @name='slrType' and @value=3]/following::span[1]
+SLRType,Quality of Life_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=3]
+SLRType,Real-world Evidence,XPATH,//label//input[@type='radio' and @name='slrType' and @value=4]/following::span[1]
+SLRType,Real-world Evidence_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=4]
+ReportedVariable,reported_variable_section,XPATH,//strong[text()='Select Reported Variables']
+ReportedVariable,reported_variable_selectall,XPATH,//*[@id='collapse07']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allReportedVariables']/following::span[1]
+ReportedVariable,reported_variable_selectall_checkbox,XPATH,//*[@id='collapse07']//div//div[1]//div//div//label//input
+ReportedVariable,reported_variable_section1,XPATH,//*[@id='collapse07']//div//div[2]//div[1]//div//label//input[@type='checkbox' and @name='selectedReportedVariables']/following::span[1]
+ReportedVariable,reported_variable_section1_checkbox,XPATH,//*[@id='collapse07']//div//div[2]//div[1]//div//label//input
+ReportedVariable,reported_variable_section2,XPATH,//*[@id='collapse07']//div//div[2]//div[2]//div//label//input[@type='checkbox' and @name='selectedReportedVariables']/following::span[1]
+ReportedVariable,reported_variable_section2_checkbox,XPATH,//*[@id='collapse07']//div//div[2]//div[2]//div//label//input
+ReportedVariable,reported_variable_section3,XPATH,//*[@id='collapse07']//div//div[2]//div[3]//div//label//input[@type='checkbox' and @name='selectedReportedVariables']/following::span[1]
+ReportedVariable,reported_variable_section3_checkbox,XPATH,//*[@id='collapse07']//div//div[2]//div[3]//div//label//input
+ReportedVariable,reported_variable_section4,XPATH,//*[@id='collapse07']//div//div[2]//div[4]//div//label//input[@type='checkbox' and @name='selectedReportedVariables']/following::span[1]
+ReportedVariable,reported_variable_section4_checkbox,XPATH,//*[@id='collapse07']//div//div[2]//div[4]//div//label//input
+PreviewResults,preview_results,XPATH,"//button[@type='button' and contains(text(), 'Preview Results')]"
+WebTable,Table,CSS_SELECTOR,.table-scrollable.report
+WebTable,Export_as_excel,XPATH,"//button[contains(text(), 'Export as excel')]"
+WebTable,Back_to_search_page,XPATH,"//button[contains(text(), 'Back')]"
+GenerateExcel,excel_report,XPATH,"//button[@type='button' and contains(text(), 'Generate Complete Excel')]"
+GenerateExcel,word_report,XPATH,"//button[@type='button' and contains(text(), 'Generate Complete Word')]"
+StudyDesign,study_design_section,XPATH,//strong[text()='Select Study Design']
+StudyDesign,study_design_selectall,XPATH,//*[@id='collapse06']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allStudyDesigns']/following::span[1]
+StudyDesign,study_design_selectall_checkbox,XPATH,//*[@id='collapse06']//div//div[1]//div//div//label//input
+StudyDesign,study_design_section1,XPATH,//*[@id='collapse06']//div//div[2]//div[1]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section1_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[1]//div//label//input
+StudyDesign,study_design_section2,XPATH,//*[@id='collapse06']//div//div[2]//div[2]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section2_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[2]//div//label//input
+StudyDesign,study_design_section3,XPATH,//*[@id='collapse06']//div//div[2]//div[3]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section3_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[3]//div//label//input
+StudyDesign,study_design_section4,XPATH,//*[@id='collapse06']//div//div[2]//div[4]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section4_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[4]//div//label//input
+StudyDesign,study_design_section5,XPATH,//*[@id='collapse06']//div//div[2]//div[5]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section5_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[5]//div//label//input
+StudyDesign,study_design_section6,XPATH,//*[@id='collapse06']//div//div[2]//div[6]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section6_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[6]//div//label//input
+StudyDesign,study_design_section7,XPATH,//*[@id='collapse06']//div//div[2]//div[7]//div//label//input[@type='checkbox' and @name='studyDesign']/following::span[1]
+StudyDesign,study_design_section7_checkbox,XPATH,//*[@id='collapse06']//div//div[2]//div[7]//div//label//input
+DownloadError,error_popup,XPATH,"//*[@id=""toast-container""]/div/div/div[2]/div[contains(text(), 'Error while downloading report file')]"
+PrismaCount,New_total_selected,XPATH,"//dl[@class=""multiple-table""]/dd[7]"
+SelectedArea,selected_area_population,XPATH,//div[@class='search-selection population-selected w-100']/strong
+SelectedArea,selected_area_slrtype,XPATH,//div[@class='search-selection population-selected w-100']/span
+AdditionalUserCriteriaSelected,study_design_value,XPATH,"//div[contains(text(), 'Study Design')]//span[@class='search-selection ng-star-inserted']"
+AdditionalUserCriteriaSelected,reported_variable_value,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection ng-star-inserted']"
+LaunchLiveNMA,launch_live_nma,XPATH,//button[@type='button' and text()='Launch LiveNMA']
+LaunchLiveNMA,live_nma_data_table,XPATH,//tbody[@class='scrollbar']
+LaunchLiveNMA,live_nma_study_design,XPATH,"//div[contains(text(), 'Study Design')]//span[@class='search-selection']"
+LaunchLiveNMA,live_nma_reported_variable,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection']"
+LaunchLiveNMA,live_nma_pop_data,XPATH,//div[@class='search-selection population-selected w-100']/strong
+LaunchLiveNMA,add_study_button,XPATH,//button[@class='btn addStudyButton btn-sm btn-block card-default-buttons']
+FrameElements,short_reference,XPATH,//input[@id='shortReference']
+FrameElements,intervention,XPATH,//input[@id='intervention']
+FrameElements,intervention_OS_N,XPATH,//input[@id='interventionOSN']
+FrameElements,reference_dropdown,XPATH,//select[@id='referenceComparator']
+FrameElements,reference_OS_N,XPATH,//input[@id='referenceComparatorOSN']
+FrameElements,OS_HR,XPATH,//input[@id='oSHR']
+FrameElements,OS_HR_CI_Low,XPATH,//input[@id='oSHRCILow']
+FrameElements,OS_HR_CI_High,XPATH,//input[@id='oSHRCIHigh']
+FrameElements,OS_HR_P_Value,XPATH,//input[@id='oSHRPValue']
+FrameElements,add_button,XPATH,//button[@class='btn btn-sm btn-primary']
+FrameElements,close_button,XPATH,//button[@class='btn btn-sm btn-secondary']
