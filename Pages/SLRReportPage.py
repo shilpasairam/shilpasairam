@@ -105,24 +105,47 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Selected Population and SLR Type are not matching in Selected area")
 
-    def prism_value_validation(self, filename, prism_locator):
+    def prism_value_validation(self, efilename, wfilename, word_filename, prism_locator):
         self.scroll(prism_locator)
         prism = self.get_text(prism_locator)
-        # preview_res = re.findall(r'\d+', self.get_text(preview_locator))
-        excel = openpyxl.load_workbook(f'ActualOutputs//{filename}')
+        # Reading PRISMA value from Complete WebExcel Sheet
+        webexcel = pd.read_excel(f'ActualOutputs//{wfilename}', skiprows=3)
+        webcount = []
+        webcount_final = []
+        for i in list(webexcel):
+            webcount.append(webexcel[i].tolist())
+        webcount = [item for item in webcount[0] if str(item) != 'nan']
+        # Removing duplicates to get the proper length of Article identifier data
+        [webcount_final.append(x) for x in webcount if x not in webcount_final]
+
+        # Read PRISMA value from Complete Excel Sheet
+        excel = openpyxl.load_workbook(f'ActualOutputs//{efilename}')
         excel_sheet = excel['Updated PRISMA']
         count_str = excel_sheet['B19'].value
         count_val = excel_sheet['C19'].value
-        self.LogScreenshot.fLogScreenshot(message=f"FileName is: {filename}\n"
-                                                  f"{count_str} {count_val}",
+
+        # Reading PRISMA Value from Complete Word Report
+        docs = docx.Document(f'ActualOutputs//{word_filename}')
+        word = []
+        for row in docs.tables[4].rows:
+            word.append(row.cells[1].text)
+
+        self.LogScreenshot.fLogScreenshot(message=f"WebExcel FileName is: {wfilename}\n and Count Value is: {len(webcount_final)}"
+                                                  f"Excel FileName is: {efilename}\n and Count values is: {count_str} {count_val}"
+                                                  f"Word FileName is: {efilename}\n and Count value is: {word[7]}",
                                           pass_=True, log=True, screenshot=False)
-        if int(prism) == count_val:
-            self.LogScreenshot.fLogScreenshot(message=f"Excel Sheet Prisma Count Value: {count_val}\n"
+
+        if int(prism) == count_val and len(webcount_final) == count_val and int(word[7]) == count_val:
+            self.LogScreenshot.fLogScreenshot(message=f"WebExcel Prisma Count Value: {len(webcount_final)}\n"
+                                                      f"Excel Sheet Prisma Count Value: {count_val}\n"
+                                                      f"Word Prisma Count Value: {word[7]}\n"
                                                       f"UI Updated Prisma Count Value: {prism}\n"
                                                       f"Records are matching",
                                               pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Excel Sheet Prisma Count Value: {count_val}\n"
+            self.LogScreenshot.fLogScreenshot(message=f"WebExcel Prisma Count Value: {len(webcount_final)}\n"
+                                                      f"Excel Sheet Prisma Count Value: {count_val}\n"
+                                                      f"Word Prisma Count Value: {word[7]}\n"
                                                       f"UI Updated Prisma Count Value: {prism}\n"
                                                       f"Records are not matching",
                                               pass_=False, log=True, screenshot=False)
