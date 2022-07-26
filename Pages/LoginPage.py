@@ -38,6 +38,9 @@ class LoginPage(Base):
             self.click("login_button", UnivWaitFor=3)
             self.LogScreenshot.fLogScreenshot(message='Submit Credentials',
                                               pass_=True, log=True, screenshot=False)
+            
+            self.jsclick("launch_live_slr", UnivWaitFor=5)
+            self.driver.switch_to.window(self.driver.window_handles[1])
         except Exception:
             pass
         # check whether the login page opened or not
@@ -58,7 +61,7 @@ class LoginPage(Base):
         """
         try:
             # click on logout
-            self.click("logout_button", UnivWaitFor=10)
+            self.click("liveslr_logout_button", UnivWaitFor=10)
             self.LogScreenshot.fLogScreenshot(message=f"Complete logout",
                                               pass_=True, log=True, screenshot=False)
 

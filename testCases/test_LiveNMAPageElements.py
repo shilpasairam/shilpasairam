@@ -89,7 +89,7 @@ class Test_SLR_Custom_Report:
                                        "show_network")
                     time.sleep(3)
                     self.nma.driver.close()
-                    self.nma.driver.switch_to.window(self.driver.window_handles[0])
+                    self.nma.driver.switch_to.window(self.driver.window_handles[1])
             except Exception:
                 raise Exception("LiveNMA Page action failed")
 
@@ -156,6 +156,6 @@ class Test_SLR_Custom_Report:
                                        "show_network")
                     time.sleep(3)
                     self.nma.driver.close()
-                    self.nma.driver.switch_to.window(self.driver.window_handles[0])
+                    self.nma.driver.switch_to.window(self.driver.window_handles[1])
             except Exception:
                 raise Exception("LiveNMA Page action failed")

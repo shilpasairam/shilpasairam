@@ -1,29 +1,29 @@
-# README #
-
-This README would normally document whatever steps are necessary to get your application up and running.
-
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+This repository contains the automation scripts related to LiveSLR application.
+
+Framework: Python Pytest framework with Selenium
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+The setup for Python pytest automation framework
 
-### Contribution guidelines ###
+1. Prerequisites
 
-* Writing tests
-* Code review
-* Other guidelines
+	a) Install Python 3.x
+	b) Add Python 3.x to your PATH environment variable
+	c) If you do not have it already, get pip (NOTE: Most recent Python distributions come with pip)
+	d) pip install -r requirements.txt to install dependencies
 
-### Who do I talk to? ###
+2. Refer cliText.txt file in the repository to get the commands to run the test case
 
-* Repo owner or admin
-* Other community or team contact
+3. Repository Structure
+
+	Acutal Outputs: Saves the downloaded reports
+	Configuration: For all configurations and credential files
+	Logs: Log files for all tests
+	Pages: Contains our Base Page, different Page Objects
+	Reports: Contains screenshots and save the report.html file
+	testCases: Actual testcases are present here
+	Testdata: Contains Testdata required for the execution
+	utilities: All utility modules (CustomLogger, LogScreenshot, ReadProperties) are kept in this folder

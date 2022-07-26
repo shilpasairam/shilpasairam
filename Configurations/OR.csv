@@ -1,8 +1,10 @@
 Module,Object,Type,Path
-login,username_textbox,ID,Email
-login,password_textbox,ID,Password
-login,login_button,CSS_SELECTOR,.btn.btn-block.btn-primary.mt-3.mb-3
-logout,logout_button,XPATH,"//a[@title=""Sign out""]"
+PSEPortal,username_textbox,ID,Email
+PSEPortal,password_textbox,ID,Password
+PSEPortal,login_button,CSS_SELECTOR,.btn.btn-block.btn-primary.mt-3.mb-3
+PSEPortal,portal_logout_button,XPATH,//a[text()='Logout']
+PSEPortal,launch_live_slr,XPATH,"//a[@class='btn btn-primary' and @href=""https://pse-liveslr-ng-testing.azurewebsites.net/""]"
+PSEPortal,liveslr_logout_button,XPATH,"//a[@title=""Sign out""]"
 SLRPAGE,SLR_Homepage,LINK_TEXT,Search LiveSLR
 SLRPAGE,SLR_Population,XPATH,//*[text()='1. Select SLR Population']
 SLRPAGE,SLR_Type,XPATH,//*[text()='2. Select Type of SLR']
@@ -75,6 +77,11 @@ AdditionalUserCriteriaSelected,study_design_value,XPATH,"//div[contains(text(), 
 AdditionalUserCriteriaSelected,reported_variable_value,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection ng-star-inserted']"
 LaunchLiveNMA,launch_live_nma,XPATH,//button[@type='button' and text()='Launch LiveNMA']
 LaunchLiveNMA,live_nma_data_table,XPATH,//tbody[@class='scrollbar']
+LaunchLiveNMA,live_nma_data_table_rows,XPATH,//table[@class='table table-bordered data-table-content ']/tbody/tr
+LaunchLiveNMA,live_nma_switch_1,XPATH,//input[@id='btnradio1']
+LaunchLiveNMA,live_nma_switch_2,XPATH,//input[@id='btnradio2']
+LaunchLiveNMA,live_nma_table_row_1,XPATH,//table[@class='table table-bordered data-table-content ']/tbody/tr[1]/td
+LaunchLiveNMA,live_nma_table_row_2,XPATH,//table[@class='table table-bordered data-table-content ']/tbody/tr[2]/td
 LaunchLiveNMA,live_nma_study_design,XPATH,"//div[contains(text(), 'Study Design')]//span[@class='search-selection']"
 LaunchLiveNMA,live_nma_reported_variable,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection']"
 LaunchLiveNMA,live_nma_pop_data,XPATH,//div[@class='search-selection population-selected w-100']/strong
@@ -90,3 +97,4 @@ FrameElements,OS_HR_CI_High,XPATH,//input[@id='oSHRCIHigh']
 FrameElements,OS_HR_P_Value,XPATH,//input[@id='oSHRPValue']
 FrameElements,add_button,XPATH,//button[@class='btn btn-sm btn-primary']
 FrameElements,close_button,XPATH,//button[@class='btn btn-sm btn-secondary']
+FrameElements,show_network,XPATH,//a[text()='Show Network']

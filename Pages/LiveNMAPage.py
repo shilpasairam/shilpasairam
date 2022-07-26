@@ -113,7 +113,7 @@ class LiveNMA(Base):
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not clickable",
                                               pass_=False, log=True, screenshot=False)
         # Switch the driver to LiveNMA tab
-        self.driver.switch_to.window(self.driver.window_handles[1])
+        self.driver.switch_to.window(self.driver.window_handles[2])
         try:
             self.assertPageTitle("Live NMA", UnivWaitFor=30)
             self.LogScreenshot.fLogScreenshot(message=f"LiveNMA Page Opened successfully",
@@ -181,6 +181,10 @@ class LiveNMA(Base):
                     else:
                         raise Exception("Wrong values entered")
 
-                self.click(network_loc)
+                if self.clickable(network_loc):
+                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is clickable', pass_=True, log=True, screenshot=False)
+                    self.click(network_loc)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is not clickable', pass_=False, log=True, screenshot=False)
         except Exception:
             raise Exception("Failed in adding new study data to table")

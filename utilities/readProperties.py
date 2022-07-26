@@ -9,8 +9,8 @@ class ReadConfig:
     # static method helps you read the function in another file without instantiating the class
     @staticmethod
     def getApplicationURL():
-        # return f"https://pse-liveslr-ng-testing.azurewebsites.net/"
-        return f"https://slr-stage.livehta.com/"
+        # return f"https://pse-portal-testing.azurewebsites.net/"
+        return f"https://pse-portal-staging.azurewebsites.net/"
 
     @staticmethod
     def getUserName():
@@ -54,19 +54,6 @@ class ReadConfig:
     # Get test data file path for LiveNMA
     @staticmethod
     def getnmatestdata():
+        # populationdata = config.get('commonInfo', 'testinglivenmadata')
         populationdata = config.get('commonInfo', 'staginglivenmadata')
         return populationdata
-
-    # only used for default visual. for future development only using getwrapperTD instead
-    @staticmethod
-    def get_sheetname_as_per_slrtype(value):
-        sheetnames = []
-        if value == "Interventional":
-            sheetnames = ['Interventional Report']
-        elif value == "Economic":
-            sheetnames = ['CEA CUA Report', 'BIM Report', 'CostHCRU Report', 'Other Report']
-        elif value == "Quality of Life":
-            sheetnames = ['QOL Report']
-        elif value == "Real-world Evidence":
-            sheetnames = ['RWE Report']
-        return sheetnames
