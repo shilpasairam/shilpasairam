@@ -1,8 +1,10 @@
 Module,Object,Type,Path
-login,username_textbox,ID,Email
-login,password_textbox,ID,Password
-login,login_button,CSS_SELECTOR,.btn.btn-block.btn-primary.mt-3.mb-3
-logout,logout_button,XPATH,"//a[@title=""Sign out""]"
+PSEPortal,username_textbox,ID,Email
+PSEPortal,password_textbox,ID,Password
+PSEPortal,login_button,CSS_SELECTOR,.btn.btn-block.btn-primary.mt-3.mb-3
+PSEPortal,portal_logout_button,XPATH,//a[text()='Logout']
+PSEPortal,launch_live_slr,XPATH,"//a[@class='btn btn-primary' and @href=""https://slr-stage.livehta.com/""]"
+PSEPortal,liveslr_logout_button,XPATH,"//a[@title=""Sign out""]"
 SLRPAGE,SLR_Homepage,LINK_TEXT,Search LiveSLR
 SLRPAGE,SLR_Population,XPATH,//*[text()='1. Select SLR Population']
 SLRPAGE,SLR_Type,XPATH,//*[text()='2. Select Type of SLR']
@@ -15,8 +17,8 @@ Population,MM Maintenance,XPATH,//label//input[@type='radio' and @name='populati
 Population,MM Maintenance_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=26]
 Population,RR ALL,XPATH,//input[@type='radio' and @name='populationFilters' and @value=3]/following::span[1]
 Population,RR ALL_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=3]
-Population,RRMM,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=4]/following::span[1]
-Population,RRMM_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=4]
+Population,RRMM- Pfizer,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=4]/following::span[1]
+Population,RRMM- Pfizer_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=4]
 Population,Test,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=19]/following::span[1]
 Population,Test_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=19]
 SLRType,Interventional,XPATH,//label//input[@type='radio' and @name='slrType' and @value=1]/following::span[1]

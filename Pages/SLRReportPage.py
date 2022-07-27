@@ -9,6 +9,7 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
+from pandas.core.common import flatten
 
 from Pages.Base import Base, fWaitFor
 from Pages.OpenLiveSLRPage import LiveSLRPage
@@ -45,7 +46,7 @@ class SLRReport(Base):
                                                   pass_=True, log=True, screenshot=True)
 
     def select_sub_section(self, locator, locator_button, scroll=None):
-        if self.scroll(scroll):
+        if self.scroll(scroll, UnivWaitFor=20):
             if self.isselected(locator_button):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -57,7 +58,7 @@ class SLRReport(Base):
             self.scrollback()
 
     def select_all_sub_section(self, locator, locator_button, scroll=None):
-        if self.scroll(scroll):
+        if self.scroll(scroll, UnivWaitFor=20):
             if self.isselected(locator_button):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -105,18 +106,20 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Selected Population and SLR Type are not matching in Selected area")
 
-    def prism_value_validation(self, efilename, wfilename, word_filename, prism_locator):
-        self.scroll(prism_locator)
-        prism = self.get_text(prism_locator)
-        # Reading PRISMA value from Complete WebExcel Sheet
-        webexcel = pd.read_excel(f'ActualOutputs//{wfilename}', skiprows=3)
+    def prism_value_validation(self, prism, efilename, wfilename, word_filename):
+
+        # Reading Article identifier column values from WebExcel Sheet
+        webexcel = openpyxl.load_workbook(f'ActualOutputs//{wfilename}')
         webcount = []
         webcount_final = []
-        for i in list(webexcel):
-            webcount.append(webexcel[i].tolist())
-        webcount = [item for item in webcount[0] if str(item) != 'nan']
+
+        for sheet in webexcel.sheetnames:
+            webexcel_value = pd.read_excel(f'ActualOutputs//{wfilename}', sheet_name=sheet, skiprows=3)
+            webex = webexcel_value['Article Identifier(s)']
+            webcount.append([item for item in webex if str(item) != 'nan'])
+
         # Removing duplicates to get the proper length of Article identifier data
-        [webcount_final.append(x) for x in webcount if x not in webcount_final]
+        [webcount_final.append(x) for x in list(flatten(webcount)) if x not in webcount_final]
 
         # Read PRISMA value from Complete Excel Sheet
         excel = openpyxl.load_workbook(f'ActualOutputs//{efilename}')
@@ -132,7 +135,7 @@ class SLRReport(Base):
 
         self.LogScreenshot.fLogScreenshot(message=f"WebExcel FileName is: {wfilename}\n and Count Value is: {len(webcount_final)}"
                                                   f"Excel FileName is: {efilename}\n and Count values is: {count_str} {count_val}"
-                                                  f"Word FileName is: {efilename}\n and Count value is: {word[7]}",
+                                                  f"Word FileName is: {word_filename}\n and Count value is: {word[7]}",
                                           pass_=True, log=True, screenshot=False)
 
         if int(prism) == count_val and len(webcount_final) == count_val and int(word[7]) == count_val:
@@ -255,7 +258,7 @@ class SLRReport(Base):
                 self.LogScreenshot.fLogScreenshot(message=f"Downloaded filename is {filename}",
                                                   pass_=True, log=True, screenshot=False)
                 self.driver.close()
-                self.driver.switch_to.window(self.driver.window_handles[0])
+                self.driver.switch_to.window(self.driver.window_handles[1])
                 return filename
             except:
                 pass
@@ -263,97 +266,103 @@ class SLRReport(Base):
             if time.time() > endTime:
                 break
     
-    def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
+    def excel_content_validation(self, webexcel_filename, excel_filename):
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between WebExcel and Complete Excel Report",
+                                          pass_=True, log=True, screenshot=False)
         self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
-        sheet_names = ReadConfig.get_sheetname_as_per_slrtype(slrtype)
+        column_names = ['Article Identifier(s)', 'Publication Type', 'Short Reference']
+        # sheet_names = ReadConfig.get_sheetname_as_per_slrtype(population, slrtype)
+        sheet_names = []
+
+        webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
+        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+
+        for i in webexcel_data.sheetnames:
+            if i in excel_data.sheetnames:
+                sheet_names.append(i)
+
         self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {sheet_names}",
                                           pass_=True, log=True, screenshot=False)
         for sheet in sheet_names:
-            webex = []
-            compex = []
-            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet)
-            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet)
+            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=4)
 
             try:
-                for i in list(webexcel):
-                    webex.append(webexcel[i].tolist())
+                for col in column_names:
+                    webex = webexcel[col]
+                    compex = excel[col]
 
-                for j in list(excel):
-                    compex.append(excel[j].tolist())
+                    webex = [item for item in webex if str(item) != 'nan']
+                    compex = [item for item in compex if str(item) != 'nan']
 
-                # Removing None values from the lists
-                webex = [item for item in webex[0] if str(item) != 'nan']
-                compex = [item for item in compex[0] if str(item) != 'nan']
-
-                # Comparison and Merging with regular expressions
-                res = [ele for ele in compex if (ele in webex)]
-                self.LogScreenshot.fLogScreenshot(message=f"Regular Expression output: {res}",
-                                                  pass_=True, log=True, screenshot=False)
-                if str(bool(res)):
-                    # Extracting numbers from the lists
-                    ele1 = [x for x in webex if isinstance(x, numbers.Number)]
-                    ele2 = [x for x in compex if isinstance(x, numbers.Number)]
-                    if ele1 == sorted(ele1) and ele2 == sorted(ele2):
-                        if ele1 == ele2:
-                            self.LogScreenshot.fLogScreenshot(message=f"Article Identifier(s) are matching between WebExcel "
-                                                                      f"and Complete Excel report. \n"
-                                                                      f"Compared Element values are: {ele1} and \n{ele2}",
-                                                              pass_=True, log=True, screenshot=False)
-                        else:
-                            self.LogScreenshot.fLogScreenshot(message=f"Article Identifier(s) are not matching between WebExcel "
-                                                                      f"and Complete Excel report. \n"
-                                                                      f"Compared Element values are: {ele1} and \n{ele2}",
-                                                              pass_=False, log=True, screenshot=False)
-                            raise Exception("Article Identifier(s) are not matching")
+                    if len(webex) == len(compex) and webex == compex:
+                        self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in Column '{col}' are matching between WebExcel and Complete Excel "
+                                          f"Report.\n WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n",
+                                          # f"WebExcel Elements: {webex}\n Excel Elements: {compex}",
+                                  pass_=True, log=True, screenshot=False)
                     else:
-                        raise Exception("Article Identifier Elements are not in sorted order")
+                        raise Exception("Elements are not matching between Webexcel and Complete Excel")
             except Exception:
                 raise Exception("Error in Excel sheet content validation")
 
-    def excel_to_word_content_validation(self, webexcel_filename, excel_filename, word_filename, slrtype):
-        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: "
-                                                  f"{webexcel_filename}, \n{excel_filename}, \n{word_filename}",
+    def excel_to_word_content_validation(self, webexcel_filename, excel_filename, word_filename):
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between WebExcel, Complete Excel and Complete Word Reports",
                                           pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, \n{word_filename}",
+                                          pass_=True, log=True, screenshot=False)
+        
         # Index of Table number 6 is : 5. Starting point for word table content comparison
         table_count = 5
-        sheet_names = ReadConfig.get_sheetname_as_per_slrtype(slrtype)
+        # sheet_names = ReadConfig.get_sheetname_as_per_slrtype(population, slrtype)
+        sheet_names = []
+
+        webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
+        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+
+        for i in webexcel_data.sheetnames:
+            if i in excel_data.sheetnames:
+                sheet_names.append(i)
+
         self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {sheet_names}",
                                           pass_=True, log=True, screenshot=False)
         for sheet in sheet_names:
-            webex = []
-            compex = []
-            word = []
-            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet)
-            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet)
+            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=4)
             docs = docx.Document(f'ActualOutputs//{word_filename}')
             try:
-                for i in list(webexcel):
-                    webex.append(webexcel[i].tolist())
+                table = docs.tables[table_count]
+                data = [[cell.text for cell in row.cells] for row in table.rows]
+                df_word = pd.DataFrame(data)
 
-                for j in list(excel):
-                    compex.append(excel[j].tolist())
+                # Using count variable to loop over columns in word document
+                count = 0
+                # df_word.values[0] will give the list of column names from the table in Word document
+                for col_name in df_word.values[0]:
+                    # Restricting comparison upto 3 columns in word due to data formatting issues in further columns
+                    if count <= 2:
+                        if col_name == 'Year/Country':
+                            # This IF condition is just to add space to the column name as per Excel sheet to match the names
+                            # between word and excel. This is an workaround until it is fixed
+                            col_name = 'Year / Country'
+                        if col_name in webexcel.columns.values and col_name in excel.columns.values:
+                            webex = webexcel[col_name]
+                            compex = excel[col_name]
+                            word = []
+                            for row in docs.tables[table_count].rows:
+                                word.append(row.cells[count].text)
 
-                for row in docs.tables[table_count].rows:
-                    word.append(row.cells[0].text)
-                # Incrementing the counter to switch for next table based on the number of excel sheet names
+                            webex = [item for item in webex if str(item) != 'nan']
+                            compex = [item for item in compex if str(item) != 'nan']
+                            word.pop(0)
+
+                            if len(webex) == len(compex) == len(word) and webex == compex == word:
+                                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in Column '{col_name}' are matching between WebExcel, Complete Excel and Word Reports.\n"
+                                          f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
+                                          # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                  pass_=True, log=True, screenshot=False)
+                            count += 1
                 table_count += 1
-
-                # Removing None values from the lists
-                webex = [item for item in webex[3] if str(item) != 'nan']
-                compex = [item for item in compex[3] if str(item) != 'nan']
-
-                if compex == webex and compex == word and webex == word:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents are matching in WebExcel, Complete Excel and "
-                                                              f"Complete Word Reports. Short Reference values are: \n"
-                                                              f"{webex} \n {compex} \n {word}",
-                                                      pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents are not matching in WebExcel, Complete Excel and "
-                                                              f"Complete Word Reports. Short Reference values are: \n"
-                                                              f"{webex} \n {compex} \n {word}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception("Word report contents are not matching")
             except Exception:
                 raise Exception("Error in Word report content validation")
 
