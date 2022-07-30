@@ -12,7 +12,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_LiveSLRPageElements:
-    baseURL = ReadConfig.getApplicationURL()
+    baseURL = ReadConfig.getApplicationURL('staging')
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 

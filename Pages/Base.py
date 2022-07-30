@@ -94,6 +94,22 @@ class Base:
         self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).clear()
         self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).send_keys(value)
 
+    # clear text from web element using locatorname and value
+    @fWaitFor
+    def clear(self, locator, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and clear the text
+        """
+        self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).clear()
+
+    # refresh the webpage
+    @fWaitFor
+    def refreshpage(self):
+        """
+        Given locator, identify the locator type and path from the OR file and clear the text
+        """
+        self.driver.refresh()
+
     # Assertion validation using pagetitle
     @fWaitFor
     def assertPageTitle(self, pageTitle, UnivWaitFor=0):
@@ -140,6 +156,18 @@ class Base:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
                                               pass_=False, log=True, screenshot=False)
 
+    # JavaScript click to hide a element for uploading
+    @fWaitFor
+    def jsclick_hide(self, command, UnivWaitFor=0):
+        """
+        Execute the JS statement with given command
+        """
+        try:
+            self.driver.execute_script(command)
+        except NoSuchElementException:
+            self.LogScreenshot.fLogScreenshot(message=f"{command} is not executable",
+                                              pass_=False, log=True, screenshot=False)
+    
     # Check whether a web element is clickable or not using locatorname
     @fWaitFor
     def clickable(self, locator, UnivWaitFor=0):
@@ -189,5 +217,17 @@ class Base:
         """
         Given locator, identify the locator type and path from the OR file and return the bool value
         """
-        return self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_displayed()
+        try:
+            return self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_displayed()
         # return self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
+        except NoSuchElementException:
+            self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
+                                              pass_=False, log=True, screenshot=False)
+
+    # Assertion validation for filenames
+    @fWaitFor
+    def assertText(self, expected_filename, actual_filename, UnivWaitFor=0):
+        """
+        Assert the file name uploaded
+        """
+        assert expected_filename == actual_filename

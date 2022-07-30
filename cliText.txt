@@ -14,6 +14,10 @@ python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCase
 
 python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_PrismaElementsValidation.py
 
+python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_ImportPublications.py
+
+python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_ManagePopulations.py
+
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
 

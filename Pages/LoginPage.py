@@ -12,7 +12,6 @@ class LoginPage(Base):
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
-        self.env = ReadConfig.getEnvironmenttype()
         # instantiate the logger class
         self.logger = LogGen.loggen()
         # instantiate the logScreenshot class
