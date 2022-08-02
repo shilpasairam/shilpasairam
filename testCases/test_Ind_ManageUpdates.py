@@ -1,5 +1,5 @@
 """
-Test will validate Manage Populations Page
+Test will validate Manage Updates Page
 
 """
 
@@ -17,14 +17,13 @@ from utilities.readProperties import ReadConfig
 
 
 @pytest.mark.usefixtures("init_driver")
-class Test_ManagePopultionsPage:
+class Test_ManageUpdatesPage:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getmanagepopdatafilepath()
-    population_val = []
+    added_updates_data = []
 
-    def test_add_population(self, extra):
+    def test_add_updates(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -32,31 +31,30 @@ class Test_ManagePopultionsPage:
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
-        self.mngpoppage = ManagePopulationsPage(self.driver, extra)
-        # Read extraction sheet values
-        self.file_upload = self.mngpoppage.get_template_file_details(self.filepath)
+        self.mngupdpage = ManageUpdatesPage(self.driver, extra)
+
+        today = date.today()
+        self.dateval = today.strftime("%m/%d/%Y")  # .replace('/', '')
+        self.day_val = today.day
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
-        self.mngpoppage.go_to_managepopulations("managepopulations_button")
+        # self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
-        count = 1
-        for i in self.file_upload:
+        for i in range(3):
             try:
-                added_pop = self.mngpoppage.add_multiple_population(count, "add_population_btn", self.filepath, "template_file_upload", i[1], "manage_pop_table_rows")
-
-                self.population_val.append(added_pop)
-                self.LogScreenshot.fLogScreenshot(message=f"Added populations are {self.population_val}", pass_=True, log=True, screenshot=False)
-                # self.mngpoppage.delete_multiple_population(count, "delete_population", self.filepath, "delete_population_popup", "manage_pop_table_rows")
-
-                count += 1
+                self.mngupdpage.go_to_manageupdates("manageupdates_button")
+                self.LogScreenshot.fLogScreenshot(message=f"Date values are: {self.dateval} and {self.day_val}", pass_=True, log=True, screenshot=False)
+                manage_update_data = self.mngupdpage.add_multiple_updates("add_update_btn", self.day_val, "manage_update_table_rows", self.dateval)
+                self.added_updates_data.append(manage_update_data)
+                self.LogScreenshot.fLogScreenshot(message=f"Added population udpate is {self.added_updates_data}", pass_=True, log=True, screenshot=False)
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage publications page",
+                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-    def test_delete_population(self, extra):
+    def test_delete_updates(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -64,20 +62,20 @@ class Test_ManagePopultionsPage:
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
-        self.mngpoppage = ManagePopulationsPage(self.driver, extra)
-        # Read extraction sheet values
-        self.file_upload = self.mngpoppage.get_template_file_details(self.filepath)
+        self.mngupdpage = ManageUpdatesPage(self.driver, extra)
+
+        today = date.today()
+        self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
-        self.mngpoppage.go_to_managepopulations("managepopulations_button")
+        self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
-        for i in self.population_val:
+        for i in self.added_updates_data:
             try:
-                self.mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup", "manage_pop_table_rows")
+                self.mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup", "manage_update_table_rows")
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage publications page",
+                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
-        

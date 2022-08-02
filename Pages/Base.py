@@ -94,6 +94,15 @@ class Base:
         self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).clear()
         self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).send_keys(value)
 
+    # Select current date from date-picker
+    @fWaitFor
+    def select_calendar_date(self, day_val, UnivWaitFor=0):
+        """
+        Given day value, select the current date from the date-picker
+        """
+        cal_loc = f"//table[@class='days weeks']//td[@role='gridcell']//span[not(contains(@class, 'is-other-month')) and (text()={day_val})]"
+        self.driver.find_element(By.XPATH, cal_loc).click()
+
     # clear text from web element using locatorname and value
     @fWaitFor
     def clear(self, locator, UnivWaitFor=0):

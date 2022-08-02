@@ -12,10 +12,11 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_LiveSLRPageElements:
-    baseURL = ReadConfig.getApplicationURL('staging')
+    baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
+    @pytest.mark.set1
     def test_liveslr_page_ele(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

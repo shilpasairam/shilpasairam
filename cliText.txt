@@ -14,9 +14,15 @@ python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCase
 
 python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_PrismaElementsValidation.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_ImportPublications.py
-
 python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_ManagePopulations.py
+
+python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_Ind_ImportPublications.py
+
+python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_Ind_ManagePopulations.py
+
+python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_Ind_ManageUpdates.py
+
+python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_Ind_ManageQAData.py
 
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
@@ -25,3 +31,8 @@ python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-conta
 python -m pytest -v -s -p no:logging --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
 
 python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\assets\style.css .\testCases\test_LoginPage.py
+
+# Run multiple test cases using pytest.mark for methods
+python -m pytest -m set1 -v --html=Reports\report.html --self-contained-html  .\testCases
+
+python -m pytest -m set1 -v -n=2 --html=Reports\report.html --self-contained-html  .\testCases

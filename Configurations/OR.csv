@@ -148,3 +148,21 @@ ManageQAData,upload_save_button,XPATH,"//button[@name=""upload"" and @type=""sub
 ManageQAData,delete_file_button,XPATH,"//button[@name=""delete""]"
 ManageQAData,delete_file_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
 ManageQAData,get_status_text,XPATH,//div[@class='ng-star-inserted']
+ProtocolPRISMAs,protocol_link,LINK_TEXT,Protocol
+ProtocolPRISMAs,prismas,LINK_TEXT,PRISMAs
+ProtocolPRISMAs,prisma_pop_dropdown,XPATH,//select[@class='custom-select custom-select-sm ng-untouched ng-pristine ng-valid']
+ProtocolPRISMAs,prisma_excel_file,XPATH,//input[@id='inputGroupFilePrismaExcel' and @name='PrismaExcelFile' and @type='file']
+ProtocolPRISMAs,prisma_excel_upload_btn,XPATH,//button[@class='btn btn-primary' and @name='upload']
+ProtocolPRISMAs,prisma_excel_delete_btn,XPATH,//button[@class='btn btn-outline-danger ml-2' and @name='delete']
+ProtocolPRISMAs,prisma_excel_delete_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ProtocolPRISMAs,prisma_excel_status_text,XPATH,//div[@class='ng-star-inserted']
+ProtocolPRISMAs,prisma_study_type_dropdown,XPATH,//select[@name='studytype']
+ProtocolPRISMAs,original_studies,XPATH,//input[@name='dataExtractionOriginalStudiesNumber']
+ProtocolPRISMAs,records_number,XPATH,//input[@name='dataExtractionRecordsNumber']
+ProtocolPRISMAs,fulltext_review,XPATH,//input[@name='fullTextReviewRecordsNumber']
+ProtocolPRISMAs,total_record_number,XPATH,//input[@name='totalRecordsNumber']
+ProtocolPRISMAs,prisma_image,XPATH,//input[@id='inputGroupFilePrismaImage' and @type='file']
+ProtocolPRISMAs,prisma_image_save_btn,XPATH,//button[@class='btn btn-primary' and @name='submit']
+ProtocolPRISMAs,prisma_image_delete_btn,XPATH,//button[@class='btn btn-outline-danger ml-2' and text()='Delete existing data']
+ProtocolPRISMAs,prisma_image_delete_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ProtocolPRISMAs,prisma_image_status_text,XPATH,//div[@class='ng-star-inserted']

@@ -1,3 +1,5 @@
+from datetime import date
+import random
 import time
 import pandas as pd
 from selenium.webdriver.common.by import By
@@ -29,7 +31,11 @@ class ManageUpdatesPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def add_updates(self, manage_update_pg, add_upd_button, sel_pop_val, date_val, table_rows):
+    def go_to_manageupdates(self, locator):
+        self.click(locator, UnivWaitFor=10)
+        time.sleep(5)
+
+    def add_updates(self, manage_update_pg, add_upd_button, sel_pop_val, date_val, table_rows, dateval_to_search):
         self.click(manage_update_pg)
         self.refreshpage()
         table_ele = self.select_element("sel_table_entries_dropdown")
@@ -47,7 +53,9 @@ class ManageUpdatesPage(Base):
         select = Select(pop_ele)
         select.select_by_visible_text(sel_pop_val)
 
-        self.input_text("sel_update_date", date_val)
+        self.click("sel_update_date")
+        # self.input_text("sel_update_date", date_val)
+        self.select_calendar_date(date_val)
 
         self.click("sel_update_type")
         update_type_ele = self.select_element("sel_update_type")
@@ -57,7 +65,7 @@ class ManageUpdatesPage(Base):
         self.click("sel_update_submit")
         time.sleep(1)
 
-        add_text = self.get_text("manage_update_status_text")
+        add_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
                                           pass_=True, log=True, screenshot=False)
                                           
@@ -76,12 +84,12 @@ class ManageUpdatesPage(Base):
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
                     self.refreshpage()
                     result = []
-                    self.input_text("manage_update_search_box", sel_pop_val)
+                    self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
                     td1 = self.select_elements('manage_update_table_row_1')
                     for n in td1:
                         result.append(n.text)
 
-                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
+                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
                                             pass_=True, log=True, screenshot=False)
                     
                     if result[0] == sel_pop_val:
@@ -115,7 +123,7 @@ class ManageUpdatesPage(Base):
         self.click(del_locator_popup)
         time.sleep(2)
 
-        del_text = self.get_text("manage_update_status_text")
+        del_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
                                           pass_=True, log=True, screenshot=False)
                                           
@@ -139,3 +147,127 @@ class ManageUpdatesPage(Base):
                                             pass_=False, log=True, screenshot=False)  
             raise Exception("Error in deleting the update")
     
+    def add_multiple_updates(self, add_upd_button, date_val, table_rows, dateval_to_search):
+        self.refreshpage()
+        time.sleep(5)
+        table_ele = self.select_element("sel_table_entries_dropdown")
+        select = Select(table_ele)
+        select.select_by_visible_text("100")
+
+        # Fetching total rows count before adding a new population
+        table_rows_before = self.select_elements(table_rows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new update: {len(table_rows_before)}',
+                                          pass_=True, log=True, screenshot=False)
+
+        self.click(add_upd_button, UnivWaitFor=10)
+
+        pop_ele = self.select_element("sel_pop_update_dropdown")
+        select = Select(pop_ele)
+        options_list_res = []
+        options_list = select.options
+        for xy in options_list:
+            options_list_res.append(xy.text)
+        self.LogScreenshot.fLogScreenshot(message=f'Options list values are: {options_list_res} and Length is : {len(options_list_res)}',
+                                          pass_=True, log=True, screenshot=False)
+        pop_index = random.randint(0, len(options_list_res))
+        self.LogScreenshot.fLogScreenshot(message=f'Index value is {pop_index}',
+                                          pass_=True, log=True, screenshot=False)
+        select.select_by_index(pop_index)
+        sel_pop_val = select.first_selected_option.text
+
+        self.click("sel_update_date")
+        # self.input_text("sel_update_date", date_val)
+        self.select_calendar_date(date_val)
+
+        self.click("sel_update_type")
+        update_type_ele = self.select_element("sel_update_type")
+        select = Select(update_type_ele)
+        select.select_by_index(1)
+
+        self.click("sel_update_submit")
+        time.sleep(2)
+
+        add_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
+        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
+                                          pass_=True, log=True, screenshot=False)
+                                          
+        self.assertText("Update added successfully", add_text)
+
+        table_ele = self.select_element("sel_table_entries_dropdown")
+        select = Select(table_ele)
+        select.select_by_visible_text("100")
+
+        # Fetching total rows count after adding a new population
+        table_rows_after = self.select_elements(table_rows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new update: {len(table_rows_after)}',
+                                          pass_=True, log=True, screenshot=False)
+
+        try:
+            if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+                    self.refreshpage()
+                    # today = date.today()
+                    # dateval_to_search = today.strftime("%m/%d/%Y")
+                    self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
+                                          pass_=True, log=True, screenshot=False)
+                    result = []
+                    self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
+                    td1 = self.select_elements('manage_update_table_row_1')
+                    for n in td1:
+                        result.append(n.text)
+
+                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
+                                            pass_=True, log=True, screenshot=False)
+                    
+                    if result[0] == sel_pop_val:
+                        self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
+                                            pass_=True, log=True, screenshot=False)
+                        update_data = f"{result[0]} - {result[1]}"
+                        return update_data
+                    else:
+                        raise Exception("Population update data is not added")
+            self.clear("manage_update_search_box")
+        except:
+            raise Exception("Error while adding the population updates")
+
+    def delete_multiple_manage_updates(self, added_update_val, del_locator, del_locator_popup, tablerows):
+        self.refreshpage()
+        time.sleep(2)
+        ele = self.select_element("sel_table_entries_dropdown")
+        select = Select(ele)
+        select.select_by_visible_text("100")
+
+        # Fetching total rows count before deleting a file from top of the table
+        table_rows_before = self.select_elements(tablerows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a update: {len(table_rows_before)}',
+                                          pass_=True, log=True, screenshot=False)
+
+        self.input_text("manage_update_search_box", added_update_val)
+        
+        self.click(del_locator)
+        time.sleep(2)
+        self.click(del_locator_popup)
+        time.sleep(2)
+
+        del_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
+        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
+                                          pass_=True, log=True, screenshot=False)
+                                          
+        self.assertText("Update deleted successfully", del_text)
+
+        ele = self.select_element("sel_table_entries_dropdown")
+        select = Select(ele)
+        select.select_by_visible_text("100")
+
+        # Fetching total rows count before deleting a file from top of the table
+        table_rows_after = self.select_elements(tablerows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a update: {len(table_rows_after)}',
+                                          pass_=True, log=True, screenshot=False)
+
+        try:
+            if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
+                self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
+                                            pass_=True, log=True, screenshot=False)                    
+        except:
+            self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
+                                            pass_=False, log=True, screenshot=False)  
+            raise Exception("Error in deleting the update")

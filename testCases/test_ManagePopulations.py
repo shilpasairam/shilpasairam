@@ -27,7 +27,7 @@ class Test_ManagePopultionsPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getadminpagedata()
 
-    def test_upload_extraction_template(self, extra):
+    def test_ManagePop_ManageUpdates_MangageQAData(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -46,7 +46,8 @@ class Test_ManagePopultionsPage:
         self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
         today = date.today()
-        self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
+        self.dateval = today.strftime("%m/%d/%Y")  # .replace('/', '')
+        self.day_val = today.day
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
@@ -57,14 +58,14 @@ class Test_ManagePopultionsPage:
                 added_pop = self.mngpoppage.add_population("add_population_btn", self.filepath, "template_file_upload", i[1], "manage_pop_table_rows")
                 self.LogScreenshot.fLogScreenshot(message=f"Added population is {added_pop}", pass_=True, log=True, screenshot=False)
                 
-                manage_update_data = self.mngupdates.add_updates("manageupdates_button", "add_update_btn", added_pop, self.dateval, "manage_update_table_rows")
+                manage_update_data = self.mngupdates.add_updates("manageupdates_button", "add_update_btn", added_pop, self.day_val, "manage_update_table_rows", self.dateval)
                 self.LogScreenshot.fLogScreenshot(message=f"Added population udpate is {manage_update_data}", pass_=True, log=True, screenshot=False)
                 
                 self.mngqadata.add_manage_qa_data("manage_qa_data_button", self.stdy_data, self.filepath)
 
                 self.mngqadata.del_manage_qa_data("manage_qa_data_button", self.stdy_data, "delete_file_button", "delete_file_popup", self.filepath)
                 
-                self.mngupdates.delete_manage_update("manageupdates_button", added_pop, "delete_population", "delete_population_popup", "manage_pop_table_rows")
+                self.mngupdates.delete_manage_update("manageupdates_button", added_pop, "delete_updates", "delete_updates_popup", "manage_pop_table_rows")
                 self.mngpoppage.delete_population("managepopulations_button", "delete_population", self.filepath, "delete_population_popup", "manage_pop_table_rows")
 
             except Exception:

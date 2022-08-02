@@ -1,3 +1,4 @@
+import os
 import time
 import pandas as pd
 from selenium.webdriver.common.by import By
@@ -28,13 +29,12 @@ class ManagePopulationsPage(Base):
 
     def go_to_managepopulations(self, locator):
         self.click(locator, UnivWaitFor=10)
-        # self.LogScreenshot.fLogScreenshot(message='LiveSLR Search page is opened',
-        #                                   pass_=True, log=True, screenshot=True)
+        time.sleep(5)
 
     def get_template_file_details(self, filepath):
         file = pd.read_excel(filepath)
         sheet_name = list(file['manage_population_file_name'].dropna())
-        sheet_path = list(file['manage_population_file_to_upload'].dropna())
+        sheet_path = list(os.getcwd()+file['manage_population_file_to_upload'].dropna())
         manage_pop_template = [(sheet_name[i], sheet_path[i]) for i in range(0, len(sheet_name))]
         return manage_pop_template
     
@@ -67,7 +67,7 @@ class ManagePopulationsPage(Base):
         self.click("submit_button")
         time.sleep(2)
 
-        add_text = self.get_text("file_status_popup_text")
+        add_text = self.get_text("file_status_popup_text", UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
                                           pass_=True, log=True, screenshot=False)
                                           
@@ -127,7 +127,7 @@ class ManagePopulationsPage(Base):
         self.click(del_locator_popup)
         time.sleep(1)
         
-        del_text = self.get_text("file_status_popup_text")
+        del_text = self.get_text("file_status_popup_text", UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
                                           pass_=True, log=True, screenshot=False)
 
@@ -152,6 +152,8 @@ class ManagePopulationsPage(Base):
             raise Exception("Error in deleting the population")
 
     def add_multiple_population(self, counter, add_locator, filepath, upload_loc, upload_file, table_rows):
+        self.refreshpage()
+        time.sleep(2)
         ele = self.select_element("table_entries_dropdown")
         select = Select(ele)
         select.select_by_visible_text("100")
@@ -173,7 +175,7 @@ class ManagePopulationsPage(Base):
         self.click("submit_button")
         time.sleep(2)
 
-        add_text = self.get_text("file_status_popup_text")
+        add_text = self.get_text("file_status_popup_text", UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
                                         pass_=True, log=True, screenshot=False)
                                         
@@ -229,7 +231,7 @@ class ManagePopulationsPage(Base):
         self.click(del_locator_popup)
         time.sleep(2)
         
-        del_text = self.get_text("file_status_popup_text")
+        del_text = self.get_text("file_status_popup_text", UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
                                           pass_=True, log=True, screenshot=False)
 

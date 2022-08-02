@@ -1,3 +1,4 @@
+import os
 import time
 import pandas as pd
 from selenium.webdriver.common.by import By
@@ -29,25 +30,20 @@ class ImportPublicationPage(Base):
     def go_to_importpublications(self, locator, button):
         self.click(locator, UnivWaitFor=10)
         self.jsclick(button)
-        # self.LogScreenshot.fLogScreenshot(message='LiveSLR Search page is opened',
-        #                                   pass_=True, log=True, screenshot=True)
+        time.sleep(3)
 
     def get_upload_file_details(self, filepath):
         file = pd.read_excel(filepath)
         sheet_name = list(file['Expected_File_names'].dropna())
-        sheet_path = list(file['Files_to_upload'].dropna())
+        sheet_path = list(os.getcwd()+file['Files_to_upload'].dropna())
         admin_page_data = [(sheet_name[i], sheet_path[i]) for i in range(0, len(sheet_name))]
         return admin_page_data
     
-    def select_update(self, locator):
+    def select_update(self, locator, pop_index):
         ele = self.select_element(locator)
         time.sleep(2)
         select = Select(ele)
-        # li = select.options
-        # for i in li:
-        #     self.LogScreenshot.fLogScreenshot(message=f'Dropdown value : {i.text}',
-        #                                   pass_=True, log=True, screenshot=False)
-        select.select_by_visible_text("Test_Sachin - Test_Sachin1 - Ovid search - 7/29/2022")
+        select.select_by_index(pop_index)
 
     def upload_file(self, locator, expected_filename, filepath, upload, msg_popup, tablerows):
         # Fetching total rows count before uploading a new file
@@ -61,7 +57,7 @@ class ImportPublicationPage(Base):
         try:
             self.jsclick(upload)
             time.sleep(2)
-            upload_text = self.get_text(msg_popup)
+            upload_text = self.get_text(msg_popup, UnivWaitFor=30)
             self.LogScreenshot.fLogScreenshot(message=f'Message popup: {upload_text}',
                                           pass_=True, log=True, screenshot=False)
 
@@ -90,6 +86,8 @@ class ImportPublicationPage(Base):
             elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=10):
                 self.LogScreenshot.fLogScreenshot(message=f'Check the contents for file and try to upload again',
                                           pass_=False, log=True, screenshot=False)
+            self.refreshpage()
+            time.sleep(5)
         except:
             raise Exception("Error while uploading")
 
@@ -104,7 +102,7 @@ class ImportPublicationPage(Base):
         self.click(del_locator_popup)
         time.sleep(2)
 
-        del_text = self.get_text(msg_popup)
+        del_text = self.get_text(msg_popup, UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
                                           pass_=True, log=True, screenshot=False)
 
@@ -118,7 +116,9 @@ class ImportPublicationPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)                    
+                                            pass_=True, log=True, screenshot=False)  
+            self.refreshpage()
+            time.sleep(5)                  
         except:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
                                             pass_=False, log=True, screenshot=False)  

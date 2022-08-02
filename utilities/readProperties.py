@@ -76,11 +76,23 @@ class ReadConfig:
         admindata = config.get('commonInfo', 'adminpagedata')
         return admindata
     
+    # Get file containing data for Manage QA Data page actions
+    @staticmethod
+    def getmanageqadatapath():
+        qadata = config.get('commonInfo', 'manageqadata')
+        return qadata
+    
     # Get data file for manage population page
     @staticmethod
     def getmanagepopdatafilepath():
         template = config.get('commonInfo', 'managepopulationdata')
         return template
+    
+    # Get file containing data for Manage QA Data page actions
+    @staticmethod
+    def getprismadata():
+        qadata = config.get('commonInfo', 'prismadata')
+        return qadata
     
     # Get JS command to hide
     @staticmethod
