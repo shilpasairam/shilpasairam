@@ -1,7 +1,8 @@
 import configparser
+import os
 
 config = configparser.RawConfigParser()
-config.read("D:\\VersionControl\\pse.autotest\\Configurations\\config.ini")
+config.read(os.getcwd()+"\\Configurations\\config.ini")
 
 
 class ReadConfig:

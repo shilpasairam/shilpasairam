@@ -80,10 +80,10 @@ class ImportPublicationPage(Base):
                 else:
                     raise Exception("Wrong file is uploaded")
 
-            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=10):
+            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=30):
                 self.LogScreenshot.fLogScreenshot(message=f'File uploading is done',
                                           pass_=True, log=True, screenshot=False)
-            elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=10):
+            elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=30):
                 self.LogScreenshot.fLogScreenshot(message=f'Check the contents for file and try to upload again',
                                           pass_=False, log=True, screenshot=False)
             self.refreshpage()

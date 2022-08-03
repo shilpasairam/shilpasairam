@@ -37,7 +37,7 @@ class Test_ImportPublicationPage:
 
         for index, i in enumerate(self.file_upload):
             try:
-                self.imppubpage.select_update("select_update_dropdown", index+2)
+                self.imppubpage.select_update("select_update_dropdown", index+3)
                 self.LogScreenshot.fLogScreenshot(message=f"Filepath is {i[1]}",
                     pass_=True, log=True, screenshot=False)
                 self.imppubpage.upload_file("add_file", i[0], i[1], "upload_button", "file_status_popup_text", "upload_table_rows")

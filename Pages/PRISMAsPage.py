@@ -33,7 +33,7 @@ class PRISMASPage(Base):
     def go_to_prisma(self, locator, button):
         self.click(locator, UnivWaitFor=10)
         self.jsclick(button)
-        time.sleep(2)
+        time.sleep(5)
 
     def get_prisma_excelfile_details(self, filepath):
         file = pd.read_excel(filepath)
@@ -117,6 +117,7 @@ class PRISMASPage(Base):
                 self.input_text("total_record_number", i[4]+index, UnivWaitFor=5)
                 time.sleep(1)
                 self.input_text("prisma_image", i[5], UnivWaitFor=5)
+                time.sleep(1)
 
                 self.click("prisma_image_save_btn")
                 time.sleep(2)
