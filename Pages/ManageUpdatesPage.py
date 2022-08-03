@@ -169,7 +169,7 @@ class ManageUpdatesPage(Base):
             options_list_res.append(xy.text)
         self.LogScreenshot.fLogScreenshot(message=f'Options list values are: {options_list_res} and Length is : {len(options_list_res)}',
                                           pass_=True, log=True, screenshot=False)
-        pop_index = random.randint(0, len(options_list_res))
+        pop_index = random.randint(1, len(options_list_res)-1)
         self.LogScreenshot.fLogScreenshot(message=f'Index value is {pop_index}',
                                           pass_=True, log=True, screenshot=False)
         select.select_by_index(pop_index)

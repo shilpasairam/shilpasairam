@@ -73,8 +73,8 @@ class ReadConfig:
 
     # Get file containing data for Admin Page actions
     @staticmethod
-    def getadminpagedata():
-        admindata = config.get('commonInfo', 'adminpagedata')
+    def getimportpublicationsdata():
+        admindata = config.get('commonInfo', 'importpublicationsdata')
         return admindata
     
     # Get file containing data for Manage QA Data page actions

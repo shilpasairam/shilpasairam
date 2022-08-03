@@ -15,7 +15,7 @@ class Test_Login:
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
-    @pytest.mark.set1
+    @pytest.mark.smoketest
     def test_login_page(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -23,7 +23,7 @@ class Test_Login:
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
 
-    @pytest.mark.set1
+    @pytest.mark.smoketest
     def test_logout(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)

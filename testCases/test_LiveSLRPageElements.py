@@ -16,7 +16,7 @@ class Test_LiveSLRPageElements:
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
-    @pytest.mark.set1
+    @pytest.mark.smoketest
     def test_liveslr_page_ele(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

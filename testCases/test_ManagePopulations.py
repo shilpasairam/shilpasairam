@@ -25,7 +25,7 @@ class Test_ManagePopultionsPage:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getadminpagedata()
+    filepath = ReadConfig.getimportpublicationsdata()
 
     def test_ManagePop_ManageUpdates_MangageQAData(self, extra):
         # Instantiate the logScreenshot class

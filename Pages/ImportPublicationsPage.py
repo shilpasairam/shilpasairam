@@ -56,7 +56,7 @@ class ImportPublicationPage(Base):
         self.input_text(locator, filepath)
         try:
             self.jsclick(upload)
-            time.sleep(2)
+            time.sleep(3)
             upload_text = self.get_text(msg_popup, UnivWaitFor=30)
             self.LogScreenshot.fLogScreenshot(message=f'Message popup: {upload_text}',
                                           pass_=True, log=True, screenshot=False)

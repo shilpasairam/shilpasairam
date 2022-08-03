@@ -17,7 +17,7 @@ class Test_ImportPublicationPage:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getadminpagedata()
+    filepath = ReadConfig.getimportpublicationsdata()
 
     def test_upload_extraction_template(self, extra):
         # Instantiate the logScreenshot class
