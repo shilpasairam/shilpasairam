@@ -21,3 +21,6 @@ python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-conta
 python -m pytest -v -s -p no:logging --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
 
 python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\assets\style.css .\testCases\test_LoginPage.py
+
+# Run specific group of testcases with the help of Marker name
+python -m pytest -v -m smoketest --html=Reports\report.html --self-contained-html  .\testCases
