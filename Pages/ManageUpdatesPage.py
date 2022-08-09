@@ -147,7 +147,7 @@ class ManageUpdatesPage(Base):
                                             pass_=False, log=True, screenshot=False)  
             raise Exception("Error in deleting the update")
     
-    def add_multiple_updates(self, add_upd_button, date_val, table_rows, dateval_to_search):
+    def add_multiple_updates(self, pop_index, add_upd_button, date_val, table_rows, dateval_to_search):
         self.refreshpage()
         time.sleep(5)
         table_ele = self.select_element("sel_table_entries_dropdown")
@@ -163,20 +163,19 @@ class ManageUpdatesPage(Base):
 
         pop_ele = self.select_element("sel_pop_update_dropdown")
         select = Select(pop_ele)
-        options_list_res = []
-        options_list = select.options
-        for xy in options_list:
-            options_list_res.append(xy.text)
-        self.LogScreenshot.fLogScreenshot(message=f'Options list values are: {options_list_res} and Length is : {len(options_list_res)}',
-                                          pass_=True, log=True, screenshot=False)
-        pop_index = random.randint(1, len(options_list_res)-1)
-        self.LogScreenshot.fLogScreenshot(message=f'Index value is {pop_index}',
-                                          pass_=True, log=True, screenshot=False)
+        # options_list_res = []
+        # options_list = select.options
+        # for xy in options_list:
+        #     options_list_res.append(xy.text)
+        # self.LogScreenshot.fLogScreenshot(message=f'Options list values are: {options_list_res} and Length is : {len(options_list_res)}',
+        #                                   pass_=True, log=True, screenshot=False)
+        # pop_index = random.randint(1, len(options_list_res)-1)
+        # self.LogScreenshot.fLogScreenshot(message=f'Index value is {pop_index}',
+        #                                   pass_=True, log=True, screenshot=False)
         select.select_by_index(pop_index)
         sel_pop_val = select.first_selected_option.text
 
         self.click("sel_update_date")
-        # self.input_text("sel_update_date", date_val)
         self.select_calendar_date(date_val)
 
         self.click("sel_update_type")
@@ -192,6 +191,8 @@ class ManageUpdatesPage(Base):
                                           pass_=True, log=True, screenshot=False)
                                           
         self.assertText("Update added successfully", add_text)
+        self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates record',
+                                    pass_=True, log=True, screenshot=True)
 
         table_ele = self.select_element("sel_table_entries_dropdown")
         select = Select(table_ele)
@@ -205,8 +206,6 @@ class ManageUpdatesPage(Base):
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
                     self.refreshpage()
-                    # today = date.today()
-                    # dateval_to_search = today.strftime("%m/%d/%Y")
                     self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
                                           pass_=True, log=True, screenshot=False)
                     result = []
@@ -226,6 +225,64 @@ class ManageUpdatesPage(Base):
                     else:
                         raise Exception("Population update data is not added")
             self.clear("manage_update_search_box")
+        except:
+            raise Exception("Error while adding the population updates")
+    
+    def edit_multiple_updates(self, current_data, edit_upd_button, date_val, dateval_to_search):
+        self.refreshpage()
+        time.sleep(5)
+
+        self.input_text("manage_update_search_box", current_data)
+        self.click(edit_upd_button, UnivWaitFor=10)
+
+        pop_ele = self.select_element("sel_pop_update_dropdown")
+        select = Select(pop_ele)
+        sel_pop_val = select.first_selected_option.text
+
+        self.click("sel_update_date")
+        self.select_calendar_date(date_val+1)
+
+        self.click("sel_update_type")
+        update_type_ele = self.select_element("sel_update_type")
+        select = Select(update_type_ele)
+        select.select_by_index(2)
+
+        if select.first_selected_option.text == 'Congress search':
+            congress_ele = self.select_element("sel_congress_meeting")
+            select1 = Select(congress_ele)
+            select1.select_by_index(2)
+
+        self.click("sel_update_submit")
+        time.sleep(2)
+
+        update_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
+        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {update_text}',
+                                          pass_=True, log=True, screenshot=False)
+                                          
+        self.assertText("Update updated successfully", update_text)
+        self.LogScreenshot.fLogScreenshot(message=f'Able to edit the updates record',
+                                    pass_=True, log=True, screenshot=True)
+
+        try:
+            self.refreshpage()
+            self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
+                                    pass_=True, log=True, screenshot=False)
+            result = []
+            self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
+            td1 = self.select_elements('manage_update_table_row_1')
+            for n in td1:
+                result.append(n.text)
+
+            self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the update: {result}',
+                                    pass_=True, log=True, screenshot=False)
+            
+            if result[0] == sel_pop_val:
+                self.LogScreenshot.fLogScreenshot(message=f'Edited Population update data is present in table',
+                                    pass_=True, log=True, screenshot=False)
+                update_data = f"{result[0]} - {result[1]}"
+                return update_data
+            else:
+                raise Exception("Population update data is not eduted")
         except:
             raise Exception("Error while adding the population updates")
 
@@ -253,6 +310,8 @@ class ManageUpdatesPage(Base):
                                           pass_=True, log=True, screenshot=False)
                                           
         self.assertText("Update deleted successfully", del_text)
+        self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates record',
+                                    pass_=True, log=True, screenshot=True)
 
         ele = self.select_element("sel_table_entries_dropdown")
         select = Select(ele)

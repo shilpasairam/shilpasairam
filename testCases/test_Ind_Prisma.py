@@ -2,7 +2,6 @@
 Test will validate the Import publications page
 """
 
-import time
 import pytest
 from Pages.PRISMAsPage import PRISMASPage
 
@@ -19,6 +18,7 @@ class Test_PRISMAPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getprismadata()
 
+    @pytest.mark.LIVEHTA_568
     def test_upload_prisma_details(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -48,6 +48,7 @@ class Test_PRISMAPage:
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
+    @pytest.mark.LIVEHTA_568
     def test_del_prisma_details(self, extra):
             # Instantiate the logScreenshot class
             self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -68,10 +69,7 @@ class Test_PRISMAPage:
 
             for index, i in enumerate(self.excel_file):
                 try:
-                    self.prismapage.del_prisma_excel_file(index+1, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.stdy_data)
-
-                    # self.prismapage.del_prisma_image(self.stdy_data, "prisma_image_delete_btn", "prisma_image_delete_popup")
-                    
+                    self.prismapage.del_prisma_excel_file(index+1, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.stdy_data)                    
                 except Exception:
                     self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
                         pass_=False, log=True, screenshot=True)

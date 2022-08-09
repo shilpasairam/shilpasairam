@@ -65,9 +65,9 @@ class ManageQADataPage(Base):
                 select = Select(stdy_ele)
                 select.select_by_visible_text(i[0])
 
-                self.input_text("qa_checklist_name", f"Auto_Test_{i[0]}")
-                self.input_text("qa_checklist_citation", f"Auto_Test_Citation{i[0]}")
-                self.input_text("qa_checklist_reference", f"Auto_Test_Reference{i[0]}")
+                self.input_text("qa_checklist_name", f"QAName_{i[0]}")
+                self.input_text("qa_checklist_citation", f"QACitation_{i[0]}")
+                self.input_text("qa_checklist_reference", f"QAReference_{i[0]}")
                 self.input_text("qa_excel_file_upload", i[1])
                 time.sleep(1)
 
@@ -118,9 +118,7 @@ class ManageQADataPage(Base):
 
     def add_multiple_manage_qa_data(self, study_data, pop_index):
         expected_upload_status_text = 'QA File successfully uploaded'
-        
-        # # Read population details from data sheet
-        # new_pop_data, new_pop_val = self.mngpoppage.get_pop_data(filepath)
+
         try:
             for i in study_data:
                 self.refreshpage()
@@ -129,15 +127,16 @@ class ManageQADataPage(Base):
                 select = Select(pop_ele)
                 select.select_by_index(pop_index)
                 time.sleep(1)
+                pop_value = select.first_selected_option.text
 
                 stdy_ele = self.select_element("select_stdy_type_dropdown")
                 select = Select(stdy_ele)
                 select.select_by_visible_text(i[0])
                 time.sleep(1)
 
-                self.input_text("qa_checklist_name", f"Auto_Test_{i[0]}")
-                self.input_text("qa_checklist_citation", f"Auto_Test_Citation{i[0]}")
-                self.input_text("qa_checklist_reference", f"Auto_Test_Reference{i[0]}")
+                self.input_text("qa_checklist_name", f"QAName_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_citation", f"QACitation_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_reference", f"QAReference_{pop_value}_{i[0]}")
                 self.input_text("qa_excel_file_upload", i[1])
                 time.sleep(2)
 
@@ -156,8 +155,6 @@ class ManageQADataPage(Base):
     def overwrite_multiple_manage_qa_data(self, study_data, pop_index):
         expected_upload_status_text = 'QA File successfully uploaded'
         
-        # # Read population details from data sheet
-        # new_pop_data, new_pop_val = self.mngpoppage.get_pop_data(filepath)
         try:
             for i in study_data:
                 self.refreshpage()
@@ -166,15 +163,16 @@ class ManageQADataPage(Base):
                 select = Select(pop_ele)
                 select.select_by_index(pop_index)
                 time.sleep(1)
+                pop_value = select.first_selected_option.text
 
                 stdy_ele = self.select_element("select_stdy_type_dropdown")
                 select = Select(stdy_ele)
                 select.select_by_visible_text(i[0])
                 time.sleep(1)
 
-                self.input_text("qa_checklist_name", f"Auto_Test_{i[0]}")
-                self.input_text("qa_checklist_citation", f"Auto_Test_Citation{i[0]}")
-                self.input_text("qa_checklist_reference", f"Auto_Test_Reference{i[0]}")
+                self.input_text("qa_checklist_name", f"QAName_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_citation", f"QACitation_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_reference", f"QAReference_{pop_value}_{i[0]}")
                 self.input_text("qa_excel_file_upload", i[1])
                 time.sleep(2)
 
@@ -193,8 +191,6 @@ class ManageQADataPage(Base):
     def del_multiple_manage_qa_data(self, study_data, del_locator, del_locator_popup, pop_index):
         expected_delete_status_text = 'QA excel file successfully deleted'
 
-        # # Read population details from data sheet
-        # new_pop_data, new_pop_val = self.mngpoppage.get_pop_data(filepath)
         try:
             for i in study_data:
                 self.refreshpage()
@@ -210,9 +206,9 @@ class ManageQADataPage(Base):
                 time.sleep(1)
 
                 self.click(del_locator)
-                time.sleep(1)
+                time.sleep(2)
                 self.click(del_locator_popup)
-                time.sleep(1)
+                time.sleep(2)
 
                 actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
 
@@ -221,6 +217,5 @@ class ManageQADataPage(Base):
                                             pass_=True, log=True, screenshot=True)
                 else:
                     raise Exception("Error in QA file Deletion")
-        
         except:
             raise Exception("Unable to delete the existing QA file")

@@ -233,10 +233,10 @@ class Base:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
                                               pass_=False, log=True, screenshot=False)
 
-    # Assertion validation for filenames
+    # Assertion validation for text
     @fWaitFor
-    def assertText(self, expected_filename, actual_filename, UnivWaitFor=0):
+    def assertText(self, expected_text, actual_text, UnivWaitFor=0):
         """
-        Assert the file name uploaded
+        Assert the text
         """
-        assert expected_filename == actual_filename
+        assert expected_text == actual_text

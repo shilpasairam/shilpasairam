@@ -3,14 +3,11 @@ Test will validate Manage QA Data Page
 
 """
 
-import time
 import pytest
 from datetime import date
-from Pages.ManagePopulationsPage import ManagePopulationsPage
 
 from Pages.LoginPage import LoginPage
 from Pages.ManageQADataPage import ManageQADataPage
-from Pages.ManageUpdatesPage import ManageUpdatesPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
@@ -23,6 +20,7 @@ class Test_ManageQADataPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getmanageqadatapath()
 
+    @pytest.mark.LIVEHTA_568
     def test_add_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -50,6 +48,7 @@ class Test_ManageQADataPage:
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Error while uploading QA File")
 
+    @pytest.mark.LIVEHTA_568
     def test_overwrite_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -79,6 +78,7 @@ class Test_ManageQADataPage:
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Error while uploading QA File to the same population and same study type")
     
+    @pytest.mark.LIVEHTA_568
     def test_delete_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

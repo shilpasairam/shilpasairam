@@ -1,17 +1,11 @@
 import os
 import time
-from tkinter import E
-from turtle import st
-from numpy import std
 import pandas as pd
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 from Pages.Base import Base
-from utilities.readProperties import ReadConfig
 from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
-from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import Select
 
 
@@ -86,13 +80,13 @@ class PRISMASPage(Base):
             time.sleep(2)
 
             self.click(excel_del_locator)
-            time.sleep(1)
+            time.sleep(2)
             self.click(excel_del_popup)
-            time.sleep(1)
+            time.sleep(2)
 
             actual_excel_del_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=10)
 
-            # self.assertText(expected_excel_del_status_text, actual_excel_del_status_text)
+            self.assertText(expected_excel_del_status_text, actual_excel_del_status_text)
             self.LogScreenshot.fLogScreenshot(message=f"Excel File Delete is success. Text is : {actual_excel_del_status_text}",
                     pass_=True, log=True, screenshot=True)
             time.sleep(5)
@@ -131,7 +125,7 @@ class PRISMASPage(Base):
             raise Exception("Unable to upload PRISMA image")
     
     def del_prisma_image(self, pop_index, stdy_data, del_locator, del_popup):
-        expected_image_del_status_text = "PRISMA successfully updated"
+        expected_image_del_status_text = "PRISMA successfully deleted"
         try:
             for i in stdy_data:
                 self.refreshpage()
@@ -147,13 +141,13 @@ class PRISMASPage(Base):
                 time.sleep(1)
 
                 self.click(del_locator)
-                time.sleep(1)
+                time.sleep(2)
                 self.click(del_popup)
                 time.sleep(2)
                 
                 actual_image_del_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=10)
 
-                # self.assertText(expected_image_del_status_text, actual_image_del_status_text)
+                self.assertText(expected_image_del_status_text, actual_image_del_status_text)
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success. Text is : {actual_image_del_status_text}",
                     pass_=True, log=True, screenshot=True)
                 time.sleep(5)

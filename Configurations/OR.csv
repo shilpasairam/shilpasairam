@@ -118,10 +118,12 @@ ManagePopulations,company_identifier,XPATH,"//input[@name=""uci"" and @type='tex
 ManagePopulations,pop_description,XPATH,"//input[@name=""description"" and @type='text']"
 ManagePopulations,template_file_upload,XPATH,"//input[@name=""ExtractionTemplate"" and @type='file']"
 ManagePopulations,submit_button,XPATH,"//button[@class=""btn btn-primary"" and @type=""submit""]"
+ManagePopulations,population_status_popup_text,XPATH,//div[@class='ng-star-inserted']
 ManagePopulations,table_entries_dropdown,XPATH,//select[@name='DataTables_Table_0_length']
 ManagePopulations,manage_pop_table_rows,XPATH,//table[@id='DataTables_Table_0']//tbody//tr
 ManagePopulations,manage_pop_table_row_1,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td
 ManagePopulations,search_button,XPATH,//input[@type='search' and @aria-controls='DataTables_Table_0']
+ManagePopulations,edit_population,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-note action-icon px-2 py-1 mx-1']
 ManagePopulations,delete_population,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-trash action-icon px-2 py-1 mx-1']
 ManagePopulations,delete_population_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
 ManageUpdates,manageupdates_button,LINK_TEXT,Manage updates
@@ -129,11 +131,13 @@ ManageUpdates,add_update_btn,XPATH,"//button[@class=""btn btn-primary""]"
 ManageUpdates,sel_pop_update_dropdown,XPATH,//select[@name='population']
 ManageUpdates,sel_update_date,XPATH,//input[@id='startDate' and @name='date']
 ManageUpdates,sel_update_type,XPATH,//select[@name='type']
+ManageUpdates,sel_congress_meeting,XPATH,//select[@name='meeting']
 ManageUpdates,sel_update_submit,XPATH,//button[@type='submit' and @class='btn btn-primary']
 ManageUpdates,sel_table_entries_dropdown,XPATH,//select[@name='DataTables_Table_0_length']
 ManageUpdates,manage_update_table_rows,XPATH,//table[@id='DataTables_Table_0']//tbody//tr
 ManageUpdates,manage_update_table_row_1,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td
 ManageUpdates,manage_update_search_box,XPATH,//input[@type='search' and @aria-controls='DataTables_Table_0']
+ManageUpdates,edit_updates,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-note action-icon px-2 py-1 mx-1']
 ManageUpdates,delete_updates,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-trash action-icon px-2 py-1 mx-1']
 ManageUpdates,delete_updates_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
 ManageUpdates,manage_update_status_text,XPATH,//div[@class='ng-star-inserted']

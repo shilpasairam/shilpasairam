@@ -2,7 +2,6 @@
 Test will validate the Import publications page
 """
 
-import time
 import pytest
 from Pages.ImportPublicationsPage import ImportPublicationPage
 
@@ -19,6 +18,7 @@ class Test_ImportPublicationPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getimportpublicationsdata()
 
+    @pytest.mark.LIVEHTA_568
     def test_upload_extraction_template(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -41,14 +41,12 @@ class Test_ImportPublicationPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Filepath is {i[1]}",
                     pass_=True, log=True, screenshot=False)
                 self.imppubpage.upload_file("add_file", i[0], i[1], "upload_button", "file_status_popup_text", "upload_table_rows")
-                
-                # Keep delete file in separate test case
-                # self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text", "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
+    @pytest.mark.LIVEHTA_568
     def test_del_extraction_template(self, extra):
             # Instantiate the logScreenshot class
             self.LogScreenshot = cLogScreenshot(self.driver, extra)
