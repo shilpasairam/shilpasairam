@@ -84,8 +84,14 @@ class ImportPublicationPage(Base):
                 self.LogScreenshot.fLogScreenshot(message=f'File uploading is done',
                                           pass_=True, log=True, screenshot=False)
             elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=30):
-                self.LogScreenshot.fLogScreenshot(message=f'Check the contents for file and try to upload again',
-                                          pass_=False, log=True, screenshot=False)
+                self.click("view_action", UnivWaitFor=10)
+                time.sleep(2)
+                td = self.select_elements('error_data_table')
+                error_data = []
+                for n in td:
+                    error_data.append(n.text)
+                self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
+                                          pass_=True, log=True, screenshot=False)
             self.refreshpage()
             time.sleep(5)
         except:

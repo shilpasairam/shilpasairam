@@ -32,6 +32,8 @@ class Test_ManageUpdatesPage:
         # Creating object of ManagePopulationsPage class
         self.mngupdpage = ManageUpdatesPage(self.driver, extra)
 
+        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
+
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y")
         self.day_val = today.day
@@ -42,7 +44,6 @@ class Test_ManageUpdatesPage:
         for i in range(1, 4):
             try:
                 self.mngupdpage.go_to_manageupdates("manageupdates_button")
-                self.LogScreenshot.fLogScreenshot(message=f"Date values are: {self.dateval} and {self.day_val}", pass_=True, log=True, screenshot=False)
                 manage_update_data = self.mngupdpage.add_multiple_updates(i, "add_update_btn", self.day_val, "manage_update_table_rows", self.dateval)
                 self.added_updates_data.append(manage_update_data)
                 self.LogScreenshot.fLogScreenshot(message=f"Added population udpate is {self.added_updates_data}", pass_=True, log=True, screenshot=False)
@@ -51,6 +52,8 @@ class Test_ManageUpdatesPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.LIVEHTA_568
     def test_edit_updates(self, extra):
@@ -63,6 +66,8 @@ class Test_ManageUpdatesPage:
         # Creating object of ManagePopulationsPage class
         self.mngupdpage = ManageUpdatesPage(self.driver, extra)
 
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
+
         today = date.today()
         self.dateval = (today + timedelta(1)).strftime("%m/%d/%Y")
         self.day_val = today.day
@@ -73,7 +78,6 @@ class Test_ManageUpdatesPage:
         for i in self.added_updates_data:
             try:
                 self.mngupdpage.go_to_manageupdates("manageupdates_button")
-                self.LogScreenshot.fLogScreenshot(message=f"Date values are: {self.dateval} and {self.day_val}", pass_=True, log=True, screenshot=False)
                 manage_update_data = self.mngupdpage.edit_multiple_updates(i, "edit_updates", self.day_val, self.dateval)
                 self.edited_updates_data.append(manage_update_data)
                 self.LogScreenshot.fLogScreenshot(message=f"Edited population udpate is {self.edited_updates_data}", pass_=True, log=True, screenshot=False)
@@ -82,6 +86,8 @@ class Test_ManageUpdatesPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.LIVEHTA_568
     def test_delete_updates(self, extra):
@@ -93,6 +99,8 @@ class Test_ManageUpdatesPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         self.mngupdpage = ManageUpdatesPage(self.driver, extra)
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
@@ -109,3 +117,5 @@ class Test_ManageUpdatesPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)

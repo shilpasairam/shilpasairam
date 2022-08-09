@@ -33,6 +33,8 @@ class Test_ManageQADataPage:
         # Get StudyType and Files path to upload Managae QA Data
         self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
+        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***", pass_=True, log=True, screenshot=False)
+
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
         
@@ -47,6 +49,8 @@ class Test_ManageQADataPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Error while uploading QA File")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.LIVEHTA_568
     def test_overwrite_qa_data(self, extra):
@@ -60,6 +64,8 @@ class Test_ManageQADataPage:
         self.mngqadata = ManageQADataPage(self.driver, extra)
         # Get StudyType and Files path to Override the existing Managae QA Data
         self.stdy_data_override = self.mngqadata.get_qa_file_details_override(self.filepath)
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is started***", pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
@@ -77,6 +83,8 @@ class Test_ManageQADataPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error while overwriting the QA files",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Error while uploading QA File to the same population and same study type")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
     
     @pytest.mark.LIVEHTA_568
     def test_delete_qa_data(self, extra):
@@ -90,6 +98,8 @@ class Test_ManageQADataPage:
         self.mngqadata = ManageQADataPage(self.driver, extra)
         # Get StudyType and Files path to upload Managae QA Data
         self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***", pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
@@ -105,3 +115,5 @@ class Test_ManageQADataPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)

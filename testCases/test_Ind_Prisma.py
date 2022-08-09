@@ -32,6 +32,8 @@ class Test_PRISMAPage:
         self.excel_file = self.prismapage.get_prisma_excelfile_details(self.filepath) 
         # Read extraction sheet values to upload prisma image for study data
         self.stdy_data = self.prismapage.get_prisma_data_details(self.filepath) 
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
@@ -47,30 +49,37 @@ class Test_PRISMAPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
                     pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.LIVEHTA_568
     def test_del_prisma_details(self, extra):
-            # Instantiate the logScreenshot class
-            self.LogScreenshot = cLogScreenshot(self.driver, extra)
-            # Creating object of loginpage class
-            self.loginPage = LoginPage(self.driver, extra)
-            # Creating object of liveslrpage class
-            self.liveslrpage = LiveSLRPage(self.driver, extra)
-            # Creating object of ImportPublicationPage class
-            self.prismapage = PRISMASPage(self.driver, extra)
-            # Read extraction sheet values to upload excel files
-            self.excel_file = self.prismapage.get_prisma_excelfile_details(self.filepath) 
-            # Read extraction sheet values to upload prisma image for study data
-            self.stdy_data = self.prismapage.get_prisma_data_details(self.filepath) 
-            
-            self.loginPage.driver.get(self.baseURL)
-            self.loginPage.complete_login(self.username, self.password)
-            self.prismapage.go_to_prisma("protocol_link", "prismas")
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        self.prismapage = PRISMASPage(self.driver, extra)
+        # Read extraction sheet values to upload excel files
+        self.excel_file = self.prismapage.get_prisma_excelfile_details(self.filepath) 
+        # Read extraction sheet values to upload prisma image for study data
+        self.stdy_data = self.prismapage.get_prisma_data_details(self.filepath) 
 
-            for index, i in enumerate(self.excel_file):
-                try:
-                    self.prismapage.del_prisma_excel_file(index+1, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.stdy_data)                    
-                except Exception:
-                    self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
-                        pass_=False, log=True, screenshot=True)
-                    raise Exception("Element Not Found")
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password)
+        self.prismapage.go_to_prisma("protocol_link", "prismas")
+
+        for index, i in enumerate(self.excel_file):
+            try:
+                self.prismapage.del_prisma_excel_file(index+1, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.stdy_data)                    
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
+                    pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
+
