@@ -33,4 +33,5 @@ python -m pytest -v -s -p no:logging --html=Reports\report.html --self-contained
 python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\assets\style.css .\testCases\test_LoginPage.py
 
 # Run multiple test cases using pytest.mark for methods
+# Run specific group of testcases with the help of Marker name
 python -m pytest -v -m smoketest --html=Reports\report.html --self-contained-html  .\testCases

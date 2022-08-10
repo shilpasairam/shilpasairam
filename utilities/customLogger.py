@@ -23,6 +23,7 @@ class LogGen:
         if not isExist:
             os.makedirs(screenshot_dirpath)
         
+            
         logging.basicConfig(
             filename=".\\Logs\\testlog.log",
             format='%(asctime)s: %(levelname)s: %(message)s',
