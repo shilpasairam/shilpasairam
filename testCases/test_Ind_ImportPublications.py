@@ -18,7 +18,6 @@ class Test_ImportPublicationPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getimportpublicationsdata()
 
-    @pytest.mark.LIVEHTA_568
     def test_upload_extraction_template(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -48,7 +47,6 @@ class Test_ImportPublicationPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_del_extraction_template(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

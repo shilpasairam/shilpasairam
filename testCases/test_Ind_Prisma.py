@@ -18,7 +18,6 @@ class Test_PRISMAPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getprismadata()
 
-    @pytest.mark.LIVEHTA_568
     def test_upload_prisma_details(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -52,7 +51,6 @@ class Test_PRISMAPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_del_prisma_details(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -82,4 +80,3 @@ class Test_PRISMAPage:
                 raise Exception("Element Not Found")
 
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
-

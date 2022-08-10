@@ -21,7 +21,6 @@ class Test_ManagePopultionsPage:
     population_val = []
     edited_population_val = []
 
-    @pytest.mark.LIVEHTA_568
     def test_add_population(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -53,7 +52,6 @@ class Test_ManagePopultionsPage:
             
         self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_edit_population(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -87,7 +85,6 @@ class Test_ManagePopultionsPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_delete_population(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

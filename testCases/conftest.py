@@ -35,9 +35,9 @@ def init_driver(request):
     prefs["profile.default_content_settings.popups"] = 0
     # getcwd should always return the root directory of the framework
     prefs["download.default_directory"] = f"{os.getcwd()}\\ActualOutputs"
-    # options.add_argument("--headless")
-    # options.add_argument('--disable-gpu')
-    # options.add_argument("--log-level=3")  # fatal
+    options.add_argument("--headless")
+    options.add_argument('--disable-gpu')
+    options.add_argument("--log-level=3")  # fatal
     options.add_experimental_option("prefs", prefs)
     options.add_experimental_option("detach", True)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])

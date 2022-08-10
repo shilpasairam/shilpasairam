@@ -21,7 +21,6 @@ class Test_ManageUpdatesPage:
     added_updates_data = []
     edited_updates_data = []
 
-    @pytest.mark.LIVEHTA_568
     def test_add_updates(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -55,7 +54,6 @@ class Test_ManageUpdatesPage:
 
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_edit_updates(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -89,7 +87,6 @@ class Test_ManageUpdatesPage:
 
         self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_delete_updates(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

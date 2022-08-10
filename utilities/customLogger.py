@@ -17,6 +17,12 @@ class LogGen:
             filepath = Path(os.getcwd() + "\\Logs\\testlog.log")
             filepath.touch(exist_ok=True)
         
+        # Create screenshots folder to save the snapshots
+        screenshot_dirpath = os.getcwd()+'\\Reports\\screenshots'
+        isExist = os.path.exists(screenshot_dirpath)
+        if not isExist:
+            os.makedirs(screenshot_dirpath)
+        
         logging.basicConfig(
             filename=".\\Logs\\testlog.log",
             format='%(asctime)s: %(levelname)s: %(message)s',

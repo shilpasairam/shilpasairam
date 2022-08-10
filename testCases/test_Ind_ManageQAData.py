@@ -20,7 +20,6 @@ class Test_ManageQADataPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getmanageqadatapath()
 
-    @pytest.mark.LIVEHTA_568
     def test_add_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -52,7 +51,6 @@ class Test_ManageQADataPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.LIVEHTA_568
     def test_overwrite_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -86,7 +84,6 @@ class Test_ManageQADataPage:
 
         self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
     
-    @pytest.mark.LIVEHTA_568
     def test_delete_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
