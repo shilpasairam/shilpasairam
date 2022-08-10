@@ -34,5 +34,3 @@ python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\as
 
 # Run multiple test cases using pytest.mark for methods
 python -m pytest -v -m smoketest --html=Reports\report.html --self-contained-html  .\testCases
-
-python -m pytest -v -m LIVEHTA_568 --html=Reports\report.html --self-contained-html  .\testCases
