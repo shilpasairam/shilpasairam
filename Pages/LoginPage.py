@@ -1,3 +1,4 @@
+import time
 from Pages.Base import Base
 from utilities.readProperties import ReadConfig
 from utilities.customLogger import LogGen
@@ -12,7 +13,6 @@ class LoginPage(Base):
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
-        self.env = ReadConfig.getEnvironmenttype()
         # instantiate the logger class
         self.logger = LogGen.loggen()
         # instantiate the logScreenshot class
@@ -46,6 +46,7 @@ class LoginPage(Base):
         # check whether the login page opened or not
         try:
             self.assertPageTitle("Cytel LiveSLR", UnivWaitFor=10)
+            time.sleep(5)
             self.LogScreenshot.fLogScreenshot(
                 message=f"Login Successful. Application home page displayed",
                 pass_=True, log=True, screenshot=True)

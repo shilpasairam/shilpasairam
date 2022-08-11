@@ -98,3 +98,77 @@ FrameElements,OS_HR_P_Value,XPATH,//input[@id='oSHRPValue']
 FrameElements,add_button,XPATH,//button[@class='btn btn-sm btn-primary']
 FrameElements,close_button,XPATH,//button[@class='btn btn-sm btn-secondary']
 FrameElements,show_network,XPATH,//a[text()='Show Network']
+ImportPublications,importpublications_button,LINK_TEXT,Import publications
+ImportPublications,extraction_download_btn,LINK_TEXT,Download extraction sheet
+ImportPublications,extraction_upload_btn,LINK_TEXT,Upload extraction sheet
+ImportPublications,select_update_dropdown,XPATH,//select[@name='updateId']
+ImportPublications,add_file,XPATH,//div[@class='uploadfilecontainer']//input[@type='file']
+ImportPublications,upload_button,XPATH,//button[@class='btn btn-primary']
+ImportPublications,file_status_popup_text,XPATH,//div[@class='ng-star-inserted']
+ImportPublications,file_upload_status_pass,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td//em[@class='fa-lg fas fa-check success-icon ng-star-inserted']
+ImportPublications,file_upload_status_failure,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td//em[@class='fa-lg fas fa-times failure-icon ng-star-inserted']
+ImportPublications,delete_file,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td//em[@class='fa-lg icon-trash action-icon px-2 py-1 mx-1 ng-star-inserted']
+ImportPublications,delete_file_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ImportPublications,upload_table_rows,XPATH,//table[@class='table table-borderless']/tbody/tr
+ImportPublications,upload_table_row_1,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td
+ImportPublications,view_action,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td//em[@class='fa-lg icon-eye action-icon px-2 py-1 mx-1 ng-star-inserted']
+ImportPublications,error_data_table,XPATH,//table[@class='table table-bordered table-striped table-sm mt-3 ng-star-inserted']/tbody/tr/td[2]
+ManagePopulations,managepopulations_button,LINK_TEXT,Manage populations
+ManagePopulations,add_population_btn,XPATH,"//button[@class=""btn btn-primary""]"
+ManagePopulations,pop_name,XPATH,"//input[@name=""name"" and @type='text']"
+ManagePopulations,company_identifier,XPATH,"//input[@name=""uci"" and @type='text']"
+ManagePopulations,pop_description,XPATH,"//input[@name=""description"" and @type='text']"
+ManagePopulations,template_file_upload,XPATH,"//input[@name=""ExtractionTemplate"" and @type='file']"
+ManagePopulations,submit_button,XPATH,"//button[@class=""btn btn-primary"" and @type=""submit""]"
+ManagePopulations,population_status_popup_text,XPATH,//div[@class='ng-star-inserted']
+ManagePopulations,table_entries_dropdown,XPATH,//select[@name='DataTables_Table_0_length']
+ManagePopulations,manage_pop_table_rows,XPATH,//table[@id='DataTables_Table_0']//tbody//tr
+ManagePopulations,manage_pop_table_row_1,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td
+ManagePopulations,search_button,XPATH,//input[@type='search' and @aria-controls='DataTables_Table_0']
+ManagePopulations,edit_population,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-note action-icon px-2 py-1 mx-1']
+ManagePopulations,delete_population,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-trash action-icon px-2 py-1 mx-1']
+ManagePopulations,delete_population_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ManageUpdates,manageupdates_button,LINK_TEXT,Manage updates
+ManageUpdates,add_update_btn,XPATH,"//button[@class=""btn btn-primary""]"
+ManageUpdates,sel_pop_update_dropdown,XPATH,//select[@name='population']
+ManageUpdates,sel_update_date,XPATH,//input[@id='startDate' and @name='date']
+ManageUpdates,sel_update_type,XPATH,//select[@name='type']
+ManageUpdates,sel_congress_meeting,XPATH,//select[@name='meeting']
+ManageUpdates,sel_update_submit,XPATH,//button[@type='submit' and @class='btn btn-primary']
+ManageUpdates,sel_table_entries_dropdown,XPATH,//select[@name='DataTables_Table_0_length']
+ManageUpdates,manage_update_table_rows,XPATH,//table[@id='DataTables_Table_0']//tbody//tr
+ManageUpdates,manage_update_table_row_1,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td
+ManageUpdates,manage_update_search_box,XPATH,//input[@type='search' and @aria-controls='DataTables_Table_0']
+ManageUpdates,edit_updates,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-note action-icon px-2 py-1 mx-1']
+ManageUpdates,delete_updates,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td//em[@class='fa-lg icon-trash action-icon px-2 py-1 mx-1']
+ManageUpdates,delete_updates_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ManageUpdates,manage_update_status_text,XPATH,//div[@class='ng-star-inserted']
+ManageQAData,manage_qa_data_button,LINK_TEXT,Manage QA Data
+ManageQAData,select_pop_dropdown,XPATH,//select[@class='custom-select custom-select-sm']
+ManageQAData,select_stdy_type_dropdown,XPATH,//select[@class='custom-select custom-select-sm ng-untouched ng-pristine ng-valid']
+ManageQAData,qa_checklist_name,XPATH,"//input[@name=""qaCheckListName""]"
+ManageQAData,qa_checklist_citation,XPATH,"//input[@name=""qaCitation""]"
+ManageQAData,qa_checklist_reference,XPATH,"//input[@name=""qaReference""]"
+ManageQAData,qa_excel_file_upload,XPATH,"//input[@name=""qualityAssessmentExcelFile"" and @type=""file""]"
+ManageQAData,upload_save_button,XPATH,"//button[@name=""upload"" and @type=""submit""]"
+ManageQAData,delete_file_button,XPATH,"//button[@name=""delete""]"
+ManageQAData,delete_file_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ManageQAData,get_status_text,XPATH,//div[@class='ng-star-inserted']
+ProtocolPRISMAs,protocol_link,LINK_TEXT,Protocol
+ProtocolPRISMAs,prismas,LINK_TEXT,PRISMAs
+ProtocolPRISMAs,prisma_pop_dropdown,XPATH,//select[@class='custom-select custom-select-sm ng-untouched ng-pristine ng-valid']
+ProtocolPRISMAs,prisma_excel_file,XPATH,//input[@id='inputGroupFilePrismaExcel' and @name='PrismaExcelFile' and @type='file']
+ProtocolPRISMAs,prisma_excel_upload_btn,XPATH,//button[@class='btn btn-primary' and @name='upload']
+ProtocolPRISMAs,prisma_excel_delete_btn,XPATH,//button[@class='btn btn-outline-danger ml-2' and @name='delete']
+ProtocolPRISMAs,prisma_excel_delete_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ProtocolPRISMAs,prisma_excel_status_text,XPATH,//div[@class='ng-star-inserted']
+ProtocolPRISMAs,prisma_study_type_dropdown,XPATH,//select[@name='studytype']
+ProtocolPRISMAs,original_studies,XPATH,//input[@name='dataExtractionOriginalStudiesNumber']
+ProtocolPRISMAs,records_number,XPATH,//input[@name='dataExtractionRecordsNumber']
+ProtocolPRISMAs,fulltext_review,XPATH,//input[@name='fullTextReviewRecordsNumber']
+ProtocolPRISMAs,total_record_number,XPATH,//input[@name='totalRecordsNumber']
+ProtocolPRISMAs,prisma_image,XPATH,//input[@id='inputGroupFilePrismaImage' and @type='file']
+ProtocolPRISMAs,prisma_image_save_btn,XPATH,//button[@class='btn btn-primary' and @name='submit']
+ProtocolPRISMAs,prisma_image_delete_btn,XPATH,//button[@class='btn btn-outline-danger ml-2' and text()='Delete existing data']
+ProtocolPRISMAs,prisma_image_delete_popup,XPATH,//div[@class='modal-content']//div[3]//button[1]
+ProtocolPRISMAs,prisma_image_status_text,XPATH,//div[@class='ng-star-inserted']

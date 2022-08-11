@@ -10,8 +10,11 @@ class ReadConfig:
     # static method helps you read the function in another file without instantiating the class
     @staticmethod
     def getApplicationURL():
-        # return f"https://pse-portal-testing.azurewebsites.net/"
-        return f"https://pse-portal-staging.azurewebsites.net/"
+        env = config.get('commonInfo','environment')
+        if env == 'test':
+            return f"https://pse-portal-testing.azurewebsites.net/"
+        elif env == 'staging':
+            return f"https://pse-portal-staging.azurewebsites.net/"
 
     @staticmethod
     def getUserName():
@@ -25,8 +28,11 @@ class ReadConfig:
 
     @staticmethod
     def getORFilePath():
-        # OR = config.get('commonInfo', 'OR')
-        OR = config.get('commonInfo', 'OR_stagingconfig')
+        env = config.get('commonInfo','environment')
+        if env == 'test':
+            OR = config.get('commonInfo', 'OR')
+        elif env == 'staging':
+            OR = config.get('commonInfo', 'OR_stagingconfig')
         return OR
 
     @staticmethod
@@ -39,22 +45,58 @@ class ReadConfig:
         environment = config.get('commonInfo', 'environment')
         return environment
 
-    # Read input advisor authentication data from config.ini
-    @staticmethod
-    def getAuthInput(authinput):
-        input = config.get(ReadConfig.getEnvironmenttype(), authinput)
-        return input
+    # # Read input advisor authentication data from config.ini
+    # @staticmethod
+    # def getAuthInput(authinput):
+    #     input = config.get(ReadConfig.getEnvironmenttype(), authinput)
+    #     return input
 
     # Get test data file path for LiveSLR
     @staticmethod
     def getslrtestdata():
-        # populationdata = config.get('commonInfo', 'slrpopulationdata')
-        populationdata = config.get('commonInfo', 'stagingslrpopdata')
+        env = config.get('commonInfo','environment')
+        if env == 'test':
+            populationdata = config.get('commonInfo', 'slrpopulationdata')
+        elif env == 'staging':
+            populationdata = config.get('commonInfo', 'stagingslrpopdata')
         return populationdata
 
     # Get test data file path for LiveNMA
     @staticmethod
     def getnmatestdata():
-        # populationdata = config.get('commonInfo', 'testinglivenmadata')
-        populationdata = config.get('commonInfo', 'staginglivenmadata')
+        env = config.get('commonInfo','environment')
+        if env == 'test':
+            populationdata = config.get('commonInfo', 'testinglivenmadata')
+        elif env == 'staging':
+            populationdata = config.get('commonInfo', 'staginglivenmadata')
         return populationdata
+
+    # Get file containing data for Admin Page actions
+    @staticmethod
+    def getimportpublicationsdata():
+        admindata = config.get('commonInfo', 'importpublicationsdata')
+        return admindata
+    
+    # Get file containing data for Manage QA Data page actions
+    @staticmethod
+    def getmanageqadatapath():
+        qadata = config.get('commonInfo', 'manageqadata')
+        return qadata
+    
+    # Get data file for manage population page
+    @staticmethod
+    def getmanagepopdatafilepath():
+        template = config.get('commonInfo', 'managepopulationdata')
+        return template
+    
+    # Get file containing data for Manage QA Data page actions
+    @staticmethod
+    def getprismadata():
+        qadata = config.get('commonInfo', 'prismadata')
+        return qadata
+    
+    # Get JS command to hide
+    @staticmethod
+    def getJScommand():
+        command = "document.getElementsByTagName('input')[16].removeAttribute('hidden')"
+        return command
