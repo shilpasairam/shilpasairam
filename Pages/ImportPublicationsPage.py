@@ -80,10 +80,10 @@ class ImportPublicationPage(Base):
                 else:
                     raise Exception("Wrong file is uploaded")
 
-            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=30):
+            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=60):
                 self.LogScreenshot.fLogScreenshot(message=f'File uploading is done',
                                           pass_=True, log=True, screenshot=False)
-            elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=30):
+            elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=60):
                 self.click("view_action", UnivWaitFor=10)
                 time.sleep(2)
                 td = self.select_elements('error_data_table')
@@ -91,7 +91,9 @@ class ImportPublicationPage(Base):
                 for n in td:
                     error_data.append(n.text)
                 self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
-                                          pass_=True, log=True, screenshot=False)
+                                          pass_=False, log=True, screenshot=False)
+            else:
+                raise Exception("Error while uploading the extraction file")
             self.refreshpage()
             time.sleep(5)
         except:
