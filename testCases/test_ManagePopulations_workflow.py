@@ -21,7 +21,7 @@ from utilities.readProperties import ReadConfig
 
 
 @pytest.mark.usefixtures("init_driver")
-class Test_ManagePopultionsPage:
+class Test_ManagePopultionsPage_Workflow:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()

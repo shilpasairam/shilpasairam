@@ -218,7 +218,7 @@ class SLRReport(Base):
         try:
             self.jsclick(locator)
             # wait for table to download
-            time.sleep(10)
+            time.sleep(15)
             self.LogScreenshot.fLogScreenshot(message=f"Download table",
                                               pass_=True, log=True, screenshot=False)
         except Exception:
@@ -361,6 +361,11 @@ class SLRReport(Base):
                                           f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
                                           # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
                                   pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in Column '{col_name}' are not matching between WebExcel, Complete Excel and Word Reports.\n"
+                                          f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
+                                          # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                  pass_=False, log=True, screenshot=False)
                             count += 1
                 table_count += 1
             except Exception:

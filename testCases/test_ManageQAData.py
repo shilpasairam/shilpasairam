@@ -3,6 +3,7 @@ Test will validate Manage QA Data Page
 
 """
 
+import os
 import pytest
 from datetime import date
 
@@ -19,6 +20,7 @@ class Test_ManageQADataPage:
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getmanageqadatapath()
+    slrfilepath = ReadConfig.getslrtestdata()
 
     def test_add_qa_data(self, extra):
         # Instantiate the logScreenshot class
@@ -114,3 +116,40 @@ class Test_ManageQADataPage:
                 raise Exception("Element Not Found")
         
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
+
+    def test_qafile_compare_with_excelreport(self, extra):
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of ManageQADataPage class
+        self.mngqadata = ManageQADataPage(self.driver, extra)
+        # Get StudyType and Files path to upload Managae QA Data
+        self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+        self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***", pass_=True, log=True, screenshot=False)
+
+        today = date.today()
+        self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password)
+        self.mngqadata.go_to_manageqadata("manage_qa_data_button")
+
+        try:
+            self.mngqadata.compare_qa_file_with_report(self.stdy_data, "RRMM - Pfizer", self.slrfilepath)
+            self.mngqadata.del_data_after_qafile_comparison(self.stdy_data, "delete_file_button", "delete_file_popup", "RRMM - Pfizer")
+        except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
+                pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison completed***", pass_=True, log=True, screenshot=False)
