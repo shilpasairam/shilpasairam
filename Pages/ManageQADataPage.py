@@ -82,6 +82,7 @@ class ManageQADataPage(Base):
                 self.click("upload_save_button")
                 time.sleep(1)
                 actual_upload_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success. Text is {actual_upload_status_text}',
@@ -114,6 +115,7 @@ class ManageQADataPage(Base):
                 time.sleep(1)
 
                 actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_delete_status_text == expected_delete_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success. Text is {actual_delete_status_text}',
@@ -151,6 +153,7 @@ class ManageQADataPage(Base):
                 self.click("upload_save_button")
                 time.sleep(2)
                 actual_upload_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success. Text is {actual_upload_status_text}',
@@ -187,6 +190,7 @@ class ManageQADataPage(Base):
                 self.click("upload_save_button")
                 time.sleep(2)
                 actual_upload_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'Overwriting the existing QA File upload is success.',
@@ -219,6 +223,7 @@ class ManageQADataPage(Base):
                 time.sleep(2)
 
                 actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_delete_status_text == expected_delete_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success. Text is {actual_delete_status_text}',
@@ -256,6 +261,7 @@ class ManageQADataPage(Base):
                 self.click("upload_save_button")
                 time.sleep(2)
                 actual_upload_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success. Text is {actual_upload_status_text}',
@@ -331,6 +337,7 @@ class ManageQADataPage(Base):
                 time.sleep(2)
 
                 actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                time.sleep(2)
 
                 if actual_delete_status_text == expected_delete_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success. Text is {actual_delete_status_text}',

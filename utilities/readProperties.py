@@ -35,15 +35,15 @@ class ReadConfig:
             OR = config.get('commonInfo', 'OR_stagingconfig')
         return OR
 
-    @staticmethod
-    def getEnvironmenttype():
-        environmenttype = config.get('commonInfo', 'environmenttype')
-        return environmenttype
+    # @staticmethod
+    # def getEnvironmenttype():
+    #     environmenttype = config.get('commonInfo', 'environmenttype')
+    #     return environmenttype
 
-    @staticmethod
-    def getEnvironment():
-        environment = config.get('commonInfo', 'environment')
-        return environment
+    # @staticmethod
+    # def getEnvironment():
+    #     environment = config.get('commonInfo', 'environment')
+    #     return environment
 
     # # Read input advisor authentication data from config.ini
     # @staticmethod
@@ -71,6 +71,18 @@ class ReadConfig:
             populationdata = config.get('commonInfo', 'staginglivenmadata')
         return populationdata
 
+    # Get file containing data for QOL Utility
+    @staticmethod
+    def getutilityoutcome_QOL_data():
+        utilityoutcome_qol = config.get('commonInfo', 'utilityoutcome_QOL')
+        return utilityoutcome_qol
+    
+    # Get file containing data for ECON Utility
+    @staticmethod
+    def getutilityoutcome_ECON_data():
+        utilityoutcome_econ = config.get('commonInfo', 'utilityoutcome_ECON')
+        return utilityoutcome_econ
+    
     # Get file containing data for Admin Page actions
     @staticmethod
     def getimportpublicationsdata():

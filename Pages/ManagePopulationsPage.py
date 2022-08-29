@@ -81,8 +81,7 @@ class ManagePopulationsPage(Base):
         time.sleep(2)
 
         add_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
-                                          pass_=True, log=True, screenshot=False)
+        time.sleep(2)
                                           
         self.assertText("Population added successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the population record',
@@ -143,8 +142,7 @@ class ManagePopulationsPage(Base):
         time.sleep(1)
         
         del_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
-                                          pass_=True, log=True, screenshot=False)
+        time.sleep(2)
 
         self.assertText("Population deleted successfully", del_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the population record',
@@ -195,8 +193,7 @@ class ManagePopulationsPage(Base):
         time.sleep(3)
 
         add_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
-                                        pass_=True, log=True, screenshot=False)
+        time.sleep(2)
                                         
         self.assertText("Population added successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the population record',
@@ -255,8 +252,7 @@ class ManagePopulationsPage(Base):
         time.sleep(3)
 
         add_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
-                                        pass_=True, log=True, screenshot=False)
+        time.sleep(2)
                                         
         self.assertText("Population updated successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to edit the population record',
@@ -303,8 +299,7 @@ class ManagePopulationsPage(Base):
         time.sleep(2)
         
         del_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
-                                          pass_=True, log=True, screenshot=False)
+        time.sleep(2)
 
         self.assertText("Population deleted successfully", del_text)
         time.sleep(2)

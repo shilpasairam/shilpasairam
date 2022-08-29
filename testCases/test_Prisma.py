@@ -27,10 +27,6 @@ class Test_PRISMAPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         self.prismapage = PRISMASPage(self.driver, extra)
-        # Read extraction sheet values to upload excel files
-        self.excel_file = self.prismapage.get_prisma_excelfile_details(self.filepath) 
-        # Read extraction sheet values to upload prisma image for study data
-        self.stdy_data = self.prismapage.get_prisma_data_details(self.filepath) 
 
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
         
@@ -38,11 +34,13 @@ class Test_PRISMAPage:
         self.loginPage.complete_login(self.username, self.password)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        for index, i in enumerate(self.excel_file):
-            try:
-                self.prismapage.add_prisma_excel_file(index+1, i)
+        pop_val = ['Test_Sachin', 'ICER RRMM 2022 report']
 
-                self.prismapage.upload_prisma_image(self.stdy_data, index+1)
+        for index, i in enumerate(pop_val):
+            try:
+                self.prismapage.add_prisma_excel_file(i, self.filepath)
+
+                self.prismapage.upload_prisma_image(i, self.filepath, index+1)
                 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
@@ -60,10 +58,6 @@ class Test_PRISMAPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         self.prismapage = PRISMASPage(self.driver, extra)
-        # Read extraction sheet values to upload excel files
-        self.excel_file = self.prismapage.get_prisma_excelfile_details(self.filepath) 
-        # Read extraction sheet values to upload prisma image for study data
-        self.stdy_data = self.prismapage.get_prisma_data_details(self.filepath) 
 
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
         
@@ -71,9 +65,11 @@ class Test_PRISMAPage:
         self.loginPage.complete_login(self.username, self.password)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        for index, i in enumerate(self.excel_file):
+        pop_val = ['Test_Sachin', 'ICER RRMM 2022 report']
+
+        for i in pop_val:
             try:
-                self.prismapage.del_prisma_excel_file(index+1, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.stdy_data)                    
+                self.prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.filepath)                    
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
                     pass_=False, log=True, screenshot=True)
