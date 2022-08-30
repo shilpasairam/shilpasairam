@@ -38,7 +38,7 @@ class Test_ImportPublicationPage:
 
         for index, i in enumerate(self.file_upload):
             try:
-                self.imppubpage.select_update("select_update_dropdown", index+4)
+                self.imppubpage.select_update("select_update_dropdown", index)
                 self.imppubpage.upload_file("add_file", i[0], i[1], "upload_button", "file_status_popup_text", "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",

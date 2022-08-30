@@ -40,10 +40,11 @@ class ImportPublicationPage(Base):
         return admin_page_data
     
     def select_update(self, locator, pop_index):
+        pop = ['ICER RRMM 2022 report - ICER - Ovid search - 4/11/2022', 'IC AML - Pfizer - Ovid search - 5/10/2021']
         ele = self.select_element(locator)
         time.sleep(2)
         select = Select(ele)
-        select.select_by_index(pop_index)
+        select.select_by_visible_text(pop[pop_index])
 
     def upload_file(self, locator, expected_filename, filepath, upload, msg_popup, tablerows):
         # Fetching total rows count before uploading a new file
@@ -58,10 +59,11 @@ class ImportPublicationPage(Base):
             self.jsclick(upload)
             time.sleep(3)
             upload_text = self.get_text(msg_popup, UnivWaitFor=30)
-            self.LogScreenshot.fLogScreenshot(message=f'Message popup: {upload_text}',
-                                          pass_=True, log=True, screenshot=False)
+            time.sleep(2)
 
             self.assertText("File(s) uploaded successfully", upload_text)
+            self.LogScreenshot.fLogScreenshot(message=f"File upload alert message '{upload_text}' is displayed",
+                                          pass_=True, log=True, screenshot=False)
 
             # Fetching total rows count after uploading a new file
             table_rows_after = self.select_elements(tablerows)
@@ -81,9 +83,11 @@ class ImportPublicationPage(Base):
                     raise Exception("Wrong file is uploaded")
 
             if self.isdisplayed("file_upload_status_pass", UnivWaitFor=60):
-                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done',
+                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
                                           pass_=True, log=True, screenshot=False)
             elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=60):
+                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
+                                          pass_=True, log=True, screenshot=False)
                 self.click("view_action", UnivWaitFor=10)
                 time.sleep(2)
                 td = self.select_elements('error_data_table')
@@ -91,7 +95,7 @@ class ImportPublicationPage(Base):
                 for n in td:
                     error_data.append(n.text)
                 self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
-                                          pass_=False, log=True, screenshot=False)
+                                          pass_=True, log=True, screenshot=False)
             else:
                 raise Exception("Error while uploading the extraction file")
             self.refreshpage()
@@ -104,6 +108,9 @@ class ImportPublicationPage(Base):
         table_rows_before = self.select_elements(tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a file: {len(table_rows_before)}',
                                           pass_=True, log=True, screenshot=False)
+        
+        self.refreshpage()
+        time.sleep(5)
         
         self.click(del_locator)
         time.sleep(2)
@@ -124,9 +131,7 @@ class ImportPublicationPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)  
-            self.refreshpage()
-            time.sleep(5)                  
+                                            pass_=True, log=True, screenshot=False)                  
         except:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
                                             pass_=False, log=True, screenshot=False)  

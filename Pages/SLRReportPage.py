@@ -366,7 +366,10 @@ class SLRReport(Base):
                                           f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
                                           # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
                                   pass_=False, log=True, screenshot=False)
+                                raise Exception("Elements are not matching between Webexcel, Complete Excel and Word Reports")
                             count += 1
+                        else:
+                            raise Exception("Column names are not matching between Webexcel, Complete Excel and Word Reports")
                 table_count += 1
             except Exception:
                 raise Exception("Error in Word report content validation")

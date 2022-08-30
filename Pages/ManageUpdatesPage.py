@@ -66,10 +66,11 @@ class ManageUpdatesPage(Base):
         time.sleep(1)
 
         add_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {add_text}',
-                                          pass_=True, log=True, screenshot=False)
+        time.sleep(2)
                                           
         self.assertText("Update added successfully", add_text)
+        self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates',
+                                    pass_=True, log=True, screenshot=True)
 
         table_ele = self.select_element("sel_table_entries_dropdown")
         select = Select(table_ele)
@@ -124,10 +125,11 @@ class ManageUpdatesPage(Base):
         time.sleep(2)
 
         del_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
-                                          pass_=True, log=True, screenshot=False)
+        time.sleep(2)
                                           
         self.assertText("Update deleted successfully", del_text)
+        self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates',
+                                    pass_=True, log=True, screenshot=True)
 
         ele = self.select_element("sel_table_entries_dropdown")
         select = Select(ele)
@@ -187,6 +189,7 @@ class ManageUpdatesPage(Base):
         time.sleep(2)
 
         add_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
+        time.sleep(2)
                                           
         self.assertText("Update added successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates record',
@@ -254,6 +257,7 @@ class ManageUpdatesPage(Base):
         time.sleep(2)
 
         update_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
+        time.sleep(2)
                                           
         self.assertText("Update updated successfully", update_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to edit the updates record',
@@ -302,6 +306,7 @@ class ManageUpdatesPage(Base):
         time.sleep(2)
 
         del_text = self.get_text("manage_update_status_text", UnivWaitFor=10)
+        time.sleep(2)
                                           
         self.assertText("Update deleted successfully", del_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates record',

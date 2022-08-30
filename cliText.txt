@@ -16,15 +16,19 @@ python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCase
 
 python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_ManagePopulations_workflow.py
 
-python -m pytest -v --html=Reports\importpublications_report.html --self-contained-html .\testCases\test_ImportPublications.py
+python -m pytest -v --html=Reports\Importpublications_report.html --self-contained-html .\testCases\test_ImportPublications.py
 
-python -m pytest -v --html=Reports\ManagePopulations_report.html --self-contained-html .\testCases\test_ManagePopulations.py
+python -m pytest -v --html=Reports\ManagePopulations_report.html --self-contained-html .\testCases\test_Manage_Populations.py
 
 python -m pytest -v --html=Reports\ManageUpdates_report.html --self-contained-html .\testCases\test_ManageUpdates.py
 
 python -m pytest -v --html=Reports\ManageQAData_report.html --self-contained-html .\testCases\test_ManageQAData.py
 
 python -m pytest -v --html=Reports\Prisma_report.html --self-contained-html .\testCases\test_Prisma.py
+
+python -m pytest -v --html=Reports\Utilityoutcome_QOL_report.html --self-contained-html .\testCases\test_UtilityOutcome_QOL.py
+
+python -m pytest -v --html=Reports\Utilityoutcome_ECON_report.html --self-contained-html .\testCases\test_UtilityOutcome_ECON.py
 
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
