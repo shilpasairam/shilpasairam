@@ -3,6 +3,7 @@ Test will validate Manage Updates Page
 
 """
 
+import os
 import pytest
 from datetime import date, timedelta
 
@@ -30,6 +31,12 @@ class Test_ManageUpdatesPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         self.mngupdpage = ManageUpdatesPage(self.driver, extra)
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
 
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
 

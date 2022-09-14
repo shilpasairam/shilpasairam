@@ -46,7 +46,7 @@ class ImportPublicationPage(Base):
         select = Select(ele)
         select.select_by_visible_text(pop[pop_index])
 
-    def upload_file(self, locator, expected_filename, filepath, upload, msg_popup, tablerows):
+    def upload_file(self, locator, expected_filename, filepath, upload, msg_popup, tablerows, index):
         # Fetching total rows count before uploading a new file
         table_rows_before = self.select_elements(tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: {len(table_rows_before)}',
@@ -82,22 +82,28 @@ class ImportPublicationPage(Base):
                 else:
                     raise Exception("Wrong file is uploaded")
 
-            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=60):
-                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
-                                          pass_=True, log=True, screenshot=False)
-            elif self.isdisplayed("file_upload_status_failure", UnivWaitFor=60):
-                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
-                                          pass_=True, log=True, screenshot=False)
-                self.click("view_action", UnivWaitFor=10)
-                time.sleep(2)
-                td = self.select_elements('error_data_table')
-                error_data = []
-                for n in td:
-                    error_data.append(n.text)
-                self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
-                                          pass_=True, log=True, screenshot=False)
-            else:
-                raise Exception("Error while uploading the extraction file")
+            # Validating the upload status icon
+            status_icon = ["file_upload_status_pass", "file_upload_status_failure"]
+            if status_icon[index] == "file_upload_status_pass":
+                if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
+                    self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
+                                            pass_=True, log=True, screenshot=True)
+                else:
+                    raise Exception("Error while uploading the extraction file")
+            elif status_icon[index] == "file_upload_status_failure":
+                if self.isdisplayed("file_upload_status_failure", UnivWaitFor=180):
+                    self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
+                                            pass_=True, log=True, screenshot=True)
+                    self.click("view_action", UnivWaitFor=10)
+                    time.sleep(2)
+                    td = self.select_elements('error_data_table')
+                    error_data = []
+                    for n in td:
+                        error_data.append(n.text)
+                    self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
+                                            pass_=True, log=True, screenshot=False)
+                else:
+                    raise Exception("Error while uploading the extraction file")
             self.refreshpage()
             time.sleep(5)
         except:
@@ -115,13 +121,13 @@ class ImportPublicationPage(Base):
         self.click(del_locator)
         time.sleep(2)
         self.click(del_locator_popup)
-        time.sleep(2)
+        time.sleep(3)
 
-        del_text = self.get_text(msg_popup, UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message=f'Message popup: {del_text}',
-                                          pass_=True, log=True, screenshot=False)
+        del_text = self.get_text(msg_popup, UnivWaitFor=30)
 
         self.assertText("Import status deleted successfully", del_text)
+        self.LogScreenshot.fLogScreenshot(message=f"File delete alert message '{del_text}' is displayed",
+                                          pass_=True, log=True, screenshot=False)
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_after = self.select_elements(tablerows)

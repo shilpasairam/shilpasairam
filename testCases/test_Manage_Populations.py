@@ -3,6 +3,7 @@ Test will validate Manage Populations Page
 
 """
 
+import os
 import pytest
 from Pages.ManagePopulationsPage import ManagePopulationsPage
 
@@ -30,6 +31,12 @@ class Test_ManagePopultionsPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         self.mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
 
         self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is started***", pass_=True, log=True, screenshot=False)
         

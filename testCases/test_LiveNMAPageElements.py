@@ -125,12 +125,12 @@ class Test_SLR_Custom_Report:
         #             print(file)
         #             os.remove(os.path.join(root, file))
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    print(file)
-                    os.remove(os.path.join(root, file))
+        # # Removing the files before the test runs
+        # if os.path.exists(f'ActualOutputs'):
+        #     for root, dirs, files in os.walk(f'ActualOutputs'):
+        #         for file in files:
+        #             print(file)
+        #             os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)

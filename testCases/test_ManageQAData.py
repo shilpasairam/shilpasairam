@@ -22,6 +22,7 @@ class Test_ManageQADataPage:
     filepath = ReadConfig.getmanageqadatapath()
     slrfilepath = ReadConfig.getslrtestdata()
 
+    # @pytest.mark.manageqadataUI
     def test_add_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -33,6 +34,12 @@ class Test_ManageQADataPage:
         self.mngqadata = ManageQADataPage(self.driver, extra)
         # Get StudyType and Files path to upload Managae QA Data
         self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
 
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***", pass_=True, log=True, screenshot=False)
 
@@ -53,6 +60,7 @@ class Test_ManageQADataPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
 
+    # @pytest.mark.manageqadataUI
     def test_overwrite_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -75,8 +83,6 @@ class Test_ManageQADataPage:
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         try:
-            self.LogScreenshot.fLogScreenshot(message=f"Overwriting the QA file upload",
-                    pass_=True, log=True, screenshot=True)
             for j in range(1, 4):
                 self.mngqadata.overwrite_multiple_manage_qa_data(self.stdy_data_override, j)
         except Exception:
@@ -86,6 +92,7 @@ class Test_ManageQADataPage:
 
         self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
     
+    # @pytest.mark.manageqadataUI
     def test_delete_qa_data(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -117,6 +124,7 @@ class Test_ManageQADataPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
 
+    # @pytest.mark.manageqadataendtoendflow
     def test_qafile_compare_with_excelreport(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -145,8 +153,8 @@ class Test_ManageQADataPage:
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         try:
-            self.mngqadata.compare_qa_file_with_report(self.stdy_data, "RRMM - Pfizer", self.slrfilepath)
-            self.mngqadata.del_data_after_qafile_comparison(self.stdy_data, "delete_file_button", "delete_file_popup", "RRMM - Pfizer")
+            self.mngqadata.compare_qa_file_with_report(self.stdy_data, "NewImportLogic_1 - Test_Automation_1", self.slrfilepath)
+            self.mngqadata.del_data_after_qafile_comparison(self.stdy_data, "NewImportLogic_1 - Test_Automation_1", self.slrfilepath)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
                 pass_=False, log=True, screenshot=True)

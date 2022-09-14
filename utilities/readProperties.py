@@ -112,3 +112,9 @@ class ReadConfig:
     def getJScommand():
         command = "document.getElementsByTagName('input')[16].removeAttribute('hidden')"
         return command
+    
+    # Get file containing data for Excluded Studies page actions
+    @staticmethod
+    def getexcludedstudiespath():
+        exstdy = config.get('commonInfo', 'ExcludedStudiesdata')
+        return exstdy

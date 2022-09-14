@@ -4,17 +4,17 @@ python -m pytest -v -s --html=Reports\report.html  .\testCases\test_LoginPage.py
 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_LoginPage.py
+python -m pytest -v --html=Reports\LoginPage_report.html --self-contained-html  .\testCases\test_LoginPage.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_LiveSLRPageElements.py
+python -m pytest -v --html=Reports\LiveSLRPageElements_report.html --self-contained-html  .\testCases\test_LiveSLRPageElements.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_SLRCustomReport.py
+python -m pytest -v --html=Reports\SLRCustomReport.html --self-contained-html  .\testCases\test_SLRCustomReport.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_LiveNMAPageElements.py
+python -m pytest -v --html=Reports\LiveNMAPageElements_report.html --self-contained-html  .\testCases\test_LiveNMAPageElements.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_PrismaElementsValidation.py
+python -m pytest -v --html=Reports\PrismaElementsValidation_report.html --self-contained-html  .\testCases\test_PrismaElementsValidation.py
 
-python -m pytest -v --html=Reports\report.html --self-contained-html  .\testCases\test_ManagePopulations_workflow.py
+python -m pytest -v --html=Reports\ManagePopulations_workflow_report.html --self-contained-html  .\testCases\test_ManagePopulations_workflow.py
 
 python -m pytest -v --html=Reports\Importpublications_report.html --self-contained-html .\testCases\test_ImportPublications.py
 
@@ -29,6 +29,8 @@ python -m pytest -v --html=Reports\Prisma_report.html --self-contained-html .\te
 python -m pytest -v --html=Reports\Utilityoutcome_QOL_report.html --self-contained-html .\testCases\test_UtilityOutcome_QOL.py
 
 python -m pytest -v --html=Reports\Utilityoutcome_ECON_report.html --self-contained-html .\testCases\test_UtilityOutcome_ECON.py
+
+python -m pytest -v --html=Reports\Excluded_Studies_report.html --self-contained-html .\testCases\test_ExcludedStudies.py
 
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py

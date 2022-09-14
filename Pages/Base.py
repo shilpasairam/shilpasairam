@@ -155,14 +155,16 @@ class Base:
 
     # JavaScript click a web element using locatorname
     @fWaitFor
-    def jsclick(self, locator, UnivWaitFor=0):
+    def jsclick(self, locator, message="", UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and click on the element
         """
         try:
             self.driver.execute_script("arguments[0].click();", self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)))
         except NoSuchElementException:
-            self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
+            # self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
+            #                                   pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"{message}",
                                               pass_=False, log=True, screenshot=False)
 
     # JavaScript click to hide a element for uploading
