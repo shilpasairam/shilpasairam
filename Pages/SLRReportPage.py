@@ -36,6 +36,7 @@ class SLRReport(Base):
         self.wait = WebDriverWait(driver, 20)
 
     def select_data(self, locator, locator_button):
+        time.sleep(3)
         if self.isselected(locator_button):
             self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
                                               pass_=True, log=True, screenshot=True)
@@ -134,7 +135,7 @@ class SLRReport(Base):
             word.append(row.cells[1].text)
 
         self.LogScreenshot.fLogScreenshot(message=f"WebExcel FileName is: {wfilename}\n and Count Value is: {len(webcount_final)}"
-                                                  f"Excel FileName is: {efilename}\n and Count values is: {count_str} {count_val}"
+                                                  f"Excel FileName is: {efilename}\n and Count value is: {count_str} {count_val}"
                                                   f"Word FileName is: {word_filename}\n and Count value is: {word[7]}",
                                           pass_=True, log=True, screenshot=False)
 
@@ -170,10 +171,11 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
 
     def table_display_check(self, locator):
-        if self.isdisplayed(locator, UnivWaitFor=20):
+        if self.isdisplayed(locator, UnivWaitFor=120):
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is displayed",
                                               pass_=True, log=True, screenshot=True)
         else:
+            time.sleep(10)
             self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_displayed()
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is displayed with extra wait time",
                                               pass_=True, log=True, screenshot=True)
@@ -233,9 +235,11 @@ class SLRReport(Base):
         try:
             file = pd.read_excel(filepath)
             expectedname = list(file['ExpectedFilenames'].dropna())
-            actualname = [x for x in re.compile(r'\D+').findall(filename)]
+            # actualname = [x for x in re.compile(r'\D+').findall(filename)]
+            actualname = filename[:-19]
             for i in expectedname:
-                if i == actualname[0]:
+                # if i == actualname[0]:
+                if i == actualname:
                     self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                                       pass_=True, log=True, screenshot=False)
                     break
@@ -253,6 +257,7 @@ class SLRReport(Base):
         endTime = time.time() + waitTime
         while True:
             try:
+                time.sleep(10)
                 filename = self.driver.execute_script(
                     "return document.querySelector('downloads-manager').shadowRoot.querySelector('#downloadsList downloads-item').shadowRoot.querySelector('div#content  #file-link').text")
                 self.LogScreenshot.fLogScreenshot(message=f"Downloaded filename is {filename}",
@@ -272,7 +277,6 @@ class SLRReport(Base):
         self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
         column_names = ['Article Identifier(s)', 'Publication Type', 'Short Reference']
-        # sheet_names = ReadConfig.get_sheetname_as_per_slrtype(population, slrtype)
         sheet_names = []
 
         webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
@@ -314,7 +318,6 @@ class SLRReport(Base):
         
         # Index of Table number 6 is : 5. Starting point for word table content comparison
         table_count = 5
-        # sheet_names = ReadConfig.get_sheetname_as_per_slrtype(population, slrtype)
         sheet_names = []
 
         webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
@@ -363,8 +366,8 @@ class SLRReport(Base):
                                   pass_=True, log=True, screenshot=False)
                             else:
                                 self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in Column '{col_name}' are not matching between WebExcel, Complete Excel and Word Reports.\n"
-                                          f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
-                                          # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                          f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n"
+                                          f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
                                   pass_=False, log=True, screenshot=False)
                                 raise Exception("Elements are not matching between Webexcel, Complete Excel and Word Reports")
                             count += 1

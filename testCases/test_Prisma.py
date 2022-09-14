@@ -2,6 +2,7 @@
 Test will validate the Import publications page
 """
 
+import os
 import pytest
 from Pages.PRISMAsPage import PRISMASPage
 
@@ -28,13 +29,19 @@ class Test_PRISMAPage:
         # Creating object of ImportPublicationPage class
         self.prismapage = PRISMASPage(self.driver, extra)
 
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        pop_val = ['Test_Sachin', 'ICER RRMM 2022 report']
+        pop_val = ['Test_Sachin_2022 - Test_Sachin', 'ICER - ICER RRMM 2022 report']
 
         for index, i in enumerate(pop_val):
             try:
@@ -65,7 +72,7 @@ class Test_PRISMAPage:
         self.loginPage.complete_login(self.username, self.password)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        pop_val = ['Test_Sachin', 'ICER RRMM 2022 report']
+        pop_val = ['Test_Sachin_2022 - Test_Sachin', 'ICER - ICER RRMM 2022 report']
 
         for i in pop_val:
             try:

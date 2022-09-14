@@ -62,7 +62,7 @@ class PRISMASPage(Base):
             self.click("prisma_excel_upload_btn")
             time.sleep(3)
             actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
-            time.sleep(2)
+            # time.sleep(2)
 
             self.assertText(expected_excel_upload_status_text, actual_excel_upload_status_text)
             self.LogScreenshot.fLogScreenshot(message=f"Excel File upload is success",

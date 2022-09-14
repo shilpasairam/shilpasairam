@@ -116,11 +116,11 @@ class Test_UtilityOutcome_ECON:
         #         for file in files:
         #             os.remove(os.path.join(root, file))
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # # Removing the files before the test runs
+        # if os.path.exists(f'ActualOutputs'):
+        #     for root, dirs, files in os.walk(f'ActualOutputs'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password)
