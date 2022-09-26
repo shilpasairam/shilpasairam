@@ -50,7 +50,7 @@ class Test_ManagePopultionsPage_Workflow:
         self.day_val = today.day
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         for i in self.file_upload:

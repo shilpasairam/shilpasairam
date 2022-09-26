@@ -18,6 +18,7 @@ class Test_SLR_Custom_Report:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getslrtestdata()
 
+    @pytest.mark.C26957
     def test_prisma_elements(self, extra):
         # Instantiate the Base class
         self.base = Base(self.driver, extra)
@@ -56,7 +57,7 @@ class Test_SLR_Custom_Report:
                     os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
             try:

@@ -61,7 +61,7 @@ class UtilityOutcome(Base):
         expectedfilepath = list(os.getcwd()+file['ExpectedSourceTemplateFile'].dropna())
         return expectedfilepath
     
-    def qol_presenceof_utility_summary_tab(self, excel_filename, util_filepath):
+    def qol_presenceof_utilitysummary_into_excelreport(self, excel_filename, util_filepath):
         source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Utility Summary Tab in Complete Excel Report*****",
@@ -71,7 +71,28 @@ class UtilityOutcome(Base):
             self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is present in Downloaded Complete Excel Report",
                                           pass_=True, log=True, screenshot=False)
         else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is missing in Complete Excel Report",
+                                          pass_=False, log=True, screenshot=False)
             raise Exception("'Utility Summary' tab is missing in Complete Excel Report")
+
+        excel_sheet = excel_data[f'Utility Summary']
+        if excel_sheet['H1'].value == 'Back To Toc':
+            self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Utility Summary' sheet",
+                                    pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in 'Utility Summary' sheet",
+                                    pass_=False, log=True, screenshot=False)
+            raise Exception(f"'Back To Toc' option is not present in 'Utility Summary' sheet")
+        
+        toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
+        col_data = list(toc_sheet.iloc[:, 1])
+        if f'Utility Summary' in col_data:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' is present in TOC sheet.",
+                                    pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' is not present in TOC sheet. Available Data from TOC sheet: {col_data}",
+                                    pass_=False, log=True, screenshot=False)
+            raise Exception("'Utility Summary' is not present in TOC sheet.")
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of expected columns in Utility Summary Tab*****",
                                           pass_=True, log=True, screenshot=False)
@@ -92,6 +113,98 @@ class UtilityOutcome(Base):
                                           pass_=False, log=True, screenshot=False)
             raise Exception("Expected column names are not present in Complete Excel Report")
     
+    def qol_verify_source_to_target_row_counts_excelreport(self, excel_filename, util_filepath):
+        source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
+
+        sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+        
+        cols = list(sourcefile.columns.values)
+
+        sourcefile_col = sourcefile['Short Reference']
+        actualexcel_col = actualexcel['Short Reference']
+
+        sourcefile_col = [item for item in sourcefile_col if str(item) != 'nan']
+        actualexcel_col = [item for item in actualexcel_col if str(item) != 'nan']
+
+        for col in cols:
+            source_col = sourcefile[col]
+            actual_col = actualexcel[col]
+
+            source_col = [item for item in source_col if str(item) != 'nan']
+            actual_col = [item for item in actual_col if str(item) != 'nan']
+
+            if len(source_col) == len(actual_col):
+                self.LogScreenshot.fLogScreenshot(message=f"Row count in column '{col}' are matching between Source Utility File and Complete Excel Report. "
+                                        f"Source Utility File Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+                                        pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Row count in column '{col}' are not matching. "
+                                        f"Source Utility File Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception("Row Counts are not matching between Source Utility File and Complete Excel report")
+    
+    def qol_presenceof_utilitysummary_into_wordreport(self, word_filename, util_filepath):
+        source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
+
+        sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
+        docs = docx.Document(f'ActualOutputs//{word_filename}')
+        
+        table = docs.tables[6]
+        data = [[cell.text for cell in row.cells] for row in table.rows]
+        df_word = pd.DataFrame(data)
+
+        self.LogScreenshot.fLogScreenshot(message=f"'Utility Table' is present in Downloaded Complete Word Report",
+                                        pass_=True, log=True, screenshot=False)
+
+        # Column name check between Expected data and Word report
+        source_col_val = [item for item in list(sourcefile.columns.values) if str(item) != 'nan']
+        word_col_val = [item for item in list(df_word.values[0]) if str(item) != 'nan']
+        if source_col_val == word_col_val:
+            self.LogScreenshot.fLogScreenshot(message=f"Expected column names are present in Word Report. Column names are: {word_col_val}",
+                                        pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Expected column names are not present in Word Report."
+                                        f"Source Excel Column names are : {source_col_val},\n Word Report Column names are : {word_col_val}",
+                                        pass_=False, log=True, screenshot=False)
+            raise Exception("Expected column names are not present in Word Report")
+
+    def qol_verify_source_to_target_row_counts_wordreport(self, word_filename, util_filepath):
+        source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
+
+        sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
+        docs = docx.Document(f'ActualOutputs//{word_filename}')
+        
+        table = docs.tables[6]
+        data = [[cell.text for cell in row.cells] for row in table.rows]
+        df_word = pd.DataFrame(data)
+
+        # Using count variable to loop over columns in word document
+        count = 0
+        # df_word.values[0] will give the list of column names from the table in Word document
+        for col_name in df_word.values[0]:
+            if col_name in sourcefile.columns.values:
+                source = sourcefile[col_name]
+                word = []
+                for row in docs.tables[6].rows:
+                    word.append(row.cells[count].text)
+                
+                source = [item for item in source if str(item) != 'nan']
+                word.pop(0)
+
+                if len(source) == len(word):
+                    self.LogScreenshot.fLogScreenshot(message=f"Row count in Column '{col_name}' are matching between Source Utility File and Word Report.\n"
+                                f"Source Utility File Elements Length: {len(source)},\n Word Elements Length: {len(word)}\n",
+                        pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Row count in Column '{col_name}' are not matching between Source Utility File and Word Report.\n"
+                                f"Source Utility File Elements Length: {len(source)},\n Word Elements Length: {len(word)}\n",
+                        pass_=False, log=True, screenshot=False)
+                    raise Exception("Row Counts are not matching between Source Utility File and Word Report.")
+                count += 1
+            else:
+                raise Exception(f"Column name '{col_name}' is not matching between Source Utility File and Word Report.")
+        
     def qol_utility_summary_validation(self, webexcel_filename, excel_filename, util_filepath, word_filename):
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Started*****",
                                           pass_=True, log=True, screenshot=False)
@@ -153,28 +266,28 @@ class UtilityOutcome(Base):
         sourcefile_col = [item for item in sourcefile_col if str(item) != 'nan']
         actualexcel_col = [item for item in actualexcel_col if str(item) != 'nan']
 
-        if sourcefile_col == sorted(sourcefile_col) and actualexcel_col == sorted(actualexcel_col):
-            self.LogScreenshot.fLogScreenshot(message=f"From 'Utility Summary' sheet, contents in column 'Short Reference' are in sorted order",
-                                            pass_=True, log=True, screenshot=False)
-            for col in cols:
-                source_col = sourcefile[col]
-                actual_col = actualexcel[col]
+        # if sourcefile_col == sorted(sourcefile_col) and actualexcel_col == sorted(actualexcel_col):
+        #     self.LogScreenshot.fLogScreenshot(message=f"From 'Utility Summary' sheet, contents in column 'Short Reference' are in sorted order",
+        #                                     pass_=True, log=True, screenshot=False)
+        for col in cols:
+            source_col = sourcefile[col]
+            actual_col = actualexcel[col]
 
-                source_col = [item for item in source_col if str(item) != 'nan']
-                actual_col = [item for item in actual_col if str(item) != 'nan']
+            source_col = [item for item in source_col if str(item) != 'nan']
+            actual_col = [item for item in actual_col if str(item) != 'nan']
 
-                if len(source_col) == len(actual_col) and source_col == actual_col:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
-                                          f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_col)}",
-                                          pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                          f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_col)}"
-                                          f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
-                                          pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template and Complete Excel report")
-        else:
-            raise Exception("From 'Utility Summary' sheet, contents in column 'Short Reference' are not in Sorted order")
+            if len(source_col) == len(actual_col) and source_col == actual_col:
+                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
+                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+                                        pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
+                                        f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception("Contents are not matching between Source template and Complete Excel report")
+        # else:
+        #     raise Exception("From 'Utility Summary' sheet, contents in column 'Short Reference' are not in Sorted order")
 
         # Word report content comparison for Utility Table
         self.LogScreenshot.fLogScreenshot(message=f"*****Word Report Utility Table Comparison*****",
@@ -184,6 +297,18 @@ class UtilityOutcome(Base):
             table = docs.tables[6]
             data = [[cell.text for cell in row.cells] for row in table.rows]
             df_word = pd.DataFrame(data)
+
+            # Column name check between Expected data and Word report
+            source_col_val = [item for item in list(sourcefile.columns.values) if str(item) != 'nan']
+            word_col_val = [item for item in list(df_word.values[0]) if str(item) != 'nan']
+            if source_col_val == word_col_val:
+                self.LogScreenshot.fLogScreenshot(message=f"Expected column names are present in Word Report. Column names are: {word_col_val}",
+                                            pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Expected column names are not present in Word Report."
+                                            f"Source Excel Column names are : {source_col_val},\n Word Report Column names are : {word_col_val}",
+                                            pass_=False, log=True, screenshot=False)
+                raise Exception("Expected column names are not present in Word Report")
 
             # Using count variable to loop over columns in word document
             count = 0
@@ -201,12 +326,12 @@ class UtilityOutcome(Base):
                     word.pop(0)
 
                     # Validating the sorted order for 'Short Reference' column from Word Report -> Utility Table
-                    if col_name == 'Short Reference':
-                        if word == sorted(word):
-                            self.LogScreenshot.fLogScreenshot(message=f"From Word Report -> 'Utility Table' section, contents in column 'Short Reference' are in sorted order",
-                                            pass_=True, log=True, screenshot=False)
-                        else:
-                            raise Exception("From Word Report -> 'Utility Table' section, contents in column 'Short Reference' are not in sorted order")
+                    # if col_name == 'Short Reference':
+                    #     if word == sorted(word):
+                    #         self.LogScreenshot.fLogScreenshot(message=f"From Word Report -> 'Utility Table' section, contents in column 'Short Reference' are in sorted order",
+                    #                         pass_=True, log=True, screenshot=False)
+                    #     else:
+                    #         raise Exception("From Word Report -> 'Utility Table' section, contents in column 'Short Reference' are not in sorted order")
 
                     if len(source) == len(actual) == len(word) and source == actual == word:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel and Word Reports.\n"
@@ -229,12 +354,31 @@ class UtilityOutcome(Base):
                                           pass_=True, log=True, screenshot=False)
 
     def qol_utility_summary_validation_old_imports(self, webexcel_filename, excel_filename, util_filepath):
-        self.LogScreenshot.fLogScreenshot(message=f"*****Validation as per the OLD Import logic*****",
-                                          pass_=True, log=True, screenshot=False)
-        self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Started*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Content Validation as per the OLD Import logic*****",
                                           pass_=True, log=True, screenshot=False)
         source_template = self.get_util_source_template(util_filepath, 'OldImportLogic')
+
+        self.LogScreenshot.fLogScreenshot(message=f"*****Check Absence of Utility Summary Tab in Complete Excel Report*****",
+                                          pass_=True, log=True, screenshot=False)
+        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+        if 'Utility Summary' not in excel_data.sheetnames:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is absent in downloaded Complete Excel Report as expected",
+                                          pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is present in Complete Excel Report",
+                                          pass_=False, log=True, screenshot=False)
+            raise Exception("'Utility Summary' tab is present in Complete Excel Report")
         
+        toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
+        col_data = list(toc_sheet.iloc[:, 1])
+        if f'Utility Summary' not in col_data:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' is not present in TOC sheet as expected.",
+                                    pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' is present in TOC sheet. Available Data from TOC sheet: {col_data}",
+                                    pass_=False, log=True, screenshot=False)
+            raise Exception("'Utility Summary' is present in TOC sheet which is not expected to be present.")
+
         # QOL Report sheet comparison with Expected results
         self.LogScreenshot.fLogScreenshot(message=f"*****QOL Report sheet Comparison*****",
                                           pass_=True, log=True, screenshot=False)
@@ -382,9 +526,7 @@ class UtilityOutcome(Base):
                                           pass_=True, log=True, screenshot=False)
 
     def econ_utility_summary_validation_old_imports(self, webexcel_filename, excel_filename, util_filepath, word_filename):
-        self.LogScreenshot.fLogScreenshot(message=f"*****Validation as per the OLD Import logic*****",
-                                          pass_=True, log=True, screenshot=False)
-        self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Started*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Content Validation as per the OLD Import logic*****",
                                           pass_=True, log=True, screenshot=False)
         source_template = self.get_util_source_template(util_filepath, 'OldImportLogic')
         

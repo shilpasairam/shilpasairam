@@ -26,7 +26,7 @@ class Test_LiveSLRPageElements:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         try:
             self.loginPage.driver.get(self.baseURL)
-            self.loginPage.complete_login(self.username, self.password)
+            self.loginPage.complete_login(self.username, self.password, self.baseURL)
             self.liveslrpage.go_to_liveslr("SLR_Homepage")
             self.liveslrpage.presence_of_elements("SLR_Population")
             self.liveslrpage.presence_of_elements("SLR_Type")

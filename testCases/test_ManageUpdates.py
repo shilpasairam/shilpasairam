@@ -45,9 +45,11 @@ class Test_ManageUpdatesPage:
         self.day_val = today.day
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
 
-        for i in range(1, 4):
+        pop_val = ['pop1', 'pop2']
+
+        for i in pop_val:
             try:
                 self.mngupdpage.go_to_manageupdates("manageupdates_button")
                 manage_update_data = self.mngupdpage.add_multiple_updates(i, "add_update_btn", self.day_val, "manage_update_table_rows", self.dateval)
@@ -78,7 +80,7 @@ class Test_ManageUpdatesPage:
         self.day_val = today.day
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
 
         for i in self.added_updates_data:
             try:
@@ -110,7 +112,7 @@ class Test_ManageUpdatesPage:
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
         for i in self.edited_updates_data:

@@ -32,84 +32,99 @@ class ImportPublicationPage(Base):
         self.jsclick(button)
         time.sleep(3)
 
-    def get_upload_file_details(self, filepath):
-        file = pd.read_excel(filepath)
-        sheet_name = list(file['Expected_File_names'].dropna())
-        sheet_path = list(os.getcwd()+file['Files_to_upload'].dropna())
-        admin_page_data = [(sheet_name[i], sheet_path[i]) for i in range(0, len(sheet_name))]
-        return admin_page_data
+    # Reading Population data for Excluded Studies Page
+    def get_file_details_to_upload(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        pop_name = df.loc[df['Name'] == locatorname]['Population_name'].dropna().to_list()
+        path = df.loc[df['Name'] == locatorname]['Files_to_upload'].dropna().to_list()
+        filename = df.loc[df['Name'] == locatorname]['Expected_File_names'].dropna().to_list()
+        result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]
+        return result
     
-    def select_update(self, locator, pop_index):
-        pop = ['ICER RRMM 2022 report - ICER - Ovid search - 4/11/2022', 'IC AML - Pfizer - Ovid search - 5/10/2021']
-        ele = self.select_element(locator)
-        time.sleep(2)
-        select = Select(ele)
-        select.select_by_visible_text(pop[pop_index])
+    def upload_file(self, locatorname, filepath, index):
+        expected_upload_status_text = "File(s) uploaded successfully"
+        # Read population details from data sheet
+        pop_data = self.get_file_details_to_upload(filepath, locatorname)
 
-    def upload_file(self, locator, expected_filename, filepath, upload, msg_popup, tablerows, index):
-        # Fetching total rows count before uploading a new file
-        table_rows_before = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: {len(table_rows_before)}',
-                                          pass_=True, log=True, screenshot=False)
-        
-        jscmd = ReadConfig.getJScommand()
-        self.jsclick_hide(jscmd)
-        self.input_text(locator, filepath)
-        try:
-            self.jsclick(upload)
-            time.sleep(3)
-            upload_text = self.get_text(msg_popup, UnivWaitFor=30)
+        for i in pop_data:
+            ele = self.select_element("select_update_dropdown")
             time.sleep(2)
+            select = Select(ele)
+            select.select_by_visible_text(i[0])
 
-            self.assertText("File(s) uploaded successfully", upload_text)
-            self.LogScreenshot.fLogScreenshot(message=f"File upload alert message '{upload_text}' is displayed",
-                                          pass_=True, log=True, screenshot=False)
-
-            # Fetching total rows count after uploading a new file
-            table_rows_after = self.select_elements(tablerows)
-            self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: {len(table_rows_after)}',
-                                          pass_=True, log=True, screenshot=False)
-
-            if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                result = []
-                td1 = self.select_elements('upload_table_row_1')
-                for m in td1:
-                    result.append(m.text)
-                
-                if expected_filename in result:
-                    self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being uploaded: {expected_filename}',
-                                          pass_=True, log=True, screenshot=False)
-                else:
-                    raise Exception("Wrong file is uploaded")
-
-            # Validating the upload status icon
-            status_icon = ["file_upload_status_pass", "file_upload_status_failure"]
-            if status_icon[index] == "file_upload_status_pass":
-                if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
-                    self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
-                                            pass_=True, log=True, screenshot=True)
-                else:
-                    raise Exception("Error while uploading the extraction file")
-            elif status_icon[index] == "file_upload_status_failure":
-                if self.isdisplayed("file_upload_status_failure", UnivWaitFor=180):
-                    self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
-                                            pass_=True, log=True, screenshot=True)
-                    self.click("view_action", UnivWaitFor=10)
-                    time.sleep(2)
-                    td = self.select_elements('error_data_table')
-                    error_data = []
-                    for n in td:
-                        error_data.append(n.text)
-                    self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
+            # Fetching total rows count before uploading a new file
+            table_rows_before = self.select_elements("upload_table_rows")
+            self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: {len(table_rows_before)}',
                                             pass_=True, log=True, screenshot=False)
+            
+            jscmd = ReadConfig.getJScommand()
+            self.jsclick_hide(jscmd)
+            self.input_text("add_file", i[1])
+            try:
+                self.jsclick("upload_button")
+                time.sleep(3)
+                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+                # time.sleep(2)
+
+                # self.assertText("File(s) uploaded successfully", upload_text)
+                # self.LogScreenshot.fLogScreenshot(message=f"File upload alert message '{upload_text}' is displayed",
+                #                             pass_=True, log=True, screenshot=False)
+                if actual_upload_status_text == expected_upload_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
+                                            pass_=True, log=True, screenshot=True)
                 else:
-                    raise Exception("Error while uploading the extraction file")
-            self.refreshpage()
-            time.sleep(5)
-        except:
-            raise Exception("Error while uploading")
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction File for Population : {i[0]}.',
+                                            pass_=False, log=True, screenshot=True)
+                    raise Exception("Unable to find status message during Extraction file uploading")
+
+                # Fetching total rows count after uploading a new file
+                table_rows_after = self.select_elements("upload_table_rows")
+                self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: {len(table_rows_after)}',
+                                            pass_=True, log=True, screenshot=False)
+
+                if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+                    result = []
+                    td1 = self.select_elements('upload_table_row_1')
+                    for m in td1:
+                        result.append(m.text)
+                    
+                    if i[2] in result:
+                        self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being uploaded: {i[2]}',
+                                            pass_=True, log=True, screenshot=False)
+                    else:
+                        raise Exception("Wrong file is uploaded")
+
+                # Validating the upload status icon
+                status_icon = ["file_upload_status_pass", "file_upload_status_failure"]
+                if status_icon[index] == "file_upload_status_pass":
+                    time.sleep(10)
+                    if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
+                        self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
+                                                pass_=True, log=True, screenshot=True)
+                    else:
+                        raise Exception("Error while uploading the extraction file")
+                elif status_icon[index] == "file_upload_status_failure":
+                    time.sleep(10)
+                    if self.isdisplayed("file_upload_status_failure", UnivWaitFor=180):
+                        self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
+                                                pass_=True, log=True, screenshot=True)
+                        self.click("view_action", UnivWaitFor=10)
+                        time.sleep(2)
+                        td = self.select_elements('error_data_table')
+                        error_data = []
+                        for n in td:
+                            error_data.append(n.text)
+                        self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        raise Exception("Error while uploading the extraction file")
+                self.refreshpage()
+                time.sleep(5)
+            except:
+                raise Exception("Error while uploading")
 
     def delete_file(self, del_locator, del_locator_popup, msg_popup, tablerows):
+        expected_delete_status_text = "Import status deleted successfully"
         # Fetching total rows count before deleting a file from top of the table
         table_rows_before = self.select_elements(tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a file: {len(table_rows_before)}',
@@ -123,11 +138,19 @@ class ImportPublicationPage(Base):
         self.click(del_locator_popup)
         time.sleep(3)
 
-        del_text = self.get_text(msg_popup, UnivWaitFor=30)
+        actual_delete_status_text = self.get_text(msg_popup, UnivWaitFor=30)
 
-        self.assertText("Import status deleted successfully", del_text)
-        self.LogScreenshot.fLogScreenshot(message=f"File delete alert message '{del_text}' is displayed",
-                                          pass_=True, log=True, screenshot=False)
+        # self.assertText("Import status deleted successfully", del_text)
+        # self.LogScreenshot.fLogScreenshot(message=f"File deletion is success.",
+        #                                   pass_=True, log=True, screenshot=True)
+        
+        if actual_delete_status_text == expected_delete_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
+                                    pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
+                                    pass_=False, log=True, screenshot=True)
+            raise Exception("Error during Extraction File Deletion")
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_after = self.select_elements(tablerows)
