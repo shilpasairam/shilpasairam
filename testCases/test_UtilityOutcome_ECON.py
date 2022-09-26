@@ -18,7 +18,8 @@ class Test_UtilityOutcome_ECON:
     password = ReadConfig.getPassword()
     util_filepath = ReadConfig.getutilityoutcome_ECON_data()
 
-    def test_econ_utility_outcome_results_comparison(self, extra):
+    @pytest.mark.C29953
+    def test_econ_utility_outcome_results_comparison_newimport_logic(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Creating object of liveslrpage class
@@ -52,7 +53,7 @@ class Test_UtilityOutcome_ECON:
                     os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
             try:
@@ -89,6 +90,7 @@ class Test_UtilityOutcome_ECON:
             except Exception:
                 raise Exception("Unable to select element")
 
+    @pytest.mark.C29986
     def test_econ_utility_outcome_results_comparison_oldimport_logic(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -123,7 +125,7 @@ class Test_UtilityOutcome_ECON:
         #             os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
             try:

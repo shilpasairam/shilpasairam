@@ -19,6 +19,7 @@ class Test_PRISMAPage:
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getprismadata()
 
+    @pytest.mark.C30243
     def test_upload_prisma_details(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -38,10 +39,10 @@ class Test_PRISMAPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        pop_val = ['Test_Sachin_2022 - Test_Sachin', 'ICER - ICER RRMM 2022 report']
+        pop_val = ['pop1', 'pop2']
 
         for index, i in enumerate(pop_val):
             try:
@@ -56,6 +57,7 @@ class Test_PRISMAPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
 
+    @pytest.mark.C30243
     def test_del_prisma_details(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -69,10 +71,10 @@ class Test_PRISMAPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        pop_val = ['Test_Sachin_2022 - Test_Sachin', 'ICER - ICER RRMM 2022 report']
+        pop_val = ['pop1', 'pop2']
 
         for i in pop_val:
             try:

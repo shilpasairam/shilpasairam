@@ -15,6 +15,8 @@ from selenium.webdriver.support.ui import Select
 
 
 class ManageUpdatesPage(Base):
+    
+    filepath = ReadConfig.getmanageupdatesdata()
 
     """Constructor of the ManageUpdates Page class"""
     def __init__(self, driver, extra):
@@ -34,6 +36,12 @@ class ManageUpdatesPage(Base):
     def go_to_manageupdates(self, locator):
         self.click(locator, UnivWaitFor=10)
         time.sleep(5)
+    
+    # Reading Population data for ManageUpdates Page
+    def get_updates_pop_data(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        pop = df.loc[df['Name'] == locatorname]['Population'].dropna().to_list()
+        return pop
 
     def add_updates(self, manage_update_pg, add_upd_button, sel_pop_val, date_val, table_rows, dateval_to_search):
         self.click(manage_update_pg)
@@ -83,23 +91,23 @@ class ManageUpdatesPage(Base):
 
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    self.refreshpage()
-                    result = []
-                    self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
-                    td1 = self.select_elements('manage_update_table_row_1')
-                    for n in td1:
-                        result.append(n.text)
+                self.refreshpage()
+                result = []
+                self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
+                td1 = self.select_elements('manage_update_table_row_1')
+                for n in td1:
+                    result.append(n.text)
 
-                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
-                                            pass_=True, log=True, screenshot=False)
-                    
-                    if result[0] == sel_pop_val:
-                        self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
-                                            pass_=True, log=True, screenshot=False)
-                        update_data = f"{result[0]} - {result[2]} - {result[1].replace('0', '')}"
-                        return update_data
-                    else:
-                        raise Exception("Population update data is not added")
+                self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
+                                        pass_=True, log=True, screenshot=False)
+                
+                if result[0] == sel_pop_val:
+                    self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
+                                        pass_=True, log=True, screenshot=False)
+                    update_data = f"{result[0]} - {result[2]} - {result[1].replace('0', '')}"
+                    return update_data
+                else:
+                    raise Exception("Population update data is not added")
             self.clear("manage_update_search_box")
         except:
             raise Exception("Error while adding the population updates")
@@ -149,7 +157,10 @@ class ManageUpdatesPage(Base):
                                             pass_=False, log=True, screenshot=False)  
             raise Exception("Error in deleting the update")
     
-    def add_multiple_updates(self, pop_index, add_upd_button, date_val, table_rows, dateval_to_search):
+    def add_multiple_updates(self, locatorname, add_upd_button, date_val, table_rows, dateval_to_search):
+        # Read population details from data sheet
+        pop_name = self.get_updates_pop_data(self.filepath, locatorname)
+
         self.refreshpage()
         time.sleep(5)
         table_ele = self.select_element("sel_table_entries_dropdown")
@@ -165,16 +176,7 @@ class ManageUpdatesPage(Base):
 
         pop_ele = self.select_element("sel_pop_update_dropdown")
         select = Select(pop_ele)
-        # options_list_res = []
-        # options_list = select.options
-        # for xy in options_list:
-        #     options_list_res.append(xy.text)
-        # self.LogScreenshot.fLogScreenshot(message=f'Options list values are: {options_list_res} and Length is : {len(options_list_res)}',
-        #                                   pass_=True, log=True, screenshot=False)
-        # pop_index = random.randint(1, len(options_list_res)-1)
-        # self.LogScreenshot.fLogScreenshot(message=f'Index value is {pop_index}',
-        #                                   pass_=True, log=True, screenshot=False)
-        select.select_by_index(pop_index)
+        select.select_by_visible_text(pop_name[0])
         sel_pop_val = select.first_selected_option.text
 
         self.click("sel_update_date")
@@ -206,25 +208,25 @@ class ManageUpdatesPage(Base):
 
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    self.refreshpage()
-                    self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
-                                          pass_=True, log=True, screenshot=False)
-                    result = []
-                    self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
-                    td1 = self.select_elements('manage_update_table_row_1')
-                    for n in td1:
-                        result.append(n.text)
+                self.refreshpage()
+                self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
+                                        pass_=True, log=True, screenshot=False)
+                result = []
+                self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
+                td1 = self.select_elements('manage_update_table_row_1')
+                for n in td1:
+                    result.append(n.text)
 
-                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
-                                            pass_=True, log=True, screenshot=False)
-                    
-                    if result[0] == sel_pop_val:
-                        self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
-                                            pass_=True, log=True, screenshot=False)
-                        update_data = f"{result[0]} - {result[1]}"
-                        return update_data
-                    else:
-                        raise Exception("Population update data is not added")
+                self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
+                                        pass_=True, log=True, screenshot=False)
+                
+                if result[0] == sel_pop_val:
+                    self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
+                                        pass_=True, log=True, screenshot=False)
+                    update_data = f"{result[0]} - {result[1]}"
+                    return update_data
+                else:
+                    raise Exception("Population update data is not added")
             self.clear("manage_update_search_box")
         except:
             raise Exception("Error while adding the population updates")

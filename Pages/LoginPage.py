@@ -19,11 +19,13 @@ class LoginPage(Base):
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
 
     """Page Actions for Login page"""
-    def complete_login(self, username, password):
+    def complete_login(self, username, password, app_url):
         """
         application login page must be opened before calling this method
         """
         try:
+            self.LogScreenshot.fLogScreenshot(message=f'Launching the Application: {app_url}',
+                                              pass_=True, log=True, screenshot=False)
             # enter username
             self.input_text("username_textbox", username, UnivWaitFor=10)
             self.LogScreenshot.fLogScreenshot(message='Enter username',

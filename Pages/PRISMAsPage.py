@@ -29,31 +29,40 @@ class PRISMASPage(Base):
         self.jsclick(button)
         time.sleep(5)
 
+    # Reading Population data for PRISMAs Page
+    def get_prisma_pop_data(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        pop = df.loc[df['Name'] == locatorname]['Prisma_Population'].dropna().to_list()
+        return pop
+    
     def get_prisma_excelfile_details(self, filepath, locatorname, column_name):
         df = pd.read_excel(filepath)
-        sheet_name = os.getcwd()+(df.loc[df['Prisma_Population'] == locatorname][column_name].to_list()[0])
+        sheet_name = os.getcwd()+(df.loc[df['Name'] == locatorname][column_name].to_list()[0])
         return sheet_name
     
     def get_prisma_data_details(self, filepath, locatorname):
         df = pd.read_excel(filepath)
-        sheet_name = df.loc[df['Prisma_Population'] == locatorname]['Study_Types'].to_list()
-        sheet1 = df.loc[df['Prisma_Population'] == locatorname]['OriginalStudiesNumbers'].to_list()
-        sheet2 = df.loc[df['Prisma_Population'] == locatorname]['RecordsNumber'].to_list()
-        sheet3 = df.loc[df['Prisma_Population'] == locatorname]['fullTextReviewRecordsNumber'].to_list()
-        sheet4 = df.loc[df['Prisma_Population'] == locatorname]['totalRecordsNumber'].to_list()
-        sheet5 = df.loc[df['Prisma_Population'] == locatorname]['Prisma_Image'].to_list()
+        sheet_name = df.loc[df['Name'] == locatorname]['Study_Types'].to_list()
+        sheet1 = df.loc[df['Name'] == locatorname]['OriginalStudiesNumbers'].to_list()
+        sheet2 = df.loc[df['Name'] == locatorname]['RecordsNumber'].to_list()
+        sheet3 = df.loc[df['Name'] == locatorname]['fullTextReviewRecordsNumber'].to_list()
+        sheet4 = df.loc[df['Name'] == locatorname]['totalRecordsNumber'].to_list()
+        sheet5 = df.loc[df['Name'] == locatorname]['Prisma_Image'].to_list()
         prisma_data = [(sheet_name[i], int(sheet1[i]), int(sheet2[i]), int(sheet3[i]), int(sheet4[i]), (os.getcwd()+sheet5[i])) for i in range(0, len(sheet_name))]
         return prisma_data
 
     def add_prisma_excel_file(self, locatorname, filepath):
         expected_excel_upload_status_text = "PRISMA successfully uploaded"
+
+        # Read population details from data sheet
+        pop_name = self.get_prisma_pop_data(filepath, locatorname)
         
         self.refreshpage()
         time.sleep(3)
         try:
             pop_ele = self.select_element("prisma_pop_dropdown")
             select = Select(pop_ele)
-            select.select_by_visible_text(locatorname)
+            select.select_by_visible_text(pop_name[0])
 
             # Read the PRISMA file path required to upload
             prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
@@ -64,21 +73,31 @@ class PRISMASPage(Base):
             actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
             # time.sleep(2)
 
-            self.assertText(expected_excel_upload_status_text, actual_excel_upload_status_text)
-            self.LogScreenshot.fLogScreenshot(message=f"Excel File upload is success",
-                    pass_=True, log=True, screenshot=True)
+            # self.assertText(expected_excel_upload_status_text, actual_excel_upload_status_text)
+            # self.LogScreenshot.fLogScreenshot(message=f"Excel File upload is success",
+            #         pass_=True, log=True, screenshot=True)
+            if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Upload is success.",
+                                        pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading PRISMA Excel File.",
+                                        pass_=False, log=True, screenshot=True)
+                raise Exception("Unable to find status message while uploading PRISMA Excel File.")
         except Exception:
             raise Exception("Unable to upload PRISMA Excel file")
     
     def del_prisma_excel_file(self, locatorname, excel_del_locator, excel_del_popup, filepath):
         expected_excel_del_status_text = "PRISMA excel file successfully deleted"
+
+        # Read population details from data sheet
+        pop_name = self.get_prisma_pop_data(filepath, locatorname)
         
         self.refreshpage()
         time.sleep(3)
         try:
             pop_ele = self.select_element("prisma_pop_dropdown")
             select = Select(pop_ele)
-            select.select_by_visible_text(locatorname)
+            select.select_by_visible_text(pop_name[0])
 
             self.del_prisma_image(locatorname, filepath, "prisma_image_delete_btn", "prisma_image_delete_popup")
             time.sleep(2)
@@ -89,11 +108,18 @@ class PRISMASPage(Base):
             time.sleep(2)
 
             actual_excel_del_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
-            time.sleep(2)
+            # time.sleep(2)
 
-            self.assertText(expected_excel_del_status_text, actual_excel_del_status_text)
-            self.LogScreenshot.fLogScreenshot(message=f"Excel File Delete is success. Text is : {actual_excel_del_status_text}",
-                    pass_=True, log=True, screenshot=True)
+            # self.assertText(expected_excel_del_status_text, actual_excel_del_status_text)
+            # self.LogScreenshot.fLogScreenshot(message=f"Excel File Delete is success. Text is : {actual_excel_del_status_text}",
+            #         pass_=True, log=True, screenshot=True)
+            if actual_excel_del_status_text == expected_excel_del_status_text:
+                self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Delete is success.",
+                                        pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting PRISMA Excel File.",
+                                        pass_=False, log=True, screenshot=True)
+                raise Exception("Unable to find status message while deleting PRISMA Excel File.")
             time.sleep(5)
         except Exception:
             raise Exception("Unable to delete PRISMA Excel file")
@@ -126,16 +152,27 @@ class PRISMASPage(Base):
                 time.sleep(3)
                 
                 actual_image_upload_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=30)
-                time.sleep(2)
+                # time.sleep(2)
 
-                self.assertText(expected_image_upload_status_text, actual_image_upload_status_text)
-                self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success",
-                    pass_=True, log=True, screenshot=True)
+                # self.assertText(expected_image_upload_status_text, actual_image_upload_status_text)
+                # self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success",
+                #     pass_=True, log=True, screenshot=True)
+
+                if actual_image_upload_status_text == expected_image_upload_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success.",
+                                            pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading PRISMA Image File.",
+                                            pass_=False, log=True, screenshot=True)
+                    raise Exception("Unable to find status message while uploading PRISMA Image File.")
         except Exception:
             raise Exception("Unable to upload PRISMA image")
     
     def del_prisma_image(self, locatorname, filepath, del_locator, del_popup):
         expected_image_del_status_text = "PRISMA successfully deleted"
+
+        # Read population details from data sheet
+        pop_name = self.get_prisma_pop_data(filepath, locatorname)
 
         stdy_data = self.get_prisma_data_details(filepath, locatorname)
 
@@ -145,7 +182,7 @@ class PRISMASPage(Base):
                 time.sleep(3)
                 pop_ele = self.select_element("prisma_pop_dropdown")
                 select = Select(pop_ele)
-                select.select_by_visible_text(locatorname)
+                select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
 
                 stdy_ele = self.select_element("prisma_study_type_dropdown")
@@ -156,14 +193,22 @@ class PRISMASPage(Base):
                 self.click(del_locator)
                 time.sleep(2)
                 self.click(del_popup)
-                time.sleep(3)
+                time.sleep(2)
                 
                 actual_image_del_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=30)
-                time.sleep(2)
+                # time.sleep(2)
 
-                self.assertText(expected_image_del_status_text, actual_image_del_status_text)
-                self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success. Text is : {actual_image_del_status_text}",
-                    pass_=True, log=True, screenshot=True)
+                # self.assertText(expected_image_del_status_text, actual_image_del_status_text)
+                # self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success. Text is : {actual_image_del_status_text}",
+                #     pass_=True, log=True, screenshot=True)
+
+                if actual_image_del_status_text == expected_image_del_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success.",
+                                            pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting PRISMA Image File.",
+                                            pass_=False, log=True, screenshot=True)
+                    raise Exception("Unable to find status message while deleting PRISMA Image File.")
                 time.sleep(5)
         except Exception:
             raise Exception("Unable to delete PRISMA image")

@@ -21,7 +21,7 @@ class Test_Login:
         self.loginPage = LoginPage(self.driver, extra)
         # Invoking the methods from loginpage
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
 
     @pytest.mark.smoketest
     def test_logout(self, extra):
@@ -29,5 +29,5 @@ class Test_Login:
         self.loginPage = LoginPage(self.driver, extra)
         # Invoking the methods from loginpage
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.loginPage.logout()

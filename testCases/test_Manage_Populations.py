@@ -22,6 +22,7 @@ class Test_ManagePopultionsPage:
     population_val = []
     edited_population_val = []
 
+    @pytest.mark.C30244
     def test_add_population(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -41,7 +42,7 @@ class Test_ManagePopultionsPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         pop_list = ['pop1', 'pop2', 'pop3']
@@ -59,6 +60,7 @@ class Test_ManagePopultionsPage:
             
         self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is completed***", pass_=True, log=True, screenshot=False)
 
+    @pytest.mark.C30244
     def test_edit_population(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -72,7 +74,7 @@ class Test_ManagePopultionsPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         pop_list = ['pop1', 'pop2', 'pop3']
@@ -92,6 +94,7 @@ class Test_ManagePopultionsPage:
         
         self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is completed***", pass_=True, log=True, screenshot=False)
 
+    @pytest.mark.C30244
     def test_delete_population(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -105,7 +108,7 @@ class Test_ManagePopultionsPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         for i in self.edited_population_val:

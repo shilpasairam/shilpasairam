@@ -41,97 +41,91 @@ class ManageQADataPage(Base):
     def go_to_manageqadata(self, locator):
         self.click(locator, UnivWaitFor=10)
         time.sleep(5)
+    
+    def presence_of_elements(self, locator):
+        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
+    
+    # Reading Population data for ManageQAData Page
+    def get_manageqa_pop_data(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        pop = df.loc[df['Name'] == locatorname]['QA_Population'].dropna().to_list()
+        return pop
 
-    def get_qa_file_details(self, filepath):
-        file = pd.read_excel(filepath)
-        study_type = list(file['Study_Types'].dropna())
-        qa_file = list(os.getcwd()+file['QA_Excel_Files'].dropna())
-        result = [[study_type[i], qa_file[i]] for i in range(0, len(study_type))]
+    def get_qa_file_details(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        study_type = df.loc[df['Name'] == locatorname]['Study_Types'].dropna().to_list() # list(file['Study_Types'].dropna())
+        qa_file = df.loc[df['Name'] == locatorname]['QA_Excel_Files'].dropna().to_list() # list(os.getcwd()+file['QA_Excel_Files'].dropna()) 
+        result = [[study_type[i], os.getcwd()+qa_file[i]] for i in range(0, len(study_type))]
         return result
     
-    def get_qa_file_details_override(self, filepath):
-        file = pd.read_excel(filepath)
-        study_type = list(file['Study_Types'].dropna())
-        qa_file = list(os.getcwd()+file['Override_QA_Excel_Files'].dropna())
-        result = [(study_type[i], qa_file[i]) for i in range(0, len(study_type))]
+    def get_qa_file_details_override(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        study_type = df.loc[df['Name'] == locatorname]['Study_Types'].dropna().to_list() # list(file['Study_Types'].dropna())
+        qa_file = df.loc[df['Name'] == locatorname]['Override_QA_Excel_Files'].dropna().to_list() # list(os.getcwd()+file['Override_QA_Excel_Files'].dropna())
+        result = [[study_type[i], os.getcwd()+qa_file[i]] for i in range(0, len(study_type))]
+        return result
+    
+    def get_invalid_qa_file_details(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        study_type = df.loc[df['Name'] == locatorname]['Study_Types'].dropna().to_list()
+        qa_file = df.loc[df['Name'] == locatorname]['Invalid_Files'].dropna().to_list()
+        result = [[study_type[i], os.getcwd()+qa_file[i]] for i in range(0, len(study_type))]
         return result
 
-    # def add_manage_qa_data(self, manage_qa_page, study_data, filepath):
-    #     expected_upload_status_text = 'QA File successfully uploaded'
-        
-    #     self.click(manage_qa_page)
-    #     # Read population details from data sheet
-    #     new_pop_data, new_pop_val = self.mngpoppage.get_pop_data(filepath)
-    #     try:
-    #         for i in study_data:
-    #             self.refreshpage()
-    #             pop_ele = self.select_element("select_pop_dropdown")
-    #             select = Select(pop_ele)
-    #             select.select_by_visible_text(new_pop_val[0])
+    def access_manageqadata_page_elements(self, locatorname, filepath):
 
-    #             stdy_ele = self.select_element("select_stdy_type_dropdown")
-    #             select = Select(stdy_ele)
-    #             select.select_by_visible_text(i[0])
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
 
-    #             self.input_text("qa_checklist_name", f"QAName_{i[0]}")
-    #             self.input_text("qa_checklist_citation", f"QACitation_{i[0]}")
-    #             self.input_text("qa_checklist_reference", f"QAReference_{i[0]}")
-    #             self.input_text("qa_excel_file_upload", i[1])
-    #             time.sleep(1)
+        # Get StudyType and Files path to upload Managae QA Data
+        study_data = self.get_qa_file_details(filepath, locatorname)
 
-    #             self.click("upload_save_button")
-    #             time.sleep(1)
-    #             actual_upload_status_text = self.get_text("get_status_text", UnivWaitFor=10)
-    #             time.sleep(2)
+        try:
+            for i in study_data:
+                self.refreshpage()
+                time.sleep(3)
+                self.click("select_pop_dropdown")
+                self.LogScreenshot.fLogScreenshot(message=f"Population dropdown is accessible. Listed elements are:",
+                                                pass_=True, log=True, screenshot=True)
+                pop_ele = self.select_element("select_pop_dropdown")
+                select = Select(pop_ele)
+                select.select_by_visible_text(pop_name[0])
+                time.sleep(1)
+                pop_value = select.first_selected_option.text
 
-    #             if actual_upload_status_text == expected_upload_status_text:
-    #                 self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success.',
-    #                                         pass_=True, log=True, screenshot=True)
-    #             else:
-    #                 self.LogScreenshot.fLogScreenshot(message=f'Error while uploading QA File. Error Message is {actual_upload_status_text}',
-    #                                         pass_=False, log=True, screenshot=True)
-    #                 raise Exception("Error in QA file uploading")
-    #     except:
-    #         raise Exception("Unable to upload the Manage QA Data")
+                self.click("select_stdy_type_dropdown")
+                self.LogScreenshot.fLogScreenshot(message=f"SLR Type dropdown is accessible. Listed elements are:",
+                                                pass_=True, log=True, screenshot=True)
+                stdy_ele = self.select_element("select_stdy_type_dropdown")
+                select = Select(stdy_ele)
+                select.select_by_visible_text(i[0])
+                time.sleep(1)
 
-    # def del_manage_qa_data(self, manage_qa_page, study_data, del_locator, del_locator_popup, filepath):
-    #     expected_delete_status_text = 'QA excel file successfully deleted'
+                self.input_text("qa_checklist_name", f"QAName_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_citation", f"QACitation_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_reference", f"QAReference_{pop_value}_{i[0]}")
+                self.input_text("qa_excel_file_upload", i[1])
+                time.sleep(2)                
+                self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : {pop_value} -> SLR Type : {i[0]}',
+                                            pass_=True, log=True, screenshot=True)
 
-    #     self.click(manage_qa_page)
-    #     # Read population details from data sheet
-    #     new_pop_data, new_pop_val = self.mngpoppage.get_pop_data(filepath)
-    #     try:
-    #         for i in study_data:
-    #             self.refreshpage()
-    #             pop_ele = self.select_element("select_pop_dropdown")
-    #             select = Select(pop_ele)
-    #             select.select_by_visible_text(new_pop_val[0])
+                self.presence_of_elements("upload_save_button")
+                self.presence_of_elements("delete_file_button")
+                time.sleep(2)
+                self.LogScreenshot.fLogScreenshot(message=f"ManageQAData Page elements are accessible for Population : {pop_value} -> SLR Type : {i[0]}.",
+                                              pass_=True, log=True, screenshot=True)
 
-    #             stdy_ele = self.select_element("select_stdy_type_dropdown")
-    #             select = Select(stdy_ele)
-    #             select.select_by_visible_text(i[0])
+        except:
+            raise Exception("Unable to access the Manage QA Data page elements")
 
-    #             self.click(del_locator)
-    #             time.sleep(1)
-    #             self.click(del_locator_popup)
-    #             time.sleep(1)
+    def add_manage_qa_data_with_invalidfile(self, locatorname, filepath):
+        expected_error_text = "Incorrect file extension for the quality assessment excel file, it should have the .xls or .xlsx extension"
 
-    #             actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
-    #             time.sleep(2)
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
 
-    #             if actual_delete_status_text == expected_delete_status_text:
-    #                 self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success.',
-    #                                         pass_=True, log=True, screenshot=True)
-    #             else:
-    #                 self.LogScreenshot.fLogScreenshot(message=f'Error while deleting QA File. Error Message is {actual_delete_status_text}',
-    #                                         pass_=False, log=True, screenshot=True)
-    #                 raise Exception("Error in QA file Deletion")
-        
-    #     except:
-    #         raise Exception("Unable to delete the existing QA file")
-
-    def add_multiple_manage_qa_data(self, study_data, pop_index):
-        expected_upload_status_text = 'QA File successfully uploaded'
+        # Get StudyType and Files path to upload Managae QA Data
+        study_data = self.get_invalid_qa_file_details(filepath, locatorname)
 
         try:
             for i in study_data:
@@ -139,7 +133,54 @@ class ManageQADataPage(Base):
                 time.sleep(3)
                 pop_ele = self.select_element("select_pop_dropdown")
                 select = Select(pop_ele)
-                select.select_by_index(pop_index)
+                select.select_by_visible_text(pop_name[0])
+                time.sleep(1)
+                pop_value = select.first_selected_option.text
+
+                stdy_ele = self.select_element("select_stdy_type_dropdown")
+                select = Select(stdy_ele)
+                select.select_by_visible_text(i[0])
+                time.sleep(1)
+
+                self.input_text("qa_checklist_name", f"QAName_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_citation", f"QACitation_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_reference", f"QAReference_{pop_value}_{i[0]}")
+                self.input_text("qa_excel_file_upload", i[1])
+                time.sleep(2)                
+                self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : {pop_value} -> SLR Type : {i[0]}',
+                                            pass_=True, log=True, screenshot=True)
+
+                self.click("upload_save_button")
+                time.sleep(3)
+                actual_upload_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                # time.sleep(2)
+
+                if actual_upload_status_text == expected_error_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"File with invalid format is not uploaded as expected. Invalid file is '{Path(f'{i[1]}').stem}'",
+                                            pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading File with invalid format for Population : {pop_value} -> SLR Type : {i[0]}. Invalid file is '{Path(f'{i[1]}').stem}'",
+                                            pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while uploading File with invalid format for Population : {pop_value} -> SLR Type : {i[0]}. Invalid file is '{Path(f'{i[1]}').stem}'")
+        except:
+            raise Exception("Unable to upload the Manage QA Data")
+
+    def add_multiple_manage_qa_data(self, locatorname, filepath):
+        expected_upload_status_text = 'QA File successfully uploaded'
+
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
+
+        # Get StudyType and Files path to upload Managae QA Data
+        study_data = self.get_qa_file_details(filepath, locatorname)
+
+        try:
+            for i in study_data:
+                self.refreshpage()
+                time.sleep(3)
+                pop_ele = self.select_element("select_pop_dropdown")
+                select = Select(pop_ele)
+                select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
                 pop_value = select.first_selected_option.text
 
@@ -171,8 +212,14 @@ class ManageQADataPage(Base):
         except:
             raise Exception("Unable to upload the Manage QA Data")
 
-    def overwrite_multiple_manage_qa_data(self, study_data, pop_index):
+    def overwrite_multiple_manage_qa_data(self, locatorname, filepath):
         expected_upload_status_text = 'QA File successfully uploaded'
+
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
+
+        # Get StudyType and Files path to Override the existing Managae QA Data
+        study_data = self.get_qa_file_details_override(filepath, locatorname)
         
         try:
             for i in study_data:
@@ -180,7 +227,7 @@ class ManageQADataPage(Base):
                 time.sleep(3)
                 pop_ele = self.select_element("select_pop_dropdown")
                 select = Select(pop_ele)
-                select.select_by_index(pop_index)
+                select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
                 pop_value = select.first_selected_option.text
 
@@ -212,8 +259,14 @@ class ManageQADataPage(Base):
         except:
             raise Exception("Unable to overwrite the Manage QA Data")
 
-    def del_multiple_manage_qa_data(self, study_data, del_locator, del_locator_popup, pop_index):
+    def del_multiple_manage_qa_data(self, locatorname, filepath):
         expected_delete_status_text = 'QA excel file successfully deleted'
+
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
+
+        # Get StudyType and Files path to upload Managae QA Data
+        study_data = self.get_qa_file_details(filepath, locatorname)
 
         try:
             for i in study_data:
@@ -221,7 +274,7 @@ class ManageQADataPage(Base):
                 time.sleep(3)
                 pop_ele = self.select_element("select_pop_dropdown")
                 select = Select(pop_ele)
-                select.select_by_index(pop_index)
+                select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
                 pop_value = select.first_selected_option.text
 
@@ -232,9 +285,9 @@ class ManageQADataPage(Base):
                 self.LogScreenshot.fLogScreenshot(message=f'Selected Data For Deletion :',
                                             pass_=True, log=True, screenshot=True)
 
-                self.click(del_locator)
+                self.click("delete_file_button")
                 time.sleep(2)
-                self.click(del_locator_popup)
+                self.click("delete_file_popup")
                 time.sleep(2)
 
                 actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
@@ -250,8 +303,14 @@ class ManageQADataPage(Base):
         except:
             raise Exception("Unable to delete the existing QA file")
 
-    def compare_qa_file_with_report(self, study_data, pop_value, slrfilepath):
+    def compare_qa_file_with_report(self, locatorname, filepath):
         expected_upload_status_text = 'QA File successfully uploaded'
+
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
+
+        # Get StudyType and Files path to upload Managae QA Data
+        study_data = self.get_qa_file_details(filepath, locatorname)
 
         try:
             for i in study_data:
@@ -260,7 +319,7 @@ class ManageQADataPage(Base):
                 self.go_to_manageqadata("manage_qa_data_button")
                 pop_ele = self.select_element("select_pop_dropdown")
                 select = Select(pop_ele)
-                select.select_by_visible_text(pop_value)
+                select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
 
                 stdy_ele = self.select_element("select_stdy_type_dropdown")
@@ -268,12 +327,12 @@ class ManageQADataPage(Base):
                 select.select_by_visible_text(i[0])
                 time.sleep(1)
 
-                self.input_text("qa_checklist_name", f"QAName_{pop_value}_{i[0]}")
-                self.input_text("qa_checklist_citation", f"QACitation_{pop_value}_{i[0]}")
-                self.input_text("qa_checklist_reference", f"QAReference_{pop_value}_{i[0]}")
+                self.input_text("qa_checklist_name", f"QAName_{pop_name[0]}_{i[0]}")
+                self.input_text("qa_checklist_citation", f"QACitation_{pop_name[0]}_{i[0]}")
+                self.input_text("qa_checklist_reference", f"QAReference_{pop_name[0]}_{i[0]}")
                 self.input_text("qa_excel_file_upload", i[1])
                 time.sleep(3)
-                self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : {pop_value} -> SLR Type : {i[0]}',
+                self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : {pop_name[0]} -> SLR Type : {i[0]}',
                                             pass_=True, log=True, screenshot=True)
 
                 self.click("upload_save_button")
@@ -282,23 +341,23 @@ class ManageQADataPage(Base):
                 # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success for Population : {pop_value} -> SLR Type : {i[0]}.',
+                    self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success for Population : {pop_name[0]} -> SLR Type : {i[0]}.',
                                             pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading QA File for Population : {pop_value} -> SLR Type : {i[0]}.',
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading QA File for Population : {pop_name[0]} -> SLR Type : {i[0]}.',
                                             pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while uploading QA File for Population : {pop_value} -> SLR Type : {i[0]}.")
+                    raise Exception(f"Unable to find status message while uploading QA File for Population : {pop_name[0]} -> SLR Type : {i[0]}.")
 
                 # Go to live slr page
                 self.liveslrpage.go_to_liveslr("SLR_Homepage")
                 if i[0] == 'Quality of life':
                     i[0] = 'Quality of Life'
-                self.slrreport.select_data(f"{pop_value}", f"{pop_value}_radio_button")
+                self.slrreport.select_data(f"{pop_name[0]}", f"{pop_name[0]}_radio_button")
                 self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
                 self.slrreport.generate_download_report("excel_report")
                 time.sleep(5)
                 excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                self.slrreport.validate_filename(excel_filename1, slrfilepath)
+                self.slrreport.validate_filename(excel_filename1, filepath)
 
                 excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename1}')
                 if 'Quality Assessment' in excel_data.sheetnames:
@@ -339,8 +398,14 @@ class ManageQADataPage(Base):
         except:
             raise Exception("Error in report comparision between QA data file and Complete Excel report")
 
-    def del_data_after_qafile_comparison(self, study_data, pop_value, slrfilepath):
+    def del_data_after_qafile_comparison(self, locatorname, filepath):
         expected_delete_status_text = 'QA excel file successfully deleted'
+
+        # Read population details from data sheet
+        pop_name = self.get_manageqa_pop_data(filepath, locatorname)
+
+        # Get StudyType and Files path to upload Managae QA Data
+        study_data = self.get_qa_file_details(filepath, locatorname)
 
         try:
             for i in study_data:
@@ -349,7 +414,7 @@ class ManageQADataPage(Base):
                 self.go_to_manageqadata("manage_qa_data_button")
                 pop_ele = self.select_element("select_pop_dropdown")
                 select = Select(pop_ele)
-                select.select_by_visible_text(pop_value)
+                select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
 
                 stdy_ele = self.select_element("select_stdy_type_dropdown")
@@ -370,23 +435,23 @@ class ManageQADataPage(Base):
                 # time.sleep(2)
 
                 if actual_delete_status_text == expected_delete_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success for Population : {pop_value} -> SLR Type : {i[0]}.',
+                    self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success for Population : {pop_name[0]} -> SLR Type : {i[0]}.',
                                             pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting QA File for Population : {pop_value} -> SLR Type : {i[0]}.',
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting QA File for Population : {pop_name[0]} -> SLR Type : {i[0]}.',
                                             pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while deleting QA File for Population : {pop_value} -> SLR Type : {i[0]}.")
+                    raise Exception(f"Unable to find status message while deleting QA File for Population : {pop_name[0]} -> SLR Type : {i[0]}.")
                 
                 # Go to live slr page
                 self.liveslrpage.go_to_liveslr("SLR_Homepage")
                 if i[0] == 'Quality of life':
                     i[0] = 'Quality of Life'
-                self.slrreport.select_data(f"{pop_value}", f"{pop_value}_radio_button")
+                self.slrreport.select_data(f"{pop_name[0]}", f"{pop_name[0]}_radio_button")
                 self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
                 self.slrreport.generate_download_report("excel_report")
                 time.sleep(5)
                 excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                self.slrreport.validate_filename(excel_filename1, slrfilepath)
+                self.slrreport.validate_filename(excel_filename1, filepath)
 
                 excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename1}')
                 if 'Quality Assessment' not in excel_data.sheetnames:
