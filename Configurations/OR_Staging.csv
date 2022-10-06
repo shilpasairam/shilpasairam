@@ -32,6 +32,8 @@ Population,NewImportLogic_1 - Test_Automation_1,XPATH,//label//input[@type='radi
 Population,NewImportLogic_1 - Test_Automation_1_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=32]
 Population,QOL_and_ECON - UtilityOutcome,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=42]/following::span[1]
 Population,QOL_and_ECON - UtilityOutcome_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=42]
+Population,PRODFix_QOL_ECON - UtilityOutcome,XPATH,//label//input[@type='radio' and @name='populationFilters' and @value=50]/following::span[1]
+Population,PRODFix_QOL_ECON - UtilityOutcome_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=50]
 SLRType,Clinical,XPATH,//label//input[@type='radio' and @name='slrType' and @value=1]/following::span[1]
 SLRType,Clinical_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=1]
 SLRType,Interventional,XPATH,//label//input[@type='radio' and @name='slrType' and @value=1]/following::span[1]
