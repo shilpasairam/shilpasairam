@@ -237,12 +237,18 @@ class SLRReport(Base):
             expectedname = list(file['ExpectedFilenames'].dropna())
             # actualname = [x for x in re.compile(r'\D+').findall(filename)]
             actualname = filename[:-19]
-            for i in expectedname:
-                # if i == actualname[0]:
-                if i == actualname:
-                    self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
+            # for i in expectedname:
+            #     # if i == actualname[0]:
+            #     if i == actualname:
+            #         self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
+            #                                           pass_=True, log=True, screenshot=False)
+            #         break
+            if actualname in expectedname:
+                self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                                       pass_=True, log=True, screenshot=False)
-                    break
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
+                                                      pass_=False, log=True, screenshot=False)
         except Exception:
             raise Exception("Error during filename validation")
 

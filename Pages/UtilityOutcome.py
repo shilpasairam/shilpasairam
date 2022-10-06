@@ -1,19 +1,25 @@
 import numbers
 import os
+from pathlib import Path
 import re
 import time
 
 import docx
+from numpy import exp
 import openpyxl
 import pandas as pd
+from pytest import fail
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from pandas.core.common import flatten
 
 from Pages.Base import Base, fWaitFor
+from Pages.ImportPublicationsPage import ImportPublicationPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
+from Pages.SLRReportPage import SLRReport
 from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
@@ -28,6 +34,10 @@ class UtilityOutcome(Base):
         self.base = Base(self.driver, self.extra)
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, self.extra)
+        # Creating object of ImportPublicationPage class
+        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
         # Instantiate the logger class
         self.logger = LogGen.loggen()
         # Instantiate the logScreenshot class
@@ -53,7 +63,6 @@ class UtilityOutcome(Base):
         file = pd.read_excel(filepath, sheet_name=sheet)
         reported_var = list(file['ReportedVariables'].dropna())
         reported_var_button = list(file['Reportedvariable_checkbox'].dropna())
-        # reported_var_data = [(reported_var[i], reported_var_button[i]) for i in range(0, len(reported_var))]
         return reported_var, reported_var_button
     
     def get_util_source_template(self, filepath, sheet):
@@ -61,6 +70,49 @@ class UtilityOutcome(Base):
         expectedfilepath = list(os.getcwd()+file['ExpectedSourceTemplateFile'].dropna())
         return expectedfilepath
     
+    ###
+    def get_extraction_file_to_upload(self, filepath, sheet, locatorname):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        path = df.loc[df['Name'] == locatorname]['ExtractionFile'].dropna().to_list()
+        result = [[os.getcwd() + path[i]] for i in range(0, len(path))]
+        return result
+    
+    ###
+    def get_import_pop_to_upload(self, filepath, sheet, locatorname):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        pop = df.loc[df['Name'] == locatorname]['Import_Pop'].dropna().to_list()
+        return pop
+
+    ###
+    def get_population_to_upload(self, filepath, sheet, locatorname):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        pop = df.loc[df['Name'] == locatorname]['Population'].dropna().to_list()
+        pop_button = df.loc[df['Name'] == locatorname]['Population_Radio_button'].dropna().to_list()
+        result = [[pop[i], pop_button[i]] for i in range(0, len(pop))]
+        return result
+    
+    ###
+    def get_slrtype_to_upload(self, filepath, sheet, locatorname):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        slrtype = df.loc[df['Name'] == locatorname]['slrtype'].dropna().to_list()
+        slrtype_button = df.loc[df['Name'] == locatorname]['slrtype_Radio_button'].dropna().to_list()
+        result = [[slrtype[i], slrtype_button[i]] for i in range(0, len(slrtype))]
+        return result
+    
+    def validate_filename(self, filename, filepath, sheet):
+        try:
+            file = pd.read_excel(filepath, sheet_name=sheet)
+            expectedname = list(file['ExpectedFilenames'].dropna())
+            actualname = filename[:-19]
+            if actualname in expectedname:
+                self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
+                                                      pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
+                                                      pass_=False, log=True, screenshot=False)
+        except Exception:
+            raise Exception("Error during filename validation")
+
     def qol_presenceof_utilitysummary_into_excelreport(self, excel_filename, util_filepath):
         source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
         
@@ -205,6 +257,61 @@ class UtilityOutcome(Base):
             else:
                 raise Exception(f"Column name '{col_name}' is not matching between Source Utility File and Word Report.")
         
+    def qol_verify_utility_summary_sorting_order(self, excel_filename, util_filepath):
+        self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Summary sheet Started*****",
+                                          pass_=True, log=True, screenshot=False)
+        source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
+        
+        # Utility Summary sheet comparison with Expected results
+        self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Comparison*****",
+                                          pass_=True, log=True, screenshot=False)
+        sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+        
+        cols = list(sourcefile.columns.values)
+
+        # Check sorting order from downloaded excel report
+        actual_slrsource = actualexcel["SLR Source"]
+        actual_slrsource = [item for item in actual_slrsource if str(item) != 'nan']
+        actual_slrsource_final = []
+        # Removing the duplicates
+        [actual_slrsource_final.append(x) for x in list(flatten(actual_slrsource)) if x not in actual_slrsource_final]
+
+        self.LogScreenshot.fLogScreenshot(message=f"Unique SLR Source column values are : {actual_slrsource_final}",
+                                          pass_=True, log=True, screenshot=False)
+        
+        for m in actual_slrsource_final:
+            col_val = actualexcel[actualexcel["SLR Source"] == m]
+            col_val_res = col_val["Short Reference"]
+            col_val_res = [item for item in col_val_res if str(item) != 'nan']
+            if col_val_res == sorted(col_val_res):
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Utility Summary' sheet -> For '{m}' SLR Source, contents in column 'Short Reference' are in sorted order",
+                                          pass_=True, log=True, screenshot=False)
+            else:
+                raise Exception(f"From 'Utility Summary' sheet -> For '{m}' SLR Source, contents in column 'Short Reference' are not in Sorted order")
+
+        # Content comparison between Source file and Complete Excel report
+        for col in cols:
+            source_col = sourcefile[col]
+            actual_col = actualexcel[col]
+
+            source_col = [item for item in source_col if str(item) != 'nan']
+            actual_col = [item for item in actual_col if str(item) != 'nan']
+
+            if len(source_col) == len(actual_col) and source_col == actual_col:
+                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
+                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+                                        pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
+                                        f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception("Contents are not matching between Source template and Complete Excel report")
+
+        self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Summary sheet Completed*****",
+                                          pass_=True, log=True, screenshot=False)
+
     def qol_utility_summary_validation(self, webexcel_filename, excel_filename, util_filepath, word_filename):
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Started*****",
                                           pass_=True, log=True, screenshot=False)
@@ -424,6 +531,185 @@ class UtilityOutcome(Base):
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Completed*****",
                                           pass_=True, log=True, screenshot=False)
 
+    def upload_file(self, pop_name, file_to_upload):
+        expected_upload_status_text = "File(s) uploaded successfully"
+    
+        ele = self.select_element("select_update_dropdown")
+        time.sleep(2)
+        select = Select(ele)
+        select.select_by_visible_text(pop_name)
+        
+        jscmd = ReadConfig.getJScommand()
+        self.jsclick_hide(jscmd)
+        self.input_text("add_file", file_to_upload)
+        try:
+            self.jsclick("upload_button")
+            time.sleep(3)
+            actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+            
+            if actual_upload_status_text == expected_upload_status_text:
+                self.LogScreenshot.fLogScreenshot(message=f"File upload is success for Population : {pop_name}. Extraction Filename is '{Path(f'{file_to_upload}').stem}'",
+                                        pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction File for Population : {pop_name}.',
+                                        pass_=False, log=True, screenshot=True)
+                raise Exception("Unable to find status message during Extraction file uploading")
+
+            time.sleep(10)
+            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
+                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
+                                        pass_=True, log=True, screenshot=True)
+            else:
+                raise Exception("Error while uploading the extraction file")
+
+            self.refreshpage()
+            time.sleep(5)
+        except:
+            raise Exception("Error while uploading")
+    
+    def delete_file(self):
+        expected_delete_status_text = "Import status deleted successfully"        
+        self.refreshpage()
+        time.sleep(5)
+        
+        self.click("delete_file")
+        time.sleep(2)
+        self.click("delete_file_popup")
+        time.sleep(3)
+
+        actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+        
+        if actual_delete_status_text == expected_delete_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
+                                    pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
+                                    pass_=False, log=True, screenshot=True)
+            raise Exception("Error during Extraction File Deletion")
+
+    ####
+    def qol_validate_utilitysummarytab_and_contents_into_excelreport(self, locatorname, util_filepath, index):
+        source_template = self.get_util_source_template(util_filepath, 'prodfix')
+
+        extraction_file = self.get_extraction_file_to_upload(util_filepath, 'prodfix', locatorname)
+
+        # Read population data values
+        pop_list = self.get_population_to_upload(util_filepath, 'prodfix', locatorname)
+        # Read slrtype data values
+        slrtype = self.get_slrtype_to_upload(util_filepath, 'prodfix', locatorname)
+
+        imp_pop = self.get_import_pop_to_upload(util_filepath, 'prodfix', locatorname)
+
+        self.refreshpage()
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.upload_file(imp_pop[0], extraction_file[0])
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.slrreport.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}")
+        self.slrreport.select_data(slrtype[0][0], f"{slrtype[0][1]}")
+        self.slrreport.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.slrreport.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, util_filepath, "prodfix")
+
+        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Utility Summary Tab in Complete Excel Report*****",
+                                          pass_=True, log=True, screenshot=False)
+        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+        if 'Utility Summary' in excel_data.sheetnames:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is present in Downloaded Complete Excel Report",
+                                          pass_=True, log=True, screenshot=False)
+
+            excel_sheet = excel_data[f'Utility Summary']
+            if excel_sheet['H1'].value == 'Back To Toc':
+                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Utility Summary' sheet",
+                                        pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in 'Utility Summary' sheet",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception(f"'Back To Toc' option is not present in 'Utility Summary' sheet")
+            
+            toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
+            col_data = list(toc_sheet.iloc[:, 1])
+            if f'Utility Summary' in col_data:
+                self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' is present in TOC sheet.",
+                                        pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' is not present in TOC sheet. Available Data from TOC sheet: {col_data}",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception("'Utility Summary' is not present in TOC sheet.")
+        
+            # Utility Summary sheet comparison with Expected results
+            self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Content Comparison Started*****",
+                                            pass_=True, log=True, screenshot=False)
+            source_template_sheet = openpyxl.load_workbook(f'{source_template[0]}')
+            sheets = source_template_sheet.sheetnames
+
+            # if 'Utility Summary' in excel_data.sheetnames:
+
+            sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name=sheets[index])
+            actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+            
+            cols = list(sourcefile.columns.values)
+
+            # Check sorting order from downloaded excel report
+            actual_slrsource = actualexcel["SLR Source"]
+            actual_slrsource = [item for item in actual_slrsource if str(item) != 'nan']
+            actual_slrsource_final = []
+            # Removing the duplicates
+            [actual_slrsource_final.append(x) for x in list(flatten(actual_slrsource)) if x not in actual_slrsource_final]
+
+            self.LogScreenshot.fLogScreenshot(message=f"Unique SLR Source column values are : {actual_slrsource_final}",
+                                            pass_=True, log=True, screenshot=False)
+            
+            for m in actual_slrsource_final:
+                col_val = actualexcel[actualexcel["SLR Source"] == m]
+                col_val_res = col_val["Short Reference"]
+                col_val_res = [item for item in col_val_res if str(item) != 'nan']
+                if col_val_res == sorted(col_val_res):
+                    self.LogScreenshot.fLogScreenshot(message=f"From 'Utility Summary' sheet -> For '{m}' SLR Source, contents in column 'Short Reference' are in sorted order",
+                                            pass_=True, log=True, screenshot=False)
+                else:
+                    raise Exception(f"From 'Utility Summary' sheet -> For '{m}' SLR Source, contents in column 'Short Reference' are not in Sorted order")
+
+            # Content comparison between Source file and Complete Excel report
+            for col in cols:
+                source_col = sourcefile[col]
+                actual_col = actualexcel[col]
+
+                source_col = [item for item in source_col if str(item) != 'nan']
+                actual_col = [item for item in actual_col if str(item) != 'nan']
+
+                if len(source_col) == len(actual_col) and source_col == actual_col:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
+                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+                                            pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
+                                            f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
+                                            pass_=False, log=True, screenshot=False)
+                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+
+            self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Content Comparison Completed*****",
+                                            pass_=True, log=True, screenshot=False)
+        elif 'Utility Summary' not in excel_data.sheetnames and locatorname == "scenario4":
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is absent in downloaded Complete Excel Report as expected",
+                                          pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Utility Summary' tab is missing in Complete Excel Report",
+                                          pass_=False, log=True, screenshot=False)
+            raise Exception("'Utility Summary' tab is missing in Complete Excel Report")
+        
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+
+        self.delete_file()
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+    
     def econ_utility_summary_validation(self, webexcel_filename, excel_filename, util_filepath, word_filename):
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Started*****",
                                           pass_=True, log=True, screenshot=False)
