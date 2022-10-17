@@ -444,7 +444,7 @@ class ExcludedStudiesPage(Base):
                                                 pass_=True, log=True, screenshot=False)
 
                     excel_sheet = excel_data[f'Excluded studies {update_date_val}']
-                    if excel_sheet['H1'].value == 'Back To Toc':
+                    if excel_sheet['A1'].value == 'Back To Toc':
                         self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Excluded studies {update_date_val}' sheet",
                                                 pass_=True, log=True, screenshot=False)
                     else:
@@ -463,7 +463,10 @@ class ExcludedStudiesPage(Base):
                         raise Exception("'Excluded studies' is not present in TOC sheet.")
                     
                     studyfile = pd.read_excel(i[1])
-                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=f'Excluded studies {update_date_val}', skiprows=1)
+                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=f'Excluded studies {update_date_val}')
+
+                    # Removing the 'Back To Toc' column to compare the exact data with uploaded file
+                    excelfile = excelfile.iloc[: , 1:]
 
                     if studyfile.equals(excelfile):
                         self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File '{Path(f'{i[1]}').stem}' and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename}').stem}' are matching",
