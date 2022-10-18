@@ -59,7 +59,7 @@ class Test_SLR_Custom_Report:
                 self.slrreport.select_data(i[0], i[1])
                 for index, j in enumerate(self.slrtype):
                     self.slrreport.select_data(j[0], j[1])
-                    if i[0] == "MM Maintenance" and j[0] == "Interventional":
+                    if i[0] == "NewImportLogic_1 - Test_Automation_1" and j[0] == "Clinical":
                         self.slrreport.select_sub_section(self.rpt_data[3], self.rpt_data_chkbox[3],
                                                           "reported_variable_section")
 

@@ -42,7 +42,7 @@ class Test_PRISMAPage:
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        pop_val = ['pop1', 'pop2']
+        pop_val = ['pop1']
 
         for index, i in enumerate(pop_val):
             try:
@@ -74,7 +74,7 @@ class Test_PRISMAPage:
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
-        pop_val = ['pop1', 'pop2']
+        pop_val = ['pop1']
 
         for i in pop_val:
             try:

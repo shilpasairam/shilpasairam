@@ -125,8 +125,8 @@ class SLRReport(Base):
         # Read PRISMA value from Complete Excel Sheet
         excel = openpyxl.load_workbook(f'ActualOutputs//{efilename}')
         excel_sheet = excel['Updated PRISMA']
-        count_str = excel_sheet['B19'].value
-        count_val = excel_sheet['C19'].value
+        count_str = excel_sheet['B22'].value
+        count_val = excel_sheet['C22'].value
 
         # Reading PRISMA Value from Complete Word Report
         docs = docx.Document(f'ActualOutputs//{word_filename}')
@@ -296,7 +296,7 @@ class SLRReport(Base):
                                           pass_=True, log=True, screenshot=False)
         for sheet in sheet_names:
             webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
-            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=4)
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
 
             try:
                 for col in column_names:
@@ -337,7 +337,7 @@ class SLRReport(Base):
                                           pass_=True, log=True, screenshot=False)
         for sheet in sheet_names:
             webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
-            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=4)
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
             docs = docx.Document(f'ActualOutputs//{word_filename}')
             try:
                 table = docs.tables[table_count]

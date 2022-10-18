@@ -149,7 +149,7 @@ class UtilityOutcome(Base):
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of expected columns in Utility Summary Tab*****",
                                           pass_=True, log=True, screenshot=False)
         sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
-        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=2)
         
         source_col_val = [item for item in list(sourcefile.columns.values) if str(item) != 'nan']
         compex_col_val = [item for item in list(actualexcel.columns.values) if str(item) != 'nan']
@@ -169,7 +169,7 @@ class UtilityOutcome(Base):
         source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
 
         sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
-        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=2)
         
         cols = list(sourcefile.columns.values)
 
@@ -257,7 +257,7 @@ class UtilityOutcome(Base):
             else:
                 raise Exception(f"Column name '{col_name}' is not matching between Source Utility File and Word Report.")
         
-    def qol_verify_utility_summary_sorting_order(self, excel_filename, util_filepath):
+    def qol_verify_excelreport_utility_summary_sorting_order(self, excel_filename, util_filepath):
         self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Summary sheet Started*****",
                                           pass_=True, log=True, screenshot=False)
         source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
@@ -266,7 +266,7 @@ class UtilityOutcome(Base):
         self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Comparison*****",
                                           pass_=True, log=True, screenshot=False)
         sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
-        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=2)
         
         cols = list(sourcefile.columns.values)
 
@@ -311,6 +311,77 @@ class UtilityOutcome(Base):
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Summary sheet Completed*****",
                                           pass_=True, log=True, screenshot=False)
+    
+    def qol_verify_wordreport_utility_table_sorting_order(self, word_filename, util_filepath):
+        self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Table Started*****",
+                                          pass_=True, log=True, screenshot=False)
+        source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
+        
+        # Utility Table comparison with Expected results
+        self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Comparison*****",
+                                          pass_=True, log=True, screenshot=False)
+        sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
+        docs = docx.Document(f'ActualOutputs//{word_filename}')
+
+        table = docs.tables[6]
+        data = [[cell.text for cell in row.cells] for row in table.rows]
+        df_word = pd.DataFrame(data)
+
+        source = sourcefile["SLR Source"]
+        word = []
+        for row in docs.tables[6].rows:
+            word.append(row.cells[0].text)
+        
+        source = [item for item in source if str(item) != 'nan']
+        word.pop(0)
+        word_slrsource_final = []
+        # Removing the duplicates
+        [word_slrsource_final.append(x) for x in list(flatten(word)) if x not in word_slrsource_final]
+
+        print(f"Unique SLR Source column values in word report are : {word_slrsource_final}")
+
+        for n in word_slrsource_final:
+            col_val = df_word[df_word[0] == n]
+            col_val_res1 = col_val[1]
+            col_val_res1 = [item for item in col_val_res1 if str(item) != 'nan']
+
+            if col_val_res1 == sorted(col_val_res1):
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Utility Table' -> For '{n}' SLR Source, contents in column 'Short Reference' are in sorted order",
+                                          pass_=True, log=True, screenshot=False)
+            else:
+                raise Exception(f"From 'Utility Table' -> For '{n}' SLR Source, contents in column 'Short Reference' are not in Sorted order")
+        
+        # Content comparison between Source file and Complete Word report
+        # Using count variable to loop over columns in word document
+        count = 0
+        # df_word.values[0] will give the list of column names from the table in Word document
+        for col_name in df_word.values[0]:
+            if col_name in sourcefile.columns.values:
+                source = sourcefile[col_name]
+                word = []
+                for row in docs.tables[6].rows:
+                    word.append(row.cells[count].text)
+
+                source = [item for item in source if str(item) != 'nan']
+                word.pop(0)
+
+                if len(source) == len(word) and source == word:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel and Word Reports.\n"
+                                    f"Source Excel Elements Length: {len(source)},\n Word Elements Length: {len(word)}\n",
+                                    # f"Source Excel Elements: {source}\n Word Elements: {word}",
+                            pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching between Source Excel and Word Reports.\n"
+                                f"Source Excel Elements Length: {len(source)},\n Word Elements Length: {len(word)}\n"
+                                f"Source Excel Elements: {source},\n Word Elements: {word}",
+                        pass_=False, log=True, screenshot=False)
+                    raise Exception("Elements are not matching between Source Excel and Word Reports")
+                count += 1
+            else:
+                raise Exception("Column names are not matching between Source Excel and Word Reports")
+
+        self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Table Completed*****",
+                                          pass_=True, log=True, screenshot=False)
 
     def qol_utility_summary_validation(self, webexcel_filename, excel_filename, util_filepath, word_filename):
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Started*****",
@@ -322,7 +393,7 @@ class UtilityOutcome(Base):
                                           pass_=True, log=True, screenshot=False)
         sourcefile1 = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedReportData')
         webexcel1 = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name='QOL Report', skiprows=3)
-        actualexcel1 = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='QOL Report', skiprows=4)
+        actualexcel1 = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='QOL Report', skiprows=3)
         
         cols1 = list(sourcefile1.columns.values)
 
@@ -363,7 +434,7 @@ class UtilityOutcome(Base):
         self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Comparison*****",
                                           pass_=True, log=True, screenshot=False)
         sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedUtilitySummary')
-        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=2)
         
         cols = list(sourcefile.columns.values)
 
@@ -373,9 +444,6 @@ class UtilityOutcome(Base):
         sourcefile_col = [item for item in sourcefile_col if str(item) != 'nan']
         actualexcel_col = [item for item in actualexcel_col if str(item) != 'nan']
 
-        # if sourcefile_col == sorted(sourcefile_col) and actualexcel_col == sorted(actualexcel_col):
-        #     self.LogScreenshot.fLogScreenshot(message=f"From 'Utility Summary' sheet, contents in column 'Short Reference' are in sorted order",
-        #                                     pass_=True, log=True, screenshot=False)
         for col in cols:
             source_col = sourcefile[col]
             actual_col = actualexcel[col]
@@ -393,8 +461,6 @@ class UtilityOutcome(Base):
                                         f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
                                         pass_=False, log=True, screenshot=False)
                 raise Exception("Contents are not matching between Source template and Complete Excel report")
-        # else:
-        #     raise Exception("From 'Utility Summary' sheet, contents in column 'Short Reference' are not in Sorted order")
 
         # Word report content comparison for Utility Table
         self.LogScreenshot.fLogScreenshot(message=f"*****Word Report Utility Table Comparison*****",
@@ -431,14 +497,6 @@ class UtilityOutcome(Base):
                     source = [item for item in source if str(item) != 'nan']
                     actual = [item for item in actual if str(item) != 'nan']
                     word.pop(0)
-
-                    # Validating the sorted order for 'Short Reference' column from Word Report -> Utility Table
-                    # if col_name == 'Short Reference':
-                    #     if word == sorted(word):
-                    #         self.LogScreenshot.fLogScreenshot(message=f"From Word Report -> 'Utility Table' section, contents in column 'Short Reference' are in sorted order",
-                    #                         pass_=True, log=True, screenshot=False)
-                    #     else:
-                    #         raise Exception("From Word Report -> 'Utility Table' section, contents in column 'Short Reference' are not in sorted order")
 
                     if len(source) == len(actual) == len(word) and source == actual == word:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel and Word Reports.\n"
@@ -491,7 +549,7 @@ class UtilityOutcome(Base):
                                           pass_=True, log=True, screenshot=False)
         sourcefile1 = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedReportData')
         webexcel1 = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name='QOL Report', skiprows=3)
-        actualexcel1 = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='QOL Report', skiprows=4)
+        actualexcel1 = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='QOL Report', skiprows=3)
         
         cols1 = list(sourcefile1.columns.values)
 
@@ -646,10 +704,8 @@ class UtilityOutcome(Base):
             source_template_sheet = openpyxl.load_workbook(f'{source_template[0]}')
             sheets = source_template_sheet.sheetnames
 
-            # if 'Utility Summary' in excel_data.sheetnames:
-
             sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name=sheets[index])
-            actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=3)
+            actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Utility Summary', skiprows=2)
             
             cols = list(sourcefile.columns.values)
 
@@ -720,7 +776,7 @@ class UtilityOutcome(Base):
                                           pass_=True, log=True, screenshot=False)
         sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedReportData')
         webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name='CEA CUA Report', skiprows=3)
-        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='CEA CUA Report', skiprows=4)
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='CEA CUA Report', skiprows=3)
         
         cols = list(sourcefile.columns.values)
 
@@ -821,7 +877,7 @@ class UtilityOutcome(Base):
                                           pass_=True, log=True, screenshot=False)
         sourcefile1 = pd.read_excel(f'{source_template[0]}', sheet_name='ExpectedReportData')
         webexcel1 =  pd.concat(pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=None, skiprows=3), ignore_index=True)
-        actualexcel1 =  pd.concat(pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=None, skiprows=4), ignore_index=True)
+        actualexcel1 =  pd.concat(pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=None, skiprows=3), ignore_index=True)
         
         cols1 = list(sourcefile1.columns.values)
 

@@ -66,9 +66,6 @@ class ImportPublicationPage(Base):
                 actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
                 # time.sleep(2)
 
-                # self.assertText("File(s) uploaded successfully", upload_text)
-                # self.LogScreenshot.fLogScreenshot(message=f"File upload alert message '{upload_text}' is displayed",
-                #                             pass_=True, log=True, screenshot=False)
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
                                             pass_=True, log=True, screenshot=True)
@@ -115,7 +112,7 @@ class ImportPublicationPage(Base):
                         for n in td:
                             error_data.append(n.text)
                         self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
-                                                pass_=True, log=True, screenshot=False)
+                                                pass_=True, log=True, screenshot=True)
                     else:
                         raise Exception("Error while uploading the extraction file")
                 self.refreshpage()
@@ -139,10 +136,6 @@ class ImportPublicationPage(Base):
         time.sleep(3)
 
         actual_delete_status_text = self.get_text(msg_popup, UnivWaitFor=30)
-
-        # self.assertText("Import status deleted successfully", del_text)
-        # self.LogScreenshot.fLogScreenshot(message=f"File deletion is success.",
-        #                                   pass_=True, log=True, screenshot=True)
         
         if actual_delete_status_text == expected_delete_status_text:
             self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',

@@ -23,6 +23,11 @@ class LogGen:
         if not isExist:
             os.makedirs(screenshot_dirpath)
         
+        # Create ActualOutputs folder to save the snapshots
+        output_dirpath = os.getcwd()+'\\ActualOutputs'
+        isExist = os.path.exists(output_dirpath)
+        if not isExist:
+            os.makedirs(output_dirpath)
             
         logging.basicConfig(
             filename=".\\Logs\\testlog.log",

@@ -365,7 +365,7 @@ class ManageQADataPage(Base):
                                                 pass_=True, log=True, screenshot=False)
 
                     excel_sheet = excel_data['Quality Assessment']
-                    if excel_sheet['E1'].value == 'Back To Toc':
+                    if excel_sheet['A1'].value == 'Back To Toc':
                         self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present",
                                                 pass_=True, log=True, screenshot=False)
                     else:
@@ -384,8 +384,11 @@ class ManageQADataPage(Base):
                         raise Exception(f"'Quality Assessment' is present in TOC sheet which is not expected. Available Data from TOC sheet: {col_data}")
                     
                     qafile = pd.read_excel(i[1])
-                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename1}', sheet_name="Quality Assessment", skiprows=1)
+                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename1}', sheet_name="Quality Assessment")
 
+                    # Removing the 'Back To Toc' column to compare the exact data with uploaded file
+                    excelfile = excelfile.iloc[: , 1:]
+                    
                     if qafile.equals(excelfile):
                         self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File '{Path(f'{i[1]}').stem}' and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename1}').stem}' are matching",
                                                 pass_=True, log=True, screenshot=False)

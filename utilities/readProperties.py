@@ -148,3 +148,9 @@ class ReadConfig:
     def getexcludedstudiespath():
         exstdy = config.get('commonInfo', 'ExcludedStudiesdata')
         return exstdy
+
+    # Get file containing data for Excluded Studies - LiveSLR Tab actions
+    @staticmethod
+    def getexcludedstudiesliveslrpath():
+        exstdy_liveslr = config.get('commonInfo', 'ExcludedStudies_liveSLR_data')
+        return exstdy_liveslr
