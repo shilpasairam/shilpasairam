@@ -397,16 +397,16 @@ class UtilityOutcome(Base):
         
         cols1 = list(sourcefile1.columns.values)
 
-        sourcefile_col1 = sourcefile1['Article Identifier(s)']
-        actualexcel_col1 = actualexcel1['Article Identifier(s)']
-        actualwebexcel_col1 = webexcel1['Article Identifier(s)']
+        sourcefile_col1 = sourcefile1['Study Identifier']
+        actualexcel_col1 = actualexcel1['Study Identifier']
+        actualwebexcel_col1 = webexcel1['Study Identifier']
 
         sourcefile_col1 = [item for item in sourcefile_col1 if str(item) != 'nan']
         actualexcel_col1 = [item for item in actualexcel_col1 if str(item) != 'nan']
         actualwebexcel_col1 = [item for item in actualwebexcel_col1 if str(item) != 'nan']
 
         if sourcefile_col1 == sorted(sourcefile_col1) and actualexcel_col1 == sorted(actualexcel_col1) and actualwebexcel_col1 == sorted(actualwebexcel_col1):
-            self.LogScreenshot.fLogScreenshot(message=f"From 'QOL Report' sheet, contents in column 'Article Identifier(s)' are in sorted order",
+            self.LogScreenshot.fLogScreenshot(message=f"From 'QOL Report' sheet, contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
             for col in cols1:
                 source_col1 = sourcefile1[col]
@@ -428,7 +428,7 @@ class UtilityOutcome(Base):
                                             pass_=False, log=True, screenshot=False)
                     raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel report")
         else:
-            raise Exception("From 'QOL Report' sheet, contents in column 'Article Identifier(s)' are not in Sorted order")
+            raise Exception("From 'QOL Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
         
         # Utility Summary sheet comparison with Expected results
         self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Comparison*****",
@@ -553,16 +553,16 @@ class UtilityOutcome(Base):
         
         cols1 = list(sourcefile1.columns.values)
 
-        sourcefile_col1 = sourcefile1['Article Identifier(s)']
-        actualexcel_col1 = actualexcel1['Article Identifier(s)']
-        actualwebexcel_col1 = webexcel1['Article Identifier(s)']
+        sourcefile_col1 = sourcefile1['Study Identifier']
+        actualexcel_col1 = actualexcel1['Study Identifier']
+        actualwebexcel_col1 = webexcel1['Study Identifier']
 
         sourcefile_col1 = [item for item in sourcefile_col1 if str(item) != 'nan']
         actualexcel_col1 = [item for item in actualexcel_col1 if str(item) != 'nan']
         actualwebexcel_col1 = [item for item in actualwebexcel_col1 if str(item) != 'nan']
 
         if sourcefile_col1 == sorted(sourcefile_col1) and actualexcel_col1 == sorted(actualexcel_col1) and actualwebexcel_col1 == sorted(actualwebexcel_col1):
-            self.LogScreenshot.fLogScreenshot(message=f"From 'QOL Report' sheet, contents in column 'Article Identifier(s)' are in sorted order",
+            self.LogScreenshot.fLogScreenshot(message=f"From 'QOL Report' sheet, contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
             for col in cols1:
                 source_col1 = sourcefile1[col]
@@ -584,7 +584,7 @@ class UtilityOutcome(Base):
                                             pass_=False, log=True, screenshot=False)
                     raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel report")
         else:
-            raise Exception("From 'QOL Report' sheet, contents in column 'Article Identifier(s)' are not in Sorted order")
+            raise Exception("From 'QOL Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Completed*****",
                                           pass_=True, log=True, screenshot=False)
@@ -780,16 +780,16 @@ class UtilityOutcome(Base):
         
         cols = list(sourcefile.columns.values)
 
-        sourcefile_col = sourcefile['Article Identifier(s)']
-        actualexcel_col = actualexcel['Article Identifier(s)']
-        actualwebexcel_col = webexcel['Article Identifier(s)']
+        sourcefile_col = sourcefile['Study Identifier']
+        actualexcel_col = actualexcel['Study Identifier']
+        actualwebexcel_col = webexcel['Study Identifier']
 
         sourcefile_col = [item for item in sourcefile_col if str(item) != 'nan']
         actualexcel_col = [item for item in actualexcel_col if str(item) != 'nan']
         actualwebexcel_col = [item for item in actualwebexcel_col if str(item) != 'nan']
 
         if sourcefile_col == sorted(sourcefile_col) and actualexcel_col == sorted(actualexcel_col) and actualwebexcel_col == sorted(actualwebexcel_col):
-            self.LogScreenshot.fLogScreenshot(message=f"From 'CEA CUA Report' sheet, contents in column 'Article Identifier(s)' are in sorted order",
+            self.LogScreenshot.fLogScreenshot(message=f"From 'CEA CUA Report' sheet, contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
             for col in cols:
                 source_col = sourcefile[col]
@@ -811,7 +811,7 @@ class UtilityOutcome(Base):
                                             pass_=False, log=True, screenshot=False)
                     raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel Report")
         else:
-            raise Exception("From 'CEA CUA Report' sheet, contents in column 'Article Identifier(s)' are not in Sorted order")
+            raise Exception("From 'CEA CUA Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
         
         # Word report content comparison with Source template
         self.LogScreenshot.fLogScreenshot(message=f"*****ECON Word Report Comparison with Source template*****",
@@ -881,16 +881,16 @@ class UtilityOutcome(Base):
         
         cols1 = list(sourcefile1.columns.values)
 
-        sourcefile_col1 = sourcefile1['Article Identifier(s)']
-        actualexcel_col1 = actualexcel1['Article Identifier(s)']
-        actualwebexcel_col1 = webexcel1['Article Identifier(s)']
+        sourcefile_col1 = sourcefile1['Study Identifier']
+        actualexcel_col1 = actualexcel1['Study Identifier']
+        actualwebexcel_col1 = webexcel1['Study Identifier']
 
         sourcefile_col1 = [item for item in sourcefile_col1 if str(item) != 'nan']
         actualexcel_col1 = [item for item in actualexcel_col1 if str(item) != 'nan']
         actualwebexcel_col1 = [item for item in actualwebexcel_col1 if str(item) != 'nan']
 
         if sourcefile_col1 == sorted(sourcefile_col1) and actualexcel_col1 == sorted(actualexcel_col1) and actualwebexcel_col1 == sorted(actualwebexcel_col1):
-            self.LogScreenshot.fLogScreenshot(message=f"Contents in column 'Article Identifier(s)' are in sorted order",
+            self.LogScreenshot.fLogScreenshot(message=f"Contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
             for col in cols1:
                 source_col1 = sourcefile1[col]
@@ -912,7 +912,7 @@ class UtilityOutcome(Base):
                                             pass_=False, log=True, screenshot=False)
                     raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel Report")
         else:
-            raise Exception("Contents in column 'Article Identifier(s)' are not in Sorted order")
+            raise Exception("Contents in column 'Study Identifier' are not in Sorted order")
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Completed*****",
                                           pass_=True, log=True, screenshot=False)

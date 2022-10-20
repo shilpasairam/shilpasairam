@@ -109,17 +109,17 @@ class SLRReport(Base):
 
     def prism_value_validation(self, prism, efilename, wfilename, word_filename):
 
-        # Reading Article identifier column values from WebExcel Sheet
+        # Reading Study Identifier column values from WebExcel Sheet
         webexcel = openpyxl.load_workbook(f'ActualOutputs//{wfilename}')
         webcount = []
         webcount_final = []
 
         for sheet in webexcel.sheetnames:
             webexcel_value = pd.read_excel(f'ActualOutputs//{wfilename}', sheet_name=sheet, skiprows=3)
-            webex = webexcel_value['Article Identifier(s)']
+            webex = webexcel_value['Study Identifier']
             webcount.append([item for item in webex if str(item) != 'nan'])
 
-        # Removing duplicates to get the proper length of Article identifier data
+        # Removing duplicates to get the proper length of Study Identifier data
         [webcount_final.append(x) for x in list(flatten(webcount)) if x not in webcount_final]
 
         # Read PRISMA value from Complete Excel Sheet
@@ -246,10 +246,9 @@ class SLRReport(Base):
             if actualname in expectedname:
                 self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                                       pass_=True, log=True, screenshot=False)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
-                                                      pass_=False, log=True, screenshot=False)
         except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
+                                                      pass_=False, log=True, screenshot=False)
             raise Exception("Error during filename validation")
 
     # method to get the downloaded file name
@@ -282,7 +281,7 @@ class SLRReport(Base):
                                           pass_=True, log=True, screenshot=False)
         self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
-        column_names = ['Article Identifier(s)', 'Publication Type', 'Short Reference']
+        column_names = ['Study Identifier', 'Publication Type', 'Short Reference']
         sheet_names = []
 
         webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
@@ -420,18 +419,18 @@ class SLRReport(Base):
     #                 ele2 = [x for x in compex if isinstance(x, numbers.Number)]
     #                 if ele1 == sorted(ele1) and ele2 == sorted(ele2):
     #                     if ele1 == ele2:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Article Identifier(s) are matching between WebExcel "
+    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are matching between WebExcel "
     #                                                                   f"and Complete Excel report. \n"
     #                                                                   f"Compared Element values are: {ele1} and \n{ele2}",
     #                                                           pass_=True, log=True, screenshot=False)
     #                     else:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Article Identifier(s) are not matching between WebExcel "
+    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are not matching between WebExcel "
     #                                                                   f"and Complete Excel report. \n"
     #                                                                   f"Compared Element values are: {ele1} and \n{ele2}",
     #                                                           pass_=False, log=True, screenshot=False)
-    #                         raise Exception("Article Identifier(s) are not matching")
+    #                         raise Exception("Study Identifier are not matching")
     #                 else:
-    #                     raise Exception("Article Identifier Elements are not in sorted order")
+    #                     raise Exception("Study Identifier Elements are not in sorted order")
     #         except Exception:
     #             raise Exception("Error in Excel sheet content validation")
 
