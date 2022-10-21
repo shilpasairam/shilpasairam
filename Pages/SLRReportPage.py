@@ -382,6 +382,62 @@ class SLRReport(Base):
             except Exception:
                 raise Exception("Error in Word report content validation")
 
+    def presencof_publicationtype_col_in_wordreport(self, webexcel_filename, excel_filename, word_filename):
+        self.LogScreenshot.fLogScreenshot(message=f"Check presence of Publication Type column in Word Report",
+                                          pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, \n{word_filename}",
+                                          pass_=True, log=True, screenshot=False)
+        
+        # Index of Table number 6 is : 5. Starting point for word table content comparison
+        table_counts = {5: "Table 2-2 Clinical study characteristics", 6: "Table 2-3 Summary of patient demographics and baseline characteristics",
+                        7: "Table 2-4 Efficacy reported in clinical studies", 8: "Table 2-5 Safety reported in clinical studies"}
+        sheet = 'Clinical Report'
+
+        for table_count, value in table_counts.items():
+            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
+            docs = docx.Document(f'ActualOutputs//{word_filename}')
+            try:
+                table = docs.tables[table_count]
+                data = [[cell.text for cell in row.cells] for row in table.rows]
+                df_word = pd.DataFrame(data)
+
+                # Using count variable 1 will give the details of 'Publication Type' column in word document
+                count = 1
+                # 'Publication Type' is the column which will be used for validation
+                col_name = 'Publication Type'
+
+                # df_word.values[0] will give the list of column names from the table in Word document
+                if col_name in df_word.values[0]:
+                    self.LogScreenshot.fLogScreenshot(message=f"Column '{col_name}' is present after 'Short Reference' in Word report -> '{value}'",
+                                                      pass_=True, log=True, screenshot=False)
+                    if col_name in webexcel.columns.values and col_name in excel.columns.values:
+                        webex = webexcel[col_name]
+                        compex = excel[col_name]
+                        word = []
+                        for row in docs.tables[table_count].rows:
+                            word.append(row.cells[count].text)
+
+                        webex = [item for item in webex if str(item) != 'nan']
+                        compex = [item for item in compex if str(item) != 'nan']
+                        word.pop(0)
+
+                        if len(webex) == len(compex) == len(word) and webex == compex == word:
+                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' are matching between WebExcel, Complete Excel and Word Reports.\n"
+                                        f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
+                                        # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' are not matching between WebExcel, Complete Excel and Word Reports.\n"
+                                        f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n"
+                                        f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception("Elements are not matching between Webexcel, Complete Excel and Word Reports")
+                    else:
+                        raise Exception("Column names are not matching between Webexcel, Complete Excel and Word Reports")
+                table_count += 1
+            except Exception:
+                raise Exception("Error in Word report content validation")
 
     # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
