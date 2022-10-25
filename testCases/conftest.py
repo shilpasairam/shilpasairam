@@ -36,6 +36,7 @@ def init_driver(request):
     # getcwd should always return the root directory of the framework
     prefs["download.default_directory"] = f"{os.getcwd()}\\ActualOutputs"
     options.add_argument("--headless")
+    options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-gpu')
     options.add_argument("--log-level=3")  # fatal
     options.add_experimental_option("prefs", prefs)
@@ -44,7 +45,7 @@ def init_driver(request):
     web_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     request.cls.driver = web_driver
-    web_driver.maximize_window()
+    # web_driver.maximize_window()
     web_driver.implicitly_wait(10)
 
     yield

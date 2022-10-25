@@ -159,6 +159,8 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30247
+    @pytest.mark.C27301
+    @pytest.mark.C27306
     def test_qafile_compare_with_excelreport(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)

@@ -285,9 +285,6 @@ class ExcludedStudiesPage(Base):
                     for m in td1:
                         actual_table_values.append(m.text)
                     
-                    self.LogScreenshot.fLogScreenshot(message=f'Expected values are : {expected_table_values} and Actual values are : {actual_table_values}',
-                                                pass_=True, log=True, screenshot=False)
-                    
                     for n in expected_table_values:
                         if n in actual_table_values:
                             self.LogScreenshot.fLogScreenshot(message=f'Updated data is present in table.',

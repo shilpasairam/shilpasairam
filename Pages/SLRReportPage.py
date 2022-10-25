@@ -109,17 +109,17 @@ class SLRReport(Base):
 
     def prism_value_validation(self, prism, efilename, wfilename, word_filename):
 
-        # Reading Article identifier column values from WebExcel Sheet
+        # Reading Study Identifier column values from WebExcel Sheet
         webexcel = openpyxl.load_workbook(f'ActualOutputs//{wfilename}')
         webcount = []
         webcount_final = []
 
         for sheet in webexcel.sheetnames:
             webexcel_value = pd.read_excel(f'ActualOutputs//{wfilename}', sheet_name=sheet, skiprows=3)
-            webex = webexcel_value['Article Identifier(s)']
+            webex = webexcel_value['Study Identifier']
             webcount.append([item for item in webex if str(item) != 'nan'])
 
-        # Removing duplicates to get the proper length of Article identifier data
+        # Removing duplicates to get the proper length of Study Identifier data
         [webcount_final.append(x) for x in list(flatten(webcount)) if x not in webcount_final]
 
         # Read PRISMA value from Complete Excel Sheet
@@ -246,10 +246,9 @@ class SLRReport(Base):
             if actualname in expectedname:
                 self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                                       pass_=True, log=True, screenshot=False)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
-                                                      pass_=False, log=True, screenshot=False)
         except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
+                                                      pass_=False, log=True, screenshot=False)
             raise Exception("Error during filename validation")
 
     # method to get the downloaded file name
@@ -282,7 +281,7 @@ class SLRReport(Base):
                                           pass_=True, log=True, screenshot=False)
         self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
-        column_names = ['Article Identifier(s)', 'Publication Type', 'Short Reference']
+        column_names = ['Study Identifier', 'Publication Type', 'Short Reference']
         sheet_names = []
 
         webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
@@ -383,6 +382,62 @@ class SLRReport(Base):
             except Exception:
                 raise Exception("Error in Word report content validation")
 
+    def presencof_publicationtype_col_in_wordreport(self, webexcel_filename, excel_filename, word_filename):
+        self.LogScreenshot.fLogScreenshot(message=f"Check presence of Publication Type column in Word Report",
+                                          pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, \n{word_filename}",
+                                          pass_=True, log=True, screenshot=False)
+        
+        # Index of Table number 6 is : 5. Starting point for word table content comparison
+        table_counts = {5: "Table 2-2 Clinical study characteristics", 6: "Table 2-3 Summary of patient demographics and baseline characteristics",
+                        7: "Table 2-4 Efficacy reported in clinical studies", 8: "Table 2-5 Safety reported in clinical studies"}
+        sheet = 'Clinical Report'
+
+        for table_count, value in table_counts.items():
+            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
+            docs = docx.Document(f'ActualOutputs//{word_filename}')
+            try:
+                table = docs.tables[table_count]
+                data = [[cell.text for cell in row.cells] for row in table.rows]
+                df_word = pd.DataFrame(data)
+
+                # Using count variable 1 will give the details of 'Publication Type' column in word document
+                count = 1
+                # 'Publication Type' is the column which will be used for validation
+                col_name = 'Publication Type'
+
+                # df_word.values[0] will give the list of column names from the table in Word document
+                if col_name in df_word.values[0]:
+                    self.LogScreenshot.fLogScreenshot(message=f"Column '{col_name}' is present after 'Short Reference' in Word report -> '{value}'",
+                                                      pass_=True, log=True, screenshot=False)
+                    if col_name in webexcel.columns.values and col_name in excel.columns.values:
+                        webex = webexcel[col_name]
+                        compex = excel[col_name]
+                        word = []
+                        for row in docs.tables[table_count].rows:
+                            word.append(row.cells[count].text)
+
+                        webex = [item for item in webex if str(item) != 'nan']
+                        compex = [item for item in compex if str(item) != 'nan']
+                        word.pop(0)
+
+                        if len(webex) == len(compex) == len(word) and webex == compex == word:
+                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' are matching between WebExcel, Complete Excel and Word Reports.\n"
+                                        f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
+                                        # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' are not matching between WebExcel, Complete Excel and Word Reports.\n"
+                                        f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n"
+                                        f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception("Elements are not matching between Webexcel, Complete Excel and Word Reports")
+                    else:
+                        raise Exception("Column names are not matching between Webexcel, Complete Excel and Word Reports")
+                table_count += 1
+            except Exception:
+                raise Exception("Error in Word report content validation")
 
     # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
@@ -420,18 +475,18 @@ class SLRReport(Base):
     #                 ele2 = [x for x in compex if isinstance(x, numbers.Number)]
     #                 if ele1 == sorted(ele1) and ele2 == sorted(ele2):
     #                     if ele1 == ele2:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Article Identifier(s) are matching between WebExcel "
+    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are matching between WebExcel "
     #                                                                   f"and Complete Excel report. \n"
     #                                                                   f"Compared Element values are: {ele1} and \n{ele2}",
     #                                                           pass_=True, log=True, screenshot=False)
     #                     else:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Article Identifier(s) are not matching between WebExcel "
+    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are not matching between WebExcel "
     #                                                                   f"and Complete Excel report. \n"
     #                                                                   f"Compared Element values are: {ele1} and \n{ele2}",
     #                                                           pass_=False, log=True, screenshot=False)
-    #                         raise Exception("Article Identifier(s) are not matching")
+    #                         raise Exception("Study Identifier are not matching")
     #                 else:
-    #                     raise Exception("Article Identifier Elements are not in sorted order")
+    #                     raise Exception("Study Identifier Elements are not in sorted order")
     #         except Exception:
     #             raise Exception("Error in Excel sheet content validation")
 

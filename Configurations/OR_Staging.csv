@@ -44,6 +44,27 @@ SLRType,Quality of Life,XPATH,//label//input[@type='radio' and @name='slrType' a
 SLRType,Quality of Life_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=3]
 SLRType,Real-world Evidence,XPATH,//label//input[@type='radio' and @name='slrType' and @value=4]/following::span[1]
 SLRType,Real-world Evidence_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=4]
+SubPopulation,sub_pop_section,XPATH,//strong[text()='Select Sub-populations']
+SubPopulation,sub_pop_section_selectall,XPATH,//*[@id='collapse08']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allSubPopulations']/following::span[1]
+SubPopulation,sub_pop_section_selectall_checkbox,XPATH,//*[@id='collapse08']//div//div[1]//div//div//label//input
+SubPopulation,sub_pop_section2,XPATH,//*[@id='collapse08']//div//div[2]//div[2]//div//label//input[@type='checkbox' and @name='subPopulations']/following::span[1]
+SubPopulation,sub_pop_section2_checkbox,XPATH,//*[@id='collapse08']//div//div[2]//div[2]//div//label//input
+LineOfTherapy,lot_section,XPATH,//strong[text()='Select Line of Therapy']
+LineOfTherapy,lot_section_selectall,XPATH,//*[@id='collapse04']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allLineOfTherapies']/following::span[1]
+LineOfTherapy,lot_section_selectall_checkbox,XPATH,//*[@id='collapse04']//div//div[1]//div//div//label//input
+LineOfTherapy,lot_section1,XPATH,//*[@id='collapse04']//div//div[2]//div[1]//div//label//input[@type='checkbox' and @name='lineOfTherapies']/following::span[1]
+LineOfTherapy,lot_section1_checkbox,XPATH,//*[@id='collapse04']//div//div[2]//div[1]//div//label//input
+SelectIntervention,intervention_section,XPATH,//strong[text()='Select Intervention / Comparators']
+SelectIntervention,intervention_section_selectall,XPATH,//*[@id='collapse05']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allProducts']/following::span[1]
+SelectIntervention,intervention_section_selectall_checkbox,XPATH,//*[@id='collapse05']//div//div[1]//div//div//label//input
+SelectIntervention,intervention_section14,XPATH,//*[@id='collapse05']//div//div[14]//div//label//input[@type='checkbox' and @name='products']/following::span[1]
+SelectIntervention,intervention_section14_checkbox,XPATH,//*[@id='collapse05']//div//div[14]//div//label//input
+SelectIntervention,intervention_section4,XPATH,//*[@id='collapse05']//div//div[4]//div//label//input[@type='checkbox' and @name='products']/following::span[1]
+SelectIntervention,intervention_section4_checkbox,XPATH,//*[@id='collapse05']//div//div[4]//div//label//input
+SelectIntervention,intervention_section5,XPATH,//*[@id='collapse05']//div//div[5]//div//label//input[@type='checkbox' and @name='products']/following::span[1]
+SelectIntervention,intervention_section5_checkbox,XPATH,//*[@id='collapse05']//div//div[5]//div//label//input
+SelectIntervention,intervention_section6,XPATH,//*[@id='collapse05']//div//div[6]//div//label//input[@type='checkbox' and @name='products']/following::span[1]
+SelectIntervention,intervention_section6_checkbox,XPATH,//*[@id='collapse05']//div//div[6]//div//label//input
 ReportedVariable,reported_variable_section,XPATH,//strong[text()='Select Reported Variables']
 ReportedVariable,reported_variable_selectall,XPATH,//*[@id='collapse07']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allReportedVariables']/following::span[1]
 ReportedVariable,reported_variable_selectall_checkbox,XPATH,//*[@id='collapse07']//div//div[1]//div//div//label//input
@@ -121,6 +142,7 @@ ImportPublications,delete_file_popup,XPATH,//div[@class='modal-content']//div[3]
 ImportPublications,upload_table_rows,XPATH,//table[@class='table table-borderless']/tbody/tr
 ImportPublications,upload_table_row_1,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td
 ImportPublications,view_action,XPATH,//table[@class='table table-borderless']/tbody/tr[1]/td//em[@class='fa-lg icon-eye action-icon px-2 py-1 mx-1 ng-star-inserted']
+ImportPublications,back_to_view_action_btn,XPATH,//button[@class='btn btn-primary']
 ImportPublications,error_data_table,XPATH,//table[@class='table table-bordered table-striped table-sm mt-3 ng-star-inserted']/tbody/tr/td[2]
 ManagePopulations,managepopulations_button,LINK_TEXT,Manage populations
 ManagePopulations,add_population_btn,XPATH,"//button[@class=""btn btn-primary""]"

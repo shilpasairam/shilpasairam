@@ -103,6 +103,7 @@ class Test_ExcludedStudies_liveSLR:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C30715
+    @pytest.mark.C31843
     def test_validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
