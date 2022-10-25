@@ -86,6 +86,7 @@ ReportedVariable,reported_variable_section4,XPATH,//*[@id='collapse07']//div//di
 ReportedVariable,reported_variable_section4_checkbox,XPATH,//*[@id='collapse07']//div//div[2]//div[4]//div//label//input
 PreviewResults,preview_results,XPATH,"//button[@type='button' and contains(text(), 'Preview Results')]"
 WebTable,Table,CSS_SELECTOR,.table-scrollable.report
+WebTable,web_table_column_names,XPATH,//table[@class='table-scrollable report']/thead/tr[4]/th
 WebTable,Export_as_excel,XPATH,"//button[contains(text(), 'Export as excel')]"
 WebTable,Back_to_search_page,XPATH,"//button[contains(text(), 'Back')]"
 GenerateReport,excel_report,XPATH,"//button[@type='button' and contains(text(), 'Generate Complete Excel')]"

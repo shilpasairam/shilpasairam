@@ -916,3 +916,40 @@ class UtilityOutcome(Base):
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, Complete Excel Report and Complete Word Report for Utility Summary Completed*****",
                                           pass_=True, log=True, screenshot=False)
+
+    def presenceof_utilitycolumn_names(self, webexcel_filename, excel_filename, expected_dict):
+                                          
+        get_sheet_names = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
+        sheets = get_sheet_names.sheetnames
+
+        for sheet in sheets:
+            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
+            compexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
+
+            webex_cols = list(webexcel.columns.values)
+            compex_cols = list(compexcel.columns.values)
+
+            for k, v in expected_dict.items():
+                if v in webex_cols and v in compex_cols:
+                    self.LogScreenshot.fLogScreenshot(message=f"Column name '{v}' is present in Web Excel and Complete Excel Report",
+                                          pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Column name '{v}' is not present in Web Excel and Complete Excel Report",
+                                          pass_=False, log=True, screenshot=False)
+                    raise Exception("Column name '{v}' is not present in Web Excel and Complete Excel Report")
+
+    def check_column_names_in_previewresults(self, expected_dict):
+
+        result = []
+        tc1 = self.select_elements("web_table_column_names")
+        for m in tc1:
+            result.append(m.text)
+
+        for k, v in expected_dict.items():
+            if v in result:
+                self.LogScreenshot.fLogScreenshot(message=f"Column name '{v}' is present in Preview Results",
+                                        pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Column name '{v}' is not present in Preview Results",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception("Column name '{v}' is not present in Preview Results")
