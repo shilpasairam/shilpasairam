@@ -284,7 +284,7 @@ class ManageUpdatesPage(Base):
                 update_data = f"{result[0]} - {result[1]}"
                 return update_data
             else:
-                raise Exception("Population update data is not eduted")
+                raise Exception("Population update data is not edited")
         except:
             raise Exception("Error while adding the population updates")
 
