@@ -167,6 +167,7 @@ class ManagePopulationsPage(Base):
             raise Exception("Error in deleting the population")
     
     def add_multiple_population(self, locatorname, add_locator, filepath, table_rows):
+        expected_status_text = "Population added successfully"
         self.refreshpage()
         time.sleep(2)
         ele = self.select_element("table_entries_dropdown")
@@ -192,12 +193,16 @@ class ManagePopulationsPage(Base):
         self.click("submit_button")
         time.sleep(3)
 
-        add_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        time.sleep(2)
-                                        
-        self.assertText("Population added successfully", add_text)
-        self.LogScreenshot.fLogScreenshot(message=f'Able to add the population record',
+        actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
+        # time.sleep(2)
+
+        if actual_status_text == expected_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f"Addition of New Population is success",
                                     pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding New Population",
+                                    pass_=False, log=True, screenshot=True)
+            raise Exception(f"Unable to find status message while adding New Population")
 
         ele = self.select_element("table_entries_dropdown")
         select = Select(ele)
@@ -210,22 +215,22 @@ class ManagePopulationsPage(Base):
 
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    result = []
-                    self.input_text("search_button", f'{new_pop_val[1]}')
-                    td1 = self.select_elements('manage_pop_table_row_1')
-                    for m in td1:
-                        result.append(m.text)
+                result = []
+                self.input_text("search_button", f'{new_pop_val[1]}')
+                td1 = self.select_elements('manage_pop_table_row_1')
+                for m in td1:
+                    result.append(m.text)
 
-                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
-                                            pass_=True, log=True, screenshot=False)
-                    
-                    if result[1] == f'{new_pop_val[1]}':
-                        self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
-                                            pass_=True, log=True, screenshot=False)
-                        population = f"{result[1]}"
-                        return population
-                    else:
-                        raise Exception("Population data is not added")
+                self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
+                                        pass_=True, log=True, screenshot=False)
+                
+                if result[1] == f'{new_pop_val[1]}':
+                    self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
+                                        pass_=True, log=True, screenshot=False)
+                    population = f"{result[1]}"
+                    return population
+                else:
+                    raise Exception("Population data is not added")
             self.clear("search_button")
             self.refreshpage()
             time.sleep(2)
@@ -233,6 +238,7 @@ class ManagePopulationsPage(Base):
             raise Exception("Error while adding the population")
 
     def edit_multiple_population(self, locatorname, pop_name, edit_locator, filepath):
+        expected_status_text = "Population updated successfully"
         self.refreshpage()
         time.sleep(2)
 
@@ -251,15 +257,18 @@ class ManagePopulationsPage(Base):
         self.click("submit_button")
         time.sleep(3)
 
-        add_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        time.sleep(2)
-                                        
-        self.assertText("Population updated successfully", add_text)
-        self.LogScreenshot.fLogScreenshot(message=f'Able to edit the population record',
+        actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
+        # time.sleep(2)
+        
+        if actual_status_text == expected_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f"Editing the existing Population is success",
                                     pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while editing the Population data",
+                                    pass_=False, log=True, screenshot=True)
+            raise Exception(f"Unable to find status message while editing the Population data")
 
         try:
-            #if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
             result = []
             self.input_text("search_button", f'{edit_pop_val[1]}')
             td1 = self.select_elements('manage_pop_table_row_1')
@@ -282,6 +291,7 @@ class ManagePopulationsPage(Base):
             raise Exception("Error while editing the population")    
 
     def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows):
+        expected_status_text = "Population deleted successfully"
         ele = self.select_element("table_entries_dropdown")
         select = Select(ele)
         select.select_by_visible_text("100")
@@ -298,13 +308,16 @@ class ManagePopulationsPage(Base):
         self.click(del_locator_popup)
         time.sleep(2)
         
-        del_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
-        time.sleep(2)
+        actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
+        # time.sleep(2)
 
-        self.assertText("Population deleted successfully", del_text)
-        time.sleep(2)
-        self.LogScreenshot.fLogScreenshot(message=f'Able to delete the population record',
+        if actual_status_text == expected_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f"Deleting the existing Population is success",
                                     pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the Population data",
+                                    pass_=False, log=True, screenshot=True)
+            raise Exception(f"Unable to find status message while deleting the Population data")
 
         ele = self.select_element("table_entries_dropdown")
         select = Select(ele)
