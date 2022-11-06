@@ -81,7 +81,9 @@ class Test_SLR_Custom_Report:
                     self.slrreport.validate_filename(webexcel_filename1, self.filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
+                    self.slrreport.check_sorting_order_in_excel_report(webexcel_filename1, excel_filename1)
+
+                    self.slrreport.excel_content_validation(self.filepath, index, webexcel_filename1, excel_filename1)
 
                     self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
             except Exception:

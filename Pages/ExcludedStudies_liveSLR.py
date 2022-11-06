@@ -216,24 +216,41 @@ class ExcludedStudies_liveSLR(Base):
             
             cols = list(sourcefile.columns.values)
 
-            # Content comparison between Source file and Complete Excel report
-            for col in cols:
-                source_col = sourcefile[col]
-                actual_col = actualexcel[col]
+            # Check the length of 1st column from the report to make sure number of rows are as expected
+            source_col_len = sourcefile["Study Identifier"]
+            actual_col_len = actualexcel["Study Identifier"]
 
-                source_col = [item for item in source_col if str(item) != 'nan']
-                actual_col = [item for item in actual_col if str(item) != 'nan']
+            source_col_len = [item for item in source_col_len if str(item) != 'nan']
+            actual_col_len = [item for item in actual_col_len if str(item) != 'nan']
 
-                if len(source_col) == len(actual_col) and source_col == actual_col:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
-                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
-                                            pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
-                                            f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
-                                            pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+            if len(source_col_len) == len(actual_col_len):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and Complete Excel Report. "
+                                                f"Source Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
+                                          pass_=True, log=True, screenshot=False)
+
+                # Content comparison between Source file and Complete Excel report
+                for col in cols:
+                    source_col = sourcefile[col]
+                    actual_col = actualexcel[col]
+
+                    source_col = [item for item in source_col if str(item) != 'nan']
+                    actual_col = [item for item in actual_col if str(item) != 'nan']
+
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source_col, actual_col)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report",
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                                f"Duplicate values are arranged in following order -> Source File, Complete Excel. {comparison_result}",
+                                                pass_=False, log=True, screenshot=False)
+                        raise Exception("Contents are not matching between Source template and Complete Excel report")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and Complete Excel Report. "
+                                                f"Source Template Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
+                                          pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
 
             self.LogScreenshot.fLogScreenshot(message=f"*****Excluded studies - LiveSLR Sheet Content Comparison Completed*****",
                                             pass_=True, log=True, screenshot=False)

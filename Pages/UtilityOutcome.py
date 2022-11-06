@@ -290,24 +290,41 @@ class UtilityOutcome(Base):
             else:
                 raise Exception(f"From 'Utility Summary' sheet -> For '{m}' SLR Source, contents in column 'Short Reference' are not in Sorted order")
 
-        # Content comparison between Source file and Complete Excel report
-        for col in cols:
-            source_col = sourcefile[col]
-            actual_col = actualexcel[col]
+        # Check the length of 1st column from the report to make sure number of rows are as expected
+        source_col_len = sourcefile["SLR Source"]
+        actual_col_len = actualexcel["SLR Source"]
 
-            source_col = [item for item in source_col if str(item) != 'nan']
-            actual_col = [item for item in actual_col if str(item) != 'nan']
+        source_col_len = [item for item in source_col_len if str(item) != 'nan']
+        actual_col_len = [item for item in actual_col_len if str(item) != 'nan']
 
-            if len(source_col) == len(actual_col) and source_col == actual_col:
-                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
-                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+        if len(source_col_len) == len(actual_col_len):
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and Complete Excel Report. "
+                                            f"Source Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
                                         pass_=True, log=True, screenshot=False)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
-                                        f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
+        
+            # Content comparison between Source file and Complete Excel report
+            for col in cols:
+                source_col = sourcefile[col]
+                actual_col = actualexcel[col]
+
+                source_col = [item for item in source_col if str(item) != 'nan']
+                actual_col = [item for item in actual_col if str(item) != 'nan']
+
+                comparison_result = self.slrreport.list_comparison_between_reports_data(source_col, actual_col)
+
+                if len(comparison_result) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report",
+                                            pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                            f"Duplicate values are arranged in following order -> Source File, Complete Excel. {comparison_result}",
+                                            pass_=False, log=True, screenshot=False)
+                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and Complete Excel Report. "
+                                            f"Source Template Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
                                         pass_=False, log=True, screenshot=False)
-                raise Exception("Contents are not matching between Source template and Complete Excel report")
+            raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Summary sheet Completed*****",
                                           pass_=True, log=True, screenshot=False)
@@ -351,34 +368,51 @@ class UtilityOutcome(Base):
             else:
                 raise Exception(f"From 'Utility Table' -> For '{n}' SLR Source, contents in column 'Short Reference' are not in Sorted order")
         
-        # Content comparison between Source file and Complete Word report
-        # Using count variable to loop over columns in word document
-        count = 0
-        # df_word.values[0] will give the list of column names from the table in Word document
-        for col_name in df_word.values[0]:
-            if col_name in sourcefile.columns.values:
-                source = sourcefile[col_name]
-                word = []
-                for row in docs.tables[6].rows:
-                    word.append(row.cells[count].text)
+        # Check the length of 1st column from the report to make sure number of rows are as expected
+        source_len = sourcefile[df_word.values[0][0]]
+        word_len = []
+        for row in docs.tables[6].rows:
+            word_len.append(row.cells[0].text)
 
-                source = [item for item in source if str(item) != 'nan']
-                word.pop(0)
+        source_len = [item for item in source_len if str(item) != 'nan']
+        word_len.pop(0)
 
-                if len(source) == len(word) and source == word:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel and Word Reports.\n"
-                                    f"Source Excel Elements Length: {len(source)},\n Word Elements Length: {len(word)}\n",
-                                    # f"Source Excel Elements: {source}\n Word Elements: {word}",
-                            pass_=True, log=True, screenshot=False)
+        if len(source_len) == len(word_len):
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel and Complete Word Report. "
+                                            f"Source Excel Elements Length: {len(source_len)}\n Word Elements Length: {len(word_len)}\n",
+                                    pass_=True, log=True, screenshot=False)
+        
+            # Content comparison between Source file and Complete Word report
+            # Using count variable to loop over columns in word document
+            count = 0
+            # df_word.values[0] will give the list of column names from the table in Word document
+            for col_name in df_word.values[0]:
+                if col_name in sourcefile.columns.values:
+                    source = sourcefile[col_name]
+                    word = []
+                    for row in docs.tables[6].rows:
+                        word.append(row.cells[count].text)
+
+                    source = [item for item in source if str(item) != 'nan']
+                    word.pop(0)
+
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source, word)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel and Word Reports.\n",
+                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching between Source Excel and Word Reports.\n"
+                                    f"Duplicate values are arranged in following order -> Source Excel and Word Report. {comparison_result}",
+                            pass_=False, log=True, screenshot=False)
+                        raise Exception("Elements are not matching between Source Excel and Word Reports")
+                    count += 1
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching between Source Excel and Word Reports.\n"
-                                f"Source Excel Elements Length: {len(source)},\n Word Elements Length: {len(word)}\n"
-                                f"Source Excel Elements: {source},\n Word Elements: {word}",
-                        pass_=False, log=True, screenshot=False)
-                    raise Exception("Elements are not matching between Source Excel and Word Reports")
-                count += 1
-            else:
-                raise Exception("Column names are not matching between Source Excel and Word Reports")
+                    raise Exception("Column names are not matching between Source Excel and Word Reports")
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel and Complete Word Report. "
+                                            f"Source Excel Elements Length: {len(source_len)}\n Word Elements Length: {len(word_len)}\n",
+                                    pass_=False, log=True, screenshot=False)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility Table Completed*****",
                                           pass_=True, log=True, screenshot=False)
@@ -408,25 +442,34 @@ class UtilityOutcome(Base):
         if sourcefile_col1 == sorted(sourcefile_col1) and actualexcel_col1 == sorted(actualexcel_col1) and actualwebexcel_col1 == sorted(actualwebexcel_col1):
             self.LogScreenshot.fLogScreenshot(message=f"From 'QOL Report' sheet, contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
-            for col in cols1:
-                source_col1 = sourcefile1[col]
-                actual_excel_col1 = actualexcel1[col]
-                actual_webexcel_col = webexcel1[col]
+            if len(sourcefile_col1) == len(actualexcel_col1) == len(actualwebexcel_col1):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col1)}\n WebExcel Elements Length: {len(actualwebexcel_col1)}\n Excel Elements Length: {len(actualexcel_col1)}\n",
+                                          pass_=True, log=True, screenshot=False)
+                for col in cols1:
+                    source_col1 = sourcefile1[col]
+                    actual_excel_col1 = actualexcel1[col]
+                    actual_webexcel_col = webexcel1[col]
 
-                source_col1 = [item for item in source_col1 if str(item) != 'nan']
-                actual_excel_col1 = [item for item in actual_excel_col1 if str(item) != 'nan']
-                actual_webexcel_col = [item for item in actual_webexcel_col if str(item) != 'nan']
+                    source_col1 = [item for item in source_col1 if str(item) != 'nan']
+                    actual_excel_col1 = [item for item in actual_excel_col1 if str(item) != 'nan']
+                    actual_webexcel_col = [item for item in actual_webexcel_col if str(item) != 'nan']
 
-                if len(actual_excel_col1) == len(source_col1) == len(actual_webexcel_col) and actual_excel_col1 == source_col1 == actual_webexcel_col:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, Complete Excel and WebExcel Report"
-                                            f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_excel_col1)},\n Web_Excel Elements Length {len(actual_webexcel_col)}",
-                                            pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                            f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_excel_col1)},\n Web_Excel Elements Length {len(actual_webexcel_col)}"
-                                            f"Source Template column value is {source_col1},\n Actual excel file column value is {actual_excel_col1},\n Actual webexcel file column value is {actual_webexcel_col}",
-                                            pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel report")
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source_col1, actual_excel_col1, webex_list=actual_webexcel_col)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, WebExcel and Complete Excel Report",
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                                f"\nDuplicate values are arranged in following order -> Source File, WebExcel, Complete Excel. {comparison_result}",
+                                                pass_=False, log=True, screenshot=False)
+                        raise Exception("Contents are not matching between Source template, WebExcel and Complete Excel report")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col1)}\n WebExcel Elements Length: {len(actualwebexcel_col1)}\n Excel Elements Length: {len(actualexcel_col1)}\n",
+                                          pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report.")
         else:
             raise Exception("From 'QOL Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
         
@@ -444,24 +487,34 @@ class UtilityOutcome(Base):
         sourcefile_col = [item for item in sourcefile_col if str(item) != 'nan']
         actualexcel_col = [item for item in actualexcel_col if str(item) != 'nan']
 
-        for col in cols:
-            source_col = sourcefile[col]
-            actual_col = actualexcel[col]
-
-            source_col = [item for item in source_col if str(item) != 'nan']
-            actual_col = [item for item in actual_col if str(item) != 'nan']
-
-            if len(source_col) == len(actual_col) and source_col == actual_col:
-                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
-                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+        if len(sourcefile_col) == len(actualexcel_col):
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and Complete Excel Report. "
+                                            f"Source Elements Length: {len(sourcefile_col)}\n Excel Elements Length: {len(actualexcel_col)}\n",
                                         pass_=True, log=True, screenshot=False)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                        f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
-                                        f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
-                                        pass_=False, log=True, screenshot=False)
-                raise Exception("Contents are not matching between Source template and Complete Excel report")
 
+            for col in cols:
+                source_col = sourcefile[col]
+                actual_col = actualexcel[col]
+
+                source_col = [item for item in source_col if str(item) != 'nan']
+                actual_col = [item for item in actual_col if str(item) != 'nan']
+
+                comparison_result = self.slrreport.list_comparison_between_reports_data(source_col, actual_col)
+
+                if len(comparison_result) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report",
+                                            pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                            f"Duplicate values are arranged in following order -> Source File, Complete Excel. {comparison_result}",
+                                            pass_=False, log=True, screenshot=False)
+                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and Complete Excel Report. "
+                                            f"Source Template Elements Length: {len(sourcefile_col)}\n Excel Elements Length: {len(actualexcel_col)}\n",
+                                        pass_=False, log=True, screenshot=False)
+            raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
+        
         # Word report content comparison for Utility Table
         self.LogScreenshot.fLogScreenshot(message=f"*****Word Report Utility Table Comparison*****",
                                           pass_=True, log=True, screenshot=False)
@@ -483,35 +536,55 @@ class UtilityOutcome(Base):
                                             pass_=False, log=True, screenshot=False)
                 raise Exception("Expected column names are not present in Word Report")
 
-            # Using count variable to loop over columns in word document
-            count = 0
-            # df_word.values[0] will give the list of column names from the table in Word document
-            for col_name in df_word.values[0]:
-                if col_name in sourcefile.columns.values and col_name in actualexcel.columns.values:
-                    source = sourcefile[col_name]
-                    actual = actualexcel[col_name]
-                    word = []
-                    for row in docs.tables[6].rows:
-                        word.append(row.cells[count].text)
-                    
-                    source = [item for item in source if str(item) != 'nan']
-                    actual = [item for item in actual if str(item) != 'nan']
-                    word.pop(0)
+            # Check the length of 1st column from the report to make sure number of rows are as expected
+            source_len = sourcefile[df_word.values[0][0]]
+            compex_len = actualexcel[df_word.values[0][0]]
+            word_len = []
+            for row in docs.tables[6].rows:
+                word_len.append(row.cells[0].text)
 
-                    if len(source) == len(actual) == len(word) and source == actual == word:
-                        self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel and Word Reports.\n"
-                                    f"Source Excel Elements Length: {len(source)},\n Complete Excel Elements Length: {len(actual)},\n Word Elements Length: {len(word)}\n",
-                                    # f"Source Excel Elements: {source}\n Excel Elements: {actual}\n Word Elements: {word}",
-                            pass_=True, log=True, screenshot=False)
+            source_len = [item for item in source_len if str(item) != 'nan']
+            compex_len = [item for item in compex_len if str(item) != 'nan']
+            word_len.pop(0)
+
+            if len(source_len) == len(compex_len) == len(word_len):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Complete Excel and Complete Word Report. "
+                                                f"Source Excel Elements Length: {len(source_len)}\n Excel Elements Length: {len(compex_len)}\n Word Elements Length: {len(word_len)}\n",
+                                        pass_=True, log=True, screenshot=False)
+            
+                # Using count variable to loop over columns in word document
+                count = 0
+                # df_word.values[0] will give the list of column names from the table in Word document
+                for col_name in df_word.values[0]:
+                    if col_name in sourcefile.columns.values and col_name in actualexcel.columns.values:
+                        source = sourcefile[col_name]
+                        actual = actualexcel[col_name]
+                        word = []
+                        for row in docs.tables[6].rows:
+                            word.append(row.cells[count].text)
+                        
+                        source = [item for item in source if str(item) != 'nan']
+                        actual = [item for item in actual if str(item) != 'nan']
+                        word.pop(0)
+
+                        comparison_result = self.slrreport.list_comparison_between_reports_data(source, actual, word=word)
+
+                        if len(comparison_result) == 0:
+                            self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel and Word Reports.\n",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching between Source Excel, Complete Excel and Word Reports.\n"
+                                        f"Duplicate values are arranged in following order -> Source Excel, Complete Excel and Word Report. {comparison_result}",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception("Elements are not matching between Source Excel, Complete Excel and Word Reports")
+                        count += 1
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching between Source Excel, Complete Excel and Word Reports.\n"
-                                    f"Source Excel Elements Length: {len(source)},\n Excel Elements Length: {len(actual)},\n Word Elements Length: {len(word)}\n"
-                                    f"Source Excel Elements: {source},\n Complete Excel Elements: {actual},\n Word Elements: {word}",
-                            pass_=False, log=True, screenshot=False)
-                        raise Exception("Elements are not matching between Source Excel, Complete Excel and Word Reports")
-                    count += 1
-                else:
-                    raise Exception("Column names are not matching between Source Excel, Complete Excel and Word Reports")
+                        raise Exception("Column names are not matching between Source Excel, Complete Excel and Word Reports")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Complete Excel and Complete Word Report. "
+                                                f"Source Excel Elements Length: {len(source_len)}\n Excel Elements Length: {len(compex_len)}\n Word Elements Length: {len(word_len)}\n",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Complete Excel and Complete Word Report.")
         except Exception:
                 raise Exception("Error in Word report content validation")
         
@@ -564,25 +637,36 @@ class UtilityOutcome(Base):
         if sourcefile_col1 == sorted(sourcefile_col1) and actualexcel_col1 == sorted(actualexcel_col1) and actualwebexcel_col1 == sorted(actualwebexcel_col1):
             self.LogScreenshot.fLogScreenshot(message=f"From 'QOL Report' sheet, contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
-            for col in cols1:
-                source_col1 = sourcefile1[col]
-                actual_excel_col1 = actualexcel1[col]
-                actual_webexcel_col = webexcel1[col]
+            
+            if len(sourcefile_col1) == len(actualexcel_col1) == len(actualwebexcel_col1):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col1)}\n WebExcel Elements Length: {len(actualwebexcel_col1)}\n Excel Elements Length: {len(actualexcel_col1)}\n",
+                                          pass_=True, log=True, screenshot=False)
 
-                source_col1 = [item for item in source_col1 if str(item) != 'nan']
-                actual_excel_col1 = [item for item in actual_excel_col1 if str(item) != 'nan']
-                actual_webexcel_col = [item for item in actual_webexcel_col if str(item) != 'nan']
+                for col in cols1:
+                    source_col1 = sourcefile1[col]
+                    actual_excel_col1 = actualexcel1[col]
+                    actual_webexcel_col = webexcel1[col]
 
-                if len(actual_excel_col1) == len(source_col1) == len(actual_webexcel_col) and actual_excel_col1 == source_col1 == actual_webexcel_col:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, Complete Excel and WebExcel Report"
-                                            f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_excel_col1)},\n Web_Excel Elements Length {len(actual_webexcel_col)}",
-                                            pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                            f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_excel_col1)},\n Web_Excel Elements Length {len(actual_webexcel_col)}"
-                                            f"Source Template column Value is {source_col1},\n Actual excel file column value is {actual_excel_col1},\n Actual webexcel file column value is {actual_webexcel_col}",
-                                            pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel report")
+                    source_col1 = [item for item in source_col1 if str(item) != 'nan']
+                    actual_excel_col1 = [item for item in actual_excel_col1 if str(item) != 'nan']
+                    actual_webexcel_col = [item for item in actual_webexcel_col if str(item) != 'nan']
+
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source_col1, actual_excel_col1, webex_list=actual_webexcel_col)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, WebExcel and Complete Excel Report",
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                                f"\nDuplicate values are arranged in following order -> Source File, WebExcel, Complete Excel. {comparison_result}",
+                                                pass_=False, log=True, screenshot=False)
+                        raise Exception("Contents are not matching between Source template, WebExcel and Complete Excel report")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col1)}\n WebExcel Elements Length: {len(actualwebexcel_col1)}\n Excel Elements Length: {len(actualexcel_col1)}\n",
+                                          pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report.")
         else:
             raise Exception("From 'QOL Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
         
@@ -729,24 +813,41 @@ class UtilityOutcome(Base):
                 else:
                     raise Exception(f"From 'Utility Summary' sheet -> For '{m}' SLR Source, contents in column 'Short Reference' are not in Sorted order")
 
-            # Content comparison between Source file and Complete Excel report
-            for col in cols:
-                source_col = sourcefile[col]
-                actual_col = actualexcel[col]
+            # Check the length of 1st column from the report to make sure number of rows are as expected
+            source_col_len = sourcefile["SLR Source"]
+            actual_col_len = actualexcel["SLR Source"]
 
-                source_col = [item for item in source_col if str(item) != 'nan']
-                actual_col = [item for item in actual_col if str(item) != 'nan']
+            source_col_len = [item for item in source_col_len if str(item) != 'nan']
+            actual_col_len = [item for item in actual_col_len if str(item) != 'nan']
 
-                if len(source_col) == len(actual_col) and source_col == actual_col:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report"
-                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}",
+            if len(source_col_len) == len(actual_col_len):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and Complete Excel Report. "
+                                                f"Source Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
                                             pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_col)}"
-                                            f"Source Template column value is {source_col},\n Actual downloaded file column value is {actual_col}",
+            
+                # Content comparison between Source file and Complete Excel report
+                for col in cols:
+                    source_col = sourcefile[col]
+                    actual_col = actualexcel[col]
+
+                    source_col = [item for item in source_col if str(item) != 'nan']
+                    actual_col = [item for item in actual_col if str(item) != 'nan']
+
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source_col, actual_col)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report",
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                                f"Duplicate values are arranged in following order -> Source File, Complete Excel. {comparison_result}",
+                                                pass_=False, log=True, screenshot=False)
+                        raise Exception("Contents are not matching between Source template and Complete Excel report")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and Complete Excel Report. "
+                                                f"Source Template Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
                                             pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+                raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
 
             self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Content Comparison Completed*****",
                                             pass_=True, log=True, screenshot=False)
@@ -791,25 +892,36 @@ class UtilityOutcome(Base):
         if sourcefile_col == sorted(sourcefile_col) and actualexcel_col == sorted(actualexcel_col) and actualwebexcel_col == sorted(actualwebexcel_col):
             self.LogScreenshot.fLogScreenshot(message=f"From 'CEA CUA Report' sheet, contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
-            for col in cols:
-                source_col = sourcefile[col]
-                actual_excel_col = actualexcel[col]
-                actual_webexcel_col = webexcel[col]
 
-                source_col = [item for item in source_col if str(item) != 'nan']
-                actual_excel_col = [item for item in actual_excel_col if str(item) != 'nan']
-                actual_webexcel_col = [item for item in actual_webexcel_col if str(item) != 'nan']
+            if len(sourcefile_col) == len(actualexcel_col) == len(actualwebexcel_col):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col)}\n WebExcel Elements Length: {len(actualwebexcel_col)}\n Excel Elements Length: {len(actualexcel_col)}\n",
+                                          pass_=True, log=True, screenshot=False)
 
-                if len(actual_excel_col) == len(source_col) == len(actual_webexcel_col) and actual_excel_col == source_col == actual_webexcel_col:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, Complete Excel and WebExcel Report"
-                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_excel_col)},\n Web_Excel Elements Length {len(actual_webexcel_col)}",
-                                            pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                            f"Source Template Elements Length {len(source_col)},\n Complete Excel Elements Length {len(actual_excel_col)},\n Web_Excel Elements Length {len(actual_webexcel_col)}"
-                                            f"Source Template column Value is {source_col},\n Actual excel file column value is {actual_excel_col},\n Actual webexcel file column value is {actual_webexcel_col}",
-                                            pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel Report")
+                for col in cols:
+                    source_col = sourcefile[col]
+                    actual_excel_col = actualexcel[col]
+                    actual_webexcel_col = webexcel[col]
+
+                    source_col = [item for item in source_col if str(item) != 'nan']
+                    actual_excel_col = [item for item in actual_excel_col if str(item) != 'nan']
+                    actual_webexcel_col = [item for item in actual_webexcel_col if str(item) != 'nan']
+
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source_col, actual_excel_col, webex_list=actual_webexcel_col)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, WebExcel and Complete Excel Report",
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                                f"\nDuplicate values are arranged in following order -> Source File, WebExcel, Complete Excel. {comparison_result}",
+                                                pass_=False, log=True, screenshot=False)
+                        raise Exception("Contents are not matching between Source template, WebExcel and Complete Excel report")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col)}\n WebExcel Elements Length: {len(actualwebexcel_col)}\n Excel Elements Length: {len(actualexcel_col)}\n",
+                                          pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report.")
         else:
             raise Exception("From 'CEA CUA Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
         
@@ -824,43 +936,65 @@ class UtilityOutcome(Base):
             data = [[cell.text for cell in row.cells] for row in table.rows]
             df_word = pd.DataFrame(data)
 
-            # Using count variable to loop over columns in word document
-            count = 0
-            # df_word.values[0] will give the list of column names from the table in Word document
-            for col_name in df_word.values[0]:
-                # Restricting comparison upto 3 columns in word due to data formatting issues in further columns
-                if count <= 2:
-                    if col_name == 'Year/Country':
-                        # This IF condition is just to add space to the column name as per Excel sheet to match the names
-                        # between word and excel. This is an workaround until it is fixed
-                        col_name = 'Year / Country'
-                    if col_name in sourcefile.columns.values and col_name in actualexcel.columns.values and col_name in webexcel.columns.values:
-                        source = sourcefile[col_name]
-                        actualex = actualexcel[col_name]
-                        actwebex = webexcel[col_name]
-                        word = []
-                        for row in docs.tables[table_count].rows:
-                            word.append(row.cells[count].text)
-                        
-                        source = [item for item in source if str(item) != 'nan']
-                        actualex = [item for item in actualex if str(item) != 'nan']
-                        actwebex = [item for item in actwebex if str(item) != 'nan']
-                        word.pop(0)
+            # Check the length of 1st column from the report to make sure number of rows are as expected
+            source_len = sourcefile[df_word.values[0][0]]
+            webex_len = webexcel[df_word.values[0][0]]
+            compex_len = actualexcel[df_word.values[0][0]]
+            word_len = []
+            for row in docs.tables[table_count].rows:
+                word_len.append(row.cells[0].text)
 
-                        if len(source) == len(actualex) == len(word) == len(actwebex) and source == actualex == word == actwebex:
-                            self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel, Web-Excel and Word Reports.\n"
-                                        f"Source Excel Elements Length: {len(source)},\n Complete Excel Elements Length: {len(actualex)},\n Web-Excel Elements Length: {len(actwebex)},\n Word Elements Length: {len(word)}\n",
-                                        # f"Source Excel Elements: {source}\n Excel Elements: {actual}\n Word Elements: {word}",
+            source_len = [item for item in source_len if str(item) != 'nan']
+            webex_len = [item for item in webex_len if str(item) != 'nan']
+            compex_len = [item for item in compex_len if str(item) != 'nan']
+            word_len.pop(0)
+
+            if len(source_len) == len(webex_len) == len(compex_len) == len(word_len):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Web_Excel, Complete Excel and Complete Word Report. "
+                                                f"Source Excel Elements Length: {len(source_len)}\nWebExcel Elements Length: {len(webex_len)}\n Excel Elements Length: {len(compex_len)}\n Word Elements Length: {len(word_len)}\n",
+                                        pass_=True, log=True, screenshot=False)
+
+                # Using count variable to loop over columns in word document
+                count = 0
+                # df_word.values[0] will give the list of column names from the table in Word document
+                for col_name in df_word.values[0]:
+                    # Restricting comparison upto 3 columns in word due to data formatting issues in further columns
+                    if count <= 2:
+                        if col_name == 'Year/Country':
+                            # This IF condition is just to add space to the column name as per Excel sheet to match the names
+                            # between word and excel. This is an workaround until it is fixed
+                            col_name = 'Year / Country'
+                        if col_name in sourcefile.columns.values and col_name in actualexcel.columns.values and col_name in webexcel.columns.values:
+                            source = sourcefile[col_name]
+                            actualex = actualexcel[col_name]
+                            actwebex = webexcel[col_name]
+                            word = []
+                            for row in docs.tables[table_count].rows:
+                                word.append(row.cells[count].text)
+                            
+                            source = [item for item in source if str(item) != 'nan']
+                            actualex = [item for item in actualex if str(item) != 'nan']
+                            actwebex = [item for item in actwebex if str(item) != 'nan']
+                            word.pop(0)
+
+                            comparison_result = self.slrreport.list_comparison_between_reports_data(source, actualex, webex_list=actwebex, word=word)
+
+                            if len(comparison_result) == 0:
+                                self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel, Web-Excel and Word Reports.\n",
                                 pass_=True, log=True, screenshot=False)
-                        else:
-                            self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching between Source Excel, Complete Excel, Web-Excel and Word Reports.\n"
-                                        f"Source Excel Elements Length: {len(source)},\n Excel Elements Length: {len(actualex)},\n Web-Excel Elements Length: {len(actwebex)},\n Word Elements Length: {len(word)}\n"
-                                        f"Source Excel Elements: {source},\n Complete Excel Elements: {actualex},\n Web-Excel Elements: {actwebex},\n Word Elements: {word}",
+                            else:
+                                self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching between Source Excel, Complete Excel, Web-Excel and Word Reports.\n"
+                                        f"Duplicate values are arranged in following order -> Source Excel, WebExcel, Complete Excel and Word Report. {comparison_result}",
                                 pass_=False, log=True, screenshot=False)
-                            raise Exception("Elements are not matching between Source Excel, Complete Excel and Word Reports")
-                        count += 1
-                    else:
-                        raise Exception("Column names are not matching between Source Excel, Complete Excel, WebExcel and Word Reports")
+                                raise Exception("Elements are not matching between Source Excel, Webexcel, Complete Excel and Word Reports")
+                            count += 1
+                        else:
+                            raise Exception("Column names are not matching between Source Excel, Complete Excel, WebExcel and Word Reports")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Web_Excel, Complete Excel and Complete Word Report. "
+                                                f"Source Excel Elements Length: {len(webex_len)}\nWebExcel Elements Length: {len(webex_len)}\n Excel Elements Length: {len(compex_len)}\n Word Elements Length: {len(word_len)}\n",
+                                        pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel, Complete Excel and Complete Word Report.")
         except Exception:
                 raise Exception("Error in Word report content validation")
         
@@ -892,25 +1026,35 @@ class UtilityOutcome(Base):
         if sourcefile_col1 == sorted(sourcefile_col1) and actualexcel_col1 == sorted(actualexcel_col1) and actualwebexcel_col1 == sorted(actualwebexcel_col1):
             self.LogScreenshot.fLogScreenshot(message=f"Contents in column 'Study Identifier' are in sorted order",
                                             pass_=True, log=True, screenshot=False)
-            for col in cols1:
-                source_col1 = sourcefile1[col]
-                actual_excel_col1 = actualexcel1[col]
-                actual_webexcel_col1 = webexcel1[col]
 
-                source_col1 = [item for item in source_col1 if str(item) != 'nan']
-                actual_excel_col1 = [item for item in actual_excel_col1 if str(item) != 'nan']
-                actual_webexcel_col1 = [item for item in actual_webexcel_col1 if str(item) != 'nan']
+            if len(sourcefile_col1) == len(actualexcel_col1) == len(actualwebexcel_col1):
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col1)}\n WebExcel Elements Length: {len(actualwebexcel_col1)}\n Excel Elements Length: {len(actualexcel_col1)}\n",
+                                          pass_=True, log=True, screenshot=False)
+                for col in cols1:
+                    source_col1 = sourcefile1[col]
+                    actual_excel_col1 = actualexcel1[col]
+                    actual_webexcel_col1 = webexcel1[col]
 
-                if len(actual_excel_col1) == len(source_col1) == len(actual_webexcel_col1) and actual_excel_col1 == source_col1 == actual_webexcel_col1:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, Complete Excel and WebExcel Report"
-                                            f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_excel_col1)},\n Web_Excel Elements Length {len(actual_webexcel_col1)}",
-                                            pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                            f"Source Template Elements Length {len(source_col1)},\n Complete Excel Elements Length {len(actual_excel_col1)},\n Web_Excel Elements Length {len(actual_webexcel_col1)}"
-                                            f"Source Column Value is {source_col1},\n Actual excel file column value is {actual_excel_col1},\n Actual webexcel file column value is {actual_webexcel_col1}",
-                                            pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template, Complete Excel and WebExcel Report")
+                    source_col1 = [item for item in source_col1 if str(item) != 'nan']
+                    actual_excel_col1 = [item for item in actual_excel_col1 if str(item) != 'nan']
+                    actual_webexcel_col1 = [item for item in actual_webexcel_col1 if str(item) != 'nan']
+
+                    comparison_result = self.slrreport.list_comparison_between_reports_data(source_col1, actual_excel_col1, webex_list=actual_webexcel_col1)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template, WebExcel and Complete Excel Report",
+                                                pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
+                                                f"\nDuplicate values are arranged in following order -> Source File, WebExcel, Complete Excel. {comparison_result}",
+                                                pass_=False, log=True, screenshot=False)
+                        raise Exception("Contents are not matching between Source template, WebExcel and Complete Excel report")
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report. "
+                                                f"Source Elements Length: {len(sourcefile_col1)}\n WebExcel Elements Length: {len(actualwebexcel_col1)}\n Excel Elements Length: {len(actualexcel_col1)}\n",
+                                          pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report.")
         else:
             raise Exception("Contents in column 'Study Identifier' are not in Sorted order")
         

@@ -423,10 +423,6 @@ class Test_UtilityOutcome_QOL:
                     self.utiloutcome.validate_filename(webexcel_filename1, self.util_filepath, 'NewImportLogic')
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
-
-                    self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
-
                     self.utiloutcome.qol_utility_summary_validation(webexcel_filename1, excel_filename1, self.util_filepath, word_filename1)
 
             except Exception:
@@ -495,10 +491,6 @@ class Test_UtilityOutcome_QOL:
                     webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
                     self.utiloutcome.validate_filename(webexcel_filename1, self.util_filepath, 'OldImportLogic')
                     self.slrreport.back_to_report_page("Back_to_search_page")
-
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
-
-                    self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
 
                     self.utiloutcome.qol_utility_summary_validation_old_imports(webexcel_filename1, excel_filename1, self.util_filepath)
 

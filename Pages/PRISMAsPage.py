@@ -73,9 +73,6 @@ class PRISMASPage(Base):
             actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
             # time.sleep(2)
 
-            # self.assertText(expected_excel_upload_status_text, actual_excel_upload_status_text)
-            # self.LogScreenshot.fLogScreenshot(message=f"Excel File upload is success",
-            #         pass_=True, log=True, screenshot=True)
             if actual_excel_upload_status_text == expected_excel_upload_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Upload is success.",
                                         pass_=True, log=True, screenshot=True)
@@ -110,9 +107,6 @@ class PRISMASPage(Base):
             actual_excel_del_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
             # time.sleep(2)
 
-            # self.assertText(expected_excel_del_status_text, actual_excel_del_status_text)
-            # self.LogScreenshot.fLogScreenshot(message=f"Excel File Delete is success. Text is : {actual_excel_del_status_text}",
-            #         pass_=True, log=True, screenshot=True)
             if actual_excel_del_status_text == expected_excel_del_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Delete is success.",
                                         pass_=True, log=True, screenshot=True)
@@ -154,10 +148,6 @@ class PRISMASPage(Base):
                 actual_image_upload_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=30)
                 # time.sleep(2)
 
-                # self.assertText(expected_image_upload_status_text, actual_image_upload_status_text)
-                # self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success",
-                #     pass_=True, log=True, screenshot=True)
-
                 if actual_image_upload_status_text == expected_image_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success.",
                                             pass_=True, log=True, screenshot=True)
@@ -197,10 +187,6 @@ class PRISMASPage(Base):
                 
                 actual_image_del_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=30)
                 # time.sleep(2)
-
-                # self.assertText(expected_image_del_status_text, actual_image_del_status_text)
-                # self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success. Text is : {actual_image_del_status_text}",
-                #     pass_=True, log=True, screenshot=True)
 
                 if actual_image_del_status_text == expected_image_del_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success.",

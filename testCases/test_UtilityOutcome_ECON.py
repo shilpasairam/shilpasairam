@@ -81,10 +81,6 @@ class Test_UtilityOutcome_ECON:
                     self.slrreport.validate_filename(webexcel_filename1, self.util_filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
-
-                    self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
-
                     self.utiloutcome.econ_utility_summary_validation(webexcel_filename1, excel_filename1, self.util_filepath, word_filename1)
 
             except Exception:
@@ -152,10 +148,6 @@ class Test_UtilityOutcome_ECON:
                     webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
                     self.slrreport.validate_filename(webexcel_filename1, self.util_filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
-
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
-
-                    self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
 
                     self.utiloutcome.econ_utility_summary_validation_old_imports(webexcel_filename1, excel_filename1, self.util_filepath, word_filename1)
 
