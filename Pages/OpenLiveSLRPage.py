@@ -71,4 +71,5 @@ class LiveSLRPage(Base):
         return result, value
 
     def presence_of_elements(self, locator):
-        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
+        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)),
+                                                        self.locatorpath(locator))))

@@ -30,7 +30,7 @@ def fWaitFor(input_func):
         else:
             errorPresent = True
             timePassed = 0
-            while errorPresent == True and timePassed < UnivWaitFor:
+            while errorPresent is True and timePassed < UnivWaitFor:
                 try:
                     result = input_func(*args, **kwargs)
                     errorPresent = False
@@ -100,7 +100,8 @@ class Base:
         """
         Given day value, select the current date from the date-picker
         """
-        cal_loc = f"//table[@class='days weeks']//td[@role='gridcell']//span[not(contains(@class, 'is-other-month')) and (text()={day_val})]"
+        cal_loc = f"//table[@class='days weeks']//td[@role='gridcell']//span[not(contains(@class, 'is-other-month')) " \
+                  f"and (text()={day_val})]"
         self.driver.find_element(By.XPATH, cal_loc).click()
 
     # clear text from web element using locatorname and value
@@ -160,7 +161,9 @@ class Base:
         Given locator, identify the locator type and path from the OR file and click on the element
         """
         try:
-            self.driver.execute_script("arguments[0].click();", self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)))
+            self.driver.execute_script("arguments[0].click();",
+                                       self.driver.find_element(getattr(By, self.locatortype(locator)),
+                                                                self.locatorpath(locator)))
         except NoSuchElementException:
             # self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
             #                                   pass_=False, log=True, screenshot=False)
@@ -178,14 +181,15 @@ class Base:
         except NoSuchElementException:
             self.LogScreenshot.fLogScreenshot(message=f"{command} is not executable",
                                               pass_=False, log=True, screenshot=False)
-    
+
     # Check whether a web element is clickable or not using locatorname
     @fWaitFor
     def clickable(self, locator, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and check element is clickable or not
         """
-        return self.wait.until(ec.element_to_be_clickable((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
+        return self.wait.until(
+            ec.element_to_be_clickable((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
 
     # Check whether element is selected or not using locatorname
     @fWaitFor
@@ -194,7 +198,8 @@ class Base:
         Given locator, identify the locator type and path from the OR file and return the bool value
         """
         try:
-            return self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_selected()
+            return self.driver.find_element(getattr(By, self.locatortype(locator)),
+                                            self.locatorpath(locator)).is_selected()
         except NoSuchElementException:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
                                               pass_=False, log=True, screenshot=False)
@@ -206,7 +211,9 @@ class Base:
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
         try:
-            self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)))
+            self.driver.execute_script("arguments[0].scrollIntoView(true);",
+                                       self.driver.find_element(getattr(By, self.locatortype(locator)),
+                                                                self.locatorpath(locator)))
             self.jsclick(locator)
             return True
         except NoSuchElementException:
@@ -220,7 +227,8 @@ class Base:
         """
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(By.XPATH, "//p[text()='Search LiveSLR™']"))
+        self.driver.execute_script("arguments[0].scrollIntoView(true);",
+                                   self.driver.find_element(By.XPATH, "//p[text()='Search LiveSLR™']"))
 
     # Check whether a web element is displayed or not using locatorname
     @fWaitFor
@@ -229,8 +237,8 @@ class Base:
         Given locator, identify the locator type and path from the OR file and return the bool value
         """
         try:
-            return self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_displayed()
-        # return self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
+            return self.driver.find_element(getattr(By, self.locatortype(locator)),
+                                            self.locatorpath(locator)).is_displayed()
         except NoSuchElementException:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
                                               pass_=False, log=True, screenshot=False)

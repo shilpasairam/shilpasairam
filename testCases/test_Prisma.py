@@ -36,7 +36,8 @@ class Test_PRISMAPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -52,10 +53,11 @@ class Test_PRISMAPage:
                 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30243
     def test_del_prisma_details(self, extra):
@@ -68,7 +70,8 @@ class Test_PRISMAPage:
         # Creating object of ImportPublicationPage class
         self.prismapage = PRISMASPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -78,10 +81,12 @@ class Test_PRISMAPage:
 
         for i in pop_val:
             try:
-                self.prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup", self.filepath)                    
+                self.prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup",
+                                                      self.filepath)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is completed***",
+                                          pass_=True, log=True, screenshot=False)

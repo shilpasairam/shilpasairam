@@ -79,34 +79,40 @@ class ExcludedStudies_liveSLR(Base):
         excel_filename = self.slrreport.getFilenameAndValidate(180)
         self.slrreport.validate_filename(excel_filename, filepath)
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete Excel Report*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete "
+                                                  f"Excel Report*****",
                                           pass_=True, log=True, screenshot=False)
         excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
         if 'Excluded studies - LiveSLR' in excel_data.sheetnames:
-            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is present in Downloaded Complete Excel Report",
-                                          pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is present in Downloaded "
+                                                      f"Complete Excel Report",
+                                              pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is missing in Complete Excel Report",
-                                          pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is missing in "
+                                                      f"Complete Excel Report",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Excluded studies - LiveSLR' tab is missing in Complete Excel Report")
 
         excel_sheet = excel_data[f'Excluded studies - LiveSLR']
         if excel_sheet['J1'].value == 'Back To Toc':
-            self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Excluded studies - LiveSLR' sheet",
-                                    pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Excluded studies - LiveSLR'"
+                                                      f" sheet",
+                                              pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in 'Excluded studies - LiveSLR' sheet",
-                                    pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in 'Excluded studies - "
+                                                      f"LiveSLR' sheet",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception(f"'Back To Toc' option is not present in 'Excluded studies - LiveSLR' sheet")
         
         toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
         col_data = list(toc_sheet.iloc[:, 1])
         if f'Excluded studies - LiveSLR' in col_data:
             self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' is present in TOC sheet.",
-                                    pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' is not present in TOC sheet. Available Data from TOC sheet: {col_data}",
-                                    pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' is not present in TOC sheet. "
+                                                      f"Available Data from TOC sheet: {col_data}",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Excluded studies - LiveSLR' is not present in TOC sheet.")
         
     def presenceof_columnnames_in_excludedstudiesliveslrtab(self, locatorname, filepath, index):
@@ -133,13 +139,15 @@ class ExcludedStudies_liveSLR(Base):
         excel_filename = self.slrreport.getFilenameAndValidate(180)
         self.slrreport.validate_filename(excel_filename, filepath)
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of expected columns in Excluded studies - LiveSLR Tab*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of expected columns in Excluded studies - "
+                                                  f"LiveSLR Tab*****",
                                           pass_=True, log=True, screenshot=False)
         source_template_sheet = openpyxl.load_workbook(f'{source_template[0]}')
         sheets = source_template_sheet.sheetnames
 
         sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name=sheets[index])
-        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Excluded studies - LiveSLR', skiprows=2)
+        actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Excluded studies - LiveSLR',
+                                    skiprows=2)
         
         source_col_val = [item for item in list(sourcefile.columns.values) if str(item) != 'nan']
         compex_col_val = [item for item in list(actualexcel.columns.values) if str(item) != 'nan']
@@ -147,12 +155,14 @@ class ExcludedStudies_liveSLR(Base):
         compex_col_val.pop(-1)
 
         if source_col_val == compex_col_val:
-            self.LogScreenshot.fLogScreenshot(message=f"Expected column names are present in Complete Excel Report. Column names are: {compex_col_val}",
-                                          pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"Expected column names are present in Complete Excel Report. "
+                                                      f"Column names are: {compex_col_val}",
+                                              pass_=True, log=True, screenshot=False)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Expected column names are not present in Complete Excel Report."
-                                          f"Source Excel Column names are : {source_col_val},\n Complete Excel Column names are : {compex_col_val}",
-                                          pass_=False, log=True, screenshot=False)
+                                                      f"\nSource Excel Column names are : {source_col_val},"
+                                                      f"\nComplete Excel Column names are : {compex_col_val}",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Expected column names are not present in Complete Excel Report")
 
     def validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, locatorname, filepath, index):
@@ -179,40 +189,47 @@ class ExcludedStudies_liveSLR(Base):
         excel_filename = self.slrreport.getFilenameAndValidate(180)
         self.slrreport.validate_filename(excel_filename, filepath)
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete Excel Report*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete "
+                                                  f"Excel Report*****",
                                           pass_=True, log=True, screenshot=False)
         excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
         if 'Excluded studies - LiveSLR' in excel_data.sheetnames:
-            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is present in Downloaded Complete Excel Report",
-                                          pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is present in Downloaded "
+                                                      f"Complete Excel Report",
+                                              pass_=True, log=True, screenshot=False)
 
             excel_sheet = excel_data[f'Excluded studies - LiveSLR']
             if excel_sheet['J1'].value == 'Back To Toc':
-                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Excluded studies - LiveSLR' sheet",
-                                        pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in 'Excluded studies - "
+                                                          f"LiveSLR' sheet",
+                                                  pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in 'Excluded studies - LiveSLR' sheet",
-                                        pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in 'Excluded studies - "
+                                                          f"LiveSLR' sheet",
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception(f"'Back To Toc' option is not present in 'Excluded studies - LiveSLR' sheet")
             
             toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
             col_data = list(toc_sheet.iloc[:, 1])
             if f'Excluded studies - LiveSLR' in col_data:
                 self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' is present in TOC sheet.",
-                                        pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' is not present in TOC sheet. Available Data from TOC sheet: {col_data}",
-                                        pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' is not present in TOC sheet. "
+                                                          f"Available Data from TOC sheet: {col_data}",
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception("'Excluded studies - LiveSLR' is not present in TOC sheet.")
         
             # Excluded studies - LiveSLR sheet comparison with Expected results
-            self.LogScreenshot.fLogScreenshot(message=f"*****Excluded studies - LiveSLR Sheet Content Comparison Started*****",
-                                            pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"*****Excluded studies - LiveSLR Sheet Content Comparison "
+                                                      f"Started*****",
+                                              pass_=True, log=True, screenshot=False)
             source_template_sheet = openpyxl.load_workbook(f'{source_template[0]}')
             sheets = source_template_sheet.sheetnames
 
             sourcefile = pd.read_excel(f'{source_template[0]}', sheet_name=sheets[index])
-            actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Excluded studies - LiveSLR', skiprows=2)
+            actualexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Excluded studies - LiveSLR',
+                                        skiprows=2)
             
             cols = list(sourcefile.columns.values)
 
@@ -224,9 +241,11 @@ class ExcludedStudies_liveSLR(Base):
             actual_col_len = [item for item in actual_col_len if str(item) != 'nan']
 
             if len(source_col_len) == len(actual_col_len):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and Complete Excel Report. "
-                                                f"Source Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
-                                          pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and "
+                                                          f"Complete Excel Report.\n"
+                                                          f"Source Elements Length: {len(source_col_len)}\n"
+                                                          f"Excel Elements Length: {len(actual_col_len)}\n",
+                                                  pass_=True, log=True, screenshot=False)
 
                 # Content comparison between Source file and Complete Excel report
                 for col in cols:
@@ -239,22 +258,28 @@ class ExcludedStudies_liveSLR(Base):
                     comparison_result = self.slrreport.list_comparison_between_reports_data(source_col, actual_col)
 
                     if len(comparison_result) == 0:
-                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between Source Template and Complete Excel Report",
-                                                pass_=True, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between "
+                                                                  f"Source Template and Complete Excel Report",
+                                                          pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
-                                                f"Duplicate values are arranged in following order -> Source File, Complete Excel. {comparison_result}",
-                                                pass_=False, log=True, screenshot=False)
+                                                                  f"Duplicate values are arranged in following order ->"
+                                                                  f" Source File, Complete Excel. {comparison_result}",
+                                                          pass_=False, log=True, screenshot=False)
                         raise Exception("Contents are not matching between Source template and Complete Excel report")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and Complete Excel Report. "
-                                                f"Source Template Elements Length: {len(source_col_len)}\n Excel Elements Length: {len(actual_col_len)}\n",
-                                          pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template "
+                                                          f"and Complete Excel Report. "
+                                                          f"Source Template Elements Length: {len(source_col_len)}\n"
+                                                          f"Excel Elements Length: {len(actual_col_len)}\n",
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
 
-            self.LogScreenshot.fLogScreenshot(message=f"*****Excluded studies - LiveSLR Sheet Content Comparison Completed*****",
-                                            pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"*****Excluded studies - LiveSLR Sheet Content Comparison "
+                                                      f"Completed*****",
+                                              pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is missing in Complete Excel Report",
-                                          pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Excluded studies - LiveSLR' tab is missing in Complete "
+                                                      f"Excel Report",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Excluded studies - LiveSLR' tab is missing in Complete Excel Report")

@@ -54,8 +54,9 @@ class ImportPublicationPage(Base):
 
             # Fetching total rows count before uploading a new file
             table_rows_before = self.select_elements("upload_table_rows")
-            self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: {len(table_rows_before)}',
-                                            pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: '
+                                                      f'{len(table_rows_before)}',
+                                              pass_=True, log=True, screenshot=False)
             
             jscmd = ReadConfig.getJScommand()
             self.jsclick_hide(jscmd)
@@ -68,16 +69,18 @@ class ImportPublicationPage(Base):
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
-                                            pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction File for Population : {i[0]}.',
-                                            pass_=False, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
+                                                              f'Extraction File for Population : {i[0]}.',
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message during Extraction file uploading")
 
                 # Fetching total rows count after uploading a new file
                 table_rows_after = self.select_elements("upload_table_rows")
-                self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: {len(table_rows_after)}',
-                                            pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: '
+                                                          f'{len(table_rows_after)}',
+                                                  pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
                     result = []
@@ -86,8 +89,9 @@ class ImportPublicationPage(Base):
                         result.append(m.text)
                     
                     if i[2] in result:
-                        self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being uploaded: {i[2]}',
-                                            pass_=True, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being '
+                                                                  f'uploaded: {i[2]}',
+                                                          pass_=True, log=True, screenshot=False)
                     else:
                         raise Exception("Wrong file is uploaded")
 
@@ -97,27 +101,28 @@ class ImportPublicationPage(Base):
                     time.sleep(10)
                     if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
                         self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
-                                                pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
                     else:
                         raise Exception("Error while uploading the extraction file")
                 elif status_icon[index] == "file_upload_status_failure":
                     time.sleep(10)
                     if self.isdisplayed("file_upload_status_failure", UnivWaitFor=180):
                         self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
-                                                pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
                         self.click("view_action", UnivWaitFor=10)
                         time.sleep(2)
                         td = self.select_elements('error_data_table')
                         error_data = []
                         for n in td:
                             error_data.append(n.text)
-                        self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
-                                                pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: '
+                                                                  f'{error_data}',
+                                                          pass_=True, log=True, screenshot=True)
                     else:
                         raise Exception("Error while uploading the extraction file")
                 self.refreshpage()
                 time.sleep(5)
-            except:
+            except Exception:
                 raise Exception("Error while uploading")
 
     def delete_file(self, del_locator, del_locator_popup, msg_popup, tablerows):
@@ -139,10 +144,10 @@ class ImportPublicationPage(Base):
         
         if actual_delete_status_text == expected_delete_status_text:
             self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
-                                    pass_=True, log=True, screenshot=True)
+                                              pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
-                                    pass_=False, log=True, screenshot=True)
+                                              pass_=False, log=True, screenshot=True)
             raise Exception("Error during Extraction File Deletion")
 
         # Fetching total rows count before deleting a file from top of the table
@@ -153,10 +158,10 @@ class ImportPublicationPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)                  
-        except:
+                                                  pass_=True, log=True, screenshot=False)
+        except Exception:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                            pass_=False, log=True, screenshot=False)  
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the imported file")
 
     def upload_file_with_errors(self, locatorname, filepath):
@@ -172,8 +177,9 @@ class ImportPublicationPage(Base):
 
             # Fetching total rows count before uploading a new file
             table_rows_before = self.select_elements("upload_table_rows")
-            self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: {len(table_rows_before)}',
-                                            pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: '
+                                                      f'{len(table_rows_before)}',
+                                              pass_=True, log=True, screenshot=False)
             
             jscmd = ReadConfig.getJScommand()
             self.jsclick_hide(jscmd)
@@ -186,16 +192,18 @@ class ImportPublicationPage(Base):
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
-                                            pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction File for Population : {i[0]}.',
-                                            pass_=False, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
+                                                              f'Extraction File for Population : {i[0]}.',
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message during Extraction file uploading")
 
                 # Fetching total rows count after uploading a new file
                 table_rows_after = self.select_elements("upload_table_rows")
-                self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: {len(table_rows_after)}',
-                                            pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: '
+                                                          f'{len(table_rows_after)}',
+                                                  pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
                     result = []
@@ -204,8 +212,9 @@ class ImportPublicationPage(Base):
                         result.append(m.text)
                     
                     if i[2] in result:
-                        self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being uploaded: {i[2]}',
-                                            pass_=True, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is '
+                                                                  f'being uploaded: {i[2]}',
+                                                          pass_=True, log=True, screenshot=False)
                     else:
                         raise Exception("Wrong file is uploaded")
 
@@ -213,19 +222,20 @@ class ImportPublicationPage(Base):
                 time.sleep(10)
                 if self.isdisplayed("file_upload_status_failure", UnivWaitFor=180):
                     self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Failure Icon',
-                                            pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                     self.click("view_action", UnivWaitFor=10)
                     time.sleep(2)
                     td = self.select_elements('error_data_table')
                     error_data = []
                     for n in td:
                         error_data.append(n.text)
-                    self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: {error_data}',
-                                            pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: '
+                                                              f'{error_data}',
+                                                      pass_=True, log=True, screenshot=True)
                     self.click("back_to_view_action_btn", UnivWaitFor=10)
                 else:
                     raise Exception("Error while uploading the extraction file")
                 self.refreshpage()
                 time.sleep(5)
-            except:
+            except Exception:
                 raise Exception("Error while uploading")

@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 
-############## adding all screenshots to html report ##############
+# ############## adding all screenshots to html report ##############
 def add_screenshot(driver, extra, filename, message, log='logs', savepath='screenshots'):
     """
     input -
@@ -36,7 +36,8 @@ def add_screenshot(driver, extra, filename, message, log='logs', savepath='scree
                 <tr>
                     <td style="width: 10%">{timenow.strftime("%Y-%m-%d %H:%M:%S")}</td>
                     <td style="width: 40%;">{message}</td>
-                    <td style="width: 50%;"><img src= {filepath} alt="screenshot" style="width:304px;height:228px;" onclick="window.open(this.src)"></td>
+                    <td style="width: 50%;"><img src= {filepath} alt="screenshot" style="width:304px;height:228px;" 
+                    onclick="window.open(this.src)"></td>
                 </tr>
             </table>
             '''

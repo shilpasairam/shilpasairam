@@ -38,7 +38,8 @@ class Test_ManageUpdatesPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***",
+                                          pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y")
@@ -52,16 +53,19 @@ class Test_ManageUpdatesPage:
         for i in pop_val:
             try:
                 self.mngupdpage.go_to_manageupdates("manageupdates_button")
-                manage_update_data = self.mngupdpage.add_multiple_updates(i, "add_update_btn", self.day_val, "manage_update_table_rows", self.dateval)
+                manage_update_data = self.mngupdpage.add_multiple_updates(i, "add_update_btn", self.day_val,
+                                                                          "manage_update_table_rows", self.dateval)
                 self.added_updates_data.append(manage_update_data)
-                self.LogScreenshot.fLogScreenshot(message=f"Added population udpate is {self.added_updates_data}", pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Added population udpate is {self.added_updates_data}",
+                                                  pass_=True, log=True, screenshot=False)
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     def test_edit_updates(self, extra):
         # Instantiate the logScreenshot class
@@ -73,7 +77,8 @@ class Test_ManageUpdatesPage:
         # Creating object of ManagePopulationsPage class
         self.mngupdpage = ManageUpdatesPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is started***",
+                                          pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = (today + timedelta(1)).strftime("%m/%d/%Y")
@@ -85,16 +90,19 @@ class Test_ManageUpdatesPage:
         for i in self.added_updates_data:
             try:
                 self.mngupdpage.go_to_manageupdates("manageupdates_button")
-                manage_update_data = self.mngupdpage.edit_multiple_updates(i, "edit_updates", self.day_val, self.dateval)
+                manage_update_data = self.mngupdpage.edit_multiple_updates(i, "edit_updates", self.day_val,
+                                                                           self.dateval)
                 self.edited_updates_data.append(manage_update_data)
-                self.LogScreenshot.fLogScreenshot(message=f"Edited population udpate is {self.edited_updates_data}", pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Edited population udpate is {self.edited_updates_data}",
+                                                  pass_=True, log=True, screenshot=False)
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     def test_delete_updates(self, extra):
         # Instantiate the logScreenshot class
@@ -106,7 +114,8 @@ class Test_ManageUpdatesPage:
         # Creating object of ManagePopulationsPage class
         self.mngupdpage = ManageUpdatesPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is started***",
+                                          pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
@@ -117,11 +126,13 @@ class Test_ManageUpdatesPage:
 
         for i in self.edited_updates_data:
             try:
-                self.mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup", "manage_update_table_rows")
+                self.mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup",
+                                                               "manage_update_table_rows")
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is "
+                                                  f"completed***", pass_=True, log=True, screenshot=False)

@@ -125,8 +125,6 @@ class Test_SLR_Custom_Report:
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         try:
-            # self.slrreport.select_data("NewImportLogic_1 - Test_Automation_1", "NewImportLogic_1 - Test_Automation_1_radio_button")
-            # self.slrreport.select_data("Clinical", "Clinical_radio_button")
             self.slrreport.select_data(self.pop_list[0][0], self.pop_list[0][1])
             self.slrreport.select_data(self.slrtype[0][0], self.slrtype[0][1])
             self.slrreport.select_sub_section(self.rpt_data[3], self.rpt_data_chkbox[3], "reported_variable_section")
@@ -149,6 +147,7 @@ class Test_SLR_Custom_Report:
             self.slrreport.validate_filename(webexcel_filename1, self.filepath)
             self.slrreport.back_to_report_page("Back_to_search_page")
 
-            self.slrreport.presencof_publicationtype_col_in_wordreport(webexcel_filename1, excel_filename1, word_filename1)
+            self.slrreport.presencof_publicationtype_col_in_wordreport(webexcel_filename1, excel_filename1,
+                                                                       word_filename1)
         except Exception:
             raise Exception("Unable to select element")

@@ -48,7 +48,8 @@ class PRISMASPage(Base):
         sheet3 = df.loc[df['Name'] == locatorname]['fullTextReviewRecordsNumber'].to_list()
         sheet4 = df.loc[df['Name'] == locatorname]['totalRecordsNumber'].to_list()
         sheet5 = df.loc[df['Name'] == locatorname]['Prisma_Image'].to_list()
-        prisma_data = [(sheet_name[i], int(sheet1[i]), int(sheet2[i]), int(sheet3[i]), int(sheet4[i]), (os.getcwd()+sheet5[i])) for i in range(0, len(sheet_name))]
+        prisma_data = [(sheet_name[i], int(sheet1[i]), int(sheet2[i]), int(sheet3[i]), int(sheet4[i]),
+                        (os.getcwd()+sheet5[i])) for i in range(0, len(sheet_name))]
         return prisma_data
 
     def add_prisma_excel_file(self, locatorname, filepath):
@@ -75,10 +76,11 @@ class PRISMASPage(Base):
 
             if actual_excel_upload_status_text == expected_excel_upload_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Upload is success.",
-                                        pass_=True, log=True, screenshot=True)
+                                                  pass_=True, log=True, screenshot=True)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading PRISMA Excel File.",
-                                        pass_=False, log=True, screenshot=True)
+                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
+                                                          f"PRISMA Excel File.",
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message while uploading PRISMA Excel File.")
         except Exception:
             raise Exception("Unable to upload PRISMA Excel file")
@@ -109,10 +111,11 @@ class PRISMASPage(Base):
 
             if actual_excel_del_status_text == expected_excel_del_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Delete is success.",
-                                        pass_=True, log=True, screenshot=True)
+                                                  pass_=True, log=True, screenshot=True)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting PRISMA Excel File.",
-                                        pass_=False, log=True, screenshot=True)
+                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
+                                                          f"PRISMA Excel File.",
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message while deleting PRISMA Excel File.")
             time.sleep(5)
         except Exception:
@@ -150,10 +153,11 @@ class PRISMASPage(Base):
 
                 if actual_image_upload_status_text == expected_image_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success.",
-                                            pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading PRISMA Image File.",
-                                            pass_=False, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
+                                                              f"PRISMA Image File.",
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message while uploading PRISMA Image File.")
         except Exception:
             raise Exception("Unable to upload PRISMA image")
@@ -190,10 +194,11 @@ class PRISMASPage(Base):
 
                 if actual_image_del_status_text == expected_image_del_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success.",
-                                            pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting PRISMA Image File.",
-                                            pass_=False, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
+                                                              f"PRISMA Image File.",
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message while deleting PRISMA Image File.")
                 time.sleep(5)
         except Exception:

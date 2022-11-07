@@ -192,22 +192,23 @@ class SLRReport(Base):
         for row in docs.tables[4].rows:
             word.append(row.cells[1].text)
 
-        self.LogScreenshot.fLogScreenshot(message=f"WebExcel FileName is: {wfilename}\n and Count Value is: {len(webcount_final)}"
-                                                  f"Excel FileName is: {efilename}\n and Count value is: {count_str} {count_val}"
-                                                  f"Word FileName is: {word_filename}\n and Count value is: {word[7]}",
+        self.LogScreenshot.fLogScreenshot(message=f"WebExcel FileName is: {wfilename} and Count Value is: "
+                                                  f"{len(webcount_final)} \nExcel FileName is: {efilename} and "
+                                                  f"Count value is: {count_str} {count_val}"
+                                                  f"Word FileName is: {word_filename}\n and Count value is: {word[8]}",
                                           pass_=True, log=True, screenshot=False)
 
-        if int(prism) == count_val and len(webcount_final) == count_val and int(word[7]) == count_val:
+        if int(prism) == count_val and len(webcount_final) == count_val and int(word[8]) == count_val:
             self.LogScreenshot.fLogScreenshot(message=f"WebExcel Prisma Count Value: {len(webcount_final)}\n"
                                                       f"Excel Sheet Prisma Count Value: {count_val}\n"
-                                                      f"Word Prisma Count Value: {word[7]}\n"
+                                                      f"Word Prisma Count Value: {word[8]}\n"
                                                       f"UI Updated Prisma Count Value: {prism}\n"
                                                       f"Records are matching",
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"WebExcel Prisma Count Value: {len(webcount_final)}\n"
                                                       f"Excel Sheet Prisma Count Value: {count_val}\n"
-                                                      f"Word Prisma Count Value: {word[7]}\n"
+                                                      f"Word Prisma Count Value: {word[8]}\n"
                                                       f"UI Updated Prisma Count Value: {prism}\n"
                                                       f"Records are not matching",
                                               pass_=False, log=True, screenshot=False)
@@ -303,9 +304,11 @@ class SLRReport(Base):
             #         break
             if actualname in expectedname:
                 self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
-                                                      pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected Filenames are {expectedname} and Actual Filename is {actualname}",
+            self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
+                                                      f"Filenames are {expectedname} and Actual "
+                                                      f"Filename is {actualname}",
                                                       pass_=False, log=True, screenshot=False)
             raise Exception("Error during filename validation")
 
@@ -322,25 +325,29 @@ class SLRReport(Base):
             try:
                 time.sleep(10)
                 filename = self.driver.execute_script(
-                    "return document.querySelector('downloads-manager').shadowRoot.querySelector('#downloadsList downloads-item').shadowRoot.querySelector('div#content  #file-link').text")
+                    "return document.querySelector('downloads-manager').shadowRoot.querySelector"
+                    "('#downloadsList downloads-item').shadowRoot.querySelector('div#content  #file-link').text")
                 self.LogScreenshot.fLogScreenshot(message=f"Downloaded filename is {filename}",
                                                   pass_=True, log=True, screenshot=False)
                 self.driver.close()
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 return filename
-            except:
+            except Exception:
                 pass
             time.sleep(1)
             if time.time() > endTime:
                 break
     
     def excel_content_validation(self, filepath, index, webexcel_filename, excel_filename):
-        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and downloaded WebExcel and Complete Excel Reports",
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and downloaded WebExcel "
+                                                  f"and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
         
         source_template = self.get_source_template(filepath)
 
-        self.LogScreenshot.fLogScreenshot(message=f"Source Filename is: {Path(f'{source_template[0]}').stem}, Downloaded FileNames are: {webexcel_filename} and \n{excel_filename}",
+        self.LogScreenshot.fLogScreenshot(message=f"Source Filename is: {Path(f'{source_template[0]}').stem}, "
+                                                  f"Downloaded FileNames are: {webexcel_filename} "
+                                                  f"and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
 
         source_data = openpyxl.load_workbook(f'{source_template[0]}')
@@ -349,8 +356,10 @@ class SLRReport(Base):
                                           pass_=True, log=True, screenshot=False)
         
         expected_data = pd.read_excel(f'{source_template[0]}', sheet_name=source_data.sheetnames[index])
-        webexcel = pd.concat(pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=None, skiprows=3), ignore_index=True)
-        excel = pd.concat(pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=None, skiprows=3), ignore_index=True)
+        webexcel = pd.concat(pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=None, skiprows=3),
+                             ignore_index=True)
+        excel = pd.concat(pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=None, skiprows=3),
+                          ignore_index=True)
 
         try:
             # Check the length of 1st column from the report to make sure number of rows are as expected
@@ -363,9 +372,12 @@ class SLRReport(Base):
             compex_len = [item for item in compex_len if str(item) != 'nan']
 
             if len(source_len) == len(webex_len) == len(compex_len):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, Web_Excel and Complete Excel Report. "
-                                                f"Source Elements Length: {len(source_len)}\n WebExcel Elements Length: {len(webex_len)}\n Excel Elements Length: {len(compex_len)}\n",
-                                          pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                                                          f"Web_Excel and Complete Excel Report. "
+                                                          f"Source Elements Length: {len(source_len)}\n "
+                                                          f"WebExcel Elements Length: {len(webex_len)}\n "
+                                                          f"Excel Elements Length: {len(compex_len)}\n",
+                                                  pass_=True, log=True, screenshot=False)
 
                 # Content validation starts from here
                 for col in expected_data.columns.values:
@@ -380,25 +392,37 @@ class SLRReport(Base):
                     comparison_result = self.list_comparison_between_reports_data(source, compex, webex_list=webex)
 
                     if len(comparison_result) == 0:
-                        self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, Values in Column '{col}' are matching between Source, WebExcel and Complete Excel Report.\n",
-                                                        pass_=True, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, "
+                                                                  f"Values in Column '{col}' are matching between "
+                                                                  f"Source, WebExcel and Complete Excel Report.\n",
+                                                          pass_=True, log=True, screenshot=False)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, Values in Column '{col}' are not matching between Source, WebExcel and Complete Excel Report.\n"
-                                            f"Duplicate values are arranged in following order -> Source File, WebExcel, Complete Excel. {comparison_result}",
-                                    pass_=False, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, "
+                                                                  f"Values in Column '{col}' are not matching between "
+                                                                  f"Source, WebExcel and Complete Excel Report.\n"
+                                                                  f"Duplicate values are arranged in following "
+                                                                  f"order -> Source File, WebExcel, Complete Excel. "
+                                                                  f"{comparison_result}",
+                                                          pass_=False, log=True, screenshot=False)
                         raise Exception("Elements are not matching between Webexcel and Complete Excel")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report. "
-                                                f"Source Elements Length: {len(source_len)}\n WebExcel Elements Length: {len(webex_len)}\n Excel Elements Length: {len(compex_len)}\n",
-                                          pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and Complete Excel Report.")
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                                                          f"Web_Excel and Complete Excel Report. "
+                                                          f"Source Elements Length: {len(source_len)}\n "
+                                                          f"WebExcel Elements Length: {len(webex_len)}\n "
+                                                          f"Excel Elements Length: {len(compex_len)}\n",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
+                                f"Complete Excel Report.")
         except Exception:
             raise Exception("Error in Excel sheet content validation")
 
     def excel_to_word_content_validation(self, webexcel_filename, excel_filename, word_filename):
-        self.LogScreenshot.fLogScreenshot(message=f"Content validation between WebExcel, Complete Excel and Complete Word Reports",
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between WebExcel, Complete Excel and "
+                                                  f"Complete Word Reports",
                                           pass_=True, log=True, screenshot=False)
-        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, \n{word_filename}",
+        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, "
+                                                  f"\n{word_filename}",
                                           pass_=True, log=True, screenshot=False)
         
         # Index of Table number 6 is : 5. Starting point for word table content comparison
@@ -435,9 +459,12 @@ class SLRReport(Base):
                 word_len.pop(0)
 
                 if len(webex_len) == len(compex_len) == len(word_len):
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Web_Excel, Complete Excel and Complete Word Report. "
-                                                    f"WebExcel Elements Length: {len(webex_len)}\n Excel Elements Length: {len(compex_len)}\n Word Elements Length: {len(word_len)}\n",
-                                            pass_=True, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Web_Excel, "
+                                                              f"Complete Excel and Complete Word Report. "
+                                                              f"WebExcel Elements Length: {len(webex_len)}\n "
+                                                              f"Excel Elements Length: {len(compex_len)}\n "
+                                                              f"Word Elements Length: {len(word_len)}\n",
+                                                      pass_=True, log=True, screenshot=False)
 
                     # Content validation starts from here
                     # Using count variable to loop over columns in word document
@@ -447,8 +474,8 @@ class SLRReport(Base):
                         # Restricting comparison upto 3 columns in word due to data formatting issues in further columns
                         if count <= 2:
                             if col_name == 'Year/Country':
-                                # This IF condition is just to add space to the column name as per Excel sheet to match the names
-                                # between word and excel. This is an workaround until it is fixed
+                                # This IF condition is just to add space to the column name as per Excel sheet to
+                                # match the names between word and excel. This is an workaround until it is fixed
                                 col_name = 'Year / Country'
                             if col_name in webexcel.columns.values and col_name in excel.columns.values:
                                 webex = webexcel[col_name]
@@ -461,37 +488,55 @@ class SLRReport(Base):
                                 compex = [item for item in compex if str(item) != 'nan']
                                 word.pop(0)
 
-                                comparison_result = self.list_comparison_between_reports_data(word, compex, webex_list=webex)
+                                comparison_result = self.list_comparison_between_reports_data(word, compex,
+                                                                                              webex_list=webex)
 
                                 if len(comparison_result) == 0:
-                                    self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in Column '{col_name}' are matching between WebExcel, Complete Excel and Word Reports.\n",
-                                    pass_=True, log=True, screenshot=False)
+                                    self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
+                                                                              f"Column '{col_name}' are matching "
+                                                                              f"between WebExcel, Complete Excel "
+                                                                              f"and Word Reports.\n",
+                                                                      pass_=True, log=True, screenshot=False)
                                 else:
-                                    self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in Column '{col_name}' are not matching between WebExcel, Complete Excel and Word Reports.\n"
-                                            f"Duplicate values are arranged in following order -> WebExcel, Complete Excel and Word Report. {comparison_result}",
-                                    pass_=False, log=True, screenshot=False)
-                                    raise Exception("Elements are not matching between Webexcel, Complete Excel and Word Reports")
+                                    self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
+                                                                              f"Column '{col_name}' are not matching "
+                                                                              f"between WebExcel, Complete Excel and "
+                                                                              f"Word Reports.\n Duplicate values are "
+                                                                              f"arranged in following order -> "
+                                                                              f"WebExcel, Complete Excel and Word "
+                                                                              f"Report. {comparison_result}",
+                                                                      pass_=False, log=True, screenshot=False)
+                                    raise Exception("Elements are not matching between Webexcel, Complete Excel "
+                                                    "and Word Reports")
                                 count += 1
                             else:
-                                raise Exception("Column names are not matching between Webexcel, Complete Excel and Word Reports")
+                                raise Exception("Column names are not matching between Webexcel, Complete Excel "
+                                                "and Word Reports")
                     table_count += 1
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Web_Excel, Complete Excel and Complete Word Report. "
-                                                    f"WebExcel Elements Length: {len(webex_len)}\n Excel Elements Length: {len(compex_len)}\n Word Elements Length: {len(word_len)}\n",
-                                            pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Elements length is not matching between Web_Excel, Complete Excel and Complete Word Report.")
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Web_Excel, "
+                                                              f"Complete Excel and Complete Word Report. "
+                                                              f"WebExcel Elements Length: {len(webex_len)}\n "
+                                                              f"Excel Elements Length: {len(compex_len)}\n "
+                                                              f"Word Elements Length: {len(word_len)}\n",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Elements length is not matching between Web_Excel, Complete Excel and "
+                                    f"Complete Word Report.")
             except Exception:
                 raise Exception("Error in Word report content validation")
 
     def presencof_publicationtype_col_in_wordreport(self, webexcel_filename, excel_filename, word_filename):
         self.LogScreenshot.fLogScreenshot(message=f"Check presence of Publication Type column in Word Report",
                                           pass_=True, log=True, screenshot=False)
-        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, \n{word_filename}",
+        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, "
+                                                  f"\n{word_filename}",
                                           pass_=True, log=True, screenshot=False)
         
         # Index of Table number 6 is : 5. Starting point for word table content comparison
-        table_counts = {5: "Table 2-2 Clinical study characteristics", 6: "Table 2-3 Summary of patient demographics and baseline characteristics",
-                        7: "Table 2-4 Efficacy reported in clinical studies", 8: "Table 2-5 Safety reported in clinical studies"}
+        table_counts = {5: "Table 2-2 Clinical study characteristics",
+                        6: "Table 2-3 Summary of patient demographics and baseline characteristics",
+                        7: "Table 2-4 Efficacy reported in clinical studies",
+                        8: "Table 2-5 Safety reported in clinical studies"}
         sheet = 'Clinical Report'
 
         for table_count, value in table_counts.items():
@@ -510,7 +555,8 @@ class SLRReport(Base):
 
                 # df_word.values[0] will give the list of column names from the table in Word document
                 if col_name in df_word.values[0]:
-                    self.LogScreenshot.fLogScreenshot(message=f"Column '{col_name}' is present after 'Short Reference' in Word report -> '{value}'",
+                    self.LogScreenshot.fLogScreenshot(message=f"Column '{col_name}' is present after 'Short Reference'"
+                                                              f" in Word report -> '{value}'",
                                                       pass_=True, log=True, screenshot=False)
                     if col_name in webexcel.columns.values and col_name in excel.columns.values:
                         webex = webexcel[col_name]
@@ -524,18 +570,29 @@ class SLRReport(Base):
                         word.pop(0)
 
                         if len(webex) == len(compex) == len(word) and webex == compex == word:
-                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' are matching between WebExcel, Complete Excel and Word Reports.\n"
-                                        f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n",
-                                        # f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
-                                pass_=True, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' "
+                                                                      f"are matching between WebExcel, Complete Excel "
+                                                                      f"and Word Reports.\n"
+                                                                      f"WebExcel Elements Length: {len(webex)}\n "
+                                                                      f"Excel Elements Length: {len(compex)}\n "
+                                                                      f"Word Elements Length: {len(word)}\n",
+                                                              pass_=True, log=True, screenshot=False)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' are not matching between WebExcel, Complete Excel and Word Reports.\n"
-                                        f"WebExcel Elements Length: {len(webex)}\n Excel Elements Length: {len(compex)}\n Word Elements Length: {len(word)}\n"
-                                        f"WebExcel Elements: {webex}\n Excel Elements: {compex}\n Word Elements: {word}",
-                                pass_=False, log=True, screenshot=False)
-                            raise Exception("Elements are not matching between Webexcel, Complete Excel and Word Reports")
+                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' "
+                                                                      f"are not matching between WebExcel, "
+                                                                      f"Complete Excel and Word Reports.\n"
+                                                                      f"WebExcel Elements Length: {len(webex)}\n "
+                                                                      f"Excel Elements Length: {len(compex)}\n "
+                                                                      f"Word Elements Length: {len(word)}\n"
+                                                                      f"WebExcel Elements: {webex}\n "
+                                                                      f"Excel Elements: {compex}\n "
+                                                                      f"Word Elements: {word}",
+                                                              pass_=False, log=True, screenshot=False)
+                            raise Exception("Elements are not matching between Webexcel, Complete Excel and "
+                                            "Word Reports")
                     else:
-                        raise Exception("Column names are not matching between Webexcel, Complete Excel and Word Reports")
+                        raise Exception("Column names are not matching between Webexcel, Complete Excel and "
+                                        "Word Reports")
                 table_count += 1
             except Exception:
                 raise Exception("Error in Word report content validation")
@@ -582,70 +639,96 @@ class SLRReport(Base):
             webex_dup_shortref = self.get_duplicates_from_list(webex_shortreference)
 
             if webex_identifier == sorted(webex_identifier) and compex_identifier == sorted(compex_identifier):
-                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column Study Identifier are in sorted order",
-                                          pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column Study "
+                                                          f"Identifier are in sorted order",
+                                                  pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column Study Identifier are not in sorted order",
-                                          pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column Study "
+                                                          f"Identifier are not in sorted order",
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception(f"From Sheet '{sheet}', Contents in column Study Identifier are not in sorted order")
             
-            # When Study Identifier contains duplicate values then corresponding value in Short Reference column should be in sorted order
+            # When Study Identifier contains duplicate values then corresponding value in Short Reference
+            # column should be in sorted order
             if len(compex_dup_identifier) != 0:
                 for m in compex_dup_identifier:
                     col_val = compexcel[compexcel["Study Identifier"] == m]
                     col_val_res = col_val["Short Reference"]
                     col_val_res = [item for item in col_val_res if str(item) != 'nan']
                     if col_val_res == sorted(col_val_res):
-                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding contents in column 'Short Reference' are in sorted order in complete excel report",
-                                          pass_=True, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
+                                                                  f"contents in column 'Short Reference' are in "
+                                                                  f"sorted order in complete excel report",
+                                                          pass_=True, log=True, screenshot=False)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding contents in column 'Short Reference' are not in sorted order in complete excel report",
-                                          pass_=True, log=True, screenshot=False)
-                        raise Exception(f"For '{m}' in Study Identifier, corresponding contents in column 'Short Reference' are not in sorted order in complete excel report")
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
+                                                                  f"contents in column 'Short Reference' are not "
+                                                                  f"in sorted order in complete excel report",
+                                                          pass_=True, log=True, screenshot=False)
+                        raise Exception(f"For '{m}' in Study Identifier, corresponding contents in column "
+                                        f"'Short Reference' are not in sorted order in complete excel report")
                 
-                # When Short Reference contains duplicate values then corresponding value in Publication Type column should be in sorted order
+                # When Short Reference contains duplicate values then corresponding value in Publication Type
+                # column should be in sorted order
                 if len(compex_dup_shortref) != 0:
                     for n in compex_dup_shortref:
                         col_val = compexcel[compexcel["Short Reference"] == n]
                         col_val_res = col_val["Publication Type"]
                         col_val_res = [item for item in col_val_res if str(item) != 'nan']
                         if col_val_res == sorted(col_val_res):
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding contents in column 'Publication Type' are in sorted order in complete excel report",
-                                          pass_=True, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
+                                                                      f"contents in column 'Publication Type' are in "
+                                                                      f"sorted order in complete excel report",
+                                                              pass_=True, log=True, screenshot=False)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding contents in column 'Publication Type' are not in sorted order in complete excel report",
-                                            pass_=True, log=True, screenshot=False)
-                            raise Exception(f"For '{n}' in Short Reference, corresponding contents in column 'Publication Type' are not in sorted order in complete excel report")
+                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
+                                                                      f"contents in column 'Publication Type' are not "
+                                                                      f"in sorted order in complete excel report",
+                                                              pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{n}' in Short Reference, corresponding contents in column "
+                                            f"'Publication Type' are not in sorted order in complete excel report")
 
-            # When Study Identifier contains duplicate values then corresponding value in Short Reference column should be in sorted order
+            # When Study Identifier contains duplicate values then corresponding value in Short Reference column
+            # should be in sorted order
             if len(webex_dup_identifier) != 0:
                 for m in webex_dup_identifier:
                     col_val = webexcel[webexcel["Study Identifier"] == m]
                     col_val_res = col_val["Short Reference"]
                     col_val_res = [item for item in col_val_res if str(item) != 'nan']
                     if col_val_res == sorted(col_val_res):
-                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding contents in column 'Short Reference' are in sorted order in Web_excel report",
-                                          pass_=True, log=True, screenshot=False)
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
+                                                                  f"contents in column 'Short Reference' are in "
+                                                                  f"sorted order in Web_excel report",
+                                                          pass_=True, log=True, screenshot=False)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding contents in column 'Short Reference' are not in sorted order in Web_excel report",
-                                          pass_=True, log=True, screenshot=False)
-                        raise Exception(f"For '{m}' in Study Identifier, corresponding contents in column 'Short Reference' are not in sorted order in Web_excel report")
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
+                                                                  f"contents in column 'Short Reference' are not in "
+                                                                  f"sorted order in Web_excel report",
+                                                          pass_=True, log=True, screenshot=False)
+                        raise Exception(f"For '{m}' in Study Identifier, corresponding contents in column "
+                                        f"'Short Reference' are not in sorted order in Web_excel report")
                 
-                # When Short Reference contains duplicate values then corresponding value in Publication Type column should be in sorted order
+                # When Short Reference contains duplicate values then corresponding value in Publication Type
+                # column should be in sorted order
                 if len(webex_dup_shortref) != 0:
                     for n in webex_dup_shortref:
                         col_val = webexcel[webexcel["Short Reference"] == n]
                         col_val_res = col_val["Publication Type"]
                         col_val_res = [item for item in col_val_res if str(item) != 'nan']
                         if col_val_res == sorted(col_val_res):
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding contents in column 'Publication Type' are in sorted order in Web_excel report",
-                                          pass_=True, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
+                                                                      f"contents in column 'Publication Type' are in "
+                                                                      f"sorted order in Web_excel report",
+                                                              pass_=True, log=True, screenshot=False)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding contents in column 'Publication Type' are not in sorted order in Web_excel report",
-                                            pass_=True, log=True, screenshot=False)
-                            raise Exception(f"For '{n}' in Short Reference, corresponding contents in column 'Publication Type' are not in sorted order in Web_excel report")
+                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
+                                                                      f"contents in column 'Publication Type' are not "
+                                                                      f"in sorted order in Web_excel report",
+                                                              pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{n}' in Short Reference, corresponding contents in column "
+                                            f"'Publication Type' are not in sorted order in Web_excel report")
 
-    # ############## Using Openpyxl library #################
+    # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
     #                                       pass_=True, log=True, screenshot=False)
@@ -659,18 +742,18 @@ class SLRReport(Base):
     #         webexcel_sheet = webexcel[sheet]
     #         excel = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
     #         excel_sheet = excel[sheet]
-
+    #
     #         try:
     #             for i in webexcel_sheet.rows:
     #                 webex.append(i[0].value)
-
+    #
     #             for j in excel_sheet.rows:
     #                 compex.append(j[0].value)
-
+    #
     #             # Removing None values from the lists
     #             webex = list(filter(None, webex))
     #             compex = list(filter(None, compex))
-
+    #
     #             # Comparison and Merging with regular expressions
     #             res = [ele for ele in compex if (ele in webex)]
     #             self.LogScreenshot.fLogScreenshot(message=f"Regular Expression output: {res}",
@@ -681,21 +764,23 @@ class SLRReport(Base):
     #                 ele2 = [x for x in compex if isinstance(x, numbers.Number)]
     #                 if ele1 == sorted(ele1) and ele2 == sorted(ele2):
     #                     if ele1 == ele2:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are matching between WebExcel "
-    #                                                                   f"and Complete Excel report. \n"
-    #                                                                   f"Compared Element values are: {ele1} and \n{ele2}",
+    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are matching between "
+    #                                                                   f"WebExcel and Complete Excel report. \n"
+    #                                                                   f"Compared Element values are: {ele1} "
+    #                                                                   f"and \n{ele2}",
     #                                                           pass_=True, log=True, screenshot=False)
     #                     else:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are not matching between WebExcel "
-    #                                                                   f"and Complete Excel report. \n"
-    #                                                                   f"Compared Element values are: {ele1} and \n{ele2}",
+    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are not matching between "
+    #                                                                   f"WebExcel and Complete Excel report. \n"
+    #                                                                   f"Compared Element values are: {ele1} "
+    #                                                                   f"and \n{ele2}",
     #                                                           pass_=False, log=True, screenshot=False)
     #                         raise Exception("Study Identifier are not matching")
     #                 else:
     #                     raise Exception("Study Identifier Elements are not in sorted order")
     #         except Exception:
     #             raise Exception("Error in Excel sheet content validation")
-
+    #
     # def excel_to_word_content_validation(self, webexcel_filename, excel_filename, word_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: "
     #                                               f"{webexcel_filename}, \n{excel_filename}, \n{word_filename}",
@@ -717,27 +802,29 @@ class SLRReport(Base):
     #         try:
     #             for i in webexcel_sheet.rows:
     #                 webex.append(i[3].value)
-
+    #
     #             for j in excel_sheet.rows:
     #                 compex.append(j[3].value)
-
+    #
     #             for row in docs.tables[table_count].rows:
     #                 word.append(row.cells[0].text)
     #             # Incrementing the counter to switch for next table based on the number of excel sheet names
     #             table_count += 1
-
+    #
     #             # Removing None values from the lists
     #             webex = list(filter(None, webex))
     #             compex = list(filter(None, compex))
-
+    #
     #             if compex == webex and compex == word:
-    #                 self.LogScreenshot.fLogScreenshot(message=f"Contents are matching in WebExcel, Complete Excel and "
-    #                                                           f"Complete Word Reports. Short Reference values are: \n"
+    #                 self.LogScreenshot.fLogScreenshot(message=f"Contents are matching in WebExcel, Complete "
+    #                                                           f"Excel and Complete Word Reports. "
+    #                                                           f"Short Reference values are: \n"
     #                                                           f"{webex} \n {compex} \n {word}",
     #                                                   pass_=True, log=True, screenshot=False)
     #             else:
-    #                 self.LogScreenshot.fLogScreenshot(message=f"Contents are not matching in WebExcel, Complete Excel and "
-    #                                                           f"Complete Word Reports. Short Reference values are: \n"
+    #                 self.LogScreenshot.fLogScreenshot(message=f"Contents are not matching in WebExcel, Complete "
+    #                                                           f"Excel and Complete Word Reports. "
+    #                                                           f"Short Reference values are: \n"
     #                                                           f"{webex} \n {compex} \n {word}",
     #                                                   pass_=False, log=True, screenshot=False)
     #                 raise Exception("Word report contents are not matching")

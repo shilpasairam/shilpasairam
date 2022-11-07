@@ -39,7 +39,8 @@ class Test_ManagePopultionsPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -49,16 +50,19 @@ class Test_ManagePopultionsPage:
 
         for i in pop_list:
             try:
-                added_pop = self.mngpoppage.add_multiple_population(i, "add_population_btn", self.filepath, "manage_pop_table_rows")
+                added_pop = self.mngpoppage.add_multiple_population(i, "add_population_btn", self.filepath,
+                                                                    "manage_pop_table_rows")
 
                 self.population_val.append(added_pop)
-                self.LogScreenshot.fLogScreenshot(message=f"Added populations are {self.population_val}", pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Added populations are {self.population_val}",
+                                                  pass_=True, log=True, screenshot=False)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
             
-        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30244
     def test_edit_population(self, extra):
@@ -71,7 +75,8 @@ class Test_ManagePopultionsPage:
         # Creating object of ManagePopulationsPage class
         self.mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -86,13 +91,15 @@ class Test_ManagePopultionsPage:
                 edited_pop = self.mngpoppage.edit_multiple_population(i[0], i[1], "edit_population", self.filepath)
 
                 self.edited_population_val.append(edited_pop)
-                self.LogScreenshot.fLogScreenshot(message=f"Edited populations are {self.edited_population_val}", pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Edited populations are {self.edited_population_val}",
+                                                  pass_=True, log=True, screenshot=False)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30244
     def test_delete_population(self, extra):
@@ -105,7 +112,8 @@ class Test_ManagePopultionsPage:
         # Creating object of ManagePopulationsPage class
         self.mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -113,11 +121,13 @@ class Test_ManagePopultionsPage:
 
         for i in self.edited_population_val:
             try:
-                self.mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup", "manage_pop_table_rows")
+                self.mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup",
+                                                           "manage_pop_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
         

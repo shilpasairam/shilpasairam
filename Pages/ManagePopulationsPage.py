@@ -65,7 +65,8 @@ class ManagePopulationsPage(Base):
 
         # Fetching total rows count before adding a new population
         table_rows_before = self.select_elements(table_rows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: {len(table_rows_before)}',
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
+                                                  f'{len(table_rows_before)}',
                                           pass_=True, log=True, screenshot=False)
 
         self.click(add_locator, UnivWaitFor=10)
@@ -85,7 +86,7 @@ class ManagePopulationsPage(Base):
                                           
         self.assertText("Population added successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the population record',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         ele = self.select_element("table_entries_dropdown")
         select = Select(ele)
@@ -93,29 +94,30 @@ class ManagePopulationsPage(Base):
 
         # Fetching total rows count after adding a new population
         table_rows_after = self.select_elements(table_rows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: {len(table_rows_after)}',
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
+                                                  f'{len(table_rows_after)}',
                                           pass_=True, log=True, screenshot=False)
 
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    result = []
-                    self.input_text("search_button", new_pop_val[1])
-                    td1 = self.select_elements('manage_pop_table_row_1')
-                    for m in td1:
-                        result.append(m.text)
+                result = []
+                self.input_text("search_button", new_pop_val[1])
+                td1 = self.select_elements('manage_pop_table_row_1')
+                for m in td1:
+                    result.append(m.text)
 
-                    self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
-                                            pass_=True, log=True, screenshot=False)
-                    
-                    if result[1] == new_pop_val[1]:
-                        self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
-                                            pass_=True, log=True, screenshot=False)
-                        population = f"{result[0]} - {result[1]}"
-                        return population
-                    else:
-                        raise Exception("Population data is not added")
+                self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
+                                                  pass_=True, log=True, screenshot=False)
+
+                if result[1] == new_pop_val[1]:
+                    self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
+                                                      pass_=True, log=True, screenshot=False)
+                    population = f"{result[0]} - {result[1]}"
+                    return population
+                else:
+                    raise Exception("Population data is not added")
             self.clear("search_button")
-        except:
+        except Exception:
             raise Exception("Error while adding the population")
 
     def delete_population(self, manage_pop_pg, del_locator, filepath, del_locator_popup, tablerows):
@@ -128,7 +130,8 @@ class ManagePopulationsPage(Base):
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_before = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: {len(table_rows_before)}',
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: '
+                                                  f'{len(table_rows_before)}',
                                           pass_=True, log=True, screenshot=False)
 
         # Read extraction sheet values
@@ -146,7 +149,7 @@ class ManagePopulationsPage(Base):
 
         self.assertText("Population deleted successfully", del_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the population record',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         ele = self.select_element("table_entries_dropdown")
         select = Select(ele)
@@ -160,10 +163,10 @@ class ManagePopulationsPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)                    
-        except:
+                                                  pass_=True, log=True, screenshot=False)
+        except Exception:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                            pass_=False, log=True, screenshot=False)  
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the population")
     
     def add_multiple_population(self, locatorname, add_locator, filepath, table_rows):
@@ -176,8 +179,9 @@ class ManagePopulationsPage(Base):
 
         # Fetching total rows count before adding a new population
         table_rows_before = self.select_elements(table_rows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: {len(table_rows_before)}',
-                                        pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
+                                                  f'{len(table_rows_before)}',
+                                          pass_=True, log=True, screenshot=False)
 
         self.click(add_locator, UnivWaitFor=10)
 
@@ -198,10 +202,10 @@ class ManagePopulationsPage(Base):
 
         if actual_status_text == expected_status_text:
             self.LogScreenshot.fLogScreenshot(message=f"Addition of New Population is success",
-                                    pass_=True, log=True, screenshot=True)
+                                              pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding New Population",
-                                    pass_=False, log=True, screenshot=True)
+                                              pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while adding New Population")
 
         ele = self.select_element("table_entries_dropdown")
@@ -210,8 +214,9 @@ class ManagePopulationsPage(Base):
 
         # Fetching total rows count after adding a new population
         table_rows_after = self.select_elements(table_rows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: {len(table_rows_after)}',
-                                        pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
+                                                  f'{len(table_rows_after)}',
+                                          pass_=True, log=True, screenshot=False)
 
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
@@ -222,11 +227,11 @@ class ManagePopulationsPage(Base):
                     result.append(m.text)
 
                 self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
-                                        pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
                 
                 if result[1] == f'{new_pop_val[1]}':
                     self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
-                                        pass_=True, log=True, screenshot=False)
+                                                      pass_=True, log=True, screenshot=False)
                     population = f"{result[1]}"
                     return population
                 else:
@@ -234,7 +239,7 @@ class ManagePopulationsPage(Base):
             self.clear("search_button")
             self.refreshpage()
             time.sleep(2)
-        except:
+        except Exception:
             raise Exception("Error while adding the population")
 
     def edit_multiple_population(self, locatorname, pop_name, edit_locator, filepath):
@@ -246,7 +251,8 @@ class ManagePopulationsPage(Base):
         self.click(edit_locator, UnivWaitFor=10)
 
         # Read the file name and path required to upload
-        upload_updatedfile_path = self.get_template_file_details(filepath, locatorname, 'manage_population_updatedfile_to_upload')
+        upload_updatedfile_path = self.get_template_file_details(filepath, locatorname,
+                                                                 'manage_population_updatedfile_to_upload')
         # Read population details from data sheet
         edit_pop_data, edit_pop_val = self.get_pop_data(filepath, locatorname, 'Edit_population_value')
 
@@ -262,10 +268,11 @@ class ManagePopulationsPage(Base):
         
         if actual_status_text == expected_status_text:
             self.LogScreenshot.fLogScreenshot(message=f"Editing the existing Population is success",
-                                    pass_=True, log=True, screenshot=True)
+                                              pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while editing the Population data",
-                                    pass_=False, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while editing the "
+                                                      f"Population data",
+                                              pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while editing the Population data")
 
         try:
@@ -276,18 +283,18 @@ class ManagePopulationsPage(Base):
                 result.append(m.text)
 
             self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the existing population: {result}',
-                                    pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
             
             if result[1] == f'{edit_pop_val[1]}':
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Population data is present in table',
-                                    pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
                 population = f"{result[1]}"
                 return population
             
             self.clear("search_button")
             self.refreshpage()
             time.sleep(2)
-        except:
+        except Exception:
             raise Exception("Error while editing the population")    
 
     def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows):
@@ -298,7 +305,8 @@ class ManagePopulationsPage(Base):
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_before = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: {len(table_rows_before)}',
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: '
+                                                  f'{len(table_rows_before)}',
                                           pass_=True, log=True, screenshot=False)
 
         self.input_text("search_button", pop_value)
@@ -313,10 +321,11 @@ class ManagePopulationsPage(Base):
 
         if actual_status_text == expected_status_text:
             self.LogScreenshot.fLogScreenshot(message=f"Deleting the existing Population is success",
-                                    pass_=True, log=True, screenshot=True)
+                                              pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the Population data",
-                                    pass_=False, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the "
+                                                      f"Population data",
+                                              pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while deleting the Population data")
 
         ele = self.select_element("table_entries_dropdown")
@@ -331,10 +340,10 @@ class ManagePopulationsPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
             self.refreshpage()
             time.sleep(2)                
-        except:
+        except Exception:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                            pass_=False, log=True, screenshot=False)  
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the population")
