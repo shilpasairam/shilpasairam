@@ -40,7 +40,8 @@ class Test_ImportPublicationPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -53,10 +54,11 @@ class Test_ImportPublicationPage:
                 self.imppubpage.upload_file(i, self.filepath, index)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30246
     @pytest.mark.C27544
@@ -73,7 +75,8 @@ class Test_ImportPublicationPage:
         # Creating object of ImportPublicationPage class
         self.imppubpage = ImportPublicationPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Extraction Template validation is started***", pass_=True, log=True, screenshot=False) 
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Extraction Template validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -83,13 +86,15 @@ class Test_ImportPublicationPage:
 
         for i in pop_list:
             try:
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text", "upload_table_rows")
+                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                                            "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Extraction Template validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Extraction Template validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27547
     def test_upload_extraction_template_with_header_mismatch(self, extra):
@@ -108,7 +113,8 @@ class Test_ImportPublicationPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
+                                                  f"validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -119,13 +125,15 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text", "upload_table_rows")
+                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                                            "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch validation "
+                                                  f"is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27379
     def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra):
@@ -144,7 +152,9 @@ class Test_ImportPublicationPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication Identifier validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
+                                                  f"Identifier validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -155,13 +165,16 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text", "upload_table_rows")
+                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                                            "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication Identifier validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
+                                                  f"Identifier validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27380
     def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra):
@@ -180,7 +193,9 @@ class Test_ImportPublicationPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication Identifier validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
+                                                  f"Identifier validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -191,13 +206,16 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text", "upload_table_rows")
+                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                                            "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication Identifier validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
+                                                  f"Identifier validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28986
     def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra):
@@ -216,7 +234,9 @@ class Test_ImportPublicationPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication Identifier validation is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
+                                                  f"Identifier validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
@@ -227,10 +247,13 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text", "upload_table_rows")
+                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                                            "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                    pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication Identifier validation is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
+                                                  f"Identifier validation is completed***",
+                                          pass_=True, log=True, screenshot=False)

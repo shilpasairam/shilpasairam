@@ -78,7 +78,7 @@ class ManageUpdatesPage(Base):
                                           
         self.assertText("Update added successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         table_ele = self.select_element("sel_table_entries_dropdown")
         select = Select(table_ele)
@@ -99,17 +99,17 @@ class ManageUpdatesPage(Base):
                     result.append(n.text)
 
                 self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
-                                        pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
                 
                 if result[0] == sel_pop_val:
                     self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
-                                        pass_=True, log=True, screenshot=False)
+                                                      pass_=True, log=True, screenshot=False)
                     update_data = f"{result[0]} - {result[2]} - {result[1].replace('0', '')}"
                     return update_data
                 else:
                     raise Exception("Population update data is not added")
             self.clear("manage_update_search_box")
-        except:
+        except Exception:
             raise Exception("Error while adding the population updates")
 
     def delete_manage_update(self, manage_update_pg, sel_pop_val, del_locator, del_locator_popup, tablerows):
@@ -137,7 +137,7 @@ class ManageUpdatesPage(Base):
                                           
         self.assertText("Update deleted successfully", del_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         ele = self.select_element("sel_table_entries_dropdown")
         select = Select(ele)
@@ -151,10 +151,10 @@ class ManageUpdatesPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)                    
-        except:
+                                                  pass_=True, log=True, screenshot=False)
+        except Exception:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                            pass_=False, log=True, screenshot=False)  
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the update")
     
     def add_multiple_updates(self, locatorname, add_upd_button, date_val, table_rows, dateval_to_search):
@@ -195,7 +195,7 @@ class ManageUpdatesPage(Base):
                                           
         self.assertText("Update added successfully", add_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates record',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         table_ele = self.select_element("sel_table_entries_dropdown")
         select = Select(table_ele)
@@ -210,7 +210,7 @@ class ManageUpdatesPage(Base):
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
                 self.refreshpage()
                 self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
-                                        pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
                 result = []
                 self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
                 td1 = self.select_elements('manage_update_table_row_1')
@@ -218,17 +218,17 @@ class ManageUpdatesPage(Base):
                     result.append(n.text)
 
                 self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new update: {result}',
-                                        pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
                 
                 if result[0] == sel_pop_val:
                     self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
-                                        pass_=True, log=True, screenshot=False)
+                                                      pass_=True, log=True, screenshot=False)
                     update_data = f"{result[0]} - {result[1]}"
                     return update_data
                 else:
                     raise Exception("Population update data is not added")
             self.clear("manage_update_search_box")
-        except:
+        except Exception:
             raise Exception("Error while adding the population updates")
     
     def edit_multiple_updates(self, current_data, edit_upd_button, date_val, dateval_to_search):
@@ -263,12 +263,12 @@ class ManageUpdatesPage(Base):
                                           
         self.assertText("Update updated successfully", update_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to edit the updates record',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         try:
             self.refreshpage()
             self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
-                                    pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
             result = []
             self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
             td1 = self.select_elements('manage_update_table_row_1')
@@ -276,16 +276,16 @@ class ManageUpdatesPage(Base):
                 result.append(n.text)
 
             self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the update: {result}',
-                                    pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
             
             if result[0] == sel_pop_val:
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Population update data is present in table',
-                                    pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
                 update_data = f"{result[0]} - {result[1]}"
                 return update_data
             else:
                 raise Exception("Population update data is not edited")
-        except:
+        except Exception:
             raise Exception("Error while adding the population updates")
 
     def delete_multiple_manage_updates(self, added_update_val, del_locator, del_locator_popup, tablerows):
@@ -312,7 +312,7 @@ class ManageUpdatesPage(Base):
                                           
         self.assertText("Update deleted successfully", del_text)
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates record',
-                                    pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         ele = self.select_element("sel_table_entries_dropdown")
         select = Select(ele)
@@ -326,8 +326,8 @@ class ManageUpdatesPage(Base):
         try:
             if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                            pass_=True, log=True, screenshot=False)                    
-        except:
+                                                  pass_=True, log=True, screenshot=False)
+        except Exception:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                            pass_=False, log=True, screenshot=False)  
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the update")

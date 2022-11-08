@@ -35,7 +35,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -52,7 +53,8 @@ class Test_UtilityOutcome_QOL:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel Report validation*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
+                                                  f"Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -64,7 +66,7 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                        "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
                     time.sleep(5)
@@ -93,7 +95,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -110,7 +113,8 @@ class Test_UtilityOutcome_QOL:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between Source Utility File and Complete Excel Report*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
+                                                  f"Source Utility File and Complete Excel Report*****",
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
@@ -122,14 +126,15 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                        "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
                     time.sleep(5)
                     excel_filename1 = self.slrreport.getFilenameAndValidate(180)
                     self.utiloutcome.validate_filename(excel_filename1, self.util_filepath, 'NewImportLogic')
                     
-                    self.utiloutcome.qol_verify_source_to_target_row_counts_excelreport(excel_filename1, self.util_filepath)
+                    self.utiloutcome.qol_verify_source_to_target_row_counts_excelreport(excel_filename1,
+                                                                                        self.util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -151,7 +156,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -168,7 +174,8 @@ class Test_UtilityOutcome_QOL:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Word Report validation*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Word Report "
+                                                  f"validation*****",
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
@@ -180,7 +187,7 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                        "reported_variable_section")
+                                                      "reported_variable_section")
 
                     self.slrreport.generate_download_report("word_report")
                     time.sleep(5)
@@ -209,7 +216,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -226,7 +234,8 @@ class Test_UtilityOutcome_QOL:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between Source Utility File and Word Report*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
+                                                  f"Source Utility File and Word Report*****",
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
@@ -238,14 +247,15 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                        "reported_variable_section")
+                                                      "reported_variable_section")
 
                     self.slrreport.generate_download_report("word_report")
                     time.sleep(5)
                     word_filename1 = self.slrreport.getFilenameAndValidate(180)
                     self.utiloutcome.validate_filename(word_filename1, self.util_filepath, 'NewImportLogic')
 
-                    self.utiloutcome.qol_verify_source_to_target_row_counts_wordreport(word_filename1, self.util_filepath)
+                    self.utiloutcome.qol_verify_source_to_target_row_counts_wordreport(word_filename1,
+                                                                                       self.util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -267,7 +277,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -293,14 +304,15 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                          "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
                     time.sleep(5)
                     excel_filename1 = self.slrreport.getFilenameAndValidate(180)
                     self.utiloutcome.validate_filename(excel_filename1, self.util_filepath, 'NewImportLogic')
 
-                    self.utiloutcome.qol_verify_excelreport_utility_summary_sorting_order(excel_filename1, self.util_filepath)
+                    self.utiloutcome.qol_verify_excelreport_utility_summary_sorting_order(excel_filename1,
+                                                                                          self.util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -322,7 +334,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -348,14 +361,15 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                          "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("word_report")
                     time.sleep(5)
                     word_filename1 = self.slrreport.getFilenameAndValidate(180)
                     self.utiloutcome.validate_filename(word_filename1, self.util_filepath, 'NewImportLogic')
 
-                    self.utiloutcome.qol_verify_wordreport_utility_table_sorting_order(word_filename1, self.util_filepath)
+                    self.utiloutcome.qol_verify_wordreport_utility_table_sorting_order(word_filename1,
+                                                                                       self.util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -377,7 +391,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -403,7 +418,7 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                          "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
                     time.sleep(5)
@@ -423,11 +438,8 @@ class Test_UtilityOutcome_QOL:
                     self.utiloutcome.validate_filename(webexcel_filename1, self.util_filepath, 'NewImportLogic')
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
-
-                    self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
-
-                    self.utiloutcome.qol_utility_summary_validation(webexcel_filename1, excel_filename1, self.util_filepath, word_filename1)
+                    self.utiloutcome.qol_utility_summary_validation(webexcel_filename1, excel_filename1,
+                                                                    self.util_filepath, word_filename1)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -450,7 +462,8 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'OldImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'OldImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'OldImportLogic')
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -476,7 +489,7 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                          "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
                     time.sleep(5)
@@ -496,11 +509,8 @@ class Test_UtilityOutcome_QOL:
                     self.utiloutcome.validate_filename(webexcel_filename1, self.util_filepath, 'OldImportLogic')
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.excel_content_validation(webexcel_filename1, excel_filename1)
-
-                    self.slrreport.excel_to_word_content_validation(webexcel_filename1, excel_filename1, word_filename1)
-
-                    self.utiloutcome.qol_utility_summary_validation_old_imports(webexcel_filename1, excel_filename1, self.util_filepath)
+                    self.utiloutcome.qol_utility_summary_validation_old_imports(webexcel_filename1, excel_filename1,
+                                                                                self.util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -533,7 +543,8 @@ class Test_UtilityOutcome_QOL:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel Report validation*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
+                                                  f"Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -542,7 +553,8 @@ class Test_UtilityOutcome_QOL:
 
         for index, i in enumerate(scenarios):
             try:
-                self.utiloutcome.qol_validate_utilitysummarytab_and_contents_into_excelreport(i, self.util_filepath, index)
+                self.utiloutcome.qol_validate_utilitysummarytab_and_contents_into_excelreport(i, self.util_filepath,
+                                                                                              index)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -563,12 +575,13 @@ class Test_UtilityOutcome_QOL:
         # Read slrtype data values
         self.slrtype = self.utiloutcome.get_slrtype_data_specific_sheet(self.util_filepath, 'NewImportLogic')
         # Read reportedvariables data values
-        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
+        self.rpt_data, self.rpt_data_chkbox = self.utiloutcome.\
+            get_reported_variables_specific_sheet(self.util_filepath, 'NewImportLogic')
 
         expected_dict = {"FH-1": "Utility/Disutility Summary (Excluding point estimates)",
-                 "FH-2": "Utility Point Estimate Reported with Health States",
-                 "FH-3": "Disutility Point Estimate Reported with Health States",
-                 "FH-4": "Utility Elicitation Method and Source"}
+                         "FH-2": "Utility Point Estimate Reported with Health States",
+                         "FH-3": "Disutility Point Estimate Reported with Health States",
+                         "FH-4": "Utility Elicitation Method and Source"}
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -597,7 +610,7 @@ class Test_UtilityOutcome_QOL:
                 for j in self.slrtype:
                     self.slrreport.select_data(j[0], j[1])
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
-                                                          "reported_variable_section")
+                                                      "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
                     time.sleep(5)
@@ -616,7 +629,6 @@ class Test_UtilityOutcome_QOL:
                     self.utiloutcome.presenceof_utilitycolumn_names(webexcel_filename1, excel_filename1, expected_dict)
                 
                 self.LogScreenshot.fLogScreenshot(message=f"*****Column names validation Completed*****",
-                                          pass_=True, log=True, screenshot=False)
-
+                                                  pass_=True, log=True, screenshot=False)
             except Exception:
                 raise Exception("Unable to select element")

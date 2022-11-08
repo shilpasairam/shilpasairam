@@ -182,9 +182,11 @@ class LiveNMA(Base):
                         raise Exception("Wrong values entered")
 
                 if self.clickable(network_loc):
-                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is clickable', pass_=True, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is clickable',
+                                                      pass_=True, log=True, screenshot=False)
                     self.click(network_loc)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is not clickable', pass_=False, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is not clickable',
+                                                      pass_=False, log=True, screenshot=False)
         except Exception:
             raise Exception("Failed in adding new study data to table")

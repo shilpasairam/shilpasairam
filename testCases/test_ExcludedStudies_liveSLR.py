@@ -45,7 +45,8 @@ class Test_ExcludedStudies_liveSLR:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete Excel Report validation*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in "
+                                                  f"Complete Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -88,7 +89,8 @@ class Test_ExcludedStudies_liveSLR:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete Excel Report validation*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
+                                                  f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -131,7 +133,8 @@ class Test_ExcludedStudies_liveSLR:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete Excel Report validation*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
+                                                  f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -141,6 +144,7 @@ class Test_ExcludedStudies_liveSLR:
 
         for index, i in enumerate(scenarios):
             try:
-                self.exstdy_liveslr.validate_excludedstudiesliveslrtab_and_contents_into_excelreport(i, self.filepath, index)
+                self.exstdy_liveslr.validate_excludedstudiesliveslrtab_and_contents_into_excelreport(i, self.filepath,
+                                                                                                     index)
             except Exception:
                 raise Exception("Unable to select element")
