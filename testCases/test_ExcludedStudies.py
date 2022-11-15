@@ -190,11 +190,12 @@ class Test_ExcludedStudiesPage:
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
 
+        pop_list = ['pop1']
+        
         try:
-            self.exstdy.compare_excludedstudy_file_with_report(self.filepath, "NewImportLogic_1 - Test_Automation_1",
-                                                               self.slrfilepath)
-            self.exstdy.del_after_studyfile_comparison(self.filepath, "NewImportLogic_1 - Test_Automation_1",
-                                                       self.slrfilepath)
+            for i in pop_list:
+                self.exstdy.compare_excludedstudy_file_with_report(self.filepath, i)
+                self.exstdy.del_after_studyfile_comparison(self.filepath, i)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
                                               pass_=False, log=True, screenshot=True)
