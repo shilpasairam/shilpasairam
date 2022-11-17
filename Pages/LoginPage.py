@@ -1,4 +1,6 @@
 import time
+
+import pandas as pd
 from Pages.Base import Base
 from selenium.webdriver.common.by import By
 from utilities.readProperties import ReadConfig
@@ -7,6 +9,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 
 class LoginPage(Base):
+    app_filepath = ReadConfig.getappversionfilepath()
 
     """Constructor of the Login Page class"""
     def __init__(self, driver, extra):
@@ -18,6 +21,25 @@ class LoginPage(Base):
         self.logger = LogGen.loggen()
         # instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
+    
+    def get_expected_application_version(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        version_details = df.loc[df['Application'] == locatorname]['Version'].dropna().to_list()
+        return version_details
+    
+    def check_app_version(self, locatorname, filepath, app_name):
+        expected_app_version = self.get_expected_application_version(filepath, app_name)
+        actual_app_version = self.base.get_text(locatorname)
+        if expected_app_version[0] in actual_app_version:
+            self.LogScreenshot.fLogScreenshot(
+                message=f"Application version is as expected. Application version is : {actual_app_version}",
+                pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(
+                message=f"Mismatch found in Applicaiton version. Actual App version is : {actual_app_version} "
+                        f"and Expected App version is : {expected_app_version}",
+                pass_=False, log=True, screenshot=True)
+            raise Exception(f"Mismatch found in Applicaiton version.")
 
     """Page Actions for LiveSLR Login page"""
     def complete_login(self, username, password, app_url):
@@ -54,10 +76,10 @@ class LoginPage(Base):
                 message=f"Login Successful. Application home page displayed",
                 pass_=True, log=True, screenshot=True)
             self.driver.find_element(By.XPATH, '//a[@class="nav-link" and @title="About LiveSLR™"]').click()
-            self.LogScreenshot.fLogScreenshot(
-                message=f"Current Build version is: ",
-                pass_=True, log=True, screenshot=True)
+            time.sleep(1)
+            self.check_app_version("about_live_slr_text", self.app_filepath, "LiveSLR")
             self.driver.find_element(By.XPATH, "//strong[text()= 'Close']").click()
+            time.sleep(1)
         except Exception:
             self.LogScreenshot.fLogScreenshot(
                 message=f"Login Unsuccessful. Please check the application availability and try again",
@@ -118,9 +140,9 @@ class LoginPage(Base):
                 message=f"Login Successful. Application home page displayed",
                 pass_=True, log=True, screenshot=True)
             self.click("about_live_ref", UnivWaitFor=3)
-            self.LogScreenshot.fLogScreenshot(
-                message=f"Current Build version is: ",
-                pass_=True, log=True, screenshot=True)
+            time.sleep(1)
+            self.check_app_version("about_live_ref_text", self.app_filepath, "LiveRef")
+            time.sleep(1)
             self.click("about_live_ref_close", UnivWaitFor=3)
         except Exception:
             self.LogScreenshot.fLogScreenshot(

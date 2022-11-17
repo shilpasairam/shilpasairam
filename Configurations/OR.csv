@@ -226,5 +226,7 @@ ExcludedStudies,ex_stdy_delete,XPATH,//table[@class='table table-borderless']//t
 LiveRef,launch_liveref,XPATH,"//a[@class='btn btn-primary' and @href=""https://pubtracker-testing.azurewebsites.net/""]"
 LiveRef,liveref_logout_button,XPATH,"//button[@type=""submit"" and @class=""logout""]"
 LiveRef,about_live_ref,XPATH,"//a[@href=""#aboutLiveRefModal;""]"
+LiveRef,about_live_ref_text,XPATH,//div[@class='modal-body']/span
 LiveRef,about_live_ref_close,ID,btnHideModal
 LiveRef,glossary_nav_bar,XPATH,//ul[@class='nav navbar-nav navbar-right']
+LiveSLR,about_live_slr_text,XPATH,//div[@class='modal-body']/h4
