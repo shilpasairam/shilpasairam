@@ -249,19 +249,14 @@ class ManagePopulationsPage(Base):
 
         self.input_text("search_button", f'{pop_name}')
         self.click(edit_locator, UnivWaitFor=10)
-
-        # Read the file name and path required to upload
-        upload_updatedfile_path = self.get_template_file_details(filepath, locatorname,
-                                                                 'manage_population_updatedfile_to_upload')
         # Read population details from data sheet
         edit_pop_data, edit_pop_val = self.get_pop_data(filepath, locatorname, 'Edit_population_value')
 
         for j in edit_pop_data:
             self.input_text(j[0], f'{j[1]}', UnivWaitFor=10)
             
-        self.input_text("template_file_upload", upload_updatedfile_path)
         self.click("submit_button")
-        time.sleep(3)
+        time.sleep(2)
 
         actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
         # time.sleep(2)
