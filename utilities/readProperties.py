@@ -90,6 +90,8 @@ class ReadConfig:
             return config.get('commonInfo', 'utilityoutcome_QOL_testing')
         elif env == 'staging':
             return config.get('commonInfo', 'utilityoutcome_QOL_staging')
+        elif env == 'production':
+            return config.get('commonInfo', 'utilityoutcome_QOL_prod')
     
     # Get file containing data for ECON Utility
     @staticmethod
@@ -117,6 +119,8 @@ class ReadConfig:
             return config.get('commonInfo', 'manageqadata_testing')
         elif env == 'staging':
             return config.get('commonInfo', 'manageqadata_staging')
+        elif env == 'production':
+            return config.get('commonInfo', 'manageqadata_prod')
     
     # Get data file for manage population page
     @staticmethod
@@ -151,8 +155,11 @@ class ReadConfig:
     # Get file containing data for Excluded Studies page actions
     @staticmethod
     def getexcludedstudiespath():
-        exstdy = config.get('commonInfo', 'ExcludedStudiesdata')
-        return exstdy
+        env = config.get('commonInfo','environment')
+        if env == 'production':
+            return config.get('commonInfo', 'ExcludedStudiesdata_prod')
+        else:
+            return config.get('commonInfo', 'ExcludedStudiesdata')
 
     # Get file containing data for Excluded Studies - LiveSLR Tab actions
     @staticmethod
