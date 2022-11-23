@@ -19,6 +19,11 @@ class ReadConfig:
             return f"https://portal.livehta.com/"
 
     @staticmethod
+    def getappversionfilepath():
+        appversion = config.get('commonInfo', 'App_version_data')
+        return appversion
+    
+    @staticmethod
     def getUserName():
         username = config.get('commonInfo', 'username')
         return username
