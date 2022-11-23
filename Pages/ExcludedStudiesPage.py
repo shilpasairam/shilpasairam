@@ -363,249 +363,253 @@ class ExcludedStudiesPage(Base):
         except Exception:
             raise Exception("Unable to delete the existing Excluded Studies File")
 
-    def compare_excludedstudy_file_with_report(self, filepath, pop_val, slrfilepath):
+    def compare_excludedstudy_file_with_report(self, filepath, locatorname):
         expected_upload_status_text = 'File(s) uploaded successfully'
         # Read the username
         username = self.get_text("get_user_name", UnivWaitFor=10)
         firstname = username.split()[0]
 
         # Read study types and file paths to upload
-        stdy_data = self.get_file_details(filepath)
+        stdy_data = self.get_study_file_details(filepath, locatorname)
+        # Read population details from data sheet
+        new_pop_data = self.get_pop_data(filepath, locatorname)
 
         try:
-            for i in stdy_data:
-                expected_table_values = []
-                self.refreshpage()
-                time.sleep(4)
-                self.go_to_excludedstudies("excluded_studies_link")
-                pop_ele = self.select_element("ex_stdy_pop_dropdown")
-                select1 = Select(pop_ele)
-                select1.select_by_visible_text(pop_val)
-                expected_table_values.append(select1.first_selected_option.text)
-                time.sleep(1)
+            for pop_val in new_pop_data:
+                for i in stdy_data:
+                    expected_table_values = []
+                    self.refreshpage()
+                    time.sleep(4)
+                    self.go_to_excludedstudies("excluded_studies_link")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    select1 = Select(pop_ele)
+                    select1.select_by_visible_text(pop_val[0])
+                    expected_table_values.append(select1.first_selected_option.text)
+                    time.sleep(1)
 
-                stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
-                select2 = Select(stdy_ele)
-                select2.select_by_visible_text(i[0])
-                expected_table_values.append(select2.first_selected_option.text)
-                time.sleep(1)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    select2 = Select(stdy_ele)
+                    select2.select_by_visible_text(i[0])
+                    expected_table_values.append(select2.first_selected_option.text)
+                    time.sleep(1)
 
-                update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
-                select3 = Select(update_ele)
-                select3.select_by_index(1)
-                expected_table_values.append(select3.first_selected_option.text)
-                time.sleep(1)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    select3 = Select(update_ele)
+                    select3.select_by_index(1)
+                    expected_table_values.append(select3.first_selected_option.text)
+                    time.sleep(1)
 
-                self.input_text("ex_stdy_file_upload", i[1])
-                expected_table_values.append(i[2])
-                time.sleep(2)
+                    self.input_text("ex_stdy_file_upload", i[1])
+                    expected_table_values.append(i[2])
+                    time.sleep(2)
 
-                self.click("ex_stdy_upload_button")
-                time.sleep(3)
-                actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
-                # time.sleep(1)
+                    self.click("ex_stdy_upload_button")
+                    time.sleep(3)
+                    actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
+                    # time.sleep(1)
 
-                if actual_upload_status_text == expected_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f'Excluded Studies File upload is success for Population : {pop_val} -> '
-                                f'SLR Type : {i[0]}.',
-                        pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f'Unable to find status message while uploading Excluded Studies File for '
-                                f'Population : {pop_val} -> SLR Type: {i[0]}.',
-                        pass_=False, log=True, screenshot=True)
-                    raise Exception("Unable to find status message during Excluded Studies file uploading")
-
-                # Add the firstname to expected values list
-                expected_table_values.append(firstname)
-
-                # Read table data for specific population and slr study type
-                pop_ele = self.select_element("ex_stdy_pop_dropdown")
-                select1 = Select(pop_ele)
-                select1.select_by_visible_text(pop_val)
-                time.sleep(1)
-
-                stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
-                select2 = Select(stdy_ele)
-                select2.select_by_visible_text(i[0])
-                time.sleep(1)
-
-                actual_table_values = []
-                td1 = self.select_elements('ex_stdy_table_data_row_1')
-                for m in td1:
-                    actual_table_values.append(m.text)
-
-                for n in expected_table_values:
-                    if n in actual_table_values:
-                        self.LogScreenshot.fLogScreenshot(message=f'Correct data is present in table.',
-                                                          pass_=True, log=True, screenshot=True)
+                    if actual_upload_status_text == expected_upload_status_text:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f'Excluded Studies File upload is success for Population : {pop_val[0]} -> '
+                                    f'SLR Type : {i[0]}.',
+                            pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Mismatch is found in table data. Expected values are : {expected_table_values} '
-                                    f'and Actual values are : {actual_table_values}',
+                            message=f'Unable to find status message while uploading Excluded Studies File for '
+                                    f'Population : {pop_val[0]} -> SLR Type: {i[0]}.',
                             pass_=False, log=True, screenshot=True)
-                        raise Exception(
-                            f'Mismatch is found in table data. Expected values are : {expected_table_values} and '
-                            f'Actual values are : {actual_table_values}')
+                        raise Exception("Unable to find status message during Excluded Studies file uploading")
 
-                # Go to live slr page
-                self.liveslrpage.go_to_liveslr("SLR_Homepage")
-                time.sleep(2)
-                self.slrreport.select_data(f"{pop_val}", f"{pop_val}_radio_button")
-                self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
-                self.slrreport.generate_download_report("excel_report")
-                time.sleep(5)
-                excel_filename = self.slrreport.getFilenameAndValidate(180)
-                self.slrreport.validate_filename(excel_filename, slrfilepath)
+                    # Add the firstname to expected values list
+                    expected_table_values.append(firstname)
 
-                update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
-                                                                                                  2].translate(
-                    {ord('/'): None})[:4]
+                    # Read table data for specific population and slr study type
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    select1 = Select(pop_ele)
+                    select1.select_by_visible_text(pop_val[0])
+                    time.sleep(1)
 
-                excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-                if f'Excluded studies {update_date_val}' in excel_data.sheetnames:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f"'Excluded studies {update_date_val}' sheet is present in complete excel report",
-                        pass_=True, log=True, screenshot=False)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
+                    select2 = Select(stdy_ele)
+                    select2.select_by_visible_text(i[0])
+                    time.sleep(1)
 
-                    excel_sheet = excel_data[f'Excluded studies {update_date_val}']
-                    if excel_sheet['A1'].value == 'Back To Toc':
+                    actual_table_values = []
+                    td1 = self.select_elements('ex_stdy_table_data_row_1')
+                    for m in td1:
+                        actual_table_values.append(m.text)
+
+                    for n in expected_table_values:
+                        if n in actual_table_values:
+                            self.LogScreenshot.fLogScreenshot(message=f'Correct data is present in table.',
+                                                              pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Mismatch is found in table data. Expected values are : '
+                                        f'{expected_table_values} and Actual values are : {actual_table_values}',
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(
+                                f'Mismatch is found in table data. Expected values are : {expected_table_values} and '
+                                f'Actual values are : {actual_table_values}')
+
+                    # Go to live slr page
+                    self.liveslrpage.go_to_liveslr("SLR_Homepage")
+                    time.sleep(2)
+                    self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button")
+                    self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
+                    self.slrreport.generate_download_report("excel_report")
+                    time.sleep(5)
+                    excel_filename = self.slrreport.getFilenameAndValidate(180)
+                    self.slrreport.validate_filename(excel_filename, filepath)
+
+                    update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
+                                                                                                    2].translate(
+                        {ord('/'): None})[:4]
+
+                    excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+                    if f'Excluded studies {update_date_val}' in excel_data.sheetnames:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f"'Back To Toc' option is present in 'Excluded studies {update_date_val}' sheet",
+                            message=f"'Excluded studies {update_date_val}' sheet is present in complete excel report",
                             pass_=True, log=True, screenshot=False)
+
+                        excel_sheet = excel_data[f'Excluded studies {update_date_val}']
+                        if excel_sheet['A1'].value == 'Back To Toc':
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Back To Toc' option is present in 'Excluded studies {update_date_val}' "
+                                        f"sheet",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Back To Toc' option is not present in 'Excluded studies {update_date_val}' "
+                                        f"sheet",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception(
+                                f"'Back To Toc' option is not present in 'Excluded studies {update_date_val}' sheet")
+
+                        toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
+                        col_data = list(toc_sheet.iloc[:, 1])
+                        if f'Excluded studies {update_date_val}' in col_data:
+                            self.LogScreenshot.fLogScreenshot(message=f'Excluded studies is present in TOC sheet.',
+                                                              pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Excluded studies is not present in TOC sheet. Available Data from TOC sheet: '
+                                        f'{col_data}',
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception("'Excluded studies' is not present in TOC sheet.")
+
+                        studyfile = pd.read_excel(i[1])
+                        excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}',
+                                                  sheet_name=f'Excluded studies {update_date_val}')
+
+                        # Removing the 'Back To Toc' column to compare the exact data with uploaded file
+                        excelfile = excelfile.iloc[:, 1:]
+
+                        if studyfile.equals(excelfile):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"File contents between QA File '{Path(f'{i[1]}').stem}' and Complete Excel "
+                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').stem}' are matching",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            raise Exception(
+                                f"File contents between Study File '{Path(f'{i[1]}').stem}' and Complete Excel Report "
+                                f"'{Path(f'ActualOutputs//{excel_filename}').stem}' are not matching")
                     else:
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"'Back To Toc' option is not present in 'Excluded studies {update_date_val}' "
-                                    f"sheet",
-                            pass_=False, log=True, screenshot=False)
-                        raise Exception(
-                            f"'Back To Toc' option is not present in 'Excluded studies {update_date_val}' sheet")
-
-                    toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
-                    col_data = list(toc_sheet.iloc[:, 1])
-                    if f'Excluded studies {update_date_val}' in col_data:
-                        self.LogScreenshot.fLogScreenshot(message=f'Excluded studies is present in TOC sheet.',
-                                                          pass_=True, log=True, screenshot=False)
-                    else:
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f'Excluded studies is not present in TOC sheet. Available Data from TOC sheet: '
-                                    f'{col_data}',
-                            pass_=False, log=True, screenshot=False)
-                        raise Exception("'Excluded studies' is not present in TOC sheet.")
-
-                    studyfile = pd.read_excel(i[1])
-                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}',
-                                              sheet_name=f'Excluded studies {update_date_val}')
-
-                    # Removing the 'Back To Toc' column to compare the exact data with uploaded file
-                    excelfile = excelfile.iloc[:, 1:]
-
-                    if studyfile.equals(excelfile):
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"File contents between QA File '{Path(f'{i[1]}').stem}' and Complete Excel "
-                                    f"Report '{Path(f'ActualOutputs//{excel_filename}').stem}' are matching",
-                            pass_=True, log=True, screenshot=False)
-                    else:
-                        raise Exception(
-                            f"File contents between Study File '{Path(f'{i[1]}').stem}' and Complete Excel Report "
-                            f"'{Path(f'ActualOutputs//{excel_filename}').stem}' are not matching")
-                else:
-                    raise Exception("'Excluded studies' sheet is not present in complete excel report")
+                        raise Exception("'Excluded studies' sheet is not present in complete excel report")
         except Exception:
             raise Exception("Error in report comparision between Excluded study file and Complete Excel report")
 
-    def del_after_studyfile_comparison(self, filepath, pop_val, slrfilepath):
+    def del_after_studyfile_comparison(self, filepath, locatorname):
         expected_delete_status_text = 'Excluded studies deleted successfully'
 
         # Read study types and file paths to upload
-        stdy_data = self.get_file_details(filepath)
+        stdy_data = self.get_study_file_details(filepath, locatorname)
+        # Read population details from data sheet
+        new_pop_data = self.get_pop_data(filepath, locatorname)
 
         try:
-            for i in stdy_data:
-                expected_table_values = []
-                self.refreshpage()
-                time.sleep(3)
-                self.go_to_excludedstudies("excluded_studies_link")
-                pop_ele = self.select_element("ex_stdy_pop_dropdown")
-                select1 = Select(pop_ele)
-                select1.select_by_visible_text(pop_val)
-                expected_table_values.append(select1.first_selected_option.text)
-                time.sleep(1)
+            for pop_val in new_pop_data:
+                for i in stdy_data:
+                    expected_table_values = []
+                    self.refreshpage()
+                    time.sleep(3)
+                    self.go_to_excludedstudies("excluded_studies_link")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    select1 = Select(pop_ele)
+                    select1.select_by_visible_text(pop_val[0])
+                    expected_table_values.append(select1.first_selected_option.text)
+                    time.sleep(1)
 
-                stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
-                select2 = Select(stdy_ele)
-                select2.select_by_visible_text(i[0])
-                expected_table_values.append(select2.first_selected_option.text)
-                time.sleep(1)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    select2 = Select(stdy_ele)
+                    select2.select_by_visible_text(i[0])
+                    expected_table_values.append(select2.first_selected_option.text)
+                    time.sleep(1)
 
-                update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
-                select3 = Select(update_ele)
-                select3.select_by_index(1)
-                expected_table_values.append(select3.first_selected_option.text)
-                time.sleep(1)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    select3 = Select(update_ele)
+                    select3.select_by_index(1)
+                    expected_table_values.append(select3.first_selected_option.text)
+                    time.sleep(1)
 
-                self.LogScreenshot.fLogScreenshot(message=f'Data selected for deletion is : ',
-                                                  pass_=True, log=True, screenshot=True)
-
-                self.click("ex_stdy_delete")
-                time.sleep(2)
-                self.click("ex_stdy_popup_ok")
-                time.sleep(2)
-
-                actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
-                # time.sleep(2)
-
-                if actual_delete_status_text == expected_delete_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File Deletion is success.',
+                    self.LogScreenshot.fLogScreenshot(message=f'Data selected for deletion is : ',
                                                       pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f'Error while deleting Excluded Studies File. Error Message is '
-                                f'{actual_delete_status_text}',
-                        pass_=False, log=True, screenshot=True)
-                    raise Exception("Error in Excluded Studies File Deletion")
 
-                # Go to live slr page
-                self.liveslrpage.go_to_liveslr("SLR_Homepage")
-                time.sleep(2)
-                self.slrreport.select_data(f"{pop_val}", f"{pop_val}_radio_button")
-                self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
-                self.slrreport.generate_download_report("excel_report")
-                time.sleep(5)
-                excel_filename = self.slrreport.getFilenameAndValidate(180)
-                self.slrreport.validate_filename(excel_filename, slrfilepath)
+                    self.click("ex_stdy_delete")
+                    time.sleep(2)
+                    self.click("ex_stdy_popup_ok")
+                    time.sleep(2)
 
-                update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
-                                                                                                  2].translate(
-                    {ord('/'): None})[:4]
-                self.LogScreenshot.fLogScreenshot(
-                    message=f"'Excluded studies' date value is 'Excluded studies {update_date_val}'",
-                    pass_=True, log=True, screenshot=False)
+                    actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                    # time.sleep(2)
 
-                excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-                if f'Excluded studies {update_date_val}' not in excel_data.sheetnames:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f"'Excluded studies' sheet is not present in complete excel report as expected",
-                        pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f"'Excluded studies' sheet is present in complete excel report which is not expected",
-                        pass_=False, log=True, screenshot=False)
-                    raise Exception(
-                        "'Excluded studies' sheet is present in complete excel report which is not expected")
+                    if actual_delete_status_text == expected_delete_status_text:
+                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File Deletion is success.',
+                                                          pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f'Error while deleting Excluded Studies File. Error Message is '
+                                    f'{actual_delete_status_text}',
+                            pass_=False, log=True, screenshot=True)
+                        raise Exception("Error in Excluded Studies File Deletion")
 
-                toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
-                col_data = list(toc_sheet.iloc[:, 1])
-                if f'Excluded studies {update_date_val}' not in col_data:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f'Excluded studies is not present in TOC sheet as expected.',
-                        pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(
-                        message=f'Excluded studies is present in TOC sheet which is not expected. '
-                                f'Available Data from TOC sheet: {col_data}',
-                        pass_=False, log=True, screenshot=False)
-                    raise Exception("'Excluded studies' is present in TOC sheet.")
+                    # Go to live slr page
+                    self.liveslrpage.go_to_liveslr("SLR_Homepage")
+                    time.sleep(2)
+                    self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button")
+                    self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
+                    self.slrreport.generate_download_report("excel_report")
+                    time.sleep(5)
+                    excel_filename = self.slrreport.getFilenameAndValidate(180)
+                    self.slrreport.validate_filename(excel_filename, filepath)
+
+                    update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
+                                                                                                    2].translate(
+                        {ord('/'): None})[:4]
+
+                    excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+                    if f'Excluded studies {update_date_val}' not in excel_data.sheetnames:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"'Excluded studies' sheet is not present in complete excel report as expected",
+                            pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"'Excluded studies' sheet is present in complete excel report which is not "
+                                    f"expected", pass_=False, log=True, screenshot=False)
+                        raise Exception(
+                            "'Excluded studies' sheet is present in complete excel report which is not expected")
+
+                    toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
+                    col_data = list(toc_sheet.iloc[:, 1])
+                    if f'Excluded studies {update_date_val}' not in col_data:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f'Excluded studies is not present in TOC sheet as expected.',
+                            pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f'Excluded studies is present in TOC sheet which is not expected. '
+                                    f'Available Data from TOC sheet: {col_data}',
+                            pass_=False, log=True, screenshot=False)
+                        raise Exception("'Excluded studies' is present in TOC sheet.")
         except Exception:
             raise Exception("Unable to delete the existing Excluded Studies File")
