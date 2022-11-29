@@ -148,10 +148,16 @@ class ReadConfig:
     
     # Get JS command to hide
     @staticmethod
-    def getJScommand():
-        command = "document.getElementsByTagName('input')[16].removeAttribute('hidden')"
+    def get_remove_att_JScommand(index, value):
+        command = f"document.getElementsByTagName('input')[{index}].removeAttribute('{value}')"
         return command
     
+    # Get JS command to hide
+    @staticmethod
+    def get_set_att_JScommand(index, name, value=None):
+        command = f"document.getElementsByTagName('input')[{index}].setAttribute('{name}', '{value}')"
+        return command
+
     # Get file containing data for Excluded Studies page actions
     @staticmethod
     def getexcludedstudiespath():
@@ -166,3 +172,8 @@ class ReadConfig:
     def getexcludedstudiesliveslrpath():
         exstdy_liveslr = config.get('commonInfo', 'ExcludedStudies_liveSLR_data')
         return exstdy_liveslr
+
+    @staticmethod
+    def getTestdata( wrapperfile ):
+        TestData = config.get('commonInfo', wrapperfile)
+        return TestData

@@ -779,7 +779,7 @@ class UtilityOutcome(Base):
         select = Select(ele)
         select.select_by_visible_text(pop_name)
         
-        jscmd = ReadConfig.getJScommand()
+        jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
         self.jsclick_hide(jscmd)
         self.input_text("add_file", file_to_upload)
         try:

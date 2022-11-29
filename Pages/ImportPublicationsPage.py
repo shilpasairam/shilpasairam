@@ -58,7 +58,7 @@ class ImportPublicationPage(Base):
                                                       f'{len(table_rows_before)}',
                                               pass_=True, log=True, screenshot=False)
             
-            jscmd = ReadConfig.getJScommand()
+            jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
             self.jsclick_hide(jscmd)
             self.input_text("add_file", i[1])
             try:
@@ -181,7 +181,7 @@ class ImportPublicationPage(Base):
                                                       f'{len(table_rows_before)}',
                                               pass_=True, log=True, screenshot=False)
             
-            jscmd = ReadConfig.getJScommand()
+            jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
             self.jsclick_hide(jscmd)
             self.input_text("add_file", i[1])
             try:
