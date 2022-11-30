@@ -24,7 +24,7 @@ class Test_ImportPublicationPage:
     @pytest.mark.C27546
     @pytest.mark.C27381
     @pytest.mark.C28987
-    def test_upload_extraction_template(self, extra):
+    def test_upload_and_del_extraction_template(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -52,48 +52,14 @@ class Test_ImportPublicationPage:
         for index, i in enumerate(pop_list):
             try:
                 self.imppubpage.upload_file(i, self.filepath, index)
-            except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
-        
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
-
-    @pytest.mark.C30246
-    @pytest.mark.C27544
-    @pytest.mark.C27546
-    @pytest.mark.C27381
-    @pytest.mark.C28987
-    def test_del_extraction_template(self, extra):
-        # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
-        # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
-
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Extraction Template validation is started***",
-                                          pass_=True, log=True, screenshot=False)
-        
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
-
-        pop_list = ['pop1', 'pop2']
-
-        for i in pop_list:
-            try:
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
                                             "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Extraction Template validation is completed***",
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27547
@@ -125,7 +91,7 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
                                             "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
@@ -165,7 +131,7 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
                                             "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
@@ -206,7 +172,7 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
                                             "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
@@ -247,7 +213,7 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file("delete_file", "delete_file_popup", "file_status_popup_text",
+                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
                                             "upload_table_rows")
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",

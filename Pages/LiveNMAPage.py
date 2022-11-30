@@ -53,7 +53,7 @@ class LiveNMA(Base):
                 if self.isselected(locator_button):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=False)
-            self.scrollback()
+            self.scrollback("SLR_page_header")
 
     def select_all_sub_section(self, locator, locator_button, scroll=None):
         if self.scroll(scroll):
@@ -65,7 +65,7 @@ class LiveNMA(Base):
                 if self.isselected(locator_button):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=False)
-            self.scrollback()
+            self.scrollback("SLR_page_header")
 
     def table_display_check(self, nma_data_loc, locator):
         self.jsclick(nma_data_loc, UnivWaitFor=10)

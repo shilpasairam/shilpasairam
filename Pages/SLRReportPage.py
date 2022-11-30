@@ -58,7 +58,7 @@ class SLRReport(Base):
                 if self.isselected(locator_button):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback()
+            self.scrollback("SLR_page_header")
 
     def select_all_sub_section(self, locator, locator_button, scroll=None):
         if self.scroll(scroll, UnivWaitFor=20):
@@ -70,7 +70,7 @@ class SLRReport(Base):
                 if self.isselected(locator_button):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback()
+            self.scrollback("SLR_page_header")
 
     def get_additional_criteria_values(self, locator_study, locator_var):
         ele1 = self.select_elements(locator_study)
@@ -213,7 +213,7 @@ class SLRReport(Base):
                                                       f"Records are not matching",
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Prisma count values are mismatching")
-        self.scrollback()
+        self.scrollback("SLR_page_header")
 
     def collect_selected_area_details(self, locator1, locator2):
         x = self.get_text(locator1)
