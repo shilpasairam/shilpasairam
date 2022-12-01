@@ -181,3 +181,27 @@ ExcludedStudies,ex_stdy_popup_ok,XPATH,//div[@class='modal-content']//div[3]//bu
 ExcludedStudies,ex_stdy_popup_cancel,XPATH,//div[@class='modal-content']//div[3]//button[2]
 ExcludedStudies,ex_stdy_table_data_row_1,XPATH,//table[@class='table table-borderless']//tbody//tr[1]/td
 ExcludedStudies,ex_stdy_delete,XPATH,//table[@class='table table-borderless']//tbody//tr[1]/td//em[@class='fa-lg icon-trash action-icon px-2 py-1 mx-1']
+LiveRef_ManageSourceData,managesourcedata_button,LINK_TEXT,Manage Source of data
+LiveRef_ManageSourceData,add_sourcedata_btn,XPATH,"//button[@class=""btn btn-primary btn-congress pull-right""]"
+LiveRef_ManageSourceData,source_name_text_box,XPATH,"//input[@type=""text"" and @id=""congress_Name""]"
+LiveRef_ManageSourceData,source_abbreviation_text_box,XPATH,"//input[@type=""text"" and @id=""congress_ShortCode""]"
+LiveRef_ManageSourceData,source_shortcode_text_box,XPATH,"//input[@type=""text"" and @id=""congress_ConferenceShortCode""]"
+LiveRef_ManageSourceData,source_startdate,XPATH,"//input[@type=""text"" and @id=""congress_StartDate""]"
+LiveRef_ManageSourceData,source_enddate,XPATH,"//input[@type=""text"" and @id=""congress_EndDate""]"
+LiveRef_ManageSourceData,source_logo_file,XPATH,//input[@type='file' and @id='congress_CongressLogo']
+LiveRef_ManageSourceData,source_template_file,XPATH,//input[@type='file' and @id='congress-template']
+LiveRef_ManageSourceData,source_save_button,XPATH,"//button[@type=""submit"" and @class=""btn btn-primary btn-save""]"
+LiveRef_ManageSourceData,source_close_button,XPATH,"//button[@type=""button"" and @class=""btn btn-default btn-close""]"
+LiveRef_ManageSourceData,source_invaliddata_msg,XPATH,//div[@id='FileHasInvalidColumns']
+LiveRef_ManageSourceData,sel_table_entries_dropdown,XPATH,//select[@name='DataTables_Table_0_length']
+LiveRef_ManageSourceData,sourcedata_table_rows,XPATH,//table[@id='DataTables_Table_0']//tbody//tr
+LiveRef_ManageSourceData,sourcedata_table_row_1,XPATH,//table[@id='DataTables_Table_0']//tbody//tr[1]/td
+LiveRef_ManageSourceData,sourcedata_search_box,XPATH,//input[@type='search' and @aria-controls='DataTables_Table_0']
+LiveRef_ManageSourceData,sourcedata_edit,XPATH,"//table[@id='DataTables_Table_0']//tbody//tr[1]/td/a[@title=""Edit""]"
+LiveRef_ManageSourceData,sourcedata_delete,XPATH,"//table[@id='DataTables_Table_0']//tbody//tr[1]/td/a[@title=""Delete""]"
+LiveRef_ManageSourceData,sourcedata_delete_popup_confirm,XPATH,"//input[@type='button' and @class='btn btn-danger delete-confirm' and @value=""Delete""]"
+LiveRef_ManageSourceData,sourcedata_delete_popup_cancel,XPATH,"//input[@type='button' and @class='btn btn-default' and @value=""Cancel""]"
+LiveRef_ManageSourceData,sourcedata_add_success_msg,XPATH,//strong[text()='Record added successfully']
+LiveRef_ManageSourceData,sourcedata_edit_success_msg,XPATH,"//div[contains(text(), 'Record updated successfully')]"
+LiveRef_ManageSourceData,sourcedata_del_success_msg,XPATH,"//p[@class=""success-text"" and contains(text(), 'Source successfully deleted')]"
+LiveRef_ManageSourceData,sourcedata_del_success_msg_ok,XPATH,//a[@class='btn btn-success']

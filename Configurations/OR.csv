@@ -237,8 +237,8 @@ LiveRef_ManageSourceData,source_abbreviation_text_box,XPATH,"//input[@type=""tex
 LiveRef_ManageSourceData,source_shortcode_text_box,XPATH,"//input[@type=""text"" and @id=""congress_ConferenceShortCode""]"
 LiveRef_ManageSourceData,source_startdate,XPATH,"//input[@type=""text"" and @id=""congress_StartDate""]"
 LiveRef_ManageSourceData,source_enddate,XPATH,"//input[@type=""text"" and @id=""congress_EndDate""]"
-LiveRef_ManageSourceData,source_logo_file,XPATH,"//input[@type=""text"" and @placeholder=""Choose logo for source""]"
-LiveRef_ManageSourceData,source_template_file,XPATH,"//input[@type=""text"" and @placeholder=""Choose publication template""]"
+LiveRef_ManageSourceData,source_logo_file,XPATH,//input[@type='file' and @id='congress_CongressLogo']
+LiveRef_ManageSourceData,source_template_file,XPATH,//input[@type='file' and @id='congress-template']
 LiveRef_ManageSourceData,source_save_button,XPATH,"//button[@type=""submit"" and @class=""btn btn-primary btn-save""]"
 LiveRef_ManageSourceData,source_close_button,XPATH,"//button[@type=""button"" and @class=""btn btn-default btn-close""]"
 LiveRef_ManageSourceData,source_invaliddata_msg,XPATH,//div[@id='FileHasInvalidColumns']
@@ -250,6 +250,7 @@ LiveRef_ManageSourceData,sourcedata_edit,XPATH,"//table[@id='DataTables_Table_0'
 LiveRef_ManageSourceData,sourcedata_delete,XPATH,"//table[@id='DataTables_Table_0']//tbody//tr[1]/td/a[@title=""Delete""]"
 LiveRef_ManageSourceData,sourcedata_delete_popup_confirm,XPATH,"//input[@type='button' and @class='btn btn-danger delete-confirm' and @value=""Delete""]"
 LiveRef_ManageSourceData,sourcedata_delete_popup_cancel,XPATH,"//input[@type='button' and @class='btn btn-default' and @value=""Cancel""]"
-LiveRef_ManageSourceData,sourcedata_add_success_msg,XPATH,//div[@class='alert alert-success alert-success-solid viewdata-msg m-t-50']/strong
+LiveRef_ManageSourceData,sourcedata_add_success_msg,XPATH,//strong[text()='Record added successfully']
+LiveRef_ManageSourceData,sourcedata_edit_success_msg,XPATH,"//div[contains(text(), 'Record updated successfully')]"
 LiveRef_ManageSourceData,sourcedata_del_success_msg,XPATH,"//p[@class=""success-text"" and contains(text(), 'Source successfully deleted')]"
 LiveRef_ManageSourceData,sourcedata_del_success_msg_ok,XPATH,//a[@class='btn btn-success']
