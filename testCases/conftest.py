@@ -40,7 +40,7 @@ def init_driver(request):
     prefs["profile.default_content_settings.popups"] = 0
     # getcwd should always return the root directory of the framework
     prefs["download.default_directory"] = f"{os.getcwd()}\\ActualOutputs"
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-gpu')
     options.add_argument("--log-level=3")  # fatal
