@@ -6,7 +6,6 @@ PSEPortal,portal_logout_button,XPATH,//a[text()='Logout']
 PSEPortal,launch_live_slr,XPATH,"//a[@class='btn btn-primary' and @href=""https://pse-liveslr-ng-testing.azurewebsites.net/""]"
 PSEPortal,liveslr_logout_button,XPATH,"//a[@title=""Sign out""]"
 PSEPortal,get_user_name,XPATH,//span[@class='user-block-name']
-SLRPAGE,about_live_slr_text,XPATH,//div[@class='modal-body']/h4
 SLRPAGE,SLR_Homepage,LINK_TEXT,Search LiveSLR
 SLRPAGE,about_live_slr,XPATH,"//a[@class=""nav-link"" and contains(text(), ""About LiveSLR"")]"
 SLRPAGE,about_live_slr_text,XPATH,//div[@class='modal-body']/h4
