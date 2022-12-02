@@ -231,7 +231,7 @@ class ManageUpdatesPage(Base):
         except Exception:
             raise Exception("Error while adding the population updates")
     
-    def edit_multiple_updates(self, current_data, edit_upd_button, date_val, dateval_to_search):
+    def edit_multiple_updates(self, current_data, edit_upd_button, edit_date_val, dateval_to_search):
         self.refreshpage()
         time.sleep(5)
 
@@ -243,7 +243,12 @@ class ManageUpdatesPage(Base):
         sel_pop_val = select.first_selected_option.text
 
         self.click("sel_update_date")
-        self.select_calendar_date(date_val+1)
+        # Manipulating the date values when values point to month end
+        if edit_date_val in [30, 31]:
+            edit_date_val = edit_date_val - 10
+        else:
+            edit_date_val = edit_date_val + 1
+        self.select_calendar_date(edit_date_val)
 
         self.click("sel_update_type")
         update_type_ele = self.select_element("sel_update_type")

@@ -75,11 +75,11 @@ class LoginPage(Base):
             self.LogScreenshot.fLogScreenshot(
                 message=f"Login Successful. Application home page displayed",
                 pass_=True, log=True, screenshot=True)
-            self.driver.find_element(By.XPATH, '//a[@class="nav-link" and @title="About LiveSLR™"]').click()
+            self.click("about_live_slr", UnivWaitFor=3)
             time.sleep(1)
             self.check_app_version("about_live_slr_text", self.app_filepath, "LiveSLR")
-            self.driver.find_element(By.XPATH, "//strong[text()= 'Close']").click()
             time.sleep(1)
+            self.click("about_live_slr_close", UnivWaitFor=3)
         except Exception:
             self.LogScreenshot.fLogScreenshot(
                 message=f"Login Unsuccessful. Please check the application availability and try again",

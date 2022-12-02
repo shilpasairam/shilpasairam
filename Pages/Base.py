@@ -79,6 +79,15 @@ class Base:
 
     # click a web element using locatorname
     @fWaitFor
+    def go_to_page(self, locator):
+        """
+        Given locator, traverse to the respective page
+        """
+        self.click(locator, UnivWaitFor=10)
+        time.sleep(5)
+    
+    # click a web element using locatorname
+    @fWaitFor
     def click(self, locator, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and click on the element
@@ -223,12 +232,12 @@ class Base:
 
     # Scroll back to the element using locatorname
     @fWaitFor
-    def scrollback(self, UnivWaitFor=0):
+    def scrollback(self, locator, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
         self.driver.execute_script("arguments[0].scrollIntoView(true);",
-                                   self.driver.find_element(By.XPATH, "//p[text()='Search LiveSLR™']"))
+                                   self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)))
 
     # Check whether a web element is displayed or not using locatorname
     @fWaitFor

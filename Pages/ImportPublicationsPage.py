@@ -58,7 +58,7 @@ class ImportPublicationPage(Base):
                                                       f'{len(table_rows_before)}',
                                               pass_=True, log=True, screenshot=False)
             
-            jscmd = ReadConfig.getJScommand()
+            jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
             self.jsclick_hide(jscmd)
             self.input_text("add_file", i[1])
             try:
@@ -118,6 +118,7 @@ class ImportPublicationPage(Base):
                         self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: '
                                                                   f'{error_data}',
                                                           pass_=True, log=True, screenshot=True)
+                        self.click("back_to_view_action_btn", UnivWaitFor=10)
                     else:
                         raise Exception("Error while uploading the extraction file")
                 self.refreshpage()
@@ -125,8 +126,11 @@ class ImportPublicationPage(Base):
             except Exception:
                 raise Exception("Error while uploading")
 
-    def delete_file(self, del_locator, del_locator_popup, msg_popup, tablerows):
+    def delete_file(self, locatorname, filepath, msg_popup, tablerows):
         expected_delete_status_text = "Import status deleted successfully"
+        # Read population details from data sheet
+        pop_data = self.get_file_details_to_upload(filepath, locatorname)
+
         # Fetching total rows count before deleting a file from top of the table
         table_rows_before = self.select_elements(tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a file: {len(table_rows_before)}',
@@ -134,35 +138,48 @@ class ImportPublicationPage(Base):
         
         self.refreshpage()
         time.sleep(5)
-        
-        self.click(del_locator)
-        time.sleep(2)
-        self.click(del_locator_popup)
-        time.sleep(3)
 
-        actual_delete_status_text = self.get_text(msg_popup, UnivWaitFor=30)
-        
-        if actual_delete_status_text == expected_delete_status_text:
-            self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
-                                              pass_=True, log=True, screenshot=True)
-        else:
-            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
-                                              pass_=False, log=True, screenshot=True)
-            raise Exception("Error during Extraction File Deletion")
+        for i in pop_data:
+            result = []
+            td1 = self.select_elements('upload_table_row_1')
+            for m in td1:
+                result.append(m.text)
+            
+            # Check the uploaded filename before deleting the record
+            if i[2] in result:
+                self.LogScreenshot.fLogScreenshot(message=f"Uploaded Filename '{i[2]}' is present in the table. Performing the delete operation.",
+                                                    pass_=True, log=True, screenshot=True)
+            
+                self.click("delete_file")
+                time.sleep(2)
+                self.click("delete_file_popup")
+                time.sleep(3)
 
-        # Fetching total rows count before deleting a file from top of the table
-        table_rows_after = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: {len(table_rows_after)}',
-                                          pass_=True, log=True, screenshot=False)
+                actual_delete_status_text = self.get_text(msg_popup, UnivWaitFor=30)
+                
+                if actual_delete_status_text == expected_delete_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
+                                                    pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
+                                                    pass_=False, log=True, screenshot=True)
+                    raise Exception("Error during Extraction File Deletion")
 
-        try:
-            if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
-                self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                                  pass_=True, log=True, screenshot=False)
-        except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                              pass_=False, log=True, screenshot=False)
-            raise Exception("Error in deleting the imported file")
+                # Fetching total rows count before deleting a file from top of the table
+                table_rows_after = self.select_elements(tablerows)
+                self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: {len(table_rows_after)}',
+                                                pass_=True, log=True, screenshot=False)
+
+                try:
+                    if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
+                        self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
+                                                        pass_=True, log=True, screenshot=False)
+                except Exception:
+                    self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
+                                                    pass_=False, log=True, screenshot=False)
+                    raise Exception("Error in deleting the imported file")
+            else:
+                raise Exception("No file uploaded to perform delete operation")
 
     def upload_file_with_errors(self, locatorname, filepath):
         expected_upload_status_text = "File(s) uploaded successfully"
@@ -181,7 +198,7 @@ class ImportPublicationPage(Base):
                                                       f'{len(table_rows_before)}',
                                               pass_=True, log=True, screenshot=False)
             
-            jscmd = ReadConfig.getJScommand()
+            jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
             self.jsclick_hide(jscmd)
             self.input_text("add_file", i[1])
             try:

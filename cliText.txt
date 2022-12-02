@@ -34,6 +34,8 @@ python -m pytest -v --html=Reports\Excluded_Studies_report.html --self-contained
 
 python -m pytest -v --html=Reports\ExcludedStudies_liveSLR_report.html --self-contained-html .\testCases\test_ExcludedStudies_liveSLR.py
 
+python -m pytest -v --html=Reports\LiveRef_SearchPublications_report.html --self-contained-html .\testCases\test_LiveRef_SearchPublications.py
+
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
 

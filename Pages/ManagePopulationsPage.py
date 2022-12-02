@@ -195,7 +195,7 @@ class ManagePopulationsPage(Base):
             
         self.input_text("template_file_upload", upload_file_path)
         self.click("submit_button")
-        time.sleep(3)
+        time.sleep(4)
 
         actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
         # time.sleep(2)
@@ -229,10 +229,10 @@ class ManagePopulationsPage(Base):
                 self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
                                                   pass_=True, log=True, screenshot=False)
                 
-                if result[1] == f'{new_pop_val[1]}':
+                if result[2] == f'{new_pop_val[1]}':
                     self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
                                                       pass_=True, log=True, screenshot=False)
-                    population = f"{result[1]}"
+                    population = f"{result[2]}"
                     return population
                 else:
                     raise Exception("Population data is not added")
@@ -280,10 +280,10 @@ class ManagePopulationsPage(Base):
             self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the existing population: {result}',
                                               pass_=True, log=True, screenshot=False)
             
-            if result[1] == f'{edit_pop_val[1]}':
+            if result[2] == f'{edit_pop_val[1]}':
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Population data is present in table',
                                                   pass_=True, log=True, screenshot=False)
-                population = f"{result[1]}"
+                population = f"{result[2]}"
                 return population
             
             self.clear("search_button")
