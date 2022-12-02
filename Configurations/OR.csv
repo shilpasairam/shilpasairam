@@ -8,6 +8,10 @@ PSEPortal,liveslr_logout_button,XPATH,"//a[@title=""Sign out""]"
 PSEPortal,get_user_name,XPATH,//span[@class='user-block-name']
 SLRPAGE,about_live_slr_text,XPATH,//div[@class='modal-body']/h4
 SLRPAGE,SLR_Homepage,LINK_TEXT,Search LiveSLR
+SLRPAGE,about_live_slr,XPATH,"//a[@class=""nav-link"" and contains(text(), ""About LiveSLR"")]"
+SLRPAGE,about_live_slr_text,XPATH,//div[@class='modal-body']/h4
+SLRPAGE,about_live_slr_close,XPATH,//button[@type='button']/strong[text()= 'Close']
+SLRPAGE,SLR_page_header,XPATH,"//p[contains(text(), 'Search LiveSLR')]"
 SLRPAGE,SLR_Population,XPATH,//*[text()='1. Select SLR Population']
 SLRPAGE,SLR_Type,XPATH,//*[text()='2. Select Type of SLR']
 SLRPAGE,Data_Report,XPATH,//*[text()='3. Select Data to Report']
@@ -254,3 +258,26 @@ LiveRef_ManageSourceData,sourcedata_add_success_msg,XPATH,//strong[text()='Recor
 LiveRef_ManageSourceData,sourcedata_edit_success_msg,XPATH,"//div[contains(text(), 'Record updated successfully')]"
 LiveRef_ManageSourceData,sourcedata_del_success_msg,XPATH,"//p[@class=""success-text"" and contains(text(), 'Source successfully deleted')]"
 LiveRef_ManageSourceData,sourcedata_del_success_msg_ok,XPATH,//a[@class='btn btn-success']
+LiveRef_SearchPublications,searchpublications_button,LINK_TEXT,Search Publications
+LiveRef_SearchPublications,searchpublications_reset_filter,ID,reset-filter
+LiveRef_SearchPublications,searchpublications_page_header,XPATH,"//h3[contains(text(), 'Search Publications')]"
+LiveRef_SearchPublications,publications_display_msg,XPATH,//span[@class='publications-count pull-right']
+LiveRef_SearchPublications,publications_count,XPATH,//span[@class='publications-count pull-right']/b[2]/span
+LiveRef_SearchPublications,indication_section,XPATH,"//h4[contains(text(), 'Select Indication(s)')]"
+LiveRef_SearchPublications,indication_checkbox,XPATH,//div[@class='checkbox c-checkbox select-block select-indication selected']/label/input[@type='checkbox']
+LiveRef_SearchPublications,MM_Indication,XPATH,//input[@type='checkbox' and @id='58']/following::span[1]
+LiveRef_SearchPublications,AML_Indication,XPATH,//input[@type='checkbox' and @id='23']/following::span[1]
+LiveRef_SearchPublications,population_section,XPATH,"//h4[contains(text(), 'Select Population(s)')]"
+LiveRef_SearchPublications,population_checkbox,XPATH,//div[@class='checkbox c-checkbox select-block select-studytype selected']/label/input[@type='checkbox']
+LiveRef_SearchPublications,NDMM_population,XPATH,//label//input[@type='checkbox' and @value='55']/following::i[@title='NDMM']
+LiveRef_SearchPublications,NDMM_population_count,XPATH,//label//input[@type='checkbox' and @value='55']/following::i[@title='NDMM']/following::em[1]
+LiveRef_SearchPublications,NR_population,XPATH,//label//input[@type='checkbox' and @value='81']/following::i[@title='NR']
+LiveRef_SearchPublications,NR_population_count,XPATH,//label//input[@type='checkbox' and @value='81']/following::i[@title='NR']/following::em[1]
+LiveRef_SearchPublications,RRMM_population,XPATH,//label//input[@type='checkbox' and @value='37']/following::i[@title='RRMM']
+LiveRef_SearchPublications,RRMM_population_count,XPATH,//label//input[@type='checkbox' and @value='37']/following::i[@title='RRMM']/following::em[1]
+LiveRef_SearchPublications,AML_population,XPATH,//label//input[@type='checkbox' and @value='51']/following::i[@title='AML']
+LiveRef_SearchPublications,AML_population_count,XPATH,//label//input[@type='checkbox' and @value='51']/following::i[@title='AML']/following::em[1]
+LiveRef_SearchPublications,ND NIC AML_population,XPATH,//label//input[@type='checkbox' and @value='60']/following::i[@title='ND NIC AML']
+LiveRef_SearchPublications,ND NIC AML_population_count,XPATH,//label//input[@type='checkbox' and @value='60']/following::i[@title='ND NIC AML']/following::em[1]
+LiveRef_SearchPublications,RUNX1+ AML_population,XPATH,//label//input[@type='checkbox' and @value='63']/following::i[@title='RUNX1+ AML']
+LiveRef_SearchPublications,RUNX1+ AML_population_count,XPATH,//label//input[@type='checkbox' and @value='63']/following::i[@title='RUNX1+ AML']/following::em[1]

@@ -39,6 +39,7 @@ python -m pytest -v --html=Reports\LiveRef_loginpage_report.html --self-containe
 python -m pytest -v --html=Reports\LiveRef_ManageSourceData_report.html --self-contained-html .\testCases\test_LiveRef_ManageSourceData.py
 
 python -m pytest -v -s --html=Reports\LiveRef_ManageSourceData_report.html --css=Reports\assets\style.css .\testCases\test_LiveRef_ManageSourceData.py
+python -m pytest -v --html=Reports\LiveRef_SearchPublications_report.html --self-contained-html .\testCases\test_LiveRef_SearchPublications.py
 
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py

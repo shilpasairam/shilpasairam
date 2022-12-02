@@ -81,8 +81,12 @@ class Test_ManageUpdatesPage:
                                           pass_=True, log=True, screenshot=False)
 
         today = date.today()
-        self.dateval = (today + timedelta(1)).strftime("%m/%d/%Y")
         self.day_val = today.day
+        # Manipulating the date values when values point to month end
+        if self.day_val in [30, 31]:
+            self.dateval = (today - timedelta(10)).strftime("%m/%d/%Y")
+        else:
+            self.dateval = (today + timedelta(1)).strftime("%m/%d/%Y")
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
