@@ -42,6 +42,10 @@ python -m pytest -v -s --html=Reports\LiveRef_ManageSourceData_report.html --css
 
 python -m pytest -v --html=Reports\LiveRef_SearchPublications_report.html --self-contained-html .\testCases\test_LiveRef_SearchPublications.py
 
+python -m pytest -v --html=Reports\LiveRef_TabNameValidation_report.html --self-contained-html .\testCases\test_LiveRef_TabNameValidation.py
+
+python -m pytest -v --html=Reports\LiveRef_Validate_ReportName_report.html --self-contained-html .\testCases\test_LiveRef_Validate_ReportName.py
+
 # log in report 
 python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
 
