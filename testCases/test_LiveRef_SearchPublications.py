@@ -1,5 +1,5 @@
 """
-Test case deals with Manage Source Data page functionality of LiveRef application
+Test case deals with Search Publications page functionality of LiveRef application
 """
 import os
 from re import search
@@ -57,7 +57,7 @@ class Test_SearchPublications:
         for i in scenarios:
             try:
                 self.base.go_to_page("searchpublications_button")
-                # self.base.click("searchpublications_reset_filter")
+                self.base.click("searchpublications_reset_filter")
                 self.srchpub.filter_count_validation(i, self.TestData)
 
             except:

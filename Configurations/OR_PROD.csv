@@ -192,6 +192,7 @@ LiveRef,about_live_ref,XPATH,"//a[@href=""#aboutLiveRefModal;""]"
 LiveRef,about_live_ref_text,XPATH,//div[@class='modal-body']/span
 LiveRef,about_live_ref_close,ID,btnHideModal
 LiveRef,glossary_nav_bar,XPATH,//ul[@class='nav navbar-nav navbar-right']
+LiveRef,liveref_dashboard,LINK_TEXT,Dashboard
 LiveRef_ManageSourceData,managesourcedata_button,LINK_TEXT,Manage Source of data
 LiveRef_ManageSourceData,add_sourcedata_btn,XPATH,"//button[@class=""btn btn-primary btn-congress pull-right""]"
 LiveRef_ManageSourceData,source_name_text_box,XPATH,"//input[@type=""text"" and @id=""congress_Name""]"
@@ -239,3 +240,13 @@ LiveRef_SearchPublications,ND NIC AML_population,XPATH,//label//input[@type='che
 LiveRef_SearchPublications,ND NIC AML_population_count,XPATH,//label//input[@type='checkbox' and @value='60']/following::i[@title='ND NIC AML']/following::em[1]
 LiveRef_SearchPublications,RUNX1+ AML_population,XPATH,//label//input[@type='checkbox' and @value='63']/following::i[@title='RUNX1+ AML']
 LiveRef_SearchPublications,RUNX1+ AML_population_count,XPATH,//label//input[@type='checkbox' and @value='63']/following::i[@title='RUNX1+ AML']/following::em[1]
+LiveRef_SearchPublications,liveref_generate_report,XPATH,//button[@id='generate-report' and @class='btn btn-primary pull-right']
+LiveRef_SearchPublications,liveref_web_table,XPATH,//div[@class='wrap-table-scrollable']
+LiveRef_SearchPublications,liveref_export_excel_btn,XPATH,//button[@type='submit' and @class='btn btn-primary export-excel']
+LiveRef_ImportPublications,liveref_importpublications_button,LINK_TEXT,Import Publications
+LiveRef_ViewImportStatus,liveref_view_import_status_button,LINK_TEXT,View Import Status
+LiveRef_ManageIndications,liveref_manageindications_button,LINK_TEXT,Manage Indications
+LiveRef_ManagePopulations,liveref_managepopulations_button,LINK_TEXT,Manage Populations
+LiveRef_ManageCategoryofEvidence,liveref_managecatevidence_button,XPATH,"//a[@href=""/Admin/ManageTypeofStudies""]"
+LiveRef_ManageProducts,liveref_manageproducts_button,LINK_TEXT,Manage Products
+LiveRef_ManageCountries,liveref_managecountries_button,LINK_TEXT,Manage Countries

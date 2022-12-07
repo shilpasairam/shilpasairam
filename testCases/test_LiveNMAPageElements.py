@@ -20,7 +20,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 
 @pytest.mark.usefixtures("init_driver")
-class Test_SLR_Custom_Report:
+class Test_LiveNMA:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
