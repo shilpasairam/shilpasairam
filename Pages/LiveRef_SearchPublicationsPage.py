@@ -121,6 +121,7 @@ class SearchPublicationsPage(Base):
             if excel_filename[16:] == expectedfilename:
                 self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                                   pass_=True, log=True, screenshot=False)
+                return excel_filename
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Filename is not as expected. Expected "
                                                           f"Filename is {expectedfilename} and Actual "

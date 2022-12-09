@@ -54,7 +54,7 @@ class Test_SearchPublications_DownloadedFilename:
             try:
                 self.base.go_to_page("searchpublications_button")
                 self.base.click("searchpublications_reset_filter")
-                self.srchpub.validate_downloaded_filename(i, self.TestData)
+                excel_name = self.srchpub.validate_downloaded_filename(i, self.TestData)
 
             except:
                 pass
