@@ -728,6 +728,161 @@ class SLRReport(Base):
                             raise Exception(f"For '{n}' in Short Reference, corresponding contents in column "
                                             f"'Publication Type' are not in sorted order in Web_excel report")
 
+    def test_prisma_ele_comparison_between_Excel_and_Word_Report(self, pop_data, slr_type, add_criteria, filepath):
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+
+        self.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, filepath)
+
+        self.generate_download_report("word_report")
+        time.sleep(5)
+        word_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(word_filename, filepath)
+
+        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
+        excel_studies_col = excel['Unique studies']
+        # Removing NAN values
+        excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
+        # Converting list values from float to int
+        excel_studies_col = [int(x) for x in excel_studies_col]
+
+        # Reading PRISMA Value from Complete Word Report
+        docs = docx.Document(f'ActualOutputs//{word_filename}')
+        word = []
+        for row in docs.tables[4].rows:
+            word.append(row.cells[1].text)
+        # Removing unwanted values
+        word.pop(2)
+        word.pop(0)
+        # Converting list values from str to int
+        word = [int(x) for x in word]
+
+        if excel_studies_col == word:
+            self.LogScreenshot.fLogScreenshot(message=f"'Updated Prisma' count is matching between Excel and Word report. Excel report 'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' table count is {word}",
+                                pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"'Updated Prisma' count is not matching between Excel and Word report. Excel report 'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' table count is {word}",
+                                pass_=False, log=True, screenshot=False) 
+            raise Exception(f"'Updated Prisma' count is not matching between Excel and Word report. Excel report 'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' table count is {word}")           
+
+    def test_prisma_ele_comparison_between_Excel_and_UI(self, pop_data, slr_type, add_criteria, filepath):
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+
+        self.scroll("New_total_selected")
+        locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count', 'Study_Design_Count', 'Reported_Var_Count', 'New_total_selected']
+        ui_add_critera_values = []
+        for i in locators:
+            ui_add_critera_values.append(self.get_text(i))
+        # Converting list values from str to int
+        ui_add_critera_values = [int(x) for x in ui_add_critera_values]
+        
+        self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {ui_add_critera_values[0]}, Sub Pop Count : {ui_add_critera_values[1]}, "
+        f"LOT Count : {ui_add_critera_values[2]}, Intervention Count : {ui_add_critera_values[3]}, Study Design Count : {ui_add_critera_values[4]}, "
+        f"Reported Variable Count : {ui_add_critera_values[5]}, Total Selected Count : {ui_add_critera_values[6]}",
+                                    pass_=True, log=True, screenshot=True)
+        # original_slr_count = self.get_text("Original_SLR_Count")
+        # sub_pop_count = self.get_text("Sub_Pop_Count")
+        # lot_count = self.get_text("Line_of_Therapy_Count")
+        # intervention_count = self.get_text("Intervention_Count")
+        # stdy_dsgn_count = self.get_text("Study_Design_Count")
+        # rptd_var_count = self.get_text("Reported_Var_Count")
+        # total_sel_count = self.get_text("New_total_selected")
+
+        # self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {original_slr_count}, Sub Pop Count : {sub_pop_count}, "
+        # f"LOT Count : {lot_count}, Intervention Count : {intervention_count}, Study Design Count : {stdy_dsgn_count}, "
+        # f"Reported Variable Count : {rptd_var_count}, Total Selected Count : {total_sel_count}",
+        #                             pass_=True, log=True, screenshot=True)
+
+        self.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, filepath)
+
+        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
+        excel_studies_col = excel['Unique studies']
+        # Removing NAN values
+        excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
+        # Converting list values from float to int
+        excel_studies_col = [int(x) for x in excel_studies_col]
+
+        if excel_studies_col == ui_add_critera_values:
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is same as 'Updated PRISMA table' in UI",
+                                pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is not matching with 'Updated PRISMA table' in UI. Excel Report values are {excel_studies_col} and UI values are {ui_add_critera_values}",
+                                pass_=False, log=True, screenshot=False) 
+            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' is not matching with 'Updated PRISMA table' in UI")           
+
+    def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type, add_criteria, filepath):
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+
+        self.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, filepath)
+
+        prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
+        excludedstudies_liveslr_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Excluded studies - LiveSLR', skiprows=2)
+        prisma_tab_col = prisma_tab['Unique studies']
+        # Removing NAN values
+        prisma_tab_col = [item for item in prisma_tab_col if str(item) != 'nan']
+        # Converting list values from float to int
+        prisma_tab_col = [int(x) for x in prisma_tab_col]
+
+        # Get Unique Study Identifier value from corresponding to Reason for Rejection values
+        excludedstudies_liveslr = excludedstudies_liveslr_tab["Reason for Rejection"]
+        excludedstudies_liveslr = [item for item in excludedstudies_liveslr if str(item) != 'nan']
+        excludedstudies_liveslr_final = []
+        # Removing the duplicates
+        [excludedstudies_liveslr_final.append(x) for x in list(flatten(excludedstudies_liveslr)) if x not in excludedstudies_liveslr_final]
+
+        self.LogScreenshot.fLogScreenshot(message=f"Unique Reason for Rejection column values are : {excludedstudies_liveslr_final}",
+                                    pass_=True, log=True, screenshot=False)
+
+        for m in excludedstudies_liveslr_final:
+            unique_study_identifier = []
+            col_val = excludedstudies_liveslr_tab[excludedstudies_liveslr_tab["Reason for Rejection"] == m]
+            study_identifier = col_val["Study Identifier"]
+            study_identifier = [item for item in study_identifier if str(item) != 'nan']
+            # Removing duplicates to get the proper length of Study Identifier data
+            [unique_study_identifier.append(x) for x in list(flatten(study_identifier)) if x not in unique_study_identifier]
+            if len(unique_study_identifier) in prisma_tab_col[1:6]:
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the Selected studies(Unique Study Identifier)count is matching with the selected count in Updated PRISMA tab",
+                            pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the Selected studies(Unique Study Identifier)count is not matching with the selected count in Updated PRISMA tab",
+                            pass_=False, log=True, screenshot=False)                
+                raise Exception(f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the Selected studies(Unique Study Identifier)count is not matching with the selected count in Updated PRISMA tab")
+
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
