@@ -51,9 +51,9 @@ class Test_ManageQADataPage:
             for i in pop_val:
                 self.mngqadata.access_manageqadata_page_elements(i, self.filepath)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page elements",
+            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page elements",
                                               pass_=False, log=True, screenshot=True)
-            raise Exception("Error in accessing Manage Updates page elements")
+            raise Exception("Error in accessing ManageQAData page elements")
         
         self.LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is completed***",
                                           pass_=True, log=True, screenshot=False)
@@ -91,7 +91,7 @@ class Test_ManageQADataPage:
                 self.mngqadata.add_manage_qa_data_with_invalidfile(i, self.filepath)
                 self.mngqadata.add_multiple_manage_qa_data(i, self.filepath)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
+            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Error while uploading QA File")
         
