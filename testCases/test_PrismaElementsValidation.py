@@ -146,7 +146,8 @@ class Test_SLR_Custom_Report:
                 slr_type = self.exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
                 add_criteria = self.exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
-                self.slrreport.test_prisma_ele_comparison_between_Excel_and_Word_Report(pop_data, slr_type, add_criteria, self.prisma_path)
+                self.slrreport.test_prisma_ele_comparison_between_Excel_and_Word_Report(pop_data, slr_type,
+                                                                                        add_criteria, self.prisma_path)
             except Exception:
                 raise Exception("Unable to select element")
                 
@@ -193,7 +194,8 @@ class Test_SLR_Custom_Report:
                 slr_type = self.exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
                 add_criteria = self.exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
-                self.slrreport.test_prisma_ele_comparison_between_Excel_and_UI(pop_data, slr_type, add_criteria, self.prisma_path)
+                self.slrreport.test_prisma_ele_comparison_between_Excel_and_UI(pop_data, slr_type, add_criteria,
+                                                                               self.prisma_path)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -225,8 +227,8 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Prisma Counts Comparison between 'Updated PRISMA' sheet "
-                                                  f"and 'Excluded studies - LiveSLR' sheet in Complete Excel Report*****",
+        self.LogScreenshot.fLogScreenshot(message=f"*****Prisma Counts Comparison between 'Updated PRISMA' sheet and "
+                                                  f"'Excluded studies - LiveSLR' sheet in Complete Excel Report*****",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -240,6 +242,105 @@ class Test_SLR_Custom_Report:
                 slr_type = self.exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
                 add_criteria = self.exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
-                self.slrreport.test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(pop_data, slr_type, add_criteria, self.prisma_path)
+                self.slrreport.test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(pop_data,
+                                                                                                         slr_type,
+                                                                                                         add_criteria,
+                                                                                                         self.
+                                                                                                         prisma_path)
+            except Exception:
+                raise Exception("Unable to select element")
+
+    @pytest.mark.C31632
+    def test_prisma_tab_format_changes(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # # Creating object of ExcludedStudies_liveSLR class
+        self.exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+        self.LogScreenshot.fLogScreenshot(message=f"*****Updated PRISMA tab format changes in Complete Excel "
+                                                  f"Report*****",
+                                          pass_=True, log=True, screenshot=False)
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+
+        scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
+
+        for i in scenarios:
+            try:
+                pop_data = self.exstdy_liveslr.get_population_data(self.prisma_path, i)
+                slr_type = self.exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
+                add_criteria = self.exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
+
+                self.slrreport.test_prisma_tab_format_changes(pop_data, slr_type, add_criteria, self.prisma_path)
+            except Exception:
+                raise Exception("Unable to select element")
+
+    @pytest.mark.C32349
+    def test_publication_identifier_count_in_updated_prisma_tab(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # # Creating object of ExcludedStudies_liveSLR class
+        self.exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Publications Count Comparison between 'Updated PRISMA' sheet "
+                                                  f"and 'Excluded studies - LiveSLR' sheet in Complete Excel Report***",
+                                          pass_=True, log=True, screenshot=False)
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+
+        scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
+
+        for i in scenarios:
+            try:
+                pop_data = self.exstdy_liveslr.get_population_data(self.prisma_path, i)
+                slr_type = self.exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
+                add_criteria = self.exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
+
+                self.slrreport.test_publication_identifier_count_in_updated_prisma_tab(pop_data, slr_type,
+                                                                                       add_criteria, self.prisma_path)
             except Exception:
                 raise Exception("Unable to select element")
