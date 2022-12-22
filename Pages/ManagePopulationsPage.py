@@ -1,3 +1,4 @@
+import math
 import os
 import time
 import pandas as pd
@@ -168,21 +169,43 @@ class ManagePopulationsPage(Base):
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the population")
-    
+
+    # Find the total row count if data is being ordered using Pagination
+    def get_table_length(self, table_info, table_next_btn, table_rows):
+        self.refreshpage()
+        time.sleep(2)
+        # get the count info and extract the total value        
+        table_count_info = self.get_text(table_info)
+        ind1 = table_count_info.index('of')
+        ind2 = table_count_info.index('entries')
+        total_entries = int(table_count_info[ind1+3:ind2-1])
+
+        # Divide the total entries value with the number of records displayed in a page and round off the result to
+        # next nearest integer value
+        page_counter = math.ceil(total_entries/10)
+        # Get the length of row from the landing page
+        initial_rows_count = self.select_elements(table_rows)
+        table_row_count = len(initial_rows_count)
+        # Iterate over the remaining pages and append the row counts
+        for i in range(1, page_counter):
+            self.click(table_next_btn)
+            time.sleep(1)
+            next_rows_count = self.select_elements(table_rows)
+            table_row_count += len(next_rows_count)
+        
+        return table_row_count
+
     def add_multiple_population(self, locatorname, add_locator, filepath, table_rows):
         expected_status_text = "Population added successfully"
         self.refreshpage()
         time.sleep(2)
-        ele = self.select_element("table_entries_dropdown")
-        select = Select(ele)
-        select.select_by_visible_text("100")
-
-        # Fetching total rows count before adding a new population
-        table_rows_before = self.select_elements(table_rows)
+        
+        table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
-                                                  f'{len(table_rows_before)}',
-                                          pass_=True, log=True, screenshot=False)
+                                                  f'{table_rows_before}',
+                                          pass_=True, log=True, screenshot=False)        
 
+        self.scroll("managepopulation_page_heading")
         self.click(add_locator, UnivWaitFor=10)
 
         # Read the file name and path required to upload
@@ -208,19 +231,15 @@ class ManagePopulationsPage(Base):
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while adding New Population")
 
-        ele = self.select_element("table_entries_dropdown")
-        select = Select(ele)
-        select.select_by_visible_text("100")
-
-        # Fetching total rows count after adding a new population
-        table_rows_after = self.select_elements(table_rows)
+        table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
-                                                  f'{len(table_rows_after)}',
-                                          pass_=True, log=True, screenshot=False)
+                                                  f'{table_rows_after}',
+                                          pass_=True, log=True, screenshot=False)        
 
         try:
-            if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+            if table_rows_after > table_rows_before != table_rows_after:
                 result = []
+                self.scroll("managepopulation_page_heading")
                 self.input_text("search_button", f'{new_pop_val[1]}')
                 td1 = self.select_elements('manage_pop_table_row_1')
                 for m in td1:
@@ -250,7 +269,8 @@ class ManagePopulationsPage(Base):
         self.input_text("search_button", f'{pop_name}')
         self.click(edit_locator, UnivWaitFor=10)
         # Read the file name and path required to upload
-        upload_file_path = self.get_template_file_details(filepath, locatorname, 'manage_population_updatedfile_to_upload')
+        upload_file_path = self.get_template_file_details(filepath, locatorname,
+                                                          'manage_population_updatedfile_to_upload')
         # Read population details from data sheet
         edit_pop_data, edit_pop_val = self.get_pop_data(filepath, locatorname, 'Edit_population_value')
 
@@ -297,16 +317,13 @@ class ManagePopulationsPage(Base):
 
     def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows):
         expected_status_text = "Population deleted successfully"
-        ele = self.select_element("table_entries_dropdown")
-        select = Select(ele)
-        select.select_by_visible_text("100")
-
-        # Fetching total rows count before deleting a file from top of the table
-        table_rows_before = self.select_elements(tablerows)
+        
+        table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: '
-                                                  f'{len(table_rows_before)}',
-                                          pass_=True, log=True, screenshot=False)
+                                                  f'{table_rows_before}',
+                                          pass_=True, log=True, screenshot=False)        
 
+        self.scroll("managepopulation_page_heading")
         self.input_text("search_button", pop_value)
         
         self.click(del_locator)
@@ -326,17 +343,12 @@ class ManagePopulationsPage(Base):
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while deleting the Population data")
 
-        ele = self.select_element("table_entries_dropdown")
-        select = Select(ele)
-        select.select_by_visible_text("100")
-
-        # Fetching total rows count before deleting a file from top of the table
-        table_rows_after = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a population: {len(table_rows_after)}',
-                                          pass_=True, log=True, screenshot=False)
+        table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", tablerows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a population: {table_rows_after}',
+                                          pass_=True, log=True, screenshot=False)        
 
         try:
-            if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
+            if table_rows_before > table_rows_after != table_rows_before:
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
                                                   pass_=True, log=True, screenshot=False)
             self.refreshpage()

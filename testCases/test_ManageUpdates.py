@@ -47,12 +47,12 @@ class Test_ManageUpdatesPage:
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
         pop_val = ['pop1', 'pop2']
 
         for i in pop_val:
             try:
-                self.mngupdpage.go_to_manageupdates("manageupdates_button")
                 manage_update_data = self.mngupdpage.add_multiple_updates(i, "add_update_btn", self.day_val,
                                                                           "manage_update_table_rows", self.dateval)
                 self.added_updates_data.append(manage_update_data)
@@ -90,10 +90,10 @@ class Test_ManageUpdatesPage:
         
         self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
         for i in self.added_updates_data:
             try:
-                self.mngupdpage.go_to_manageupdates("manageupdates_button")
                 manage_update_data = self.mngupdpage.edit_multiple_updates(i, "edit_updates", self.day_val,
                                                                            self.dateval)
                 self.edited_updates_data.append(manage_update_data)

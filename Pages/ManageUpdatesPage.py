@@ -163,15 +163,13 @@ class ManageUpdatesPage(Base):
 
         self.refreshpage()
         time.sleep(5)
-        table_ele = self.select_element("sel_table_entries_dropdown")
-        select = Select(table_ele)
-        select.select_by_visible_text("100")
 
-        # Fetching total rows count before adding a new population
-        table_rows_before = self.select_elements(table_rows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new update: {len(table_rows_before)}',
+        table_rows_before = self.mngpoppage.get_table_length("manage_update_table_rows_info",
+                                                             "manage_update_table_next_btn", table_rows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new update: {table_rows_before}',
                                           pass_=True, log=True, screenshot=False)
 
+        self.scroll("manageupdates_page_heading")
         self.click(add_upd_button, UnivWaitFor=10)
 
         pop_ele = self.select_element("sel_pop_update_dropdown")
@@ -197,17 +195,13 @@ class ManageUpdatesPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates record',
                                           pass_=True, log=True, screenshot=True)
 
-        table_ele = self.select_element("sel_table_entries_dropdown")
-        select = Select(table_ele)
-        select.select_by_visible_text("100")
-
-        # Fetching total rows count after adding a new population
-        table_rows_after = self.select_elements(table_rows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new update: {len(table_rows_after)}',
-                                          pass_=True, log=True, screenshot=False)
+        table_rows_after = self.mngpoppage.get_table_length("manage_update_table_rows_info",
+                                                            "manage_update_table_next_btn", table_rows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new update: {table_rows_after}',
+                                          pass_=True, log=True, screenshot=False)        
 
         try:
-            if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+            if table_rows_after > table_rows_before != table_rows_after:
                 self.refreshpage()
                 self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
                                                   pass_=True, log=True, screenshot=False)
@@ -223,7 +217,7 @@ class ManageUpdatesPage(Base):
                 if result[0] == sel_pop_val:
                     self.LogScreenshot.fLogScreenshot(message=f'Population update data is present in table',
                                                       pass_=True, log=True, screenshot=False)
-                    update_data = f"{result[0]} - {result[1]}"
+                    update_data = f"{result[0]} - {result[2]}"
                     return update_data
                 else:
                     raise Exception("Population update data is not added")
@@ -286,7 +280,7 @@ class ManageUpdatesPage(Base):
             if result[0] == sel_pop_val:
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Population update data is present in table',
                                                   pass_=True, log=True, screenshot=False)
-                update_data = f"{result[0]} - {result[1]}"
+                update_data = f"{result[0]} - {result[2]}"
                 return update_data
             else:
                 raise Exception("Population update data is not edited")
@@ -296,15 +290,13 @@ class ManageUpdatesPage(Base):
     def delete_multiple_manage_updates(self, added_update_val, del_locator, del_locator_popup, tablerows):
         self.refreshpage()
         time.sleep(2)
-        ele = self.select_element("sel_table_entries_dropdown")
-        select = Select(ele)
-        select.select_by_visible_text("100")
 
-        # Fetching total rows count before deleting a file from top of the table
-        table_rows_before = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a update: {len(table_rows_before)}',
+        table_rows_before = self.mngpoppage.get_table_length("manage_update_table_rows_info",
+                                                             "manage_update_table_next_btn", tablerows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a update: {table_rows_before}',
                                           pass_=True, log=True, screenshot=False)
 
+        self.scroll("manageupdates_page_heading")
         self.input_text("manage_update_search_box", added_update_val)
         
         self.click(del_locator)
@@ -319,17 +311,13 @@ class ManageUpdatesPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates record',
                                           pass_=True, log=True, screenshot=True)
 
-        ele = self.select_element("sel_table_entries_dropdown")
-        select = Select(ele)
-        select.select_by_visible_text("100")
-
-        # Fetching total rows count before deleting a file from top of the table
-        table_rows_after = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a update: {len(table_rows_after)}',
-                                          pass_=True, log=True, screenshot=False)
+        table_rows_after = self.mngpoppage.get_table_length("manage_update_table_rows_info",
+                                                            "manage_update_table_next_btn", tablerows)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a update: {table_rows_after}',
+                                          pass_=True, log=True, screenshot=False)        
 
         try:
-            if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
+            if table_rows_before > table_rows_after != table_rows_before:
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
                                                   pass_=True, log=True, screenshot=False)
         except Exception:
