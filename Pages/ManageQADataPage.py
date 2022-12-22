@@ -121,8 +121,7 @@ class ManageQADataPage(Base):
             raise Exception("Unable to access the Manage QA Data page elements")
 
     def add_manage_qa_data_with_invalidfile(self, locatorname, filepath):
-        expected_error_text = "Incorrect file extension for the quality assessment excel file, " \
-                              "it should have the .xls or .xlsx extension"
+        expected_error_text = "Quality assessment data could not be updated due to validation errors"
 
         # Read population details from data sheet
         pop_name = self.get_manageqa_pop_data(filepath, locatorname)

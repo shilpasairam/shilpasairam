@@ -1,3 +1,4 @@
+import ast
 import numbers
 import os
 import re
@@ -7,10 +8,12 @@ import docx
 import openpyxl
 import pandas as pd
 from pathlib import Path
+from re import search
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from pandas.core.common import flatten
 
 from Pages.Base import Base, fWaitFor
@@ -769,12 +772,20 @@ class SLRReport(Base):
         word = [int(x) for x in word]
 
         if excel_studies_col == word:
-            self.LogScreenshot.fLogScreenshot(message=f"'Updated Prisma' count is matching between Excel and Word report. Excel report 'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' table count is {word}",
-                                pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Updated Prisma' count is matching between Excel and Word "
+                                                      f"report. Excel report 'Updated Prisma' tab count is "
+                                                      f"{excel_studies_col} and Word Report 'Updated Prisma' "
+                                                      f"table count is {word}",
+                                              pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"'Updated Prisma' count is not matching between Excel and Word report. Excel report 'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' table count is {word}",
-                                pass_=False, log=True, screenshot=False) 
-            raise Exception(f"'Updated Prisma' count is not matching between Excel and Word report. Excel report 'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' table count is {word}")           
+            self.LogScreenshot.fLogScreenshot(message=f"'Updated Prisma' count is not matching between Excel and "
+                                                      f"Word report. Excel report 'Updated Prisma' tab count is "
+                                                      f"{excel_studies_col} and Word Report 'Updated Prisma' "
+                                                      f"table count is {word}",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"'Updated Prisma' count is not matching between Excel and Word report. Excel report "
+                            f"'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' "
+                            f"table count is {word}")
 
     def test_prisma_ele_comparison_between_Excel_and_UI(self, pop_data, slr_type, add_criteria, filepath):
 
@@ -789,17 +800,21 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
 
         self.scroll("New_total_selected")
-        locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count', 'Study_Design_Count', 'Reported_Var_Count', 'New_total_selected']
+        locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
+                    'Study_Design_Count', 'Reported_Var_Count', 'New_total_selected']
         ui_add_critera_values = []
         for i in locators:
             ui_add_critera_values.append(self.get_text(i))
         # Converting list values from str to int
         ui_add_critera_values = [int(x) for x in ui_add_critera_values]
         
-        self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {ui_add_critera_values[0]}, Sub Pop Count : {ui_add_critera_values[1]}, "
-        f"LOT Count : {ui_add_critera_values[2]}, Intervention Count : {ui_add_critera_values[3]}, Study Design Count : {ui_add_critera_values[4]}, "
-        f"Reported Variable Count : {ui_add_critera_values[5]}, Total Selected Count : {ui_add_critera_values[6]}",
-                                    pass_=True, log=True, screenshot=True)
+        self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {ui_add_critera_values[0]}, Sub Pop Count : "
+                                                  f"{ui_add_critera_values[1]}, LOT Count : {ui_add_critera_values[2]},"
+                                                  f" Intervention Count : {ui_add_critera_values[3]}, "
+                                                  f"Study Design Count : {ui_add_critera_values[4]}, Reported "
+                                                  f"Variable Count : {ui_add_critera_values[5]}, Total Selected "
+                                                  f"Count : {ui_add_critera_values[6]}",
+                                          pass_=True, log=True, screenshot=True)
         # original_slr_count = self.get_text("Original_SLR_Count")
         # sub_pop_count = self.get_text("Sub_Pop_Count")
         # lot_count = self.get_text("Line_of_Therapy_Count")
@@ -808,10 +823,12 @@ class SLRReport(Base):
         # rptd_var_count = self.get_text("Reported_Var_Count")
         # total_sel_count = self.get_text("New_total_selected")
 
-        # self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {original_slr_count}, Sub Pop Count : {sub_pop_count}, "
-        # f"LOT Count : {lot_count}, Intervention Count : {intervention_count}, Study Design Count : {stdy_dsgn_count}, "
-        # f"Reported Variable Count : {rptd_var_count}, Total Selected Count : {total_sel_count}",
-        #                             pass_=True, log=True, screenshot=True)
+        # self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {original_slr_count}, "
+        #                                           f"Sub Pop Count : {sub_pop_count}, LOT Count : {lot_count}, "
+        #                                           f"Intervention Count : {intervention_count}, Study Design "
+        #                                           f"Count : {stdy_dsgn_count}, Reported Variable Count : "
+        #                                           f"{rptd_var_count}, Total Selected Count : {total_sel_count}",
+        #                                   pass_=True, log=True, screenshot=True)
 
         self.generate_download_report("excel_report")
         time.sleep(5)
@@ -826,14 +843,20 @@ class SLRReport(Base):
         excel_studies_col = [int(x) for x in excel_studies_col]
 
         if excel_studies_col == ui_add_critera_values:
-            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is same as 'Updated PRISMA table' in UI",
-                                pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is "
+                                                      f"same as 'Updated PRISMA table' in UI",
+                                              pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is not matching with 'Updated PRISMA table' in UI. Excel Report values are {excel_studies_col} and UI values are {ui_add_critera_values}",
-                                pass_=False, log=True, screenshot=False) 
-            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' is not matching with 'Updated PRISMA table' in UI")           
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is "
+                                                      f"not matching with 'Updated PRISMA table' in UI. Excel Report "
+                                                      f"values are {excel_studies_col} and UI values are "
+                                                      f"{ui_add_critera_values}",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' is not matching with "
+                            f"'Updated PRISMA table' in UI")
 
-    def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type, add_criteria, filepath):
+    def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type,
+                                                                                  add_criteria, filepath):
 
         # Go to live slr page
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
@@ -850,8 +873,10 @@ class SLRReport(Base):
         excel_filename = self.getFilenameAndValidate(180)
         self.validate_filename(excel_filename, filepath)
 
-        prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
-        excludedstudies_liveslr_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Excluded studies - LiveSLR', skiprows=2)
+        prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C',
+                                   skiprows=11)
+        excludedstudies_liveslr_tab = pd.read_excel(f'ActualOutputs//{excel_filename}',
+                                                    sheet_name='Excluded studies - LiveSLR', skiprows=2)
         prisma_tab_col = prisma_tab['Unique studies']
         # Removing NAN values
         prisma_tab_col = [item for item in prisma_tab_col if str(item) != 'nan']
@@ -863,10 +888,12 @@ class SLRReport(Base):
         excludedstudies_liveslr = [item for item in excludedstudies_liveslr if str(item) != 'nan']
         excludedstudies_liveslr_final = []
         # Removing the duplicates
-        [excludedstudies_liveslr_final.append(x) for x in list(flatten(excludedstudies_liveslr)) if x not in excludedstudies_liveslr_final]
+        [excludedstudies_liveslr_final.append(x) for x in list(flatten(excludedstudies_liveslr))
+         if x not in excludedstudies_liveslr_final]
 
-        self.LogScreenshot.fLogScreenshot(message=f"Unique Reason for Rejection column values are : {excludedstudies_liveslr_final}",
-                                    pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"Unique Reason for Rejection column values are : "
+                                                  f"{excludedstudies_liveslr_final}",
+                                          pass_=True, log=True, screenshot=False)
 
         for m in excludedstudies_liveslr_final:
             unique_study_identifier = []
@@ -874,14 +901,421 @@ class SLRReport(Base):
             study_identifier = col_val["Study Identifier"]
             study_identifier = [item for item in study_identifier if str(item) != 'nan']
             # Removing duplicates to get the proper length of Study Identifier data
-            [unique_study_identifier.append(x) for x in list(flatten(study_identifier)) if x not in unique_study_identifier]
+            [unique_study_identifier.append(x) for x in list(flatten(study_identifier))
+             if x not in unique_study_identifier]
             if len(unique_study_identifier) in prisma_tab_col[1:6]:
-                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the Selected studies(Unique Study Identifier)count is matching with the selected count in Updated PRISMA tab",
-                            pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' "
+                                                          f"Reason for Rejection the Selected studies(Unique Study "
+                                                          f"Identifier)count is matching with the selected count in "
+                                                          f"Updated PRISMA tab",
+                                                  pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the Selected studies(Unique Study Identifier)count is not matching with the selected count in Updated PRISMA tab",
-                            pass_=False, log=True, screenshot=False)                
-                raise Exception(f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the Selected studies(Unique Study Identifier)count is not matching with the selected count in Updated PRISMA tab")
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' "
+                                                          f"Reason for Rejection the Selected studies(Unique Study "
+                                                          f"Identifier)count is not matching with the selected count "
+                                                          f"in Updated PRISMA tab",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the "
+                                f"Selected studies(Unique Study Identifier)count is not matching with the selected "
+                                f"count in Updated PRISMA tab")
+
+    def test_prisma_tab_format_changes(self, pop_data, slr_type, add_criteria, filepath):
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+
+        self.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, filepath)
+
+        # Read PRISMA value from Complete Excel Sheet
+        excel = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+        excel_sheet = excel['Updated PRISMA']
+        row_13 = excel_sheet['B13'].value
+        row_12 = excel_sheet['C12'].value
+        row_14 = excel_sheet['B14'].value
+        row_15 = excel_sheet['B15'].value
+        row_21 = excel_sheet['B21'].value
+        row_23 = excel_sheet['B23'].value
+        
+        if "From original SLR" in row_13:
+            self.LogScreenshot.fLogScreenshot(message=f"Format has been updated from 'Original SLR' to 'From "
+                                                      f"original SLR'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Format has not been updated from 'Original SLR' to 'From "
+                                                      f"original SLR'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Format has not been updated from 'Original SLR' to 'From original SLR'")
+
+        if "Unique studies" in row_12:
+            self.LogScreenshot.fLogScreenshot(message=f"Column Title has been added with name 'Unique studies'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Column Title has not been added with name 'Unique studies'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Column Title has not been added with name 'Unique studies'")
+
+        if row_14 is None:
+            self.LogScreenshot.fLogScreenshot(message=f"An empty row below 'From original SLR' has been added",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"An empty row below 'From original SLR' has not been added",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"An empty row below 'From original SLR' has not been added")
+
+        if "Excluded based on" in row_15:
+            self.LogScreenshot.fLogScreenshot(message=f"An additional row has been added above 'sub-population' and "
+                                                      f"the column title is 'Excluded based on'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"An additional row has not been added above 'sub-population'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"An additional row has not been added above 'sub-population'")
+
+        if row_21 is None:
+            self.LogScreenshot.fLogScreenshot(message=f"An empty row above 'New total selected' has been added",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"An empty row above 'New total selected' has not been added",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"An empty row above 'New total selected' has not been added")
+
+        if "Note: LiveSLR counts the number of original studies, however, for each original study, there might be " \
+           "multiple extractions covering original or sub-group patient populations. Therefore, the number of the " \
+           "new total selected and the number of excluded studies may not add up to be the total original SLR count." \
+           " Please contact your Cytel SLR project lead if you require more assistance on this." in row_23:
+            self.LogScreenshot.fLogScreenshot(message=f"Static text '{row_23}' has been added.",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Static text '{row_23}' has not been added.",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Static text '{row_23}' has not been added.")                                            
+
+    def test_interventional_to_clinical_changes(self, filepath):
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(1)
+        self.select_data("NewImportLogic_1 - Test_Automation_1", "NewImportLogic_1 - Test_Automation_1_radio_button")
+        time.sleep(1)
+        type_of_slr_text = self.get_text("slrtype_first_option_text")
+        self.select_data("Clinical", "Clinical_radio_button")
+
+        self.click("NMA_Button")
+        nma_param_clinical_list = self.get_text("NMA_parameters_list_clinical")
+
+        self.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, filepath)
+
+        self.preview_result("preview_results")
+        self.table_display_check("Table")
+        web_table_title = self.get_text("web_table_title")
+        self.generate_download_report("Export_as_excel")
+        time.sleep(5)
+        webexcel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(webexcel_filename, filepath)
+        self.back_to_report_page("Back_to_search_page")
+
+        if search("Clinical", type_of_slr_text) and not search("Interventional", type_of_slr_text):
+            self.LogScreenshot.fLogScreenshot(message=f"From 'Search LiveSLR' page -> Under Select Type of SLR first "
+                                                      f"option is updated from Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"From 'Search LiveSLR' page -> Under Select Type of SLR first "
+                                                      f"option is not updated from Interventional to 'Clinical'. "
+                                                      f"Actual value is {type_of_slr_text}",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"From 'Search LiveSLR' page -> Under Select Type of SLR first option is not updated "
+                            f"from Interventional to 'Clinical'")
+                
+        if search("Clinical", nma_param_clinical_list) and not search("Interventional", nma_param_clinical_list):
+            self.LogScreenshot.fLogScreenshot(message=f"From 'Search LiveSLR' page -> Go to 'Select Data for  NMA' -> "
+                                                      f"Under select NMA parameters section is updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"From 'Search LiveSLR' page -> Go to 'Select Data for  NMA' -> "
+                                                      f"Under select NMA parameters section is not updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"From 'Search LiveSLR' page -> Go to 'Select Data for  NMA' -> Under select NMA "
+                            f"parameters section is not updated from Interventional to 'Clinical'")
+
+        self.click("protocol_link")
+        pages = [['picos', 'picos_pop_dropdown', 'picos_study_type_dropdown'],
+                 ['searchstrategy', 'searchstrategy_pop_dropdown', 'searchstrategy_study_type_dropdown'],
+                 ['prismas', 'prisma_pop_dropdown', 'prisma_study_type_dropdown']]
+        for i in pages:
+            self.click(i[0])
+            pop_ele = self.select_element(i[1])
+            select1 = Select(pop_ele)
+            select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+
+            stdy_ele = self.select_element(i[2])
+            select2 = Select(stdy_ele)
+            opts = select2.options
+            dropdown_li = []
+            for j in opts:
+                dropdown_li.append(j.text)
+            
+            if "Clinical" in dropdown_li and "Interventional" not in dropdown_li:
+                self.LogScreenshot.fLogScreenshot(message=f"From page '{i[0]}' -> Under Study type dropdown "
+                                                          f"Interventional is changed to 'Clinical'",
+                                                  pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"From page '{i[0]}' -> Under Study type dropdown "
+                                                          f"Interventional is not changed to 'Clinical'",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"From page '{i[0]}' -> Under Study type dropdown Interventional is not changed "
+                                f"to 'Clinical'")
+
+        self.click("manage_qa_data_button")
+        pop_ele = self.select_element("select_pop_dropdown")
+        select1 = Select(pop_ele)
+        select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+
+        stdy_ele = self.select_element("select_stdy_type_dropdown")
+        select2 = Select(stdy_ele)
+        opts = select2.options
+        qa_data_dropdown_li = []
+        for m in opts:
+            qa_data_dropdown_li.append(m.text)
+        
+        if "Clinical" in qa_data_dropdown_li and "Interventional" not in qa_data_dropdown_li:
+            self.LogScreenshot.fLogScreenshot(message=f"From 'Manage QA Data' page -> Under Study type dropdown "
+                                                      f"Interventional is changed to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"From 'Manage QA Data' page -> Under Study type dropdown "
+                                                      f"Interventional is not changed to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"From 'Manage QA Data' page -> Under Study type dropdown Interventional is not changed "
+                            f"to 'Clinical'")
+        
+        if search("Clinical", web_table_title) and not search("Interventional", web_table_title):
+            self.LogScreenshot.fLogScreenshot(message=f"WebExcel Report -> Title of 'Preview Results' section is "
+                                                      f"updated from Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"WebExcel Report -> Title of 'Preview Results' section is not "
+                                                      f"updated from Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"WebExcel Report -> Title of 'Preview Results' section is not updated from "
+                            f"Interventional to 'Clinical'")
+        
+        # Read value from Complete Excel and WebExcel
+        excel = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+        webexcel = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
+        excel_sheetnames = excel.sheetnames
+        webexcel_sheetnames = webexcel.sheetnames
+
+        webex_sheet = webexcel.active
+        webex_title = webex_sheet['A1'].value
+        if search("Clinical", webex_title) and not search("Interventional", webex_title) and "Clinical Report" in \
+                webexcel_sheetnames:
+            self.LogScreenshot.fLogScreenshot(message=f"WebExcel Report -> Title and sheet name is updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"WebExcel Report -> Title and sheet name is not updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"WebExcel Report -> Title and sheet name is not updated from Interventional to 'Clinical'")
+
+        excel_sheet_toc = excel['TOC']
+        toc_heading = excel_sheet_toc['A1'].value
+        toc_content_6 = excel_sheet_toc['B10'].value
+
+        if search("Clinical", toc_heading) and not search("Interventional", toc_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"TOC sheet heading is updated from Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"TOC sheet heading is not updated from Interventional to "
+                                                      f"'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"TOC sheet heading is not updated from Interventional to 'Clinical'")
+
+        if search("Clinical", toc_content_6) and not search("Interventional", toc_content_6):
+            self.LogScreenshot.fLogScreenshot(message=f"TOC sheet -> table of content number 6 is updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"TOC sheet -> table of content number 6 is not updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"TOC sheet -> table of content number 6 is not updated from Interventional to 'Clinical'")
+
+        excel_sheet_picos = excel['PICOS']
+        picos_heading = excel_sheet_picos['A3'].value
+
+        if search("CLINICAL", picos_heading) and not search("INTERVENTIONAL", picos_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"PICOS sheet heading is updated from INTERVENTIONAL to "
+                                                      f"'CLINICAL'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"PICOS sheet heading is not updated from INTERVENTIONAL to "
+                                                      f"'CLINICAL'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"PICOS sheet heading is not updated from INTERVENTIONAL to 'CLINICAL'")
+
+        excel_sheet_inc_exc = excel['INC-EXC']
+        inc_sheet_heading = excel_sheet_inc_exc['A1'].value
+        inc_table_heading = excel_sheet_inc_exc['A4'].value
+
+        if search("Clinical", inc_sheet_heading) and not search("Interventional", inc_sheet_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"INCLUSION AND EXCLUSION CRITERIA sheet heading is updated "
+                                                      f"from Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"INCLUSION AND EXCLUSION CRITERIA sheet heading is not "
+                                                      f"updated from Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"INCLUSION AND EXCLUSION CRITERIA sheet heading is not updated from Interventional to "
+                            f"'Clinical'")
+
+        if search("Clinical", inc_table_heading) and not search("Interventional", inc_table_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"INCLUSION AND EXCLUSION CRITERIA table heading is updated "
+                                                      f"from Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"INCLUSION AND EXCLUSION CRITERIA table heading is not updated "
+                                                      f"from Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"INCLUSION AND EXCLUSION CRITERIA table heading is not updated from Interventional "
+                            f"to 'Clinical'")
+
+        excel_sheet_strategy = excel['SEARCH STRATEGIES']
+        strategy_sheet_heading = excel_sheet_strategy['A1'].value
+        strategy_table_heading = excel_sheet_strategy['A3'].value
+
+        if search("Clinical", strategy_sheet_heading) and not search("Interventional", strategy_sheet_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"SEARCH STRATEGY sheet heading is updated from Interventional "
+                                                      f"to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"SEARCH STRATEGY sheet heading is not updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"SEARCH STRATEGY sheet heading is not updated from Interventional to 'Clinical'")
+
+        if search("Clinical", strategy_table_heading) and not search("Interventional", strategy_table_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"SEARCH STRATEGY table heading is updated from Interventional "
+                                                      f"to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"SEARCH STRATEGY table heading is not updated from "
+                                                      f"Interventional to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"SEARCH STRATEGY table heading is not updated from Interventional to 'Clinical'")
+
+        excel_sheet_report = excel['Clinical Report']
+        report_sheet_heading = excel_sheet_report['A1'].value 
+
+        if "Clinical Report" in excel_sheetnames and "Interventional Report" not in excel_sheetnames:
+            self.LogScreenshot.fLogScreenshot(message=f"Report sheet name is updated from Interventional to 'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Report sheet name is not updated from Interventional to "
+                                                      f"'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Report sheet name is not updated from Interventional to 'Clinical'")
+
+        if search("Clinical", report_sheet_heading) and not search("Interventional", report_sheet_heading):
+            self.LogScreenshot.fLogScreenshot(message=f"Report sheet heading is updated from Interventional to "
+                                                      f"'Clinical'",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Report sheet heading is not updated from Interventional "
+                                                      f"to 'Clinical'",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Report sheet heading is not updated from Interventional to 'Clinical'")
+
+    def test_publication_identifier_count_in_updated_prisma_tab(self, pop_data, slr_type, add_criteria, filepath):
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+
+        self.generate_download_report("excel_report")
+        time.sleep(5)
+        excel_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(excel_filename, filepath)
+
+        prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='D',
+                                   skiprows=11)
+        excludedstudies_liveslr_tab = pd.read_excel(f'ActualOutputs//{excel_filename}',
+                                                    sheet_name='Excluded studies - LiveSLR', skiprows=2)
+        prisma_tab_col = prisma_tab['Publications']
+        # Removing NAN values
+        prisma_tab_col = [item for item in prisma_tab_col if str(item) != 'nan']
+        # Converting list values from float to int
+        prisma_tab_col = [int(x) for x in prisma_tab_col]
+
+        # Get Unique Study Identifier value from corresponding to Reason for Rejection values
+        excludedstudies_liveslr = excludedstudies_liveslr_tab["Reason for Rejection"]
+        excludedstudies_liveslr = [item for item in excludedstudies_liveslr if str(item) != 'nan']
+        excludedstudies_liveslr_final = []
+        # Removing the duplicates
+        [excludedstudies_liveslr_final.append(x) for x in list(flatten(excludedstudies_liveslr))
+         if x not in excludedstudies_liveslr_final]
+
+        self.LogScreenshot.fLogScreenshot(message=f"Unique Reason for Rejection column values are : "
+                                                  f"{excludedstudies_liveslr_final}",
+                                          pass_=True, log=True, screenshot=False)
+
+        for m in excludedstudies_liveslr_final:
+            unique_pub_identifier = []
+            col_val = excludedstudies_liveslr_tab[excludedstudies_liveslr_tab["Reason for Rejection"] == m]
+            pub_identifier = col_val["Publication Identifier"]
+            pub_identifier = [item for item in pub_identifier if str(item) != 'nan']
+            # Checking if list is nested or not
+            if any(isinstance(i, str) for i in pub_identifier):
+                # Converting a list containing String type values into list/tuple type
+                res = []
+                for xy in pub_identifier:
+                    res.append(ast.literal_eval(xy))
+                # Removing duplicates to get the proper length of Study Identifier data
+                [unique_pub_identifier.append(x) for x in list(flatten(res))
+                if x not in unique_pub_identifier]
+            else:
+                # Removing duplicates to get the proper length of Study Identifier data
+                [unique_pub_identifier.append(x) for x in list(flatten(pub_identifier))
+                if x not in unique_pub_identifier]
+
+            if len(unique_pub_identifier) in prisma_tab_col[1:6]:
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' "
+                                                          f"Reason for Rejection the unique Publication "
+                                                          f"Identifier count is matching with the count in "
+                                                          f"Updated PRISMA tab -> 'Publications' column. The count "
+                                                          f"value is : {len(unique_pub_identifier)}",
+                                                  pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' "
+                                                          f"Reason for Rejection the unique Publication "
+                                                          f"Identifier count is not matching with the count in "
+                                                          f"Updated PRISMA tab -> 'Publications' column. The count "
+                                                          f"value is : {len(unique_pub_identifier)}",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the "
+                                f"unique Publication Identifier count is not matching with the "
+                                f"count in Updated PRISMA tab -> 'Publications' column")            
 
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
