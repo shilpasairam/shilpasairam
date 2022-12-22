@@ -50,7 +50,7 @@ class ManageUpdatesPage(Base):
         select = Select(table_ele)
         select.select_by_visible_text("100")
 
-        # Fetching total rows count before adding a new population
+        # Fetching total rows count before adding a new update
         table_rows_before = self.select_elements(table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new update: {len(table_rows_before)}',
                                           pass_=True, log=True, screenshot=False)
@@ -84,7 +84,7 @@ class ManageUpdatesPage(Base):
         select = Select(table_ele)
         select.select_by_visible_text("100")
 
-        # Fetching total rows count after adding a new population
+        # Fetching total rows count after adding a new update
         table_rows_after = self.select_elements(table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new update: {len(table_rows_after)}',
                                           pass_=True, log=True, screenshot=False)
@@ -120,7 +120,7 @@ class ManageUpdatesPage(Base):
         select = Select(ele)
         select.select_by_visible_text("100")
 
-        # Fetching total rows count before deleting a file from top of the table
+        # Fetching total rows count before deleting a update
         table_rows_before = self.select_elements(tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a update: {len(table_rows_before)}',
                                           pass_=True, log=True, screenshot=False)
@@ -143,7 +143,7 @@ class ManageUpdatesPage(Base):
         select = Select(ele)
         select.select_by_visible_text("100")
 
-        # Fetching total rows count before deleting a file from top of the table
+        # Fetching total rows count after deleting a update
         table_rows_after = self.select_elements(tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a update: {len(table_rows_after)}',
                                           pass_=True, log=True, screenshot=False)
@@ -164,6 +164,7 @@ class ManageUpdatesPage(Base):
         self.refreshpage()
         time.sleep(5)
 
+        # Fetching total rows count before adding a new update
         table_rows_before = self.mngpoppage.get_table_length("manage_update_table_rows_info",
                                                              "manage_update_table_next_btn", table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new update: {table_rows_before}',
@@ -195,6 +196,7 @@ class ManageUpdatesPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Able to add the updates record',
                                           pass_=True, log=True, screenshot=True)
 
+        # Fetching total rows count after adding a new update
         table_rows_after = self.mngpoppage.get_table_length("manage_update_table_rows_info",
                                                             "manage_update_table_next_btn", table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new update: {table_rows_after}',
@@ -291,6 +293,7 @@ class ManageUpdatesPage(Base):
         self.refreshpage()
         time.sleep(2)
 
+        # Fetching total rows count before deleting a update
         table_rows_before = self.mngpoppage.get_table_length("manage_update_table_rows_info",
                                                              "manage_update_table_next_btn", tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a update: {table_rows_before}',
@@ -311,6 +314,7 @@ class ManageUpdatesPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Able to delete the updates record',
                                           pass_=True, log=True, screenshot=True)
 
+        # Fetching total rows count after deleting a update
         table_rows_after = self.mngpoppage.get_table_length("manage_update_table_rows_info",
                                                             "manage_update_table_next_btn", tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a update: {table_rows_after}',

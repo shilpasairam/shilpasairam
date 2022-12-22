@@ -200,6 +200,7 @@ class ManagePopulationsPage(Base):
         self.refreshpage()
         time.sleep(2)
         
+        # Fetching total rows count before adding a new population
         table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
                                                   f'{table_rows_before}',
@@ -231,6 +232,7 @@ class ManagePopulationsPage(Base):
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while adding New Population")
 
+        # Fetching total rows count after adding a new population
         table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", table_rows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
                                                   f'{table_rows_after}',
@@ -318,6 +320,7 @@ class ManagePopulationsPage(Base):
     def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows):
         expected_status_text = "Population deleted successfully"
         
+        # Fetching total rows count before deleting a new population
         table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: '
                                                   f'{table_rows_before}',
@@ -343,6 +346,7 @@ class ManagePopulationsPage(Base):
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while deleting the Population data")
 
+        # Fetching total rows count after deleting a new population
         table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", tablerows)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a population: {table_rows_after}',
                                           pass_=True, log=True, screenshot=False)        
