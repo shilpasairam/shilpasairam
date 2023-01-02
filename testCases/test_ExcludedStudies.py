@@ -43,7 +43,7 @@ class Test_ExcludedStudiesPage:
                                                   f"check is started***", pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         # Check Manage Excluded Studies option is present in admin page or not
         self.exstdy.presence_of_elements("excluded_studies_link")
 
@@ -72,7 +72,7 @@ class Test_ExcludedStudiesPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         # Go to ExcludedStudies Page
         self.exstdy.go_to_excludedstudies("excluded_studies_link")
 
@@ -113,7 +113,7 @@ class Test_ExcludedStudiesPage:
                                                   f"started***", pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         # Go to ExcludedStudies Page
         self.exstdy.go_to_excludedstudies("excluded_studies_link")
 
@@ -148,7 +148,7 @@ class Test_ExcludedStudiesPage:
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.exstdy.go_to_excludedstudies("excluded_studies_link")
 
         pop_list = ['pop1']
@@ -188,7 +188,7 @@ class Test_ExcludedStudiesPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         pop_list = ['pop1']
         

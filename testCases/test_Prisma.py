@@ -40,7 +40,7 @@ class Test_PRISMAPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
         pop_val = ['pop1']
@@ -74,7 +74,7 @@ class Test_PRISMAPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
         pop_val = ['pop1']

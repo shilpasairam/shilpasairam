@@ -50,7 +50,7 @@ class Test_ExcludedStudies_liveSLR:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -94,7 +94,7 @@ class Test_ExcludedStudies_liveSLR:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -138,7 +138,7 @@ class Test_ExcludedStudies_liveSLR:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 

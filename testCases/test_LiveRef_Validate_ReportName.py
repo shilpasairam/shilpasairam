@@ -48,7 +48,7 @@ class Test_SearchPublications_DownloadedFilename:
                     os.remove(os.path.join(root, file))
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         scenarios = ['scenario1']
         for i in scenarios:
             try:

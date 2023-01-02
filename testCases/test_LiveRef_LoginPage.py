@@ -29,7 +29,7 @@ class Test_Login:
 
         # Invoking the methods from loginpage
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         
         # Checking the absence of Glossary option
         res_list = []

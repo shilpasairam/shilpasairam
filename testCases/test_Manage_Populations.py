@@ -43,7 +43,7 @@ class Test_ManagePopultionsPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         pop_list = ['pop1', 'pop2', 'pop3']
@@ -79,7 +79,7 @@ class Test_ManagePopultionsPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         pop_list = ['pop1', 'pop2', 'pop3']
@@ -116,7 +116,7 @@ class Test_ManagePopultionsPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
         for i in self.edited_population_val:

@@ -59,7 +59,7 @@ class Test_SLR_Custom_Report:
                     os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
             try:
@@ -136,7 +136,7 @@ class Test_SLR_Custom_Report:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -184,7 +184,7 @@ class Test_SLR_Custom_Report:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -232,7 +232,7 @@ class Test_SLR_Custom_Report:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -283,7 +283,7 @@ class Test_SLR_Custom_Report:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -330,7 +330,7 @@ class Test_SLR_Custom_Report:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 

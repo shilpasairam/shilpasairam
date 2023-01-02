@@ -44,7 +44,7 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
 
         pop_list = ['pop1', 'pop2']
@@ -83,7 +83,7 @@ class Test_ImportPublicationPage:
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
 
         pop_list = ['pop3']
@@ -123,7 +123,7 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
 
         pop_list = ['pop4']
@@ -164,7 +164,7 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
 
         pop_list = ['pop5']
@@ -205,7 +205,7 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
 
         pop_list = ['pop6']

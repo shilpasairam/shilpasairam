@@ -46,7 +46,7 @@ class Test_ManageUpdatesPage:
         self.day_val = today.day
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
         pop_val = ['pop1', 'pop2']
@@ -89,7 +89,7 @@ class Test_ManageUpdatesPage:
             self.dateval = (today + timedelta(1)).strftime("%m/%d/%Y")
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
         for i in self.added_updates_data:
@@ -125,7 +125,7 @@ class Test_ManageUpdatesPage:
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
         for i in self.edited_updates_data:
