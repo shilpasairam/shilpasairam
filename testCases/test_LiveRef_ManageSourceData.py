@@ -45,7 +45,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
 
         scenarios = ['scenario1']
 
@@ -80,7 +80,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
 
         scenarios = ['scenario2']
@@ -118,7 +118,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
 
         scenarios = ['scenario2']
@@ -158,7 +158,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
 
         for i in self.updated_source_data:

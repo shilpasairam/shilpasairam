@@ -11,9 +11,10 @@ from selenium.webdriver.support.ui import Select
 
 class PRISMASPage(Base):
 
-    """Constructor of the ImportPublication Page class"""
+    """Constructor of the PRISMAs Page class"""
     def __init__(self, driver, extra):
-        super().__init__(driver, extra)  # initializing the driver from base class
+        # initializing the driver from base class
+        super().__init__(driver, extra)  
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)

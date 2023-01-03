@@ -6,6 +6,8 @@ python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-conta
 
 python -m pytest -v --html=Reports\LoginPage_report.html --self-contained-html  .\testCases\test_LoginPage.py
 
+python -m pytest -v --html=Reports\AppVersion_report.html --self-contained-html .\testCases\test_AppVersion.py
+
 python -m pytest -v --html=Reports\LiveSLRPageElements_report.html --self-contained-html  .\testCases\test_LiveSLRPageElements.py
 
 python -m pytest -v --html=Reports\SLRCustomReport.html --self-contained-html  .\testCases\test_SLRCustomReport.py

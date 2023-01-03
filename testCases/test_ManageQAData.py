@@ -42,7 +42,7 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         pop_val = ['pop1']
@@ -81,7 +81,7 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         pop_val = ['pop1', 'pop2']
@@ -115,7 +115,7 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         pop_val = ['pop1', 'pop2']
@@ -149,7 +149,7 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         pop_val = ['pop1', 'pop2']
@@ -191,7 +191,7 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
         pop_val = ['pop3']

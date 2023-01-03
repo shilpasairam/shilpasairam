@@ -52,7 +52,7 @@ class Test_SLR_Custom_Report:
                     os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
             try:
@@ -122,7 +122,7 @@ class Test_SLR_Custom_Report:
                     os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         try:
             self.slrreport.select_data(self.pop_list[0][0], self.pop_list[0][1])
@@ -179,7 +179,7 @@ class Test_SLR_Custom_Report:
                     os.remove(os.path.join(root, file))
 
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         try:
             self.slrreport.test_interventional_to_clinical_changes(self.filepath)
         except Exception:

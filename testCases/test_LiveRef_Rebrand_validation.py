@@ -49,7 +49,7 @@ class Test_LiveRef_Rebrand:
                     os.remove(os.path.join(root, file))
         
         self.loginPage.driver.get(self.baseURL)
-        self.loginPage.liveref_complete_login(self.username, self.password, self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         try:
             self.rebrand.validate_liveref_rebrand(self.TestData)
         except Exception:
