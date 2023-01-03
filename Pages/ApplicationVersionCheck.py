@@ -13,7 +13,8 @@ class AppVersion(Base):
 
     """Constructor of the AppVersion class"""
     def __init__(self, driver, extra):
-        super().__init__(driver, extra)  # initializing the driver from base class
+        # initializing the driver from base class
+        super().__init__(driver, extra) 
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
@@ -27,9 +28,12 @@ class AppVersion(Base):
         version_details = df.loc[df['Application'] == locatorname]['Version'].dropna().to_list()
         return version_details
     
-    def check_app_version(self, locatorname, filepath, app_name):
+    def validate_version_details(self, locatorname, filepath, app_name):
+        # Read the expected app version value from test data
         expected_app_version = self.get_expected_application_version(filepath, app_name)
+        # Read the actual app version
         actual_app_version = self.base.get_text(locatorname)
+        # Compare actual value with expected value
         if expected_app_version[0] in actual_app_version:
             self.LogScreenshot.fLogScreenshot(
                 message=f"Application version is as expected. Application version is : {actual_app_version}",
@@ -41,15 +45,13 @@ class AppVersion(Base):
                 pass_=False, log=True, screenshot=True)
             raise Exception(f"Mismatch found in Applicaiton version.")
 
-    """Page Actions for LiveSLR Login page"""
+    """Method to check the application version"""
     def app_version_check(self, application, about_button, about_text, about_close_btn):
-        """
-        application login page must be opened before calling this method
-        """
         try:
             self.click(about_button, UnivWaitFor=3)
             time.sleep(1)
-            self.check_app_version(about_text, self.app_filepath, application)
+            # validate the actual app version with expected app version
+            self.validate_version_details(about_text, self.app_filepath, application)
             time.sleep(1)
             self.click(about_close_btn, UnivWaitFor=3)
         except Exception:

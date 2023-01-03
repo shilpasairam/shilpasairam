@@ -14,8 +14,10 @@ from utilities.logScreenshot import cLogScreenshot
 
 class ExcludedStudies_liveSLR(Base):
 
+    """Constructor of the ExcludedStudies_liveSLR class"""
     def __init__(self, driver, extra):
-        super().__init__(driver, extra)  # initializing the driver from base class
+        # initializing the driver from base class
+        super().__init__(driver, extra)  
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
