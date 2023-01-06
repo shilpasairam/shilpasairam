@@ -257,3 +257,69 @@ class ImportPublicationPage(Base):
                 time.sleep(5)
             except Exception:
                 raise Exception("Error while uploading")
+
+    def upload_file_with_success(self, locatorname, filepath):
+        expected_upload_status_text = "File(s) uploaded successfully"
+        # Read population details from data sheet
+        pop_data = self.get_file_details_to_upload(filepath, locatorname)
+
+        for i in pop_data:
+            ele = self.select_element("select_update_dropdown")
+            time.sleep(2)
+            select = Select(ele)
+            select.select_by_visible_text(i[0])
+
+            # Fetching total rows count before uploading a new file
+            table_rows_before = self.select_elements("upload_table_rows")
+            self.LogScreenshot.fLogScreenshot(message=f'Table length before uploading a new file: '
+                                                      f'{len(table_rows_before)}',
+                                              pass_=True, log=True, screenshot=False)
+            
+            jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
+            self.jsclick_hide(jscmd)
+            self.input_text("add_file", i[1])
+            try:
+                self.jsclick("upload_button")
+                time.sleep(3)
+                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+                # time.sleep(2)
+
+                if actual_upload_status_text == expected_upload_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
+                                                              f'Extraction File for Population : {i[0]}.',
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception("Unable to find status message during Extraction file uploading")
+
+                # Fetching total rows count after uploading a new file
+                table_rows_after = self.select_elements("upload_table_rows")
+                self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: '
+                                                          f'{len(table_rows_after)}',
+                                                  pass_=True, log=True, screenshot=False)
+
+                if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+                    result = []
+                    td1 = self.select_elements('upload_table_row_1')
+                    for m in td1:
+                        result.append(m.text)
+                    
+                    if i[2] in result:
+                        self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being '
+                                                                  f'uploaded: {i[2]}',
+                                                          pass_=True, log=True, screenshot=False)
+                    else:
+                        raise Exception("Wrong file is uploaded")
+
+                # Validating the upload status icon
+                time.sleep(10)
+                if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
+                    self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
+                                                        pass_=True, log=True, screenshot=True)
+                else:
+                    raise Exception("Error while uploading the extraction file")
+                self.refreshpage()
+                time.sleep(5)
+            except Exception:
+                raise Exception("Error while uploading")

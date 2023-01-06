@@ -24,6 +24,7 @@ class Test_SearchPublications:
     TestData = ReadConfig.getTestdata( "liveref_searchpublications_data" )
 
     @pytest.mark.C29813
+    @pytest.mark.C29826
     def test_filter_count_value(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -60,5 +61,7 @@ class Test_SearchPublications:
                 self.base.click("searchpublications_reset_filter")
                 self.srchpub.filter_count_validation(i, self.TestData)
 
-            except:
-                pass
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of filter count",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("Error in during validation of filter count")

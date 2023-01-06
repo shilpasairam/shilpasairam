@@ -19,6 +19,7 @@ class Test_TabNames:
     password = ReadConfig.getPassword()
 
     @pytest.mark.C29584
+    @pytest.mark.C29826
     def test_tabname_changes(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -45,8 +46,10 @@ class Test_TabNames:
                 self.LogScreenshot.fLogScreenshot(message=f"Tab Name for '{page_name}' page is as expected.",
                                                   pass_=True, log=True, screenshot=True)
 
-            except:
-                pass
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of tab names",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("Error in during validation of tab names")
 
         # Logging out from the application
-        self.loginPage.liveref_logout()
+        self.loginPage.logout("liveref_logout_button")

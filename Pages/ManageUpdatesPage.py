@@ -182,10 +182,11 @@ class ManageUpdatesPage(Base):
         self.click("sel_update_date")
         self.select_calendar_date(date_val)
 
-        self.click("sel_update_type")
-        update_type_ele = self.select_element("sel_update_type")
-        select = Select(update_type_ele)
-        select.select_by_index(1)
+        '''As per LIVEHTA-1657 changes commenting the below section'''
+        # self.click("sel_update_type")
+        # update_type_ele = self.select_element("sel_update_type")
+        # select = Select(update_type_ele)
+        # select.select_by_index(1)
 
         self.click("sel_update_submit")
         time.sleep(2)
@@ -206,8 +207,6 @@ class ManageUpdatesPage(Base):
         try:
             if table_rows_after > table_rows_before != table_rows_after:
                 self.refreshpage()
-                self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
-                                                  pass_=True, log=True, screenshot=False)
                 result = []
                 self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
                 td1 = self.select_elements('manage_update_table_row_1')
@@ -247,15 +246,16 @@ class ManageUpdatesPage(Base):
             edit_date_val = edit_date_val + 1
         self.select_calendar_date(edit_date_val)
 
-        self.click("sel_update_type")
-        update_type_ele = self.select_element("sel_update_type")
-        select = Select(update_type_ele)
-        select.select_by_index(2)
+        '''As per LIVEHTA-1657 changes commenting the below section'''
+        # self.click("sel_update_type")
+        # update_type_ele = self.select_element("sel_update_type")
+        # select = Select(update_type_ele)
+        # select.select_by_index(2)
 
-        if select.first_selected_option.text == 'Congress search':
-            congress_ele = self.select_element("sel_congress_meeting")
-            select1 = Select(congress_ele)
-            select1.select_by_index(2)
+        # if select.first_selected_option.text == 'Congress search':
+        #     congress_ele = self.select_element("sel_congress_meeting")
+        #     select1 = Select(congress_ele)
+        #     select1.select_by_index(2)
 
         self.click("sel_update_submit")
         time.sleep(2)
@@ -269,8 +269,6 @@ class ManageUpdatesPage(Base):
 
         try:
             self.refreshpage()
-            self.LogScreenshot.fLogScreenshot(message=f'Text to search: {sel_pop_val} - {dateval_to_search}',
-                                              pass_=True, log=True, screenshot=False)
             result = []
             self.input_text("manage_update_search_box", f"{sel_pop_val} - {dateval_to_search}")
             td1 = self.select_elements('manage_update_table_row_1')
@@ -288,7 +286,7 @@ class ManageUpdatesPage(Base):
             else:
                 raise Exception("Population update data is not edited")
         except Exception:
-            raise Exception("Error while adding the population updates")
+            raise Exception("Error while editing the population updates")
 
     def delete_multiple_manage_updates(self, added_update_val, del_locator, del_locator_popup, tablerows):
         self.refreshpage()

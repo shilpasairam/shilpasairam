@@ -20,6 +20,7 @@ class Test_SearchPublications_DownloadedFilename:
     TestData = ReadConfig.getTestdata( "liveref_searchpublications_data" )
 
     @pytest.mark.C29730
+    @pytest.mark.C29826
     def test_validate_downloaded_filename(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -56,5 +57,7 @@ class Test_SearchPublications_DownloadedFilename:
                 self.base.click("searchpublications_reset_filter")
                 excel_name = self.srchpub.validate_downloaded_filename(i, self.TestData)
 
-            except:
-                pass
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of downloaded filename",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("Error in during validation of downloaded filename")
