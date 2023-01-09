@@ -62,3 +62,163 @@ class Test_SearchPublications:
 
             except:
                 pass
+
+    @pytest.mark.C27393
+    def test_presence_of_author_and_affiliation(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # Creating object of SearchPublications class
+        self.srchpub = SearchPublicationsPage(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        try:
+            self.base.go_to_page("searchpublications_button")
+            self.base.click("searchpublications_reset_filter")
+            self.srchpub.presence_of_author_and_affiliation("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+
+        except:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations option",
+                                                pass_=False, log=True, screenshot=False)
+            raise Exception("Error during validation of Author and Affiliations option")
+
+    @pytest.mark.C27394
+    def test_presence_of_author_and_affiliation_column(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # Creating object of SearchPublications class
+        self.srchpub = SearchPublicationsPage(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        try:
+            self.base.go_to_page("searchpublications_button")
+            self.base.click("searchpublications_reset_filter")
+            self.srchpub.presence_of_author_and_affiliation_column("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+
+        except:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column name.",
+                                                pass_=False, log=True, screenshot=False)
+            raise Exception("Error during validation of Author and Affiliations column name")
+
+    @pytest.mark.C27395
+    def test_validate_content_of_author_and_affiliation_for_previous_load(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # Creating object of SearchPublications class
+        self.srchpub = SearchPublicationsPage(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        try:
+            self.base.go_to_page("searchpublications_button")
+            self.base.click("searchpublications_reset_filter")
+            self.srchpub.validate_content_of_author_and_affiliation_for_previous_load("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+
+        except:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column data for previous load.",
+                                                pass_=False, log=True, screenshot=False)
+            raise Exception("Error during validation of Author and Affiliations column data for previous load")
+
+    @pytest.mark.C27396
+    def test_validate_content_of_author_and_affiliation_for_latest_load(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # Creating object of SearchPublications class
+        self.srchpub = SearchPublicationsPage(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        try:
+            self.base.go_to_page("searchpublications_button")
+            self.base.click("searchpublications_reset_filter")
+            self.srchpub.validate_content_of_author_and_affiliation_for_latest_load("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+
+        except:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column data for new data source.",
+                                                pass_=False, log=True, screenshot=False)
+            raise Exception("Error during validation of Author and Affiliations column data for new data source")
