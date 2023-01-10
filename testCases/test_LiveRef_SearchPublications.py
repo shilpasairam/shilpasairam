@@ -63,6 +63,48 @@ class Test_SearchPublications:
             except:
                 pass
 
+    @pytest.mark.C29826
+    def test_filter_count_value_with_excel(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # Creating object of SearchPublications class
+        self.srchpub = SearchPublicationsPage(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+        
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        scenarios = ['scenario1']
+        for i in scenarios:
+            try:
+                self.base.go_to_page("searchpublications_button")
+                self.base.click("searchpublications_reset_filter")
+                self.srchpub.filter_count_validation_with_Excel_report(i, self.TestData)
+
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of filter count with Excel Report",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("Error in during validation of filter count with Excel Report")  
+    
     @pytest.mark.C27393
     def test_presence_of_author_and_affiliation(self, extra):
         # Creating object of loginpage class

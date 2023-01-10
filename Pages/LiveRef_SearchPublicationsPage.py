@@ -120,6 +120,51 @@ class SearchPublicationsPage(Base):
             
             self.click("searchpublications_reset_filter")
 
+    def filter_count_validation_with_Excel_report(self, locatorname, filepath):
+        # Read Indication Details
+        ind = self.get_indication_details(locatorname, filepath, "Indication", "Indication_Checkbox")
+
+        # Read Population Details
+        pop = self.get_population_details(locatorname, filepath, "Population", "Population_Checkbox",
+                                          "Population_Count")
+
+        for i in pop:
+            self.select_data(ind[0][0], ind[0][1])
+            self.select_sub_section(i[0], i[1], scroll="population_section")
+            time.sleep(1)
+
+            publications_count = self.get_text("publications_count")
+
+            excel_filename = self.validate_liveref_reportname()
+            table_col_data = []
+            table_col_eles = self.select_elements("liveref_web_table_auth_col")
+            for i in table_col_eles:
+                table_col_data.append(i.text)
+            # removing empty strings from list    
+            web_table_data = list(filter(None, table_col_data))
+
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', skiprows=2)
+            excel_col_data = excel['Source of Data']
+            excel_col_data = [item for item in excel_col_data if str(item) != 'nan']
+
+            self.LogScreenshot.fLogScreenshot(message=f"Selected Population Count is {type(publications_count)}, WebTable data row count is {type(web_table_data)} {type(len(web_table_data))} and "
+                                                          f"Excel data row count is {type(excel_col_data)} {type(len(excel_col_data))}",
+                                                  pass_=True, log=True, screenshot=True)
+
+            if len(excel_col_data) == publications_count == len(web_table_data):
+                self.LogScreenshot.fLogScreenshot(message=f"Count is matching between Publication Count, WebTable and Excel Report"
+                                                          f"Selected Population Count is {publications_count}, WebTable data row count is {len(web_table_data)} and "
+                                                          f"Excel data row count is {len(excel_col_data)}",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Count is not matching between Publication Count, WebTable and Excel Report"
+                                                          f"Selected Population Count is {publications_count}, WebTable data row count is {len(web_table_data)} and "
+                                                          f"Excel data row count is {len(excel_col_data)}",
+                                                  pass_=False, log=True, screenshot=True)
+                raise Exception(f"Count is not matching between Publication count, WebTable and Excel Report data row count")
+            
+            self.click("searchpublications_reset_filter")
+
     def validate_downloaded_filename(self, locatorname, filepath):
         # Read Indication Details
         ind = self.get_indication_details(locatorname, filepath, "Indication", "Indication_Checkbox")

@@ -50,3 +50,36 @@ class Test_TabNames:
 
         # Logging out from the application
         self.loginPage.liveref_logout()
+
+    @pytest.mark.C29826
+    def test_liveref_validate_duplicate_entries_in_admin_panel(self, extra):
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)
+        # instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        # Invoking the methods from loginpage
+        self.loginPage.driver.get(self.baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+
+        try:
+            admin_eles = self.base.select_elements("liveref_admin_panel_list")
+            admin_eles_text = []
+            for i in admin_eles:
+                admin_eles_text.append(i.text)
+            if len(admin_eles_text) == len(set(admin_eles_text)):
+                self.LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
+                                                    pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. Values are : {admin_eles_text}",
+                                                    pass_=False, log=True, screenshot=True)
+
+        except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of presence of navigation links",
+                                                pass_=False, log=True, screenshot=False)
+            raise Exception("Error in during validation of presence of navigation links")
+
+        # Logging out from the application
+        self.loginPage.logout("liveref_logout_button")
