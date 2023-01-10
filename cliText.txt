@@ -22,6 +22,8 @@ python -m pytest -v --html=Reports\Importpublications_report.html --self-contain
 
 python -m pytest -v --html=Reports\ManagePopulations_report.html --self-contained-html .\testCases\test_Manage_Populations.py
 
+python -m pytest -v --html=Reports\ManageLineofTherapy_report.html --self-contained-html .\testCases\test_LineofTherapy.py
+
 python -m pytest -v --html=Reports\ManageUpdates_report.html --self-contained-html .\testCases\test_ManageUpdates.py
 
 python -m pytest -v --html=Reports\ManageQAData_report.html --self-contained-html .\testCases\test_ManageQAData.py
