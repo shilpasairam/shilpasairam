@@ -36,6 +36,7 @@ class Test_AppVersion:
         self.loginPage.logout("liveslr_logout_button")
 
     @pytest.mark.C29577
+    @pytest.mark.C29826
     def test_liveref_app_version(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)

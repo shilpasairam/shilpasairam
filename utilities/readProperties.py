@@ -136,7 +136,16 @@ class ReadConfig:
             return config.get('commonInfo', 'manageupdatesdata_testing')
         elif env == 'staging':
             return config.get('commonInfo', 'manageupdatesdata_staging')
-    
+
+   # Get file containing data for LineofTherapy page actions
+    @staticmethod
+    def getmanagelotdata():
+        env = config.get('commonInfo','environment')
+        if env == 'test':
+            return config.get('commonInfo', 'managelotdata_testing')
+        elif env == 'staging':
+            return config.get('commonInfo', 'managelotdata_staging')
+
     # Get file containing data for PRISMAs page actions
     @staticmethod
     def getprismadata():

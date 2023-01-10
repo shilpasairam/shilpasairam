@@ -164,6 +164,7 @@ class ExcludedStudiesPage(Base):
 
                     update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
                     select3 = Select(update_ele)
+                    time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
@@ -173,7 +174,7 @@ class ExcludedStudiesPage(Base):
                     time.sleep(2)
 
                     self.click("ex_stdy_upload_button")
-                    time.sleep(3)
+                    time.sleep(4)
                     actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
                     # time.sleep(1)
 
@@ -252,6 +253,7 @@ class ExcludedStudiesPage(Base):
 
                     update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
                     select3 = Select(update_ele)
+                    time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
@@ -339,6 +341,7 @@ class ExcludedStudiesPage(Base):
 
                     update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
                     select3 = Select(update_ele)
+                    time.sleep(1)
                     select3.select_by_index(1)
                     time.sleep(1)
 
@@ -396,6 +399,7 @@ class ExcludedStudiesPage(Base):
 
                     update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
                     select3 = Select(update_ele)
+                    time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
@@ -549,6 +553,7 @@ class ExcludedStudiesPage(Base):
 
                     update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
                     select3 = Select(update_ele)
+                    time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)

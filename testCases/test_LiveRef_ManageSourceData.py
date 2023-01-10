@@ -27,6 +27,7 @@ class Test_ManageSourceData:
     updated_source_data = []
 
     @pytest.mark.C28989
+    @pytest.mark.C29826
     def test_add_invalid_managesourcedata(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -62,6 +63,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
+    @pytest.mark.C29826
     def test_add_valid_managesourcedata(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -100,6 +102,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
+    @pytest.mark.C29826
     def test_edit_valid_managesourcedata(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
@@ -140,6 +143,7 @@ class Test_ManageSourceData:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
+    @pytest.mark.C29826
     def test_del_valid_managesourcedata(self, extra):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
