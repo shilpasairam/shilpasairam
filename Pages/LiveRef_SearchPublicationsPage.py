@@ -1,3 +1,4 @@
+import math
 import time
 import pandas as pd
 from selenium.webdriver.support.wait import WebDriverWait
@@ -137,7 +138,7 @@ class SearchPublicationsPage(Base):
 
             excel_filename = self.validate_liveref_reportname()
             table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_auth_col")
+            table_col_eles = self.select_elements("liveref_web_table_col1")
             for i in table_col_eles:
                 table_col_data.append(i.text)
             # removing empty strings from list    
@@ -147,22 +148,30 @@ class SearchPublicationsPage(Base):
             excel_col_data = excel['Source of Data']
             excel_col_data = [item for item in excel_col_data if str(item) != 'nan']
 
-            self.LogScreenshot.fLogScreenshot(message=f"Selected Population Count is {type(publications_count)}, WebTable data row count is {type(web_table_data)} {type(len(web_table_data))} and "
-                                                          f"Excel data row count is {type(excel_col_data)} {type(len(excel_col_data))}",
-                                                  pass_=True, log=True, screenshot=True)
+            if int(publications_count) != int(len(web_table_data)):
+                page_counter = math.ceil(int(publications_count)/30)
+                for j in range(1, page_counter):
+                    self.click("liveref_web_table_next")
+                    time.sleep(1)
+                    table_col_eles1 = self.select_elements("liveref_web_table_col1")
+                    for k in table_col_eles1:
+                        web_table_data.append(k.text)
+                # removing empty strings from list    
+                web_table_data = list(filter(None, web_table_data))
 
-            if len(excel_col_data) == publications_count == len(web_table_data):
+            if int(len(excel_col_data)) == int(publications_count) == int(len(web_table_data)):
                 self.LogScreenshot.fLogScreenshot(message=f"Count is matching between Publication Count, WebTable and Excel Report"
                                                           f"Selected Population Count is {publications_count}, WebTable data row count is {len(web_table_data)} and "
                                                           f"Excel data row count is {len(excel_col_data)}",
-                                                  pass_=True, log=True, screenshot=True)
+                                                  pass_=True, log=True, screenshot=False)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Count is not matching between Publication Count, WebTable and Excel Report"
                                                           f"Selected Population Count is {publications_count}, WebTable data row count is {len(web_table_data)} and "
                                                           f"Excel data row count is {len(excel_col_data)}",
-                                                  pass_=False, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception(f"Count is not matching between Publication count, WebTable and Excel Report data row count")
             
+            self.click("liveref_back_to_selection_page")
             self.click("searchpublications_reset_filter")
 
     def validate_downloaded_filename(self, locatorname, filepath):
@@ -178,6 +187,7 @@ class SearchPublicationsPage(Base):
             self.select_sub_section(pop[0][0], pop[0][1], scroll="population_section")
             time.sleep(1)            
             excel_filename = self.validate_liveref_reportname()
+            return excel_filename
         except Exception:
             raise Exception("Error while downloading and validating the LiveRef report")
 
