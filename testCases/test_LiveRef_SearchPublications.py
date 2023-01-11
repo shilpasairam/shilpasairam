@@ -109,6 +109,7 @@ class Test_SearchPublications:
                 raise Exception("Error in during validation of filter count with Excel Report")  
     
     @pytest.mark.C27393
+    @pytest.mark.C37355
     def test_presence_of_author_and_affiliation(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -149,6 +150,7 @@ class Test_SearchPublications:
             raise Exception("Error during validation of Author and Affiliations option")
 
     @pytest.mark.C27394
+    @pytest.mark.C37355
     def test_presence_of_author_and_affiliation_column(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -189,6 +191,7 @@ class Test_SearchPublications:
             raise Exception("Error during validation of Author and Affiliations column name")
 
     @pytest.mark.C27395
+    @pytest.mark.C37355
     def test_validate_content_of_author_and_affiliation_for_previous_load(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
@@ -229,6 +232,7 @@ class Test_SearchPublications:
             raise Exception("Error during validation of Author and Affiliations column data for previous load")
 
     @pytest.mark.C27396
+    @pytest.mark.C37355
     def test_validate_content_of_author_and_affiliation_for_latest_load(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)

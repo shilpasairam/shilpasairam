@@ -353,7 +353,7 @@ class ExcludedStudiesPage(Base):
                     self.click("ex_stdy_popup_ok")
                     time.sleep(2)
 
-                    actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
+                    actual_delete_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
                     # time.sleep(2)
 
                     if actual_delete_status_text == expected_delete_status_text:
