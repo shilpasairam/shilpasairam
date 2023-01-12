@@ -66,6 +66,7 @@ class Test_SearchPublications:
                                                   pass_=False, log=True, screenshot=False)
                 raise Exception("Error in during validation of filter count")
 
+    @pytest.mark.C29566
     @pytest.mark.C29826
     def test_filter_count_value_with_excel(self, extra):
         # Creating object of loginpage class
