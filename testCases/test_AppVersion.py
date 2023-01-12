@@ -61,8 +61,8 @@ class Test_AppVersion:
             res_list.append(ele.text)
         
         if not search("Glossary", res_list[0]):
-            self.LogScreenshot.fLogScreenshot(message=f"Glossary link is not present as expected", 
-                                                pass_=True, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Glossary link is not present as expected",
+                                              pass_=True, log=True, screenshot=True)
         else:
             raise Exception(f"Glossary link is present as expected")
 

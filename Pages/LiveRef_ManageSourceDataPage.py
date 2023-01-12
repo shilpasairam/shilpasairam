@@ -52,7 +52,9 @@ class ManageSourceDataPage(Base):
         return logo_file_path, template_file_path
     
     def add_invalid_managesourcedata(self, locatorname, filepath):
-        expected_error_msg = "A problem occurred while uploading the file. The columns DateTime_Location, Author_LastName, Main_Message, Study Type/GVD Chapter, Study_Sub_Type/GVD Section, Reported_Data_Variables, Scales, Main_Results are not valid for this template"
+        expected_error_msg = "A problem occurred while uploading the file. The columns DateTime_Location, " \
+                             "Author_LastName, Main_Message, Study Type/GVD Chapter, Study_Sub_Type/GVD Section, " \
+                             "Reported_Data_Variables, Scales, Main_Results are not valid for this template"
         # Read manage source details from data sheet
         source_data, source_value = self.get_details(locatorname, filepath, 'Add_source_field', 'Add_source_value')
 
@@ -69,7 +71,7 @@ class ManageSourceDataPage(Base):
         self.input_text("source_template_file", template_path)
         time.sleep(1)
         self.LogScreenshot.fLogScreenshot(message=f"Entered Source Details are: ",
-                                                pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         self.click("source_save_button")
         time.sleep(3)
@@ -77,11 +79,11 @@ class ManageSourceDataPage(Base):
         actual_err_text = self.get_text("source_invaliddata_msg")
         
         if search(expected_error_msg, actual_err_text):
-            self.LogScreenshot.fLogScreenshot(message=f"Error Message is displayed as expected. Error messgae is : {actual_err_text}",
-                                                pass_=True, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Error Message is displayed as expected. Error messgae is : "
+                                                      f"{actual_err_text}", pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Different Error Message has occurred. Error message is : {actual_err_text}",
-                                                pass_=False, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Different Error Message has occurred. Error message is : "
+                                                      f"{actual_err_text}", pass_=False, log=True, screenshot=True)
             raise Exception(f"Different Error Message has occurred.")
 
     def add_valid_managesourcedata(self, locatorname, filepath, tablerows):
@@ -112,7 +114,7 @@ class ManageSourceDataPage(Base):
         self.input_text("source_template_file", template_path)
         time.sleep(1)
         self.LogScreenshot.fLogScreenshot(message=f"Entered Source Details are: ",
-                                                pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         self.click("source_save_button")
 
@@ -120,10 +122,10 @@ class ManageSourceDataPage(Base):
         
         if search(expected_msg, actual_msg):
             self.LogScreenshot.fLogScreenshot(message=f"Manage Source of Data is successfully added",
-                                                pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Error while adding Manage Source of Data",
-                                                pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception(f"Error while adding Manage Source of Data")
         
         ele = self.select_element("sel_table_entries_dropdown")
@@ -164,14 +166,15 @@ class ManageSourceDataPage(Base):
         self.refreshpage()
         time.sleep(2)        
         # Read manage source details from data sheet
-        edit_source_data, edit_source_value = self.get_details(locatorname, filepath, 'Add_source_field', 'Edit_source_value')
+        edit_source_data, edit_source_value = self.get_details(locatorname, filepath, 'Add_source_field',
+                                                               'Edit_source_value')
 
         # Read filepaths to upload
         logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template')
 
         self.input_text("sourcedata_search_box", f'{src_code}')
         self.LogScreenshot.fLogScreenshot(message=f'Selected record details for updation : ',
-                pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         self.click(edit_locator, UnivWaitFor=10)
         time.sleep(1)
@@ -183,7 +186,7 @@ class ManageSourceDataPage(Base):
         self.input_text("source_template_file", template_path)
         time.sleep(1)
         self.LogScreenshot.fLogScreenshot(message=f"Entered Source Details are: ",
-                                                pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
 
         self.click("source_save_button")
 
@@ -191,10 +194,10 @@ class ManageSourceDataPage(Base):
         
         if search(expected_msg, actual_msg):
             self.LogScreenshot.fLogScreenshot(message=f"Manage Source of Data is successfully updated",
-                                                pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Error while updating Manage Source of Data",
-                                                pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception(f"Error while updating Manage Source of Data")
 
         try:
@@ -208,7 +211,7 @@ class ManageSourceDataPage(Base):
             
             if result[2] == f'{edit_source_value[1]}_{date.today().year}':
                 self.LogScreenshot.fLogScreenshot(message=f'Updated Manage Source data is present in table',
-                                                    pass_=True, log=True, screenshot=True)
+                                                  pass_=True, log=True, screenshot=True)
                 source_code = f"{result[2]}"
                 return source_code
 
@@ -232,7 +235,7 @@ class ManageSourceDataPage(Base):
 
         self.input_text("sourcedata_search_box", src_code)
         self.LogScreenshot.fLogScreenshot(message=f'Selected record details for deletion : ',
-                        pass_=True, log=True, screenshot=True)
+                                          pass_=True, log=True, screenshot=True)
         
         self.click("sourcedata_delete")
         time.sleep(1)
@@ -257,7 +260,8 @@ class ManageSourceDataPage(Base):
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_after = self.select_elements(tablerows)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a manage source data: {len(table_rows_after)}',
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a manage source data: '
+                                                  f'{len(table_rows_after)}',
                                           pass_=True, log=True, screenshot=False)
 
         try:

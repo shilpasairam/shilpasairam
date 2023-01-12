@@ -74,14 +74,15 @@ class Test_TabNames:
                 admin_eles_text.append(i.text)
             if len(admin_eles_text) == len(set(admin_eles_text)):
                 self.LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
-                                                    pass_=True, log=True, screenshot=True)
+                                                  pass_=True, log=True, screenshot=True)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. Values are : {admin_eles_text}",
-                                                    pass_=False, log=True, screenshot=True)
+                self.LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. "
+                                                          f"Values are : {admin_eles_text}",
+                                                  pass_=False, log=True, screenshot=True)
 
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of presence of navigation links",
-                                                pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error in during validation of presence of navigation links")
 
         # Logging out from the application

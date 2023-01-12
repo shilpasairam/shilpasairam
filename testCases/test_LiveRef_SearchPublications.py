@@ -21,7 +21,7 @@ class Test_SearchPublications:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    TestData = ReadConfig.getTestdata( "liveref_searchpublications_data" )
+    TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C29813
     @pytest.mark.C29826
@@ -105,13 +105,13 @@ class Test_SearchPublications:
                 self.srchpub.filter_count_validation_with_Excel_report(i, self.TestData)
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of filter count with Excel Report",
-                                                  pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of filter count with Excel "
+                                                          f"Report", pass_=False, log=True, screenshot=False)
                 raise Exception("Error in during validation of filter count with Excel Report")  
     
     @pytest.mark.C27393
     @pytest.mark.C37355
-    def test_presence_of_author_and_affiliation(self, extra):
+    def test_presence_of_author_and_affiliation_ui(self, extra):
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -143,11 +143,12 @@ class Test_SearchPublications:
         try:
             self.base.go_to_page("searchpublications_button")
             self.base.click("searchpublications_reset_filter")
-            self.srchpub.presence_of_author_and_affiliation("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+            self.srchpub.presence_of_author_and_affiliation_ui("reported_cols_sections", "reported_col_author",
+                                                               "reported_col_author_checkbox")
 
-        except:
+        except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations option",
-                                                pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error during validation of Author and Affiliations option")
 
     @pytest.mark.C27394
@@ -184,11 +185,12 @@ class Test_SearchPublications:
         try:
             self.base.go_to_page("searchpublications_button")
             self.base.click("searchpublications_reset_filter")
-            self.srchpub.presence_of_author_and_affiliation_column("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+            self.srchpub.presence_of_author_and_affiliation_column("reported_cols_sections", "reported_col_author",
+                                                                   "reported_col_author_checkbox")
 
-        except:
-            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column name.",
-                                                pass_=False, log=True, screenshot=False)
+        except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations "
+                                                      f"column name.", pass_=False, log=True, screenshot=False)
             raise Exception("Error during validation of Author and Affiliations column name")
 
     @pytest.mark.C27395
@@ -225,11 +227,14 @@ class Test_SearchPublications:
         try:
             self.base.go_to_page("searchpublications_button")
             self.base.click("searchpublications_reset_filter")
-            self.srchpub.validate_content_of_author_and_affiliation_for_previous_load("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+            self.srchpub.validate_content_of_author_and_affiliation_for_previous_load("reported_cols_sections",
+                                                                                      "reported_col_author",
+                                                                                      "reported_col_author_checkbox")
 
-        except:
-            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column data for previous load.",
-                                                pass_=False, log=True, screenshot=False)
+        except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column "
+                                                      f"data for previous load.",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error during validation of Author and Affiliations column data for previous load")
 
     @pytest.mark.C27396
@@ -266,9 +271,12 @@ class Test_SearchPublications:
         try:
             self.base.go_to_page("searchpublications_button")
             self.base.click("searchpublications_reset_filter")
-            self.srchpub.validate_content_of_author_and_affiliation_for_latest_load("reported_cols_sections", "reported_col_author", "reported_col_author_checkbox")
+            self.srchpub.validate_content_of_author_and_affiliation_for_latest_load("reported_cols_sections",
+                                                                                    "reported_col_author",
+                                                                                    "reported_col_author_checkbox")
 
-        except:
-            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column data for new data source.",
-                                                pass_=False, log=True, screenshot=False)
+        except Exception:
+            self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column "
+                                                      f"data for new data source.",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("Error during validation of Author and Affiliations column data for new data source")

@@ -17,7 +17,7 @@ class Test_SearchPublications_DownloadedFilename:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    TestData = ReadConfig.getTestdata( "liveref_searchpublications_data" )
+    TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C29730
     @pytest.mark.C29826

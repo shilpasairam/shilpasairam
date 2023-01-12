@@ -64,13 +64,13 @@ class SearchPublicationsPage(Base):
         excel_filename = self.slrreport.getFilenameAndValidate(180)
         if excel_filename[16:] == expectedfilename:
             self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
-                                                pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=False)
             return excel_filename
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Filename is not as expected. Expected "
-                                                        f"Filename is {expectedfilename} and Actual "
-                                                        f"Filename is {excel_filename[16:]}",
-                                                pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"Filename is not as expected. Expected Filename "
+                                                      f"is {expectedfilename} and Actual Filename is "
+                                                      f"{excel_filename[16:]}",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception(f"Filename is not as expected. Expected Filename is {expectedfilename} and "
                             f"Filename is {excel_filename[16:]}")        
     
@@ -139,8 +139,8 @@ class SearchPublicationsPage(Base):
             excel_filename = self.validate_liveref_reportname()
             table_col_data = []
             table_col_eles = self.select_elements("liveref_web_table_col1")
-            for i in table_col_eles:
-                table_col_data.append(i.text)
+            for x in table_col_eles:
+                table_col_data.append(x.text)
             # removing empty strings from list    
             web_table_data = list(filter(None, table_col_data))
 
@@ -160,16 +160,21 @@ class SearchPublicationsPage(Base):
                 web_table_data = list(filter(None, web_table_data))
 
             if int(len(excel_col_data)) == int(publications_count) == int(len(web_table_data)):
-                self.LogScreenshot.fLogScreenshot(message=f"Count is matching between Publication Count, WebTable and Excel Report"
-                                                          f"Selected Population Count is {publications_count}, WebTable data row count is {len(web_table_data)} and "
-                                                          f"Excel data row count is {len(excel_col_data)}",
+                self.LogScreenshot.fLogScreenshot(message=f"Count is matching between Publication Count, WebTable "
+                                                          f"and Excel Report. Selected Population Count is "
+                                                          f"{publications_count}, WebTable data row count is "
+                                                          f"{len(web_table_data)} and Excel data row count is "
+                                                          f"{len(excel_col_data)}",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Count is not matching between Publication Count, WebTable and Excel Report"
-                                                          f"Selected Population Count is {publications_count}, WebTable data row count is {len(web_table_data)} and "
-                                                          f"Excel data row count is {len(excel_col_data)}",
+                self.LogScreenshot.fLogScreenshot(message=f"Count is not matching between Publication Count, WebTable "
+                                                          f"and Excel Report. Selected Population Count is "
+                                                          f"{publications_count}, WebTable data row count is "
+                                                          f"{len(web_table_data)} and Excel data row count is "
+                                                          f"{len(excel_col_data)}",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Count is not matching between Publication count, WebTable and Excel Report data row count")
+                raise Exception(f"Count is not matching between Publication count, WebTable and Excel Report "
+                                f"data row count")
             
             self.click("liveref_back_to_selection_page")
             self.click("searchpublications_reset_filter")
@@ -191,17 +196,20 @@ class SearchPublicationsPage(Base):
         except Exception:
             raise Exception("Error while downloading and validating the LiveRef report")
 
-    def presence_of_author_and_affiliation(self, section_locatorname, auth_locator, auth_locator_checkbox):
+    def presence_of_author_and_affiliation_ui(self, section_locatorname, auth_locator, auth_locator_checkbox):
 
         self.select_sub_section(auth_locator, auth_locator_checkbox, section_locatorname)
         time.sleep(1)
         auth_text = self.get_text(auth_locator)
+
+        # Checking the presence of 'Authors And Affiliations' option in LiveRef UI
         if 'Authors and Affiliations' == auth_text and self.isselected(auth_locator_checkbox, UnivWaitFor=10):
             self.LogScreenshot.fLogScreenshot(message=f"'Authors and Affiliations' option is present with Checkbox",
-                                    pass_=True, log=True, screenshot=True)
+                                              pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"'Authors and Affiliations' option is not present with Checkbox. Text displayed in UI : {auth_text}",
-                                    pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"'Authors and Affiliations' option is not present with "
+                                                      f"Checkbox. Text displayed in UI : {auth_text}",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Authors and Affiliations' option is not present with Checkbox")
 
     def presence_of_author_and_affiliation_column(self, section_locatorname, auth_locator, auth_locator_checkbox):
@@ -215,28 +223,32 @@ class SearchPublicationsPage(Base):
             for i in table_col_eles:
                 table_col_names.append(i.text)
             
+            # Checking the presence of column name in Web Table
             if 'Authors And Affiliations'.upper() in table_col_names:
-                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is present in LiveRef Web table",
-                                        pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is present in LiveRef "
+                                                          f"Web table", pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is not present in LiveRef Web table",
-                                        pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is not present in "
+                                                          f"LiveRef Web table", pass_=False, log=True, screenshot=False)
                 raise Exception("'Authors And Affiliations' column is not present in LiveRef Web table")
             
+            # Checking the presence of column name in downloaded excel report
             excel = pd.read_excel(f'ActualOutputs//{excel_filename}', skiprows=2)
             if 'Authors And Affiliations' in excel.columns:
-                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is present in LiveRef Excel Report",
-                                        pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is present in LiveRef "
+                                                          f"Excel Report", pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is not present in LiveRef Excel Report. Column names are : {excel.columns}",
-                                        pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' column is not present in "
+                                                          f"LiveRef Excel Report. Column names are : {excel.columns}",
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception("'Authors And Affiliations' column is not present in LiveRef Excel Report")
         else:
             self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' checkbox is not selected.",
-                                    pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Authors And Affiliations' checkbox is not selected.")                    
 
-    def validate_content_of_author_and_affiliation_for_previous_load(self, section_locatorname, auth_locator, auth_locator_checkbox):
+    def validate_content_of_author_and_affiliation_for_previous_load(self, section_locatorname, auth_locator,
+                                                                     auth_locator_checkbox):
 
         self.click("sourceofdata_section")
         time.sleep(1)
@@ -257,19 +269,26 @@ class SearchPublicationsPage(Base):
             auth_col_data = excel['Authors And Affiliations']
             auth_col_data = [item for item in auth_col_data if str(item) != 'nan']
 
+            # Checking the presence of content in 'Authors And Affiliations' column
             if len(final_table_data) == 0 == len(auth_col_data):
-                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And Affiliations' column data is empty in previous load.",
-                                        pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And "
+                                                          f"Affiliations' column data is empty in previous load.",
+                                                  pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And Affiliations' column data is not empty in previous load. Web table column data : {final_table_data} and Excel Report column data : {auth_col_data}",
-                                        pass_=False, log=True, screenshot=False)
-                raise Exception("In Web table and Downloaded Excel report -> 'Authors And Affiliations' column data is not empty in previous load")
+                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And "
+                                                          f"Affiliations' column data is not empty in previous load. "
+                                                          f"Web table column data : {final_table_data} and Excel "
+                                                          f"Report column data : {auth_col_data}",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("In Web table and Downloaded Excel report -> 'Authors And Affiliations' column data "
+                                "is not empty in previous load")
         else:
             self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' checkbox is not selected.",
-                                    pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Authors And Affiliations' checkbox is not selected.")                    
 
-    def validate_content_of_author_and_affiliation_for_latest_load(self, section_locatorname, auth_locator, auth_locator_checkbox):
+    def validate_content_of_author_and_affiliation_for_latest_load(self, section_locatorname, auth_locator,
+                                                                   auth_locator_checkbox):
 
         self.click("sourceofdata_section")
         time.sleep(1)
@@ -290,14 +309,20 @@ class SearchPublicationsPage(Base):
             auth_col_data = excel['Authors And Affiliations']
             auth_col_data = [item for item in auth_col_data if str(item) != 'nan']
 
+            # Checking the presence of content in 'Authors And Affiliations' column
             if len(final_table_data) != 0 != len(auth_col_data):
-                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And Affiliations' column contains data in new data source.",
-                                        pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And "
+                                                          f"Affiliations' column contains data in new data source.",
+                                                  pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And Affiliations' column does not contains data in new data source. Web table column data : {final_table_data} and Excel Report column data : {auth_col_data}",
-                                        pass_=False, log=True, screenshot=False)
-                raise Exception("In Web table and Downloaded Excel report -> 'Authors And Affiliations' column contains data in new data source")
+                self.LogScreenshot.fLogScreenshot(message=f"In Web table and Downloaded Excel report -> 'Authors And "
+                                                          f"Affiliations' column does not contains data in new data "
+                                                          f"source. Web table column data : {final_table_data} and "
+                                                          f"Excel Report column data : {auth_col_data}",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("In Web table and Downloaded Excel report -> 'Authors And Affiliations' column "
+                                "contains data in new data source")
         else:
             self.LogScreenshot.fLogScreenshot(message=f"'Authors And Affiliations' checkbox is not selected.",
-                                    pass_=False, log=True, screenshot=False)
+                                              pass_=False, log=True, screenshot=False)
             raise Exception("'Authors And Affiliations' checkbox is not selected.")                    
