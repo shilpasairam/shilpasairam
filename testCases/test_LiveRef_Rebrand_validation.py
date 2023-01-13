@@ -18,7 +18,7 @@ class Test_LiveRef_Rebrand:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    TestData = ReadConfig.getTestdata( "liveref_searchpublications_data" )
+    TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C27354
     @pytest.mark.C29826

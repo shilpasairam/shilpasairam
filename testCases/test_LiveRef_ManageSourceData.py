@@ -22,7 +22,7 @@ class Test_ManageSourceData:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    TestData = ReadConfig.getTestdata( "liveref_data_testing" )
+    TestData = ReadConfig.getTestdata("liveref_data_testing")
     added_source_data = []
     updated_source_data = []
 
@@ -59,7 +59,7 @@ class Test_ManageSourceData:
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Invalid Manage Source Data validation is completed***",
+        self.LogScreenshot.fLogScreenshot(message=f"**Addtion of Invalid Manage Source Data validation is completed**",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
@@ -117,7 +117,7 @@ class Test_ManageSourceData:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Updation of Existing Manage Source Data validation is started***",
+        self.LogScreenshot.fLogScreenshot(message=f"**Updation of Existing Manage Source Data validation is started**",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -130,7 +130,8 @@ class Test_ManageSourceData:
 
         for i in result:
             try:
-                updated_src_data = self.mngsrcpage.edit_valid_managesourcedata(i[0], i[1], self.TestData, "sourcedata_edit")      
+                updated_src_data = self.mngsrcpage.edit_valid_managesourcedata(i[0], i[1], self.TestData,
+                                                                               "sourcedata_edit")
                 self.updated_source_data.append(updated_src_data)
                 self.LogScreenshot.fLogScreenshot(message=f"Updated Manage Source data are {self.updated_source_data}",
                                                   pass_=True, log=True, screenshot=False)          
@@ -139,7 +140,7 @@ class Test_ManageSourceData:
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Updation of Existing Manage Source Data validation is completed***",
+        self.LogScreenshot.fLogScreenshot(message=f"*Updation of Existing Manage Source Data validation is completed*",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
@@ -158,7 +159,7 @@ class Test_ManageSourceData:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Existing Manage Source Data validation is started***",
+        self.LogScreenshot.fLogScreenshot(message=f"**Deletion of Existing Manage Source Data validation is started**",
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(self.baseURL)
@@ -173,12 +174,11 @@ class Test_ManageSourceData:
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Existing Manage Source Data validation is completed***",
+        self.LogScreenshot.fLogScreenshot(message=f"*Deletion of Existing Manage Source Data validation is completed*",
                                           pass_=True, log=True, screenshot=False)
 
 
-
-############ For custom report generation ############
+#  ########### For custom report generation ############
 # @pytest.mark.usefixtures("init_driver")
 # class Test_ManageSourceData:
 #     baseURL = ReadConfig.getApplicationURL()

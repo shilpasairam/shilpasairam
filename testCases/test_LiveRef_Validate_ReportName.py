@@ -17,7 +17,7 @@ class Test_SearchPublications_DownloadedFilename:
     baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    TestData = ReadConfig.getTestdata( "liveref_searchpublications_data" )
+    TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C29730
     @pytest.mark.C29826
@@ -55,7 +55,7 @@ class Test_SearchPublications_DownloadedFilename:
             try:
                 self.base.go_to_page("searchpublications_button")
                 self.base.click("searchpublications_reset_filter")
-                excel_name = self.srchpub.validate_downloaded_filename(i, self.TestData)
+                self.srchpub.validate_downloaded_filename(i, self.TestData)
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of downloaded filename",
