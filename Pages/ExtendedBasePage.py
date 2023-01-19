@@ -31,7 +31,7 @@ class ExtendedBase(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 20)
 
-    ###
+    # Read Population data for LIVESLR Page
     def get_population_data(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
         pop = df.loc[df['Name'] == locatorname]['Population'].dropna().to_list()
@@ -39,7 +39,7 @@ class ExtendedBase(Base):
         result = [[pop[i], pop_button[i]] for i in range(0, len(pop))]
         return result
     
-    ###
+    # Read SLRTYPE data for LIVESLR Page
     def get_slrtype_data(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
         slrtype = df.loc[df['Name'] == locatorname]['slrtype'].dropna().to_list()
@@ -47,6 +47,7 @@ class ExtendedBase(Base):
         result = [[slrtype[i], slrtype_button[i]] for i in range(0, len(slrtype))]
         return result
     
+    # Read expected test data file for comparison
     def get_source_template(self, filepath, sheet, locatorname):
         file = pd.read_excel(filepath, sheet_name=sheet)
         expectedfilepath = (os.getcwd()+(file.loc[file['Name'] == locatorname]['ExpectedSourceTemplateFile'].
