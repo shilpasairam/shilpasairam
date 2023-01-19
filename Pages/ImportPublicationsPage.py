@@ -148,8 +148,9 @@ class ImportPublicationPage(Base):
             
             # Check the uploaded filename before deleting the record
             if i[2] in result:
-                self.LogScreenshot.fLogScreenshot(message=f"Uploaded Filename '{i[2]}' is present in the table. Performing the delete operation.",
-                                                    pass_=True, log=True, screenshot=True)
+                self.LogScreenshot.fLogScreenshot(message=f"Uploaded Filename '{i[2]}' is present in the table. "
+                                                          f"Performing the delete operation.",
+                                                  pass_=True, log=True, screenshot=True)
             
                 self.click("delete_file")
                 time.sleep(2)
@@ -160,24 +161,26 @@ class ImportPublicationPage(Base):
                 
                 if actual_delete_status_text == expected_delete_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
-                                                    pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
-                                                    pass_=False, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting '
+                                                              f'Extraction File',
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("Error during Extraction File Deletion")
 
                 # Fetching total rows count before deleting a file from top of the table
                 table_rows_after = self.select_elements(tablerows)
-                self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: {len(table_rows_after)}',
-                                                pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: '
+                                                          f'{len(table_rows_after)}',
+                                                  pass_=True, log=True, screenshot=False)
 
                 try:
                     if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
                         self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
-                                                        pass_=True, log=True, screenshot=False)
+                                                          pass_=True, log=True, screenshot=False)
                 except Exception:
                     self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
-                                                    pass_=False, log=True, screenshot=False)
+                                                      pass_=False, log=True, screenshot=False)
                     raise Exception("Error in deleting the imported file")
             else:
                 raise Exception("No file uploaded to perform delete operation")
@@ -280,7 +283,7 @@ class ImportPublicationPage(Base):
             self.input_text("add_file", i[1])
             try:
                 self.jsclick("upload_button")
-                time.sleep(3)
+                time.sleep(4)
                 actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
                 # time.sleep(2)
 
@@ -316,7 +319,7 @@ class ImportPublicationPage(Base):
                 time.sleep(10)
                 if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
                     self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
-                                                        pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                 else:
                     raise Exception("Error while uploading the extraction file")
                 self.refreshpage()

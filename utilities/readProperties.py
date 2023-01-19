@@ -77,10 +77,9 @@ class ReadConfig:
     def getnmatestdata():
         env = config.get('commonInfo', 'environment')
         if env == 'test':
-            populationdata = config.get('commonInfo', 'testinglivenmadata')
+            return config.get('commonInfo', 'testinglivenmadata')
         elif env == 'staging':
-            populationdata = config.get('commonInfo', 'staginglivenmadata')
-        return populationdata
+            return config.get('commonInfo', 'staginglivenmadata')
 
     # Get file containing data for QOL Utility
     @staticmethod

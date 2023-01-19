@@ -158,6 +158,7 @@ class ExcludedStudiesPage(Base):
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
@@ -195,11 +196,13 @@ class ExcludedStudiesPage(Base):
                     # Read table data for specific population and slr study type
                     pop_ele = self.select_element("ex_stdy_pop_dropdown")
                     select1 = Select(pop_ele)
+                    time.sleep(1)
                     select1.select_by_visible_text(i[0])
                     time.sleep(1)
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     time.sleep(1)
 
@@ -247,6 +250,7 @@ class ExcludedStudiesPage(Base):
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
@@ -288,11 +292,13 @@ class ExcludedStudiesPage(Base):
                     # Read table data for specific population and slr study type
                     pop_ele = self.select_element("ex_stdy_pop_dropdown")
                     select1 = Select(pop_ele)
+                    time.sleep(1)
                     select1.select_by_visible_text(i[0])
                     time.sleep(1)
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     time.sleep(1)
 
@@ -336,6 +342,7 @@ class ExcludedStudiesPage(Base):
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     time.sleep(1)
 
@@ -393,6 +400,7 @@ class ExcludedStudiesPage(Base):
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(i[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
@@ -431,11 +439,13 @@ class ExcludedStudiesPage(Base):
                     # Read table data for specific population and slr study type
                     pop_ele = self.select_element("ex_stdy_pop_dropdown")
                     select1 = Select(pop_ele)
+                    time.sleep(1)
                     select1.select_by_visible_text(pop_val[0])
                     time.sleep(1)
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(i[0])
                     time.sleep(1)
 
@@ -547,6 +557,7 @@ class ExcludedStudiesPage(Base):
 
                     stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
                     select2 = Select(stdy_ele)
+                    time.sleep(1)
                     select2.select_by_visible_text(i[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)

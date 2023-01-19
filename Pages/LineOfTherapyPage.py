@@ -78,29 +78,26 @@ class LineofTherapyPage(Base):
         # Read Expected messages
         expected_data = self.get_expected_data(filepath, "Expected_ui_elements")
 
-        pagedetails = []
-        pagedetails.append(self.get_text("managelot_page_heading"))
-        pagedetails.append(self.get_text("managelot_pagecontent"))                            
+        pagedetails = [self.get_text("managelot_page_heading"), self.get_text("managelot_pagecontent")]
 
         if expected_data == pagedetails:
             self.LogScreenshot.fLogScreenshot(message=f"Line of Therapy Page name and page content is present in UI",
-                                    pass_=True, log=True, screenshot=True)
+                                              pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Line of Therapy Page name and page content is not present in UI",
-                                    pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"Line of Therapy Page name and page content is not present in "
+                                                      f"UI", pass_=False, log=True, screenshot=False)
             raise Exception(f"Line of Therapy Page name and page content is not present in UI")            
 
         if self.isdisplayed("add_lot_btn") and self.isdisplayed("managelot_resultpanel_heading"):
-            self.LogScreenshot.fLogScreenshot(message=f"Add Line of Therapy button and Result panel heading is present UI",
-                                    pass_=True, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Add Line of Therapy button and Result panel heading is "
+                                                      f"present UI", pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Add Line of Therapy button and Result panel heading is not present UI",
-                                    pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"Add Line of Therapy button and Result panel heading is not "
+                                                      f"present UI", pass_=False, log=True, screenshot=False)
             raise Exception(f"Add Line of Therapy button and Result panel heading is not present UI")
     
     def add_multiple_lot(self, locatorname, add_lot_button, table_rows, filepath):
-        # # Read population details from data sheet
-        # pop_name = self.get_updates_pop_data(self.filepath, locatorname)
+        expected_add_status_text = "Line of Therapy added successfully"
 
         # Read LoT name details from data sheet
         lot_name = self.get_lot_name(filepath, locatorname, "LOT_name")
@@ -115,16 +112,17 @@ class LineofTherapyPage(Base):
         self.check_lot_ui_elements(filepath)
 
         # Fetch the complete LoT data from the table
-        complete_lot_table_data = self.get_table_data("managelot_table_rows_info", "managelot_table_next_btn", "managelot_table_rows_data")
+        complete_lot_table_data = self.get_table_data("managelot_table_rows_info", "managelot_table_next_btn",
+                                                      "managelot_table_rows_data")
         
         # Compare the expected mandatory lot option with actual table data
         for j in expected_lot_options:
             if j in complete_lot_table_data:
                 self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is present in the table.",
-                                    pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is present in the table.",
-                                    pass_=False, log=True, screenshot=False)  
+                                                  pass_=False, log=True, screenshot=False)
                 raise Exception(f"Mandatory LoT '{j}' option is present in the table.")            
         
         # Fetching total rows count before adding a new LoT
@@ -141,12 +139,17 @@ class LineofTherapyPage(Base):
         self.click("lot_submit_btn")
         time.sleep(2)
 
-        add_text = self.get_text("managelot_status_text", UnivWaitFor=10)
-        time.sleep(2)
-                                          
-        self.assertText("Line of Therapy added successfully", add_text)
-        self.LogScreenshot.fLogScreenshot(message=f'Able to add the LoT record',
-                                          pass_=True, log=True, screenshot=True)
+        actual_add_status_text = self.get_text("managelot_status_text", UnivWaitFor=10)
+        # time.sleep(2)
+
+        if actual_add_status_text == expected_add_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f'Able to add the LoT record',
+                                              pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(
+                message=f'Unable to find status message while adding the LoT record',
+                pass_=False, log=True, screenshot=True)
+            raise Exception("Unable to find status message while adding the LoT record")        
 
         # Fetching total rows count after adding a new LoT
         table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
@@ -162,9 +165,6 @@ class LineofTherapyPage(Base):
                 td1 = self.select_elements('managelot_table_row_1')
                 for n in td1:
                     result.append(n.text)
-
-                # self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new LoT: {result}',
-                #                                   pass_=True, log=True, screenshot=False)
                 
                 if result[0] == lot_name[0]:
                     self.LogScreenshot.fLogScreenshot(message=f'Added Line of Therapy data is present in table',
@@ -206,9 +206,6 @@ class LineofTherapyPage(Base):
             td1 = self.select_elements('manage_update_table_row_1')
             for n in td1:
                 result.append(n.text)
-
-            # self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the update: {result}',
-            #                                   pass_=True, log=True, screenshot=False)
             
             if result[0] == f"{lot_name[0]}_Update":
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Line of Therapy data is present in table',
