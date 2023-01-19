@@ -1350,64 +1350,6 @@ class SLRReport(Base):
                                 f"unique Publication Identifier count is not matching with the "
                                 f"count in Updated PRISMA tab -> 'Publications' column")            
 
-    def validate_population_column_name_update_in_wordreport(self, filepath, locatorname):
-        self.LogScreenshot.fLogScreenshot(message=f"Validate column name update from 'Population' to "
-                                                  f"'Population/Sub-group' column in Word Report",
-                                          pass_=True, log=True, screenshot=False)
-
-        # Read population details from data sheet
-        extraction_file = self.exbase.get_file_details_to_upload(filepath, locatorname)       
-
-        # Read population data values
-        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
-        # Read slrtype data values
-        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)         
-
-        self.refreshpage()
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
-        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1]) 
-
-        # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
-        time.sleep(2)
-        self.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}")
-        self.select_data(slrtype[0][0], f"{slrtype[0][1]}")
-        
-        self.generate_download_report("word_report")
-        time.sleep(5)
-        word_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(word_filename, filepath)
-
-        table_count = 5  
-
-        docs = docx.Document(f'ActualOutputs//{word_filename}')
-        try:
-            table = docs.tables[table_count]
-            data = [[cell.text for cell in row.cells] for row in table.rows]
-            df_word = pd.DataFrame(data)
-
-            # Check whether the column name is updated or not
-            if 'Population/Sub-group' in df_word.values[0] and 'Population' not in df_word.values[0]:
-                self.LogScreenshot.fLogScreenshot(message=f"Column name has been updated from 'Population' to "
-                                                          f"'Population/Sub-group'",
-                                                  pass_=True, log=True, screenshot=False)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Column name has not been updated from 'Population' to "
-                                                          f"'Population/Sub-group'",
-                                                  pass_=False, log=True, screenshot=False)
-                raise Exception("Column name has not been updated from 'Population' to 'Population/Sub-group'")
-
-            self.refreshpage()
-            self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
-
-            self.exbase.delete_file(extraction_file[0][2])
-
-            # Go to live slr page
-            self.liveslrpage.go_to_liveslr("SLR_Homepage")
-            time.sleep(2)
-        except Exception:
-            raise Exception("Error in Word report column name validation")
-
     def validate_population_col_in_wordreport(self, filepath, locatorname):
         self.LogScreenshot.fLogScreenshot(message=f"Validate contents of Population/Sub-group column in Word Report",
                                           pass_=True, log=True, screenshot=False)
