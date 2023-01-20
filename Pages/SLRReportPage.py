@@ -360,7 +360,7 @@ class SLRReport(Base):
                                                   f"and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
 
-        # Check position of 'Back to TOC' button and presence of column names at row 4
+        '''Reference-LIVEHTA1161: Check position of 'Back to TOC' button and presence of column names at row 4'''
         wb = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
         for i in wb.sheetnames:
             # Check the position of 'Back to TOC' button
