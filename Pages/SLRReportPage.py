@@ -17,6 +17,8 @@ from selenium.webdriver.support.ui import Select
 from pandas.core.common import flatten
 
 from Pages.Base import Base, fWaitFor
+from Pages.ExtendedBasePage import ExtendedBase
+from Pages.ImportPublicationsPage import ImportPublicationPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
 from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
@@ -38,6 +40,10 @@ class SLRReport(Base):
         self.logger = LogGen.loggen()
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
+        # Creating object of ExtendedBase class
+        self.exbase = ExtendedBase(self.driver, extra)  
+        # Creating object of ImportPublicationPage class
+        self.imppubpage = ImportPublicationPage(self.driver, extra)                     
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 20)
 
@@ -354,6 +360,32 @@ class SLRReport(Base):
                                                   f"and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
 
+        '''Reference-LIVEHTA1161: Check position of 'Back to TOC' button and presence of column names at row 4'''
+        wb = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
+        for i in wb.sheetnames:
+            # Check the position of 'Back to TOC' button
+            ex = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+            ex_sheet = ex[i]
+            if ex_sheet['H1'].value == 'Back To Toc':
+                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present in '{i}' sheet",
+                                                  pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present in '{i}' "
+                                                          f"sheet",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"'Back To Toc' option is not present in '{i}' sheet")
+            
+            # Check the presence of column names at row 4
+            df = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=i, skiprows=3)
+            if 'Study Identifier' in df.columns.values:
+                self.LogScreenshot.fLogScreenshot(message=f"Column names are present at row 4.",
+                                                  pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Column names are not present at row 4",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"Column names are not present at row 4")           
+
+        # Actual excel content validation step starts here
         source_data = openpyxl.load_workbook(f'{source_template[0]}')
 
         self.LogScreenshot.fLogScreenshot(message=f"Source file Sheetnames are: {source_data.sheetnames}",
@@ -507,7 +539,7 @@ class SLRReport(Base):
                                                                               f"between WebExcel, Complete Excel and "
                                                                               f"Word Reports.\n Duplicate values are "
                                                                               f"arranged in following order -> "
-                                                                              f"WebExcel, Complete Excel and Word "
+                                                                              f"Word, Complete Excel and WebExcel "
                                                                               f"Report. {comparison_result}",
                                                                       pass_=False, log=True, screenshot=False)
                                     raise Exception("Elements are not matching between Webexcel, Complete Excel "
@@ -1294,11 +1326,11 @@ class SLRReport(Base):
                     res.append(ast.literal_eval(xy))
                 # Removing duplicates to get the proper length of Study Identifier data
                 [unique_pub_identifier.append(x) for x in list(flatten(res))
-                if x not in unique_pub_identifier]
+                 if x not in unique_pub_identifier]
             else:
                 # Removing duplicates to get the proper length of Study Identifier data
                 [unique_pub_identifier.append(x) for x in list(flatten(pub_identifier))
-                if x not in unique_pub_identifier]
+                 if x not in unique_pub_identifier]
 
             if len(unique_pub_identifier) in prisma_tab_col[1:6]:
                 self.LogScreenshot.fLogScreenshot(message=f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' "
@@ -1317,6 +1349,175 @@ class SLRReport(Base):
                 raise Exception(f"From 'Excluded studies - LiveSLR' sheet -> for '{m}' Reason for Rejection the "
                                 f"unique Publication Identifier count is not matching with the "
                                 f"count in Updated PRISMA tab -> 'Publications' column")            
+
+    def validate_population_col_in_wordreport(self, filepath, locatorname):
+        self.LogScreenshot.fLogScreenshot(message=f"Validate contents of Population/Sub-group column in Word Report",
+                                          pass_=True, log=True, screenshot=False)
+        source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)
+
+        # Read population details from data sheet
+        extraction_file = self.exbase.get_file_details_to_upload(filepath, locatorname)       
+
+        # Read population data values
+        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        # Read slrtype data values
+        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)         
+
+        self.refreshpage()
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1]) 
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        self.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}")
+        self.select_data(slrtype[0][0], f"{slrtype[0][1]}")
+        
+        self.generate_download_report("word_report")
+        time.sleep(5)
+        word_filename = self.getFilenameAndValidate(180)
+        self.validate_filename(word_filename, filepath)
+
+        table_count = 5  
+
+        sourcefile = pd.read_excel(f'{source_template[0]}') 
+        docs = docx.Document(f'ActualOutputs//{word_filename}')
+        try:
+            table = docs.tables[table_count]
+            data = [[cell.text for cell in row.cells] for row in table.rows]
+            df_word = pd.DataFrame(data)
+
+            # Check whether the column name is updated or not
+            if 'Population/Sub-group' in df_word.values[0] and 'Population' not in df_word.values[0]:
+                self.LogScreenshot.fLogScreenshot(message=f"Column name has been updated from 'Population' to "
+                                                          f"'Population/Sub-group'",
+                                                  pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Column name has not been updated from 'Population' to "
+                                                          f"'Population/Sub-group'",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception("Column name has not been updated from 'Population' to 'Population/Sub-group'")
+
+            # Using count variable to loop over columns in word document
+            count = 0        
+            # df_word.values[0] will give the list of column names from the table in Word document        
+            for j in df_word.values[0]:
+                # Check the column name is present in Expected test data file
+                if j in sourcefile.columns.values:
+                    sourcedata = sourcefile[j]
+                    word = []
+                    for row in docs.tables[table_count].rows:
+                        word.append(row.cells[count].text)
+
+                    # Removing NAN/None values if any
+                    sourcedata = [item for item in sourcedata if str(item) != 'nan']
+                    # Converting Integer list to String list
+                    sourcedata = [str(x) for x in sourcedata]
+                    # Popping up the column name
+                    word.pop(0)
+
+                    comparison_result = self.list_comparison_between_reports_data(sourcedata, word)
+
+                    if len(comparison_result) == 0:
+                        self.LogScreenshot.fLogScreenshot(message=f"Content from Table 2-2 is matching with expected "
+                                                                  f"test data.",
+                                                          pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Content from Table 2-2 is not matching with "
+                                                                  f"expected test data. Duplicate values are "
+                                                                  f"arranged in following order -> Source Excel and "
+                                                                  f"Word Report. {comparison_result}",
+                                                          pass_=False, log=True, screenshot=False)
+                        raise Exception("Elements are not matching between Source data and Word Report")
+                    count += 1
+                else:
+                    raise Exception("Column names are not matching between Source data and "
+                                    "Word Report")
+            self.refreshpage()
+            self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+
+            self.exbase.delete_file(extraction_file[0][2])
+
+            # Go to live slr page
+            self.liveslrpage.go_to_liveslr("SLR_Homepage")
+            time.sleep(2)
+        except Exception:
+            raise Exception("Error in Word report content validation")
+
+    def validate_control_chars_in_wordreport(self, filepath, locatorname):
+        self.LogScreenshot.fLogScreenshot(message=f"Validate the accessibility of downloaded reports when extraction "
+                                                  f"file contains control characters",
+                                          pass_=True, log=True, screenshot=False)
+
+        # Read population details from data sheet
+        extraction_file = self.exbase.get_file_details_to_upload(filepath, locatorname)       
+
+        # Read population data values
+        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        # Read slrtype data values
+        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)         
+
+        self.refreshpage()
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1]) 
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        time.sleep(2)
+        try:
+            for i in pop_list:
+                self.select_data(i[0], i[1])
+                for j in slrtype:
+                    self.select_data(j[0], j[1])
+
+                    self.generate_download_report("excel_report")
+                    time.sleep(5)
+                    excel_filename = self.getFilenameAndValidate(180)
+                    self.validate_filename(excel_filename, filepath)
+
+                    self.generate_download_report("word_report")
+                    time.sleep(5)
+                    word_filename = self.getFilenameAndValidate(180)
+                    self.validate_filename(word_filename, filepath)
+
+                    self.preview_result("preview_results")
+                    self.table_display_check("Table")
+                    self.generate_download_report("Export_as_excel")
+                    time.sleep(5)
+                    webexcel_filename = self.getFilenameAndValidate(180)
+                    self.validate_filename(webexcel_filename, filepath)
+                    self.back_to_report_page("Back_to_search_page")
+
+                    '''Checking whether we are able to read data from downloaded reports or not'''
+                    webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}')
+                    excel = pd.read_excel(f'ActualOutputs//{excel_filename}')
+                    docs = docx.Document(f'ActualOutputs//{word_filename}')
+
+                    # Reading Table 2-2 in word report
+                    table = docs.tables[5]
+                    data = [[cell.text for cell in row.cells] for row in table.rows]
+                    df_word = pd.DataFrame(data)
+
+                    if not webexcel.empty and not excel.empty and not df_word.empty:
+                        self.LogScreenshot.fLogScreenshot(message=f"Able to open WebExcel, Complete Excel, Word "
+                                                                  f"Reports and read data successfully.",
+                                                          pass_=True, log=True, screenshot=False)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Error while opening and reading the data from "
+                                                                  f"WebExcel, Complete Excel, Word Reports.",
+                                                          pass_=False, log=True, screenshot=False)
+                        raise Exception(f"Error while opening and reading the data from WebExcel, Complete Excel, "
+                                        f"Word Reports.")
+        except Exception:
+            raise Exception("Unable to select element")                  
+
+        self.refreshpage()
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+
+        self.exbase.delete_file(extraction_file[0][2])
+
+        # Go to live slr page
+        self.liveslrpage.go_to_liveslr("SLR_Homepage")
 
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
