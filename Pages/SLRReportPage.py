@@ -488,9 +488,10 @@ class SLRReport(Base):
                 word_len.pop(0)
 
                 if len(src_data_len) == len(word_len):
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel and Complete Word Report. "
-                                                              f"Source Excel Elements Length: {len(src_data_len)}\n "
-                                                              f"Word Elements Length: {len(word_len)}\n",
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel and "
+                                                              f"Complete Word Report. Source Excel Elements Length: "
+                                                              f"{len(src_data_len)}\n Word Elements Length: "
+                                                              f"{len(word_len)}\n",
                                                       pass_=True, log=True, screenshot=False)
 
                     # Content validation starts from here
@@ -498,7 +499,8 @@ class SLRReport(Base):
                     count = 0
                     # df_word.values[0] will give the list of column names from the table in Word document
                     for col_name in df_word.values[0]:
-                        # # Restricting comparison upto 3 columns in word due to data formatting issues in further columns
+                        # # Restricting comparison upto 3 columns in word due to data formatting
+                        # # issues in further columns
                         # if count <= 2:
                         #     if col_name == 'Year/Country':
                         #         # This IF condition is just to add space to the column name as per Excel sheet to
@@ -519,19 +521,17 @@ class SLRReport(Base):
 
                             if len(comparison_result) == 0:
                                 self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
-                                                                            f"Column '{col_name}' are matching "
-                                                                            f"between Source Excel "
-                                                                            f"and Word Report.\n",
-                                                                    pass_=True, log=True, screenshot=False)
+                                                                          f"Column '{col_name}' are matching "
+                                                                          f"between Source Excel and Word Report.\n",
+                                                                  pass_=True, log=True, screenshot=False)
                             else:
                                 self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
-                                                                            f"Column '{col_name}' are not matching "
-                                                                            f"between Source Excel and "
-                                                                            f"Word Report.\n Mismatch values are "
-                                                                            f"arranged in following order -> "
-                                                                            f"Word, Complete Excel and WebExcel "
-                                                                            f"Report. {comparison_result}",
-                                                                    pass_=False, log=True, screenshot=False)
+                                                                          f"Column '{col_name}' are not matching "
+                                                                          f"between Source Excel and Word Report.\n "
+                                                                          f"Mismatch values are arranged in "
+                                                                          f"following order -> Word, Complete Excel "
+                                                                          f"and WebExcel Report. {comparison_result}",
+                                                                  pass_=False, log=True, screenshot=False)
                                 raise Exception("Elements are not matching between Source Excel "
                                                 "and Word Reports")
                             count += 1
@@ -540,9 +540,10 @@ class SLRReport(Base):
                                             "and Word Reports")
                     table_count += 1
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel and Complete Word Report. "
-                                                              f"Source Excel Elements Length: {len(src_data_len)}\n "
-                                                              f"Word Elements Length: {len(word_len)}\n",
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel "
+                                                              f"and Complete Word Report. Source Excel Elements "
+                                                              f"Length: {len(src_data_len)}\n Word Elements "
+                                                              f"Length: {len(word_len)}\n",
                                                       pass_=False, log=True, screenshot=False)
                     raise Exception(f"Elements length is not matching between Source Excel and "
                                     f"Complete Word Report.")
@@ -601,31 +602,35 @@ class SLRReport(Base):
                                                                       f"Word Elements Length: {len(word)}\n",
                                                               pass_=True, log=True, screenshot=False)      
 
-                            comparison_result = self.list_comparison_between_reports_data(word, compex, webex_list=webex)                      
+                            comparison_result = self.list_comparison_between_reports_data(word, compex,
+                                                                                          webex_list=webex)
 
                             if len(comparison_result) == 0:
-                                self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' "
-                                                                          f"are matching between WebExcel, Complete Excel "
+                                self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column "
+                                                                          f"'{col_name}' are matching between "
+                                                                          f"WebExcel, Complete Excel "
                                                                           f"and Word Reports.\n",
                                                                   pass_=True, log=True, screenshot=False)
                             else:
-                                self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' "
-                                                                          f"are not matching between WebExcel, "
-                                                                          f"Complete Excel and Word Reports.\n"
-                                                                          f"Mismatch values are arranged in "
+                                self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column "
+                                                                          f"'{col_name}' are not matching between "
+                                                                          f"WebExcel, Complete Excel and Word Reports."
+                                                                          f"\n Mismatch values are arranged in "
                                                                           f"following order -> Word, Complete Excel "
                                                                           f"and WebExcel Report. {comparison_result}",
                                                                   pass_=False, log=True, screenshot=False)
                                 raise Exception("Elements are not matching between Webexcel, Complete Excel and "
                                                 "Word Reports")
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Web_Excel, "
-                                                                      f"Complete Excel and Complete Word Report. "
-                                                                      f"WebExcel Elements Length: {len(webex)}\n "
-                                                                      f"Excel Elements Length: {len(compex)}\n "
-                                                                      f"Word Elements Length: {len(word)}\n",
+                            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between "
+                                                                      f"Web_Excel, Complete Excel and Complete "
+                                                                      f"Word Report. WebExcel Elements Length: "
+                                                                      f"{len(webex)}\n Excel Elements Length: "
+                                                                      f"{len(compex)}\n Word Elements Length: "
+                                                                      f"{len(word)}\n",
                                                               pass_=False, log=True, screenshot=False)
-                            raise Exception(f"Elements length is not matching between Web_Excel, Complete Excel and Complete Word Report.")                          
+                            raise Exception(f"Elements length is not matching between Web_Excel, Complete Excel "
+                                            f"and Complete Word Report.")
                     else:
                         raise Exception("Column names are not matching between Webexcel, Complete Excel and "
                                         "Word Reports")
