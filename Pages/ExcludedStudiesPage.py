@@ -417,9 +417,13 @@ class ExcludedStudiesPage(Base):
                     time.sleep(2)
 
                     self.click("ex_stdy_upload_button")
-                    time.sleep(3)
-                    actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
-                    # time.sleep(1)
+                    time.sleep(2)
+
+                    if self.isdisplayed("ex_stdy_status_text"):
+                        actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=30)
+                    else:
+                        time.sleep(2)
+                        actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=30)
 
                     if actual_upload_status_text == expected_upload_status_text:
                         self.LogScreenshot.fLogScreenshot(
@@ -447,10 +451,11 @@ class ExcludedStudiesPage(Base):
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(i[0])
-                    time.sleep(1)
+                    time.sleep(2)
 
                     actual_table_values = []
                     td1 = self.select_elements('ex_stdy_table_data_row_1')
+                    time.sleep(1)
                     for m in td1:
                         actual_table_values.append(m.text)
 
@@ -547,7 +552,7 @@ class ExcludedStudiesPage(Base):
                 for i in stdy_data:
                     expected_table_values = []
                     self.refreshpage()
-                    time.sleep(3)
+                    time.sleep(4)
                     self.go_to_excludedstudies("excluded_studies_link")
                     pop_ele = self.select_element("ex_stdy_pop_dropdown")
                     select1 = Select(pop_ele)
@@ -577,8 +582,11 @@ class ExcludedStudiesPage(Base):
                     self.click("ex_stdy_popup_ok")
                     time.sleep(2)
 
-                    actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=10)
-                    # time.sleep(2)
+                    if self.isdisplayed("get_status_text"):
+                        actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=30)
+                    else:
+                        time.sleep(2)
+                        actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=30)                    
 
                     if actual_delete_status_text == expected_delete_status_text:
                         self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File Deletion is success.',
