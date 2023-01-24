@@ -65,20 +65,17 @@ class UtilityOutcome(Base):
         expectedfilepath = list(os.getcwd()+file['ExpectedSourceTemplateFile'].dropna())
         return expectedfilepath
     
-    ###
     def get_extraction_file_to_upload(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
         path = df.loc[df['Name'] == locatorname]['ExtractionFile'].dropna().to_list()
         result = [[os.getcwd() + path[i]] for i in range(0, len(path))]
         return result
     
-    ###
     def get_import_pop_to_upload(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
         pop = df.loc[df['Name'] == locatorname]['Import_Pop'].dropna().to_list()
         return pop
 
-    ###
     def get_population_to_upload(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
         pop = df.loc[df['Name'] == locatorname]['Population'].dropna().to_list()
@@ -86,7 +83,6 @@ class UtilityOutcome(Base):
         result = [[pop[i], pop_button[i]] for i in range(0, len(pop))]
         return result
     
-    ###
     def get_slrtype_to_upload(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
         slrtype = df.loc[df['Name'] == locatorname]['slrtype'].dropna().to_list()
@@ -823,9 +819,13 @@ class UtilityOutcome(Base):
         self.click("delete_file")
         time.sleep(2)
         self.click("delete_file_popup")
-        time.sleep(3)
+        time.sleep(2)
 
-        actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+        if self.isdisplayed("file_status_popup_text"):
+            actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+        else:
+            time.sleep(2)
+            actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)         
         
         if actual_delete_status_text == expected_delete_status_text:
             self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
@@ -835,7 +835,6 @@ class UtilityOutcome(Base):
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Error during Extraction File Deletion")
 
-    ####
     def qol_validate_utilitysummarytab_and_contents_into_excelreport(self, locatorname, util_filepath, index):
         source_template = self.get_util_source_template(util_filepath, 'prodfix')
 

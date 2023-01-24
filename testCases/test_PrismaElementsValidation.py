@@ -66,6 +66,8 @@ class Test_SLR_Custom_Report:
                 self.slrreport.select_data(i[0], i[1])
                 for index, j in enumerate(self.slrtype):
                     self.slrreport.select_data(j[0], j[1])
+                    self.slrreport.validate_selected_area(i[0], j[0])
+                    
                     self.slrreport.select_sub_section(self.study_data[1], self.study_data_chkbox[1],
                                                       "study_design_section")
                     self.slrreport.select_sub_section(self.study_data[3], self.study_data_chkbox[3],
@@ -75,7 +77,7 @@ class Test_SLR_Custom_Report:
                     self.slrreport.select_sub_section(self.rpt_data[1], self.rpt_data_chkbox[1],
                                                       "reported_variable_section")
                     self.slrreport.validate_additional_criteria_val(self.filepath, "study_design_value",
-                                                                    "reported_variable_value")
+                                                                    "reported_variable_value")                                                                    
 
                     self.base.scroll("New_total_selected")
                     prism = self.base.get_text("New_total_selected")
@@ -99,7 +101,6 @@ class Test_SLR_Custom_Report:
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
                     self.slrreport.prism_value_validation(prism, excel_filename1, webexcel_filename1, word_filename1)
-                    self.slrreport.validate_selected_area(i[0], j[0])
             except Exception:
                 raise Exception("Unable to select element")
 

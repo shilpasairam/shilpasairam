@@ -87,9 +87,9 @@ class SLRReport(Base):
         ele2 = self.select_elements(locator_var)
         return ele1, ele2
 
-    def get_source_template(self, filepath):
+    def get_source_template(self, filepath, col_name):
         file = pd.read_excel(filepath)
-        expectedfilepath = list(os.getcwd()+file['ExpectedSourceTemplateFile'].dropna())
+        expectedfilepath = list(os.getcwd()+file[col_name].dropna())
         return expectedfilepath
     
     def get_duplicates_from_list(self, input_list):
@@ -353,7 +353,7 @@ class SLRReport(Base):
                                                   f"and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
         
-        source_template = self.get_source_template(filepath)
+        source_template = self.get_source_template(filepath, 'ExpectedSourceTemplateFile_Excel')
 
         self.LogScreenshot.fLogScreenshot(message=f"Source Filename is: {Path(f'{source_template[0]}').stem}, "
                                                   f"Downloaded FileNames are: {webexcel_filename} "
@@ -436,7 +436,7 @@ class SLRReport(Base):
                         self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, "
                                                                   f"Values in Column '{col}' are not matching between "
                                                                   f"Source, WebExcel and Complete Excel Report.\n"
-                                                                  f"Duplicate values are arranged in following "
+                                                                  f"Mismatch values are arranged in following "
                                                                   f"order -> Source File, WebExcel, Complete Excel. "
                                                                   f"{comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
@@ -453,30 +453,25 @@ class SLRReport(Base):
         except Exception:
             raise Exception("Error in Excel sheet content validation")
 
-    def excel_to_word_content_validation(self, webexcel_filename, excel_filename, word_filename):
-        self.LogScreenshot.fLogScreenshot(message=f"Content validation between WebExcel, Complete Excel and "
-                                                  f"Complete Word Reports",
+    def word_content_validation(self, filepath, slr_type_index, word_filename):
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and "
+                                                  f"Complete Word Report",
                                           pass_=True, log=True, screenshot=False)
-        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename}, \n{excel_filename}, "
-                                                  f"\n{word_filename}",
+
+        source_template = self.get_source_template(filepath, 'ExpectedSourceTemplateFile_Word')
+
+        self.LogScreenshot.fLogScreenshot(message=f"FileName is: {word_filename}",
                                           pass_=True, log=True, screenshot=False)
+
+        source_excel = openpyxl.load_workbook(f'{source_template[slr_type_index]}')                                          
         
         # Index of Table number 6 is : 5. Starting point for word table content comparison
         table_count = 5
-        sheet_names = []
 
-        webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
-        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-
-        for i in webexcel_data.sheetnames:
-            if i in excel_data.sheetnames:
-                sheet_names.append(i)
-
-        self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {sheet_names}",
+        self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {source_excel.sheetnames}",
                                           pass_=True, log=True, screenshot=False)
-        for sheet in sheet_names:
-            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
-            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
+        for sheet in source_excel.sheetnames:
+            src_data = pd.read_excel(f'{source_template[slr_type_index]}', sheet_name=sheet)
             docs = docx.Document(f'ActualOutputs//{word_filename}')
             try:
                 table = docs.tables[table_count]
@@ -484,22 +479,19 @@ class SLRReport(Base):
                 df_word = pd.DataFrame(data)
 
                 # Check the length of 1st column from the report to make sure number of rows are as expected
-                webex_len = webexcel[df_word.values[0][0]]
-                compex_len = excel[df_word.values[0][0]]
+                src_data_len = src_data[df_word.values[0][0]]
                 word_len = []
                 for row in docs.tables[table_count].rows:
                     word_len.append(row.cells[0].text)
 
-                webex_len = [item for item in webex_len if str(item) != 'nan']
-                compex_len = [item for item in compex_len if str(item) != 'nan']
+                src_data_len = [item for item in src_data_len if str(item) != 'nan']
                 word_len.pop(0)
 
-                if len(webex_len) == len(compex_len) == len(word_len):
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Web_Excel, "
-                                                              f"Complete Excel and Complete Word Report. "
-                                                              f"WebExcel Elements Length: {len(webex_len)}\n "
-                                                              f"Excel Elements Length: {len(compex_len)}\n "
-                                                              f"Word Elements Length: {len(word_len)}\n",
+                if len(src_data_len) == len(word_len):
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel and "
+                                                              f"Complete Word Report. Source Excel Elements Length: "
+                                                              f"{len(src_data_len)}\n Word Elements Length: "
+                                                              f"{len(word_len)}\n",
                                                       pass_=True, log=True, screenshot=False)
 
                     # Content validation starts from here
@@ -507,56 +499,55 @@ class SLRReport(Base):
                     count = 0
                     # df_word.values[0] will give the list of column names from the table in Word document
                     for col_name in df_word.values[0]:
-                        # Restricting comparison upto 3 columns in word due to data formatting issues in further columns
-                        if count <= 2:
-                            if col_name == 'Year/Country':
-                                # This IF condition is just to add space to the column name as per Excel sheet to
-                                # match the names between word and excel. This is an workaround until it is fixed
-                                col_name = 'Year / Country'
-                            if col_name in webexcel.columns.values and col_name in excel.columns.values:
-                                webex = webexcel[col_name]
-                                compex = excel[col_name]
-                                word = []
-                                for row in docs.tables[table_count].rows:
-                                    word.append(row.cells[count].text)
+                        # # Restricting comparison upto 3 columns in word due to data formatting
+                        # # issues in further columns
+                        # if count <= 2:
+                        #     if col_name == 'Year/Country':
+                        #         # This IF condition is just to add space to the column name as per Excel sheet to
+                        #         # match the names between word and excel. This is an workaround until it is fixed
+                        #         col_name = 'Year / Country'
+                        if col_name in src_data.columns.values:
+                            src_data_final = src_data[col_name]
+                            word = []
+                            for row in docs.tables[table_count].rows:
+                                word.append(row.cells[count].text)
 
-                                webex = [item for item in webex if str(item) != 'nan']
-                                compex = [item for item in compex if str(item) != 'nan']
-                                word.pop(0)
+                            src_data_final = [item for item in src_data_final if str(item) != 'nan']
+                            # Converting Integer list to String list
+                            src_data_final = [str(x) for x in src_data_final]
+                            # While reading the table data from word report column name is also being stored. 
+                            # Hence removing the column name to get the exact content                            
+                            word.pop(0)
 
-                                comparison_result = self.list_comparison_between_reports_data(word, compex,
-                                                                                              webex_list=webex)
+                            comparison_result = self.list_comparison_between_reports_data(src_data_final, word)
 
-                                if len(comparison_result) == 0:
-                                    self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
-                                                                              f"Column '{col_name}' are matching "
-                                                                              f"between WebExcel, Complete Excel "
-                                                                              f"and Word Reports.\n",
-                                                                      pass_=True, log=True, screenshot=False)
-                                else:
-                                    self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
-                                                                              f"Column '{col_name}' are not matching "
-                                                                              f"between WebExcel, Complete Excel and "
-                                                                              f"Word Reports.\n Duplicate values are "
-                                                                              f"arranged in following order -> "
-                                                                              f"Word, Complete Excel and WebExcel "
-                                                                              f"Report. {comparison_result}",
-                                                                      pass_=False, log=True, screenshot=False)
-                                    raise Exception("Elements are not matching between Webexcel, Complete Excel "
-                                                    "and Word Reports")
-                                count += 1
+                            if len(comparison_result) == 0:
+                                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
+                                                                          f"Column '{col_name}' are matching "
+                                                                          f"between Source Excel and Word Report.\n",
+                                                                  pass_=True, log=True, screenshot=False)
                             else:
-                                raise Exception("Column names are not matching between Webexcel, Complete Excel "
+                                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
+                                                                          f"Column '{col_name}' are not matching "
+                                                                          f"between Source Excel and Word Report.\n "
+                                                                          f"Mismatch values are arranged in "
+                                                                          f"following order -> Word, Complete Excel "
+                                                                          f"and WebExcel Report. {comparison_result}",
+                                                                  pass_=False, log=True, screenshot=False)
+                                raise Exception("Elements are not matching between Source Excel "
                                                 "and Word Reports")
+                            count += 1
+                        else:
+                            raise Exception("Column names are not matching between Source Excel "
+                                            "and Word Reports")
                     table_count += 1
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Web_Excel, "
-                                                              f"Complete Excel and Complete Word Report. "
-                                                              f"WebExcel Elements Length: {len(webex_len)}\n "
-                                                              f"Excel Elements Length: {len(compex_len)}\n "
-                                                              f"Word Elements Length: {len(word_len)}\n",
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel "
+                                                              f"and Complete Word Report. Source Excel Elements "
+                                                              f"Length: {len(src_data_len)}\n Word Elements "
+                                                              f"Length: {len(word_len)}\n",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Elements length is not matching between Web_Excel, Complete Excel and "
+                    raise Exception(f"Elements length is not matching between Source Excel and "
                                     f"Complete Word Report.")
             except Exception:
                 raise Exception("Error in Word report content validation")
@@ -605,27 +596,43 @@ class SLRReport(Base):
                         compex = [item for item in compex if str(item) != 'nan']
                         word.pop(0)
 
-                        if len(webex) == len(compex) == len(word) and webex == compex == word:
-                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' "
-                                                                      f"are matching between WebExcel, Complete Excel "
-                                                                      f"and Word Reports.\n"
+                        if len(webex) == len(compex) == len(word):
+                            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Web_Excel, "
+                                                                      f"Complete Excel and Complete Word Report. "
                                                                       f"WebExcel Elements Length: {len(webex)}\n "
                                                                       f"Excel Elements Length: {len(compex)}\n "
                                                                       f"Word Elements Length: {len(word)}\n",
-                                                              pass_=True, log=True, screenshot=False)
+                                                              pass_=True, log=True, screenshot=False)      
+
+                            comparison_result = self.list_comparison_between_reports_data(word, compex,
+                                                                                          webex_list=webex)
+
+                            if len(comparison_result) == 0:
+                                self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column "
+                                                                          f"'{col_name}' are matching between "
+                                                                          f"WebExcel, Complete Excel "
+                                                                          f"and Word Reports.\n",
+                                                                  pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column "
+                                                                          f"'{col_name}' are not matching between "
+                                                                          f"WebExcel, Complete Excel and Word Reports."
+                                                                          f"\n Mismatch values are arranged in "
+                                                                          f"following order -> Word, Complete Excel "
+                                                                          f"and WebExcel Report. {comparison_result}",
+                                                                  pass_=False, log=True, screenshot=False)
+                                raise Exception("Elements are not matching between Webexcel, Complete Excel and "
+                                                "Word Reports")
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"From '{value}', Values in Column '{col_name}' "
-                                                                      f"are not matching between WebExcel, "
-                                                                      f"Complete Excel and Word Reports.\n"
-                                                                      f"WebExcel Elements Length: {len(webex)}\n "
-                                                                      f"Excel Elements Length: {len(compex)}\n "
-                                                                      f"Word Elements Length: {len(word)}\n"
-                                                                      f"WebExcel Elements: {webex}\n "
-                                                                      f"Excel Elements: {compex}\n "
-                                                                      f"Word Elements: {word}",
+                            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between "
+                                                                      f"Web_Excel, Complete Excel and Complete "
+                                                                      f"Word Report. WebExcel Elements Length: "
+                                                                      f"{len(webex)}\n Excel Elements Length: "
+                                                                      f"{len(compex)}\n Word Elements Length: "
+                                                                      f"{len(word)}\n",
                                                               pass_=False, log=True, screenshot=False)
-                            raise Exception("Elements are not matching between Webexcel, Complete Excel and "
-                                            "Word Reports")
+                            raise Exception(f"Elements length is not matching between Web_Excel, Complete Excel "
+                                            f"and Complete Word Report.")
                     else:
                         raise Exception("Column names are not matching between Webexcel, Complete Excel and "
                                         "Word Reports")
@@ -1424,7 +1431,7 @@ class SLRReport(Base):
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Content from Table 2-2 is not matching with "
-                                                                  f"expected test data. Duplicate values are "
+                                                                  f"expected test data. Mismatch values are "
                                                                   f"arranged in following order -> Source Excel and "
                                                                   f"Word Report. {comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
