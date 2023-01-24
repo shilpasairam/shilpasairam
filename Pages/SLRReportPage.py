@@ -453,7 +453,7 @@ class SLRReport(Base):
         except Exception:
             raise Exception("Error in Excel sheet content validation")
 
-    def word_content_validation(self, filepath, index, word_filename):
+    def word_content_validation(self, filepath, slr_type_index, word_filename):
         self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and "
                                                   f"Complete Word Report",
                                           pass_=True, log=True, screenshot=False)
@@ -463,7 +463,7 @@ class SLRReport(Base):
         self.LogScreenshot.fLogScreenshot(message=f"FileName is: {word_filename}",
                                           pass_=True, log=True, screenshot=False)
 
-        source_excel = openpyxl.load_workbook(f'{source_template[index]}')                                          
+        source_excel = openpyxl.load_workbook(f'{source_template[slr_type_index]}')                                          
         
         # Index of Table number 6 is : 5. Starting point for word table content comparison
         table_count = 5
@@ -471,7 +471,7 @@ class SLRReport(Base):
         self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {source_excel.sheetnames}",
                                           pass_=True, log=True, screenshot=False)
         for sheet in source_excel.sheetnames:
-            src_data = pd.read_excel(f'{source_template[index]}', sheet_name=sheet)
+            src_data = pd.read_excel(f'{source_template[slr_type_index]}', sheet_name=sheet)
             docs = docx.Document(f'ActualOutputs//{word_filename}')
             try:
                 table = docs.tables[table_count]
@@ -514,7 +514,9 @@ class SLRReport(Base):
 
                             src_data_final = [item for item in src_data_final if str(item) != 'nan']
                             # Converting Integer list to String list
-                            src_data_final = [str(x) for x in src_data_final]                            
+                            src_data_final = [str(x) for x in src_data_final]
+                            # While reading the table data from word report column name is also being stored. 
+                            # Hence removing the column name to get the exact content                            
                             word.pop(0)
 
                             comparison_result = self.list_comparison_between_reports_data(src_data_final, word)
