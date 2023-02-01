@@ -64,5 +64,8 @@ python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\as
 python -m pytest -v -m smoketest --html=Reports\report.html --self-contained-html  .\testCases
 python -m pytest -v -m {Use CASE ID} --html=Reports\{Use CASE ID}_report.html --self-contained-html .\testCases
 
+# Run test cases in specific environment
+python -m pytest -v -s --html=Reports\AppAccessCheck_report.html --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\test_AppAccessCheck.py --env="test"
+
 # To run the whole regression suite
 python -m pytest -v --html=Reports\complete_suite_report.html --self-contained-html  .\testCases

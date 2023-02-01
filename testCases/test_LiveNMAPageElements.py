@@ -21,7 +21,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 @pytest.mark.usefixtures("init_driver")
 class Test_LiveNMA:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getnmatestdata()
@@ -65,7 +65,7 @@ class Test_LiveNMA:
                     print(file)
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
@@ -132,7 +132,7 @@ class Test_LiveNMA:
         #             print(file)
         #             os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:

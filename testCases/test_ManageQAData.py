@@ -15,7 +15,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_ManageQADataPage:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getmanageqadatapath()
@@ -41,7 +41,7 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
@@ -80,7 +80,7 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
@@ -114,7 +114,7 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
@@ -148,7 +148,7 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 
@@ -190,7 +190,7 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngqadata.go_to_manageqadata("manage_qa_data_button")
 

@@ -857,8 +857,9 @@ class UtilityOutcome(Base):
         self.slrreport.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}")
         self.slrreport.select_data(slrtype[0][0], f"{slrtype[0][1]}")
         self.slrreport.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.slrreport.getFilenameAndValidate(180)
+        # time.sleep(5)
+        # excel_filename = self.slrreport.getFilenameAndValidate(180)
+        excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         self.validate_filename(excel_filename, util_filepath, "prodfix")
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Utility Summary Tab in Complete "

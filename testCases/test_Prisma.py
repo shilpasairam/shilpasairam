@@ -14,7 +14,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_PRISMAPage:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getprismadata()
@@ -39,7 +39,7 @@ class Test_PRISMAPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 
@@ -73,7 +73,7 @@ class Test_PRISMAPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.prismapage.go_to_prisma("protocol_link", "prismas")
 

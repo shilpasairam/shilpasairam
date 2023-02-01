@@ -9,8 +9,9 @@ class ReadConfig:
 
     # static method helps you read the function in another file without instantiating the class
     @staticmethod
-    def getApplicationURL():
-        env = config.get('commonInfo', 'environment')
+    def getApplicationURL(env):
+        # env = config.get('commonInfo', 'environment')
+        # print("From properties file : ", env)
         if env == 'test':
             return f"https://pse-portal-testing.azurewebsites.net/"
         elif env == 'staging':
@@ -34,8 +35,8 @@ class ReadConfig:
         return password
 
     @staticmethod
-    def getORFilePath():
-        env = config.get('commonInfo', 'environment')
+    def getORFilePath(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             OR = config.get('commonInfo', 'OR_testingconfig')
         elif env == 'staging':
@@ -103,8 +104,8 @@ class ReadConfig:
     
     # Get file containing data for Admin Page actions
     @staticmethod
-    def getimportpublicationsdata():
-        env = config.get('commonInfo', 'environment')
+    def getimportpublicationsdata(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'importpublicationsdata_testing')
         elif env == 'staging':
@@ -112,8 +113,8 @@ class ReadConfig:
     
     # Get file containing data for Manage QA Data page actions
     @staticmethod
-    def getmanageqadatapath():
-        env = config.get('commonInfo', 'environment')
+    def getmanageqadatapath(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'manageqadata_testing')
         elif env == 'staging':
@@ -138,8 +139,8 @@ class ReadConfig:
 
     # Get file containing data for LineofTherapy page actions
     @staticmethod
-    def getmanagelotdata():
-        env = config.get('commonInfo', 'environment')
+    def getmanagelotdata(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'managelotdata_testing')
         elif env == 'staging':

@@ -15,7 +15,7 @@ from utilities.customLogger import LogGen
 
 @pytest.mark.usefixtures("init_driver")
 class Test_LiveRef_Rebrand:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
@@ -49,7 +49,7 @@ class Test_LiveRef_Rebrand:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         try:
             self.rebrand.validate_liveref_rebrand(self.TestData)

@@ -11,7 +11,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_Login:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
@@ -20,7 +20,7 @@ class Test_Login:
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
     @pytest.mark.smoketest
@@ -28,6 +28,6 @@ class Test_Login:
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.loginPage.logout("liveslr_logout_button")

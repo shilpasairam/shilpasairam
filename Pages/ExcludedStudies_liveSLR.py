@@ -59,7 +59,7 @@ class ExcludedStudies_liveSLR(Base):
         result = [[criteria[i], criteria_btn[i], section_name[i]] for i in range(0, len(criteria))]
         return result
     
-    def presenceof_excludedstudiesliveslr_into_excelreport(self, locatorname, filepath):
+    def presenceof_excludedstudiesliveslr_into_excelreport(self, locatorname, filepath, env):
         pop_data = self.get_population_data(filepath, locatorname)
 
         slr_type = self.get_slrtype_data(filepath, locatorname)
@@ -67,19 +67,20 @@ class ExcludedStudies_liveSLR(Base):
         add_criteria = self.get_additional_criteria_data(filepath, locatorname)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
         time.sleep(2)
-        self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.slrreport.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.slrreport.getFilenameAndValidate(180)
-        self.slrreport.validate_filename(excel_filename, filepath)
+        self.slrreport.generate_download_report("excel_report", env)
+        # time.sleep(5)
+        # excel_filename = self.slrreport.getFilenameAndValidate(180)
+        # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete "
                                                   f"Excel Report*****",
@@ -117,7 +118,7 @@ class ExcludedStudies_liveSLR(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception("'Excluded studies - LiveSLR' is not present in TOC sheet.")
         
-    def presenceof_columnnames_in_excludedstudiesliveslrtab(self, locatorname, filepath, index):
+    def presenceof_columnnames_in_excludedstudiesliveslrtab(self, locatorname, filepath, index, env):
         pop_data = self.get_population_data(filepath, locatorname)
 
         slr_type = self.get_slrtype_data(filepath, locatorname)
@@ -127,19 +128,20 @@ class ExcludedStudies_liveSLR(Base):
         source_template = self.get_source_template(filepath)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
         time.sleep(2)
-        self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.slrreport.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.slrreport.getFilenameAndValidate(180)
-        self.slrreport.validate_filename(excel_filename, filepath)
+        self.slrreport.generate_download_report("excel_report", env)
+        # time.sleep(5)
+        # excel_filename = self.slrreport.getFilenameAndValidate(180)
+        # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of expected columns in Excluded studies - "
                                                   f"LiveSLR Tab*****",
@@ -167,7 +169,7 @@ class ExcludedStudies_liveSLR(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Expected column names are not present in Complete Excel Report")
 
-    def validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, locatorname, filepath, index):
+    def validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, locatorname, filepath, index, env):
         pop_data = self.get_population_data(filepath, locatorname)
 
         slr_type = self.get_slrtype_data(filepath, locatorname)
@@ -177,19 +179,20 @@ class ExcludedStudies_liveSLR(Base):
         source_template = self.get_source_template(filepath)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
         time.sleep(2)
-        self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.slrreport.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.slrreport.getFilenameAndValidate(180)
-        self.slrreport.validate_filename(excel_filename, filepath)
+        self.slrreport.generate_download_report("excel_report", env)
+        # time.sleep(5)
+        # excel_filename = self.slrreport.getFilenameAndValidate(180)
+        # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete "
                                                   f"Excel Report*****",

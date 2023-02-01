@@ -31,6 +31,41 @@ class ExtendedBase(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 20)
 
+    def select_data(self, locator, locator_button, env):
+        time.sleep(3)
+        if self.isselected(locator_button, env):
+            self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
+                                              pass_=True, log=True, screenshot=True)
+        else:
+            self.jsclick(locator, env, UnivWaitFor=10)
+            if self.isselected(locator_button, env):
+                self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
+                                                  pass_=True, log=True, screenshot=True)
+
+    def select_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):
+            if self.isselected(locator_button, env):
+                self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.jsclick(locator, env, UnivWaitFor=10)
+                if self.isselected(locator_button, env):
+                    self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
+                                                      pass_=True, log=True, screenshot=True)
+            self.scrollback("SLR_page_header", env)
+
+    def select_all_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):
+            if self.isselected(locator_button, env):
+                self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.jsclick(locator, env, UnivWaitFor=10)
+                if self.isselected(locator_button, env):
+                    self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
+                                                      pass_=True, log=True, screenshot=True)
+            self.scrollback("SLR_page_header", env)        
+
     # Read Population data for LIVESLR Page
     def get_population_data(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
@@ -46,6 +81,14 @@ class ExtendedBase(Base):
         slrtype_button = df.loc[df['Name'] == locatorname]['slrtype_Radio_button'].dropna().to_list()
         result = [[slrtype[i], slrtype_button[i]] for i in range(0, len(slrtype))]
         return result
+
+    # Read Required data for LIVESLR Page actions
+    def get_slrtest_data(self, filepath, sheet, locatorname, option, option_radio_btn):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        opt = df.loc[df['Name'] == locatorname][option].dropna().to_list()
+        opt_button = df.loc[df['Name'] == locatorname][option_radio_btn].dropna().to_list()
+        result = [[opt[i], opt_button[i]] for i in range(0, len(opt))]
+        return result        
     
     # Read expected test data file for comparison
     def get_source_template(self, filepath, sheet, locatorname):

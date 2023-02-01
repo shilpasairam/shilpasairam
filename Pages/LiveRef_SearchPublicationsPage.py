@@ -26,20 +26,20 @@ class SearchPublicationsPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
     
-    def select_data(self, locator, locator_button):
+    def select_data(self, locator, locator_button, env):
         time.sleep(2)        
-        self.jsclick(locator, UnivWaitFor=10)
-        if self.isselected(locator_button):
+        self.jsclick(locator, env, UnivWaitFor=10)
+        if self.isselected(locator_button, env):
             self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
                                               pass_=True, log=True, screenshot=True)
 
-    def select_sub_section(self, locator, locator_button, scroll=None):
-        if self.scroll(scroll, UnivWaitFor=20):            
-            self.jsclick(locator, UnivWaitFor=10)
-            if self.isselected(locator_button):
+    def select_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):            
+            self.jsclick(locator, env, UnivWaitFor=10)
+            if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                   pass_=True, log=True, screenshot=True)
-            self.scrollback("searchpublications_page_header")
+            self.scrollback("searchpublications_page_header", env)
     
     def get_indication_details(self, locatorname, filepath, element_locator, button_locator):
         df = pd.read_excel(filepath)
@@ -61,7 +61,8 @@ class SearchPublicationsPage(Base):
         self.click("liveref_generate_report")
         self.slrreport.table_display_check("liveref_web_table")
         self.slrreport.generate_download_report("liveref_export_excel_btn")
-        excel_filename = self.slrreport.getFilenameAndValidate(180)
+        # excel_filename = self.slrreport.getFilenameAndValidate(180)
+        excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         if excel_filename[16:] == expectedfilename:
             self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                               pass_=True, log=True, screenshot=False)

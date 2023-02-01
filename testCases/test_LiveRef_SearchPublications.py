@@ -18,7 +18,7 @@ from utilities.customLogger import LogGen
 
 @pytest.mark.usefixtures("init_driver")
 class Test_SearchPublications:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
@@ -52,7 +52,7 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         scenarios = ['scenario1']
         for i in scenarios:
@@ -95,7 +95,7 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         scenarios = ['scenario1']
         for i in scenarios:
@@ -138,7 +138,7 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         try:
             self.base.go_to_page("searchpublications_button")
@@ -180,7 +180,7 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         try:
             self.base.go_to_page("searchpublications_button")
@@ -222,7 +222,7 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         try:
             self.base.go_to_page("searchpublications_button")
@@ -266,7 +266,7 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
         try:
             self.base.go_to_page("searchpublications_button")

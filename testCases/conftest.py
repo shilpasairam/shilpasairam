@@ -1,3 +1,4 @@
+import configparser
 import os
 
 # from py.xml import html
@@ -12,6 +13,15 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium import webdriver
 
+
+def pytest_addoption(parser):
+    config = configparser.ConfigParser()
+    config.read(os.getcwd()+"\\Configurations\\config.ini")
+    parser.addoption("--env", action="store", default=config.get('commonInfo', 'environment'))
+
+@pytest.fixture()
+def env(request):
+    return request.config.getoption("--env")
 
 # @pytest.fixture(params=["chrome", "edge"])
 # def init_driver(request):
@@ -49,10 +59,21 @@ def init_driver(request):
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     web_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
+    # env = request.config.getoption("--env")
+    # print("Environment details are : ", env)
+    # if env == 'test':
+    #     web_driver.get("https://pse-portal-testing.azurewebsites.net/")
+    # elif env == 'staging':
+    #     web_driver.get("https://portal-stage.livehta.com")
+    # elif env == 'production':
+    #     web_driver.get("https://portal.livehta.com/")
+    
+
     request.cls.driver = web_driver
     # web_driver.maximize_window()
     web_driver.implicitly_wait(10)
 
+    # Yield will act as Teardown method which automatically quit driver once the test is completed
     yield
     web_driver.quit()
 
@@ -61,7 +82,8 @@ def init_driver(request):
 def pytest_configure(config):
     # config._metadata['Test Suite'] = ReadConfig.getTestdata("liveref_data").replace(".xlsx","")
     config._metadata['Machine Configuration'] = f'{socket.getfqdn()}, {platform.processor()}, {str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"}'
-    config._metadata['Application URL'] = ReadConfig.getApplicationURL()
+    # config._metadata['Application URL'] = ReadConfig.getApplicationURL()
+    config._metadata['Environment'] = config.getoption("--env")
     config._metadata['Tester'] = ReadConfig.getUserName()
     config._metadata['OS'] = platform.platform()
     config._metadata['Browser'] = 'Chrome'

@@ -14,7 +14,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 @pytest.mark.usefixtures("init_driver")
 class Test_SLR_Custom_Report:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getslrtestdata()
@@ -58,7 +58,7 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
@@ -83,24 +83,27 @@ class Test_SLR_Custom_Report:
                     prism = self.base.get_text("New_total_selected")
                     
                     self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename1, self.filepath)
+                    # time.sleep(5)
+                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(self.filepath)
 
                     self.slrreport.generate_download_report("word_report")
-                    time.sleep(5)
-                    word_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(word_filename1, self.filepath)
+                    # time.sleep(5)
+                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    word_filename = self.slrreport.get_and_validate_filename(self.filepath)
 
                     self.slrreport.preview_result("preview_results")
                     self.slrreport.table_display_check("Table")
                     self.slrreport.generate_download_report("Export_as_excel")
-                    time.sleep(5)
-                    webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(webexcel_filename1, self.filepath)
+                    # time.sleep(5)
+                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.slrreport.get_and_validate_filename(self.filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.prism_value_validation(prism, excel_filename1, webexcel_filename1, word_filename1)
+                    self.slrreport.prism_value_validation(prism, excel_filename, webexcel_filename, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -136,7 +139,7 @@ class Test_SLR_Custom_Report:
                                                   f"and Word Report*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
@@ -184,7 +187,7 @@ class Test_SLR_Custom_Report:
                                                   f"and UI*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
@@ -232,7 +235,7 @@ class Test_SLR_Custom_Report:
                                                   f"'Excluded studies - LiveSLR' sheet in Complete Excel Report*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
@@ -283,7 +286,7 @@ class Test_SLR_Custom_Report:
                                                   f"Report*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
@@ -330,7 +333,7 @@ class Test_SLR_Custom_Report:
                                                   f"and 'Excluded studies - LiveSLR' sheet in Complete Excel Report***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']

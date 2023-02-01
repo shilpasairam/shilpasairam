@@ -16,7 +16,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_ManageUpdatesPage:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     added_updates_data = []
@@ -45,7 +45,7 @@ class Test_ManageUpdatesPage:
         self.dateval = today.strftime("%m/%d/%Y")
         self.day_val = today.day
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
@@ -88,7 +88,7 @@ class Test_ManageUpdatesPage:
         else:
             self.dateval = (today + timedelta(1)).strftime("%m/%d/%Y")
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 
@@ -124,7 +124,7 @@ class Test_ManageUpdatesPage:
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngupdpage.go_to_manageupdates("manageupdates_button")
 

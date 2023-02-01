@@ -172,11 +172,11 @@ class ManagePopulationsPage(Base):
             raise Exception("Error in deleting the population")
 
     # Find the total row count if data is being ordered using Pagination
-    def get_table_length(self, table_info, table_next_btn, table_rows):
+    def get_table_length(self, table_info, table_next_btn, table_rows, env):
         self.refreshpage()
         time.sleep(2)
         # get the count info and extract the total value        
-        table_count_info = self.get_text(table_info)
+        table_count_info = self.get_text(table_info, env)
         ind1 = table_count_info.index('of')
         ind2 = table_count_info.index('entries')
         total_entries = int(table_count_info[ind1+3:ind2-1])
@@ -185,13 +185,13 @@ class ManagePopulationsPage(Base):
         # next nearest integer value
         page_counter = math.ceil(total_entries/10)
         # Get the length of row from the landing page
-        initial_rows_count = self.select_elements(table_rows)
+        initial_rows_count = self.select_elements(table_rows, env)
         table_row_count = len(initial_rows_count)
         # Iterate over the remaining pages and append the row counts
         for i in range(1, page_counter):
-            self.click(table_next_btn)
+            self.click(table_next_btn, env)
             time.sleep(1)
-            next_rows_count = self.select_elements(table_rows)
+            next_rows_count = self.select_elements(table_rows, env)
             table_row_count += len(next_rows_count)
         
         return table_row_count

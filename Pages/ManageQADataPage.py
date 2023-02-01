@@ -381,11 +381,12 @@ class ManageQADataPage(Base):
                 self.slrreport.select_data(f"{pop_name[0]}", f"{pop_name[0]}_radio_button")
                 self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
                 self.slrreport.generate_download_report("excel_report")
-                time.sleep(5)
-                excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                self.slrreport.validate_filename(excel_filename1, filepath)
+                # time.sleep(5)
+                # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
-                excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename1}')
+                excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
                 if 'Quality Assessment' in excel_data.sheetnames:
                     self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' sheet is present in complete "
                                                               f"excel report",
@@ -400,7 +401,7 @@ class ManageQADataPage(Base):
                                                           pass_=False, log=True, screenshot=False)
                         raise Exception(f"'Back To Toc' option is not present")
                     
-                    toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename1}', sheet_name="TOC", skiprows=3)
+                    toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                     col_data = list(toc_sheet.iloc[:, 1])
                     if 'Quality Assessment' in col_data:
                         self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' is present in TOC sheet.",
@@ -413,7 +414,7 @@ class ManageQADataPage(Base):
                                         f"Available Data from TOC sheet: {col_data}")
                     
                     qafile = pd.read_excel(i[1])
-                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename1}', sheet_name="Quality Assessment")
+                    excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="Quality Assessment")
 
                     # Removing the 'Back To Toc' column to compare the exact data with uploaded file
                     excelfile = excelfile.iloc[:, 1:]
@@ -421,17 +422,17 @@ class ManageQADataPage(Base):
                     if qafile.equals(excelfile):
                         self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
                                                                   f"'{Path(f'{i[1]}').stem}' and Complete Excel Report "
-                                                                  f"'{Path(f'ActualOutputs//{excel_filename1}').stem}' "
+                                                                  f"'{Path(f'ActualOutputs//{excel_filename}').stem}' "
                                                                   f"are matching",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
                                                                   f"'{Path({i[1]}).stem}' and Complete Excel Report "
-                                                                  f"'{Path(f'ActualOutputs//{excel_filename1}').stem}' "
+                                                                  f"'{Path(f'ActualOutputs//{excel_filename}').stem}' "
                                                                   f"are not matching",
                                                           pass_=False, log=True, screenshot=False)
                         raise Exception(f"File contents between QA File '{Path({i[1]}).stem}' "
-                                        f"and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename1}').stem}' "
+                                        f"and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename}').stem}' "
                                         f"are not matching")
                 else:
                     raise Exception("'Quality Assessment' sheet is not present in complete excel report")
@@ -492,11 +493,12 @@ class ManageQADataPage(Base):
                 self.slrreport.select_data(f"{pop_name[0]}", f"{pop_name[0]}_radio_button")
                 self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
                 self.slrreport.generate_download_report("excel_report")
-                time.sleep(5)
-                excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                self.slrreport.validate_filename(excel_filename1, filepath)
+                #time.sleep(5)
+                # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
-                excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename1}')
+                excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
                 if 'Quality Assessment' not in excel_data.sheetnames:
                     self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' sheet is not present in complete "
                                                               f"excel report as expected",
@@ -508,7 +510,7 @@ class ManageQADataPage(Base):
                     raise Exception(f"'Quality Assessment' sheet is present in complete excel report which is not "
                                     f"expected")
                 
-                toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename1}', sheet_name="TOC", skiprows=3)
+                toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                 col_data = list(toc_sheet.iloc[:, 1])
                 if 'Quality Assessment' not in col_data:
                     self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' is not present in TOC sheet "

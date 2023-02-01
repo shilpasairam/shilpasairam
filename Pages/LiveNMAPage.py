@@ -68,13 +68,13 @@ class LiveNMA(Base):
                                                       pass_=True, log=True, screenshot=False)
             self.scrollback("SLR_page_header")
 
-    def table_display_check(self, nma_data_loc, locator):
-        self.jsclick(nma_data_loc, UnivWaitFor=10)
-        if self.isdisplayed(locator, UnivWaitFor=20):
+    def table_display_check(self, nma_data_loc, locator, env):
+        self.jsclick(nma_data_loc, env, UnivWaitFor=10)
+        if self.isdisplayed(locator, env, UnivWaitFor=20):
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is displayed",
                                               pass_=True, log=True, screenshot=True)
         else:
-            self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_displayed()
+            self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).is_displayed()
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is displayed with extra wait time",
                                               pass_=True, log=True, screenshot=True)
 
@@ -104,10 +104,10 @@ class LiveNMA(Base):
                     pass_=True, log=True, screenshot=False)
 
     @fWaitFor
-    def launch_nma(self, locator, UnivWaitFor=0):
-        self.click("NMA_Button")
-        if self.clickable(locator):
-            self.jsclick(locator)
+    def launch_nma(self, locator, env, UnivWaitFor=0):
+        self.click("NMA_Button", env)
+        if self.clickable(locator, env):
+            self.jsclick(locator, env)
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is clickable",
                                               pass_=True, log=True, screenshot=False)
         else:

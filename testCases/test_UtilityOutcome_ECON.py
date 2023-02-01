@@ -13,7 +13,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 @pytest.mark.usefixtures("init_driver")
 class Test_UtilityOutcome_ECON:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     util_filepath = ReadConfig.getutilityoutcome_ECON_data()
@@ -53,7 +53,7 @@ class Test_UtilityOutcome_ECON:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
@@ -65,25 +65,28 @@ class Test_UtilityOutcome_ECON:
                                                       "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
 
                     self.slrreport.generate_download_report("word_report")
-                    time.sleep(5)
-                    word_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(word_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    word_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
 
                     self.slrreport.preview_result("preview_results")
                     self.slrreport.table_display_check("Table")
                     self.slrreport.generate_download_report("Export_as_excel")
-                    time.sleep(5)
-                    webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(webexcel_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.utiloutcome.econ_utility_summary_validation(webexcel_filename1, excel_filename1,
-                                                                     self.util_filepath, word_filename1)
+                    self.utiloutcome.econ_utility_summary_validation(webexcel_filename, excel_filename,
+                                                                     self.util_filepath, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -122,7 +125,7 @@ class Test_UtilityOutcome_ECON:
         #         for file in files:
         #             os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
@@ -134,19 +137,21 @@ class Test_UtilityOutcome_ECON:
                                                       "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
 
                     self.slrreport.preview_result("preview_results")
                     self.slrreport.table_display_check("Table")
                     self.slrreport.generate_download_report("Export_as_excel")
-                    time.sleep(5)
-                    webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(webexcel_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.utiloutcome.econ_utility_summary_validation_old_imports(webexcel_filename1, excel_filename1,
+                    self.utiloutcome.econ_utility_summary_validation_old_imports(webexcel_filename, excel_filename,
                                                                                  self.util_filepath)
             except Exception:
                 raise Exception("Unable to select element")
@@ -194,7 +199,7 @@ class Test_UtilityOutcome_ECON:
         self.LogScreenshot.fLogScreenshot(message=f"*****Column names validation started*****",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
@@ -206,20 +211,22 @@ class Test_UtilityOutcome_ECON:
                                                       "reported_variable_section")
                     
                     self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
 
                     self.slrreport.preview_result("preview_results")
                     self.slrreport.table_display_check("Table")
                     self.utiloutcome.check_column_names_in_previewresults(expected_dict)
                     self.slrreport.generate_download_report("Export_as_excel")
-                    time.sleep(5)
-                    webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(webexcel_filename1, self.util_filepath)
+                    # time.sleep(5)
+                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.slrreport.get_and_validate_filename(self.util_filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.utiloutcome.presenceof_utilitycolumn_names(webexcel_filename1, excel_filename1, expected_dict)
+                    self.utiloutcome.presenceof_utilitycolumn_names(webexcel_filename, excel_filename, expected_dict)
                 
                 self.LogScreenshot.fLogScreenshot(message=f"*****Column names validation Completed*****",
                                                   pass_=True, log=True, screenshot=False)

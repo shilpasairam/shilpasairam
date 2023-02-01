@@ -39,8 +39,8 @@ class ExcludedStudiesPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_excludedstudies(self, locator):
-        self.click(locator, UnivWaitFor=10)
+    def go_to_excludedstudies(self, locator, env):
+        self.click(locator, env, UnivWaitFor=10)
         time.sleep(5)
 
     # Reading slr study type and Excluded study files data for Excluded Studies Page -> upload feature validation
@@ -79,15 +79,15 @@ class ExcludedStudiesPage(Base):
         return result
 
     # Check the presence of Manage Excluded Studies option in Admin page
-    def presence_of_elements(self, locator):
-        self.scroll(locator)
-        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)),
-                                                        self.locatorpath(locator))))
+    def presence_of_elements(self, locator, env):
+        self.scroll(locator, env)
+        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
+                                                        self.locatorpath(locator, env))))
         self.LogScreenshot.fLogScreenshot(message=f'Manage Excluded Studies option is present in Admin page.',
                                           pass_=True, log=True, screenshot=True)
 
     # Check Manage Excluded Studies page elements are accessible or not
-    def access_excludedstudy_page_elements(self, locatorname, filepath):
+    def access_excludedstudy_page_elements(self, locatorname, filepath, env):
         # Read study types and file paths to upload
         stdy_data = self.get_study_file_details(filepath, locatorname)
         # Read population details from data sheet
@@ -97,34 +97,34 @@ class ExcludedStudiesPage(Base):
             for j in stdy_data:
                 self.refreshpage()
                 time.sleep(4)
-                self.click("ex_stdy_pop_dropdown")
+                self.click("ex_stdy_pop_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Population dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
-                pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                 select1 = Select(pop_ele)
                 select1.select_by_visible_text(i[0])
                 time.sleep(1)
 
-                self.click("ex_stdy_stdytype_dropdown")
+                self.click("ex_stdy_stdytype_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"SLR Type dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
-                stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
+                stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
                 select2 = Select(stdy_ele)
                 select2.select_by_visible_text(j[0])
                 time.sleep(1)
 
-                self.click("ex_stdy_update_dropdown")
+                self.click("ex_stdy_update_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Updated dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
-                update_ele = self.select_element("ex_stdy_update_dropdown")
+                update_ele = self.select_element("ex_stdy_update_dropdown", env)
                 select3 = Select(update_ele)
                 select3.select_by_index(1)
                 time.sleep(1)
 
-                self.input_text("ex_stdy_file_upload", j[1])
+                self.input_text("ex_stdy_file_upload", j[1], env)
                 time.sleep(2)
 
-                if self.clickable("ex_stdy_upload_button"):
+                if self.clickable("ex_stdy_upload_button", env):
                     self.LogScreenshot.fLogScreenshot(message=f"Upload button is clickable after selecting the file",
                                                       pass_=True, log=True, screenshot=True)
                 else:
@@ -133,10 +133,10 @@ class ExcludedStudiesPage(Base):
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Upload button is not clickable after selecting the file")
 
-    def add_multiple_excluded_study_data(self, locatorname, filepath):
+    def add_multiple_excluded_study_data(self, locatorname, filepath, env):
         expected_upload_status_text = 'File(s) uploaded successfully'
         # Read the username
-        username = self.get_text("get_user_name", UnivWaitFor=10)
+        username = self.get_text("get_user_name", env, UnivWaitFor=10)
         firstname = username.split()[0]
 
         # Read study types and file paths to upload
@@ -150,33 +150,33 @@ class ExcludedStudiesPage(Base):
                     expected_table_values = []
                     self.refreshpage()
                     time.sleep(4)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(i[0])
                     expected_table_values.append(select1.first_selected_option.text)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
                     select3 = Select(update_ele)
                     time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
 
-                    self.input_text("ex_stdy_file_upload", j[1])
+                    self.input_text("ex_stdy_file_upload", j[1], env)
                     expected_table_values.append(j[2])
                     time.sleep(2)
 
-                    self.click("ex_stdy_upload_button")
+                    self.click("ex_stdy_upload_button", env)
                     time.sleep(4)
-                    actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
+                    actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(1)
 
                     if actual_upload_status_text == expected_upload_status_text:
@@ -194,20 +194,20 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(firstname)
 
                     # Read table data for specific population and slr study type
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     time.sleep(1)
                     select1.select_by_visible_text(i[0])
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     time.sleep(1)
 
                     actual_table_values = []
-                    td1 = self.select_elements('ex_stdy_table_data_row_1')
+                    td1 = self.select_elements('ex_stdy_table_data_row_1', env)
                     for m in td1:
                         actual_table_values.append(m.text)
 
@@ -225,10 +225,10 @@ class ExcludedStudiesPage(Base):
         except Exception:
             raise Exception("Unable to upload the Excluded Studies data")
 
-    def update_multiple_excluded_study_data(self, locatorname, filepath):
+    def update_multiple_excluded_study_data(self, locatorname, filepath, env):
         expected_upload_status_text = 'File(s) uploaded successfully'
         # Read the username
-        username = self.get_text("get_user_name", UnivWaitFor=10)
+        username = self.get_text("get_user_name", env, UnivWaitFor=10)
         firstname = username.split()[0]
 
         # Read study types and file paths to upload
@@ -242,35 +242,35 @@ class ExcludedStudiesPage(Base):
                     expected_table_values = []
                     self.refreshpage()
                     time.sleep(3)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(i[0])
                     expected_table_values.append(select1.first_selected_option.text)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
                     select3 = Select(update_ele)
                     time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
 
-                    self.input_text("ex_stdy_file_upload", j[1])
+                    self.input_text("ex_stdy_file_upload", j[1], env)
                     expected_table_values.append(j[2])
                     time.sleep(2)
 
-                    self.click("ex_stdy_upload_button")
+                    self.click("ex_stdy_upload_button", env)
                     time.sleep(3)
-                    self.jsclick("ex_stdy_popup_ok", message="Expected : popup reminder. Actual : popup is not shown")
+                    self.jsclick("ex_stdy_popup_ok", env, message="Expected : popup reminder. Actual : popup is not shown")
                     time.sleep(3)
-                    actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
+                    actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(1)
 
                     if actual_upload_status_text == expected_upload_status_text:
@@ -290,20 +290,20 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(firstname)
 
                     # Read table data for specific population and slr study type
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     time.sleep(1)
                     select1.select_by_visible_text(i[0])
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     time.sleep(1)
 
                     actual_table_values = []
-                    td1 = self.select_elements('ex_stdy_table_data_row_1')
+                    td1 = self.select_elements('ex_stdy_table_data_row_1', env)
                     for m in td1:
                         actual_table_values.append(m.text)
 
@@ -322,7 +322,7 @@ class ExcludedStudiesPage(Base):
         except Exception:
             raise Exception("Unable to update the existing Excluded Studies data")
 
-    def del_multiple_excluded_study_data(self, locatorname, filepath):
+    def del_multiple_excluded_study_data(self, locatorname, filepath, env):
         expected_delete_status_text = 'Excluded studies deleted successfully'
 
         # Read study types and file paths to upload
@@ -335,18 +335,18 @@ class ExcludedStudiesPage(Base):
                 for j in stdy_data:
                     self.refreshpage()
                     time.sleep(3)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(i[0])
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(j[0])
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
                     select3 = Select(update_ele)
                     time.sleep(1)
                     select3.select_by_index(1)
@@ -355,12 +355,12 @@ class ExcludedStudiesPage(Base):
                     self.LogScreenshot.fLogScreenshot(message=f'Data selected for deletion is : ',
                                                       pass_=True, log=True, screenshot=True)
 
-                    self.click("ex_stdy_delete")
+                    self.click("ex_stdy_delete", env)
                     time.sleep(2)
-                    self.click("ex_stdy_popup_ok")
+                    self.click("ex_stdy_popup_ok", env)
                     time.sleep(2)
 
-                    actual_delete_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=10)
+                    actual_delete_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(2)
 
                     if actual_delete_status_text == expected_delete_status_text:
@@ -374,10 +374,10 @@ class ExcludedStudiesPage(Base):
         except Exception:
             raise Exception("Unable to delete the existing Excluded Studies File")
 
-    def compare_excludedstudy_file_with_report(self, filepath, locatorname):
+    def compare_excludedstudy_file_with_report(self, filepath, locatorname, env):
         expected_upload_status_text = 'File(s) uploaded successfully'
         # Read the username
-        username = self.get_text("get_user_name", UnivWaitFor=10)
+        username = self.get_text("get_user_name", env, UnivWaitFor=10)
         firstname = username.split()[0]
 
         # Read study types and file paths to upload
@@ -391,39 +391,39 @@ class ExcludedStudiesPage(Base):
                     expected_table_values = []
                     self.refreshpage()
                     time.sleep(4)
-                    self.go_to_excludedstudies("excluded_studies_link")
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    self.go_to_excludedstudies("excluded_studies_link", env)
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(pop_val[0])
                     expected_table_values.append(select1.first_selected_option.text)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(i[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
                     select3 = Select(update_ele)
                     time.sleep(1)
                     select3.select_by_index(1)
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
 
-                    self.input_text("ex_stdy_file_upload", i[1])
+                    self.input_text("ex_stdy_file_upload", i[1], env)
                     expected_table_values.append(i[2])
                     time.sleep(2)
 
-                    self.click("ex_stdy_upload_button")
+                    self.click("ex_stdy_upload_button", env)
                     time.sleep(2)
 
-                    if self.isdisplayed("ex_stdy_status_text"):
-                        actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=30)
+                    if self.isdisplayed("ex_stdy_status_text", env):
+                        actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=30)
                     else:
                         time.sleep(2)
-                        actual_upload_status_text = self.get_text("ex_stdy_status_text", UnivWaitFor=30)
+                        actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=30)
 
                     if actual_upload_status_text == expected_upload_status_text:
                         self.LogScreenshot.fLogScreenshot(
@@ -441,20 +441,20 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(firstname)
 
                     # Read table data for specific population and slr study type
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     time.sleep(1)
                     select1.select_by_visible_text(pop_val[0])
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown")
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(i[0])
                     time.sleep(2)
 
                     actual_table_values = []
-                    td1 = self.select_elements('ex_stdy_table_data_row_1')
+                    td1 = self.select_elements('ex_stdy_table_data_row_1', env)
                     time.sleep(1)
                     for m in td1:
                         actual_table_values.append(m.text)
@@ -473,14 +473,15 @@ class ExcludedStudiesPage(Base):
                                 f'Actual values are : {actual_table_values}')
 
                     # Go to live slr page
-                    self.liveslrpage.go_to_liveslr("SLR_Homepage")
+                    self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
                     time.sleep(2)
-                    self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button")
-                    self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
-                    self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename, filepath)
+                    self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button", env)
+                    self.slrreport.select_data(i[0], f"{i[0]}_radio_button", env)
+                    self.slrreport.generate_download_report("excel_report", env)
+                    # time.sleep(5)
+                    # excel_filename = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
                     update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
                                                                                                     2].translate(
@@ -539,7 +540,7 @@ class ExcludedStudiesPage(Base):
         except Exception:
             raise Exception("Error in report comparision between Excluded study file and Complete Excel report")
 
-    def del_after_studyfile_comparison(self, filepath, locatorname):
+    def del_after_studyfile_comparison(self, filepath, locatorname, env):
         expected_delete_status_text = 'Excluded studies deleted successfully'
 
         # Read study types and file paths to upload
@@ -553,21 +554,21 @@ class ExcludedStudiesPage(Base):
                     expected_table_values = []
                     self.refreshpage()
                     time.sleep(4)
-                    self.go_to_excludedstudies("excluded_studies_link")
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown")
+                    self.go_to_excludedstudies("excluded_studies_link", env)
+                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(pop_val[0])
                     expected_table_values.append(select1.first_selected_option.text)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", UnivWaitFor=10)
+                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
                     select2 = Select(stdy_ele)
                     time.sleep(1)
                     select2.select_by_visible_text(i[0])
                     expected_table_values.append(select2.first_selected_option.text)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", UnivWaitFor=10)
+                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
                     select3 = Select(update_ele)
                     time.sleep(1)
                     select3.select_by_index(1)
@@ -577,16 +578,16 @@ class ExcludedStudiesPage(Base):
                     self.LogScreenshot.fLogScreenshot(message=f'Data selected for deletion is : ',
                                                       pass_=True, log=True, screenshot=True)
 
-                    self.click("ex_stdy_delete")
+                    self.click("ex_stdy_delete", env)
                     time.sleep(2)
-                    self.click("ex_stdy_popup_ok")
+                    self.click("ex_stdy_popup_ok", env)
                     time.sleep(2)
 
-                    if self.isdisplayed("get_status_text"):
-                        actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=30)
+                    if self.isdisplayed("get_status_text", env):
+                        actual_delete_status_text = self.get_text("get_status_text", env, UnivWaitFor=30)
                     else:
                         time.sleep(2)
-                        actual_delete_status_text = self.get_text("get_status_text", UnivWaitFor=30)                    
+                        actual_delete_status_text = self.get_text("get_status_text", env, UnivWaitFor=30)                    
 
                     if actual_delete_status_text == expected_delete_status_text:
                         self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File Deletion is success.',
@@ -599,14 +600,15 @@ class ExcludedStudiesPage(Base):
                         raise Exception("Error in Excluded Studies File Deletion")
 
                     # Go to live slr page
-                    self.liveslrpage.go_to_liveslr("SLR_Homepage")
+                    self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
                     time.sleep(2)
-                    self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button")
-                    self.slrreport.select_data(i[0], f"{i[0]}_radio_button")
-                    self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename, filepath)
+                    self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button", env)
+                    self.slrreport.select_data(i[0], f"{i[0]}_radio_button", env)
+                    self.slrreport.generate_download_report("excel_report", env)
+                    # time.sleep(5)
+                    # excel_filename = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
                     update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
                                                                                                     2].translate(

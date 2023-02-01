@@ -14,17 +14,19 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_ImportPublicationPage:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getimportpublicationsdata()
+    # filepath = ReadConfig.getimportpublicationsdata()
 
     @pytest.mark.C30246
     @pytest.mark.C27544
     @pytest.mark.C27546
     @pytest.mark.C27381
     @pytest.mark.C28987
-    def test_upload_and_del_extraction_template_success(self, extra):
+    def test_upload_and_del_extraction_template_success(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -43,17 +45,17 @@ class Test_ImportPublicationPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop1']
 
         for index, i in enumerate(pop_list):
             try:
-                self.imppubpage.upload_file_with_success(i, self.filepath)
-                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
-                                            "upload_table_rows")
+                self.imppubpage.upload_file_with_success(i, filepath, env)
+                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                                            "upload_table_rows", env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
@@ -67,7 +69,9 @@ class Test_ImportPublicationPage:
     @pytest.mark.C27546
     @pytest.mark.C27381
     @pytest.mark.C28987
-    def test_upload_and_del_extraction_template_failure(self, extra):
+    def test_upload_and_del_extraction_template_failure(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -86,17 +90,17 @@ class Test_ImportPublicationPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop2']
 
         for index, i in enumerate(pop_list):
             try:
-                self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
-                                            "upload_table_rows")
+                self.imppubpage.upload_file_with_errors(i, filepath, env)
+                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                                            "upload_table_rows", env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
@@ -106,7 +110,9 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27547
-    def test_upload_extraction_template_with_header_mismatch(self, extra):
+    def test_upload_extraction_template_with_header_mismatch(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -125,17 +131,17 @@ class Test_ImportPublicationPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop3']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
-                                            "upload_table_rows")
+                self.imppubpage.upload_file_with_errors(i, filepath, env)
+                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                                            "upload_table_rows", env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
@@ -145,7 +151,9 @@ class Test_ImportPublicationPage:
                                                   f"is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27379
-    def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra):
+    def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -165,17 +173,17 @@ class Test_ImportPublicationPage:
                                                   f"Identifier validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop4']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
-                                            "upload_table_rows")
+                self.imppubpage.upload_file_with_errors(i, filepath, env)
+                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                                            "upload_table_rows", env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
@@ -186,7 +194,9 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27380
-    def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra):
+    def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -206,17 +216,17 @@ class Test_ImportPublicationPage:
                                                   f"Identifier validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop5']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
-                                            "upload_table_rows")
+                self.imppubpage.upload_file_with_errors(i, filepath, env)
+                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                                            "upload_table_rows", env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
@@ -227,7 +237,9 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28986
-    def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra):
+    def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -247,17 +259,17 @@ class Test_ImportPublicationPage:
                                                   f"Identifier validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop6']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, self.filepath)
-                self.imppubpage.delete_file(i, self.filepath, "file_status_popup_text",
-                                            "upload_table_rows")
+                self.imppubpage.upload_file_with_errors(i, filepath, env)
+                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                                            "upload_table_rows", env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)

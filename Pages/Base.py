@@ -5,6 +5,7 @@ It contains all the generic methods and utilites for all the pages
 import functools
 import time
 import pandas as pd
+import pytest
 from selenium.common import NoSuchElementException
 
 from selenium.webdriver.common.by import By
@@ -67,41 +68,41 @@ class Base:
 
     # identify locatorpath from locationname-object in csv
     @fWaitFor
-    def locatorpath(self, locatorname, UnivWaitFor=0):
-        df = self.read_data_from_csv(ReadConfig.getORFilePath())
+    def locatorpath(self, locatorname, env, UnivWaitFor=0):
+        df = self.read_data_from_csv(ReadConfig.getORFilePath(env))
         return df.loc[df['Object'] == locatorname]['Path'].to_list()[0]
 
     # identify locatortype from locationname-object in csv
     @fWaitFor
-    def locatortype(self, locatorname, UnivWaitFor=0):
-        df = self.read_data_from_csv(ReadConfig.getORFilePath())
+    def locatortype(self, locatorname, env, UnivWaitFor=0):
+        df = self.read_data_from_csv(ReadConfig.getORFilePath(env))
         return df.loc[df['Object'] == locatorname]['Type'].to_list()[0]
 
     # click a web element using locatorname
     @fWaitFor
-    def go_to_page(self, locator):
+    def go_to_page(self, locator, env):
         """
         Given locator, traverse to the respective page
         """
-        self.click(locator, UnivWaitFor=10)
+        self.click(locator, env, UnivWaitFor=10)
         time.sleep(5)
     
     # click a web element using locatorname
     @fWaitFor
-    def click(self, locator, UnivWaitFor=0):
+    def click(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and click on the element
         """
-        self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).click()
+        self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).click()
 
     # input text to web element using locatorname and value
     @fWaitFor
-    def input_text(self, locator, value, UnivWaitFor=0):
+    def input_text(self, locator, value, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and input text to the element
         """
-        self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).clear()
-        self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).send_keys(value)
+        self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).clear()
+        self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).send_keys(value)
 
     # Select current date from date-picker
     @fWaitFor
@@ -115,11 +116,11 @@ class Base:
 
     # clear text from web element using locatorname and value
     @fWaitFor
-    def clear(self, locator, UnivWaitFor=0):
+    def clear(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and clear the text
         """
-        self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).clear()
+        self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).clear()
 
     # refresh the webpage
     @fWaitFor
@@ -139,40 +140,40 @@ class Base:
 
     # Read the element text using locatorname
     @fWaitFor
-    def get_text(self, locator, UnivWaitFor=0):
+    def get_text(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and return the text
         """
-        return self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).text
+        return self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).text
 
     # function to select an element
     @fWaitFor
-    def select_element(self, locator, UnivWaitFor=0):
+    def select_element(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and select the element
         """
-        element = self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator))
+        element = self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))
         return element
 
     # function to select multiple elements
     @fWaitFor
-    def select_elements(self, locator, UnivWaitFor=0):
+    def select_elements(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and select the elements
         """
-        elements = self.driver.find_elements(getattr(By, self.locatortype(locator)), self.locatorpath(locator))
+        elements = self.driver.find_elements(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))
         return elements
 
     # JavaScript click a web element using locatorname
     @fWaitFor
-    def jsclick(self, locator, message="", UnivWaitFor=0):
+    def jsclick(self, locator, env, message="", UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and click on the element
         """
         try:
             self.driver.execute_script("arguments[0].click();",
-                                       self.driver.find_element(getattr(By, self.locatortype(locator)),
-                                                                self.locatorpath(locator)))
+                                       self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                                                self.locatorpath(locator, env)))
         except NoSuchElementException:
             # self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
             #                                   pass_=False, log=True, screenshot=False)
@@ -193,37 +194,37 @@ class Base:
 
     # Check whether a web element is clickable or not using locatorname
     @fWaitFor
-    def clickable(self, locator, UnivWaitFor=0):
+    def clickable(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and check element is clickable or not
         """
         return self.wait.until(
-            ec.element_to_be_clickable((getattr(By, self.locatortype(locator)), self.locatorpath(locator))))
+            ec.element_to_be_clickable((getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))))
 
     # Check whether element is selected or not using locatorname
     @fWaitFor
-    def isselected(self, locator, UnivWaitFor=0):
+    def isselected(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and return the bool value
         """
         try:
-            return self.driver.find_element(getattr(By, self.locatortype(locator)),
-                                            self.locatorpath(locator)).is_selected()
+            return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                            self.locatorpath(locator, env)).is_selected()
         except NoSuchElementException:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
                                               pass_=False, log=True, screenshot=False)
 
     # Scroll to the element using locatorname
     @fWaitFor
-    def scroll(self, locator, UnivWaitFor=0):
+    def scroll(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
         try:
             self.driver.execute_script("arguments[0].scrollIntoView(true);",
-                                       self.driver.find_element(getattr(By, self.locatortype(locator)),
-                                                                self.locatorpath(locator)))
-            self.jsclick(locator)
+                                       self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                                                self.locatorpath(locator, env)))
+            self.jsclick(locator, env)
             return True
         except NoSuchElementException:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
@@ -232,25 +233,39 @@ class Base:
 
     # Scroll back to the element using locatorname
     @fWaitFor
-    def scrollback(self, locator, UnivWaitFor=0):
+    def scrollback(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
         self.driver.execute_script("arguments[0].scrollIntoView(true);",
-                                   self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)))
+                                   self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)))
 
     # Check whether a web element is displayed or not using locatorname
     @fWaitFor
-    def isdisplayed(self, locator, UnivWaitFor=0):
+    def isdisplayed(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and return the bool value
         """
         try:
-            return self.driver.find_element(getattr(By, self.locatortype(locator)),
-                                            self.locatorpath(locator)).is_displayed()
+            return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                            self.locatorpath(locator, env)).is_displayed()
         except NoSuchElementException:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
                                               pass_=False, log=True, screenshot=False)
+            return False                                              
+
+    # Check whether a web element is enabled or not using locatorname
+    @fWaitFor
+    def isenabled(self, locator, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and return the bool value
+        """
+        try:
+            return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                            self.locatorpath(locator, env)).is_enabled()
+        except NoSuchElementException:
+            self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
+                                              pass_=False, log=True, screenshot=False)                                            
 
     # Assertion validation for text
     @fWaitFor

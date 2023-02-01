@@ -14,7 +14,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_TabNames:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
@@ -29,7 +29,7 @@ class Test_TabNames:
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
 
         page_locs = ['searchpublications_button', 'liveref_importpublications_button',
@@ -64,7 +64,7 @@ class Test_TabNames:
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
 
         try:

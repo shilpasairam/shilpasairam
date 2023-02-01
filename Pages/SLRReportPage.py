@@ -3,6 +3,7 @@ import numbers
 import os
 import re
 import time
+import glob
 
 import docx
 import openpyxl
@@ -47,40 +48,40 @@ class SLRReport(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 20)
 
-    def select_data(self, locator, locator_button):
+    def select_data(self, locator, locator_button, env):
         time.sleep(3)
-        if self.isselected(locator_button):
+        if self.isselected(locator_button, env):
             self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
                                               pass_=True, log=True, screenshot=True)
         else:
-            self.jsclick(locator, UnivWaitFor=10)
-            if self.isselected(locator_button):
+            self.jsclick(locator, env, UnivWaitFor=10)
+            if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
                                                   pass_=True, log=True, screenshot=True)
 
-    def select_sub_section(self, locator, locator_button, scroll=None):
-        if self.scroll(scroll, UnivWaitFor=20):
-            if self.isselected(locator_button):
+    def select_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):
+            if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
             else:
-                self.jsclick(locator, UnivWaitFor=10)
-                if self.isselected(locator_button):
+                self.jsclick(locator, env, UnivWaitFor=10)
+                if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header")
+            self.scrollback("SLR_page_header", env)
 
-    def select_all_sub_section(self, locator, locator_button, scroll=None):
-        if self.scroll(scroll, UnivWaitFor=20):
-            if self.isselected(locator_button):
+    def select_all_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):
+            if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
             else:
-                self.jsclick(locator, UnivWaitFor=10)
-                if self.isselected(locator_button):
+                self.jsclick(locator, env, UnivWaitFor=10)
+                if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header")
+            self.scrollback("SLR_page_header", env)
 
     def get_additional_criteria_values(self, locator_study, locator_var):
         ele1 = self.select_elements(locator_study)
@@ -284,14 +285,33 @@ class SLRReport(Base):
             return False
 
     @fWaitFor
-    def generate_download_report(self, locator, UnivWaitFor=0):
+    def generate_download_report(self, locator, env, UnivWaitFor=0):
         # download table csv
         try:
-            self.jsclick(locator)
-            # wait for table to download
+            # Get list of files before downloading the new report
+            list_of_files_before_download = glob.glob('ActualOutputs//*')
+
+            # Click on downlaod button
+            self.jsclick(locator, env)
+            # wait to download the report
             time.sleep(15)
-            self.LogScreenshot.fLogScreenshot(message=f"Download table",
-                                              pass_=True, log=True, screenshot=False)
+            # Get list of files after downloading the new report
+            list_of_files_after_download = glob.glob('ActualOutputs//*')
+
+            if len(list_of_files_after_download) > len(list_of_files_before_download):
+                self.LogScreenshot.fLogScreenshot(message=f"Report download is success",
+                                    pass_=True, log=True, screenshot=False)
+            else:
+                time.sleep(15)
+                # Get list of files after downloading the new report with extra wait time
+                list_of_files_after_download = glob.glob('ActualOutputs//*')
+                if len(list_of_files_after_download) > len(list_of_files_before_download):
+                    self.LogScreenshot.fLogScreenshot(message=f"Report download is success with extra wait time",
+                                        pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Report is not downloaded",
+                                                    pass_=False, log=True, screenshot=False)
+                    raise Exception("Report download is failed")                                                                                        
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in downloading the table",
                                               pass_=False, log=True, screenshot=True)
@@ -300,8 +320,20 @@ class SLRReport(Base):
     def back_to_report_page(self, locator):
         self.jsclick(locator)
 
-    def validate_filename(self, filename, filepath):
+    @fWaitFor
+    def get_latest_filename(self, UnivWaitFor=0):
+        list_of_files = glob.glob('ActualOutputs//*')
+        # Get the latest downloaded file name with full path based on the downloaded time
+        latest_file_path = max(list_of_files, key=os.path.getctime)
+        # Extracting the filename from the latest file path
+        latest_filename = os.path.basename(latest_file_path)
+        # self.LogScreenshot.fLogScreenshot(message=f"Latest Filename from Actual Outputs folder is : {latest_filename}",
+        #                                     pass_=True, log=True, screenshot=False)
+        return latest_filename                                                
+    
+    def get_and_validate_filename(self, filepath):
         try:
+            filename = self.get_latest_filename(UnivWaitFor=180)
             file = pd.read_excel(filepath)
             expectedname = list(file['ExpectedFilenames'].dropna())
             # actualname = [x for x in re.compile(r'\D+').findall(filename)]
@@ -313,8 +345,9 @@ class SLRReport(Base):
             #                                           pass_=True, log=True, screenshot=False)
             #         break
             if actualname in expectedname:
-                self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
+                self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded. Filename is {filename}",
                                                   pass_=True, log=True, screenshot=False)
+                return filename
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
                                                       f"Filenames are {expectedname} and Actual "
@@ -784,14 +817,16 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(excel_filename, filepath)
+        # time.sleep(5)
+        # excel_filename = self.getFilenameAndValidate(180)
+        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.get_and_validate_filename(filepath)
 
         self.generate_download_report("word_report")
-        time.sleep(5)
-        word_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(word_filename, filepath)
+        # time.sleep(5)
+        # word_filename = self.getFilenameAndValidate(180)
+        # word_filename = self.get_latest_filename(UnivWaitFor=180)
+        word_filename = self.get_and_validate_filename(filepath)
 
         excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
         excel_studies_col = excel['Unique studies']
@@ -871,9 +906,10 @@ class SLRReport(Base):
         #                                   pass_=True, log=True, screenshot=True)
 
         self.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(excel_filename, filepath)
+        # time.sleep(5)
+        # excel_filename = self.getFilenameAndValidate(180)
+        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.get_and_validate_filename(filepath)
 
         excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
         excel_studies_col = excel['Unique studies']
@@ -909,9 +945,10 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(excel_filename, filepath)
+        # time.sleep(5)
+        # excel_filename = self.getFilenameAndValidate(180)
+        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.get_and_validate_filename(filepath)
 
         prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C',
                                    skiprows=11)
@@ -972,9 +1009,10 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(excel_filename, filepath)
+        # time.sleep(5)
+        # excel_filename = self.getFilenameAndValidate(180)
+        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.get_and_validate_filename(filepath)
 
         # Read PRISMA value from Complete Excel Sheet
         excel = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
@@ -1054,17 +1092,19 @@ class SLRReport(Base):
         nma_param_clinical_list = self.get_text("NMA_parameters_list_clinical")
 
         self.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(excel_filename, filepath)
+        # time.sleep(5)
+        # excel_filename = self.getFilenameAndValidate(180)
+        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.get_and_validate_filename(filepath)
 
         self.preview_result("preview_results")
         self.table_display_check("Table")
         web_table_title = self.get_text("web_table_title")
         self.generate_download_report("Export_as_excel")
-        time.sleep(5)
-        webexcel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(webexcel_filename, filepath)
+        # time.sleep(5)
+        # webexcel_filename = self.getFilenameAndValidate(180)
+        # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
+        webexcel_filename = self.get_and_validate_filename(filepath)
         self.back_to_report_page("Back_to_search_page")
 
         if search("Clinical", type_of_slr_text) and not search("Interventional", type_of_slr_text):
@@ -1294,9 +1334,10 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report")
-        time.sleep(5)
-        excel_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(excel_filename, filepath)
+        # time.sleep(5)
+        # excel_filename = self.getFilenameAndValidate(180)
+        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+        excel_filename = self.get_and_validate_filename(filepath)
 
         prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='D',
                                    skiprows=11)
@@ -1381,9 +1422,10 @@ class SLRReport(Base):
         self.select_data(slrtype[0][0], f"{slrtype[0][1]}")
         
         self.generate_download_report("word_report")
-        time.sleep(5)
-        word_filename = self.getFilenameAndValidate(180)
-        self.validate_filename(word_filename, filepath)
+        # time.sleep(5)
+        # word_filename = self.getFilenameAndValidate(180)
+        # word_filename = self.get_latest_filename(UnivWaitFor=180)
+        word_filename = self.get_and_validate_filename(filepath)
 
         table_count = 5  
 
@@ -1478,21 +1520,24 @@ class SLRReport(Base):
                     self.select_data(j[0], j[1])
 
                     self.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename = self.getFilenameAndValidate(180)
-                    self.validate_filename(excel_filename, filepath)
+                    # time.sleep(5)
+                    # excel_filename = self.getFilenameAndValidate(180)
+                    # excel_filename = self.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.get_and_validate_filename(filepath)
 
                     self.generate_download_report("word_report")
-                    time.sleep(5)
-                    word_filename = self.getFilenameAndValidate(180)
-                    self.validate_filename(word_filename, filepath)
+                    # time.sleep(5)
+                    # word_filename = self.getFilenameAndValidate(180)
+                    # word_filename = self.get_latest_filename(UnivWaitFor=180)
+                    word_filename = self.get_and_validate_filename(filepath)
 
                     self.preview_result("preview_results")
                     self.table_display_check("Table")
                     self.generate_download_report("Export_as_excel")
-                    time.sleep(5)
-                    webexcel_filename = self.getFilenameAndValidate(180)
-                    self.validate_filename(webexcel_filename, filepath)
+                    # time.sleep(5)
+                    # webexcel_filename = self.getFilenameAndValidate(180)
+                    # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.get_and_validate_filename(filepath)
                     self.back_to_report_page("Back_to_search_page")
 
                     '''Checking whether we are able to read data from downloaded reports or not'''

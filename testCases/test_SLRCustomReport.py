@@ -12,7 +12,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 @pytest.mark.usefixtures("init_driver")
 class Test_SLR_Custom_Report:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getslrtestdata()
@@ -53,7 +53,7 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         for i in self.pop_list:
@@ -66,28 +66,31 @@ class Test_SLR_Custom_Report:
                                                           "reported_variable_section")
 
                     self.slrreport.generate_download_report("excel_report")
-                    time.sleep(5)
-                    excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(excel_filename1, self.filepath)
+                    # time.sleep(5)
+                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(self.filepath)
 
                     self.slrreport.generate_download_report("word_report")
-                    time.sleep(5)
-                    word_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(word_filename1, self.filepath)
+                    # time.sleep(5)
+                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    word_filename = self.slrreport.get_and_validate_filename(self.filepath)
 
                     self.slrreport.preview_result("preview_results")
                     self.slrreport.table_display_check("Table")
                     self.slrreport.generate_download_report("Export_as_excel")
-                    time.sleep(5)
-                    webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    self.slrreport.validate_filename(webexcel_filename1, self.filepath)
+                    # time.sleep(5)
+                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.slrreport.get_and_validate_filename(self.filepath)
                     self.slrreport.back_to_report_page("Back_to_search_page")
 
-                    self.slrreport.check_sorting_order_in_excel_report(webexcel_filename1, excel_filename1)
+                    self.slrreport.check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
 
-                    self.slrreport.excel_content_validation(self.filepath, index, webexcel_filename1, excel_filename1)
+                    self.slrreport.excel_content_validation(self.filepath, index, webexcel_filename, excel_filename)
 
-                    self.slrreport.word_content_validation(self.filepath, index, word_filename1)
+                    self.slrreport.word_content_validation(self.filepath, index, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -123,7 +126,7 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.liveslrpage.go_to_liveslr("SLR_Homepage")
         try:
@@ -132,25 +135,28 @@ class Test_SLR_Custom_Report:
             self.slrreport.select_sub_section(self.rpt_data[3], self.rpt_data_chkbox[3], "reported_variable_section")
 
             self.slrreport.generate_download_report("excel_report")
-            time.sleep(5)
-            excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-            self.slrreport.validate_filename(excel_filename1, self.filepath)
+            # time.sleep(5)
+            # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+            # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+            excel_filename = self.slrreport.get_and_validate_filename(self.filepath)
 
             self.slrreport.generate_download_report("word_report")
-            time.sleep(5)
-            word_filename1 = self.slrreport.getFilenameAndValidate(180)
-            self.slrreport.validate_filename(word_filename1, self.filepath)
+            # time.sleep(5)
+            # word_filename1 = self.slrreport.getFilenameAndValidate(180)
+            # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+            word_filename = self.slrreport.get_and_validate_filename(self.filepath)
 
             self.slrreport.preview_result("preview_results")
             self.slrreport.table_display_check("Table")
             self.slrreport.generate_download_report("Export_as_excel")
-            time.sleep(5)
-            webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-            self.slrreport.validate_filename(webexcel_filename1, self.filepath)
+            # time.sleep(5)
+            # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+            # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+            webexcel_filename = self.slrreport.get_and_validate_filename(self.filepath)
             self.slrreport.back_to_report_page("Back_to_search_page")
 
-            self.slrreport.presencof_publicationtype_col_in_wordreport(webexcel_filename1, excel_filename1,
-                                                                       word_filename1)
+            self.slrreport.presencof_publicationtype_col_in_wordreport(webexcel_filename, excel_filename,
+                                                                       word_filename)
         except Exception:
             raise Exception("Unable to select element")
 
@@ -180,7 +186,7 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         try:
             self.slrreport.test_interventional_to_clinical_changes(self.filepath)
@@ -213,7 +219,7 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         scenarios = ['scenario1', 'scenario2']
         for i in scenarios:
@@ -248,7 +254,7 @@ class Test_SLR_Custom_Report:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         scenarios = ['scenario1']
         for i in scenarios:

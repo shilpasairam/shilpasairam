@@ -15,7 +15,7 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_ManagePopultionsPage:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getmanagepopdatafilepath()
@@ -42,7 +42,7 @@ class Test_ManagePopultionsPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
@@ -78,7 +78,7 @@ class Test_ManagePopultionsPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 
@@ -115,7 +115,7 @@ class Test_ManagePopultionsPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
+        # self.loginPage.driver.get(self.baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
         self.mngpoppage.go_to_managepopulations("managepopulations_button")
 

@@ -25,8 +25,8 @@ class LiveSLRPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_liveslr(self, locator):
-        self.click(locator, UnivWaitFor=10)
+    def go_to_liveslr(self, locator, env):
+        self.click(locator, env, UnivWaitFor=10)
         self.LogScreenshot.fLogScreenshot(message='LiveSLR Search page is opened',
                                           pass_=True, log=True, screenshot=True)
 
