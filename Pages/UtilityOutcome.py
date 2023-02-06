@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import Select
 from pandas.core.common import flatten
 
 from Pages.Base import Base, fWaitFor
+from Pages.ExtendedBasePage import ExtendedBase
 from Pages.ImportPublicationsPage import ImportPublicationPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
 from Pages.SLRReportPage import SLRReport
@@ -27,6 +28,8 @@ class UtilityOutcome(Base):
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
+        # Creating object of ExtendedBase class
+        self.exbase = ExtendedBase(self.driver, extra)        
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, self.extra)
         # Creating object of ImportPublicationPage class
@@ -67,14 +70,18 @@ class UtilityOutcome(Base):
     
     def get_extraction_file_to_upload(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
-        path = df.loc[df['Name'] == locatorname]['ExtractionFile'].dropna().to_list()
-        result = [[os.getcwd() + path[i]] for i in range(0, len(path))]
+        # path = df.loc[df['Name'] == locatorname]['ExtractionFile'].dropna().to_list()
+        # result = [[os.getcwd() + path[i]] for i in range(0, len(path))]
+        pop_name = df.loc[df['Name'] == locatorname]['Population_name'].dropna().to_list()
+        path = df.loc[df['Name'] == locatorname]['Files_to_upload'].dropna().to_list()
+        filename = df.loc[df['Name'] == locatorname]['Expected_File_names'].dropna().to_list()
+        result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]        
         return result
     
-    def get_import_pop_to_upload(self, filepath, sheet, locatorname):
-        df = pd.read_excel(filepath, sheet_name=sheet)
-        pop = df.loc[df['Name'] == locatorname]['Import_Pop'].dropna().to_list()
-        return pop
+    # def get_import_pop_to_upload(self, filepath, sheet, locatorname):
+    #     df = pd.read_excel(filepath, sheet_name=sheet)
+    #     pop = df.loc[df['Name'] == locatorname]['Import_Pop'].dropna().to_list()
+    #     return pop
 
     def get_population_to_upload(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
@@ -769,73 +776,74 @@ class UtilityOutcome(Base):
                                                   f"Summary Completed*****",
                                           pass_=True, log=True, screenshot=False)
 
-    def upload_file(self, pop_name, file_to_upload):
-        expected_upload_status_text = "File(s) uploaded successfully"
+    # def upload_file(self, pop_name, file_to_upload, env):
+    #     expected_upload_status_text = "File(s) uploaded successfully"
     
-        ele = self.select_element("select_update_dropdown")
-        time.sleep(2)
-        select = Select(ele)
-        select.select_by_visible_text(pop_name)
+    #     ele = self.select_element("select_update_dropdown", env)
+    #     time.sleep(2)
+    #     select = Select(ele)
+    #     select.select_by_visible_text(pop_name)
         
-        jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
-        self.jsclick_hide(jscmd)
-        self.input_text("add_file", file_to_upload)
-        try:
-            self.jsclick("upload_button", UnivWaitFor=30)
-            time.sleep(4)
-            if self.isdisplayed("file_status_popup_text"):
-                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-            else:
-                time.sleep(2)
-                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-            
-            if actual_upload_status_text == expected_upload_status_text:
-                self.LogScreenshot.fLogScreenshot(message=f"File upload is success for Population : {pop_name}. "
-                                                          f"Extraction Filename is '{Path(f'{file_to_upload}').stem}'",
-                                                  pass_=True, log=True, screenshot=True)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction '
-                                                          f'File for Population : {pop_name}.',
-                                                  pass_=False, log=True, screenshot=True)
-                raise Exception("Unable to find status message during Extraction file uploading")
+    #     jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
+    #     self.jsclick_hide(jscmd)
+    #     self.input_text("add_file", file_to_upload, env)
+    #     try:
+    #         self.jsclick("upload_button", env, UnivWaitFor=30)
+    #         time.sleep(4)
+    #         if self.isdisplayed("file_status_popup_text", env):
+    #             actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+    #         else:
+    #             time.sleep(2)
+    #             actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+    #
+    #         if actual_upload_status_text == expected_upload_status_text:
+    #             self.LogScreenshot.fLogScreenshot(message=f"File upload is success for Population : {pop_name}. "
+    #                                                       f"Extraction Filename is "
+    #                                                       f"'{Path(f'{file_to_upload}').stem}'",
+    #                                               pass_=True, log=True, screenshot=True)
+    #         else:
+    #             self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction '
+    #                                                       f'File for Population : {pop_name}.',
+    #                                               pass_=False, log=True, screenshot=True)
+    #             raise Exception("Unable to find status message during Extraction file uploading")
 
-            time.sleep(10)
-            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
-                self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
-                                                  pass_=True, log=True, screenshot=True)
-            else:
-                raise Exception("Error while uploading the extraction file")
+    #         time.sleep(10)
+    #         if self.isdisplayed("file_upload_status_pass", env, UnivWaitFor=180):
+    #             self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
+    #                                               pass_=True, log=True, screenshot=True)
+    #         else:
+    #             raise Exception("Error while uploading the extraction file")
 
-            self.refreshpage()
-            time.sleep(5)
-        except Exception:
-            raise Exception("Error while uploading")
+    #         self.refreshpage()
+    #         time.sleep(5)
+    #     except Exception:
+    #         raise Exception("Error while uploading")
     
-    def delete_file(self):
-        expected_delete_status_text = "Import status deleted successfully"        
-        self.refreshpage()
-        time.sleep(5)
+    # def delete_file(self, env):
+    #     expected_delete_status_text = "Import status deleted successfully"        
+    #     self.refreshpage()
+    #     time.sleep(5)
         
-        self.click("delete_file")
-        time.sleep(2)
-        self.click("delete_file_popup")
-        time.sleep(2)
+    #     self.click("delete_file", env)
+    #     time.sleep(2)
+    #     self.click("delete_file_popup", env)
+    #     time.sleep(2)
 
-        if self.isdisplayed("file_status_popup_text"):
-            actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-        else:
-            time.sleep(2)
-            actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)         
+    #     if self.isdisplayed("file_status_popup_text", env):
+    #         actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+    #     else:
+    #         time.sleep(2)
+    #         actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)         
         
-        if actual_delete_status_text == expected_delete_status_text:
-            self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
-                                              pass_=True, log=True, screenshot=True)
-        else:
-            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
-                                              pass_=False, log=True, screenshot=True)
-            raise Exception("Error during Extraction File Deletion")
+    #     if actual_delete_status_text == expected_delete_status_text:
+    #         self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
+    #                                           pass_=True, log=True, screenshot=True)
+    #     else:
+    #         self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
+    #                                           pass_=False, log=True, screenshot=True)
+    #         raise Exception("Error during Extraction File Deletion")
 
-    def qol_validate_utilitysummarytab_and_contents_into_excelreport(self, locatorname, util_filepath, index):
+    def qol_validate_utilitysummarytab_and_contents_into_excelreport(self, locatorname, util_filepath, index, env):
         source_template = self.get_util_source_template(util_filepath, 'prodfix')
 
         extraction_file = self.get_extraction_file_to_upload(util_filepath, 'prodfix', locatorname)
@@ -845,18 +853,17 @@ class UtilityOutcome(Base):
         # Read slrtype data values
         slrtype = self.get_slrtype_to_upload(util_filepath, 'prodfix', locatorname)
 
-        imp_pop = self.get_import_pop_to_upload(util_filepath, 'prodfix', locatorname)
+        # imp_pop = self.get_import_pop_to_upload(util_filepath, 'prodfix', locatorname)
 
         self.refreshpage()
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
-        self.upload_file(imp_pop[0], extraction_file[0])
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1], env)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
-        time.sleep(2)
-        self.slrreport.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}")
-        self.slrreport.select_data(slrtype[0][0], f"{slrtype[0][1]}")
-        self.slrreport.generate_download_report("excel_report")
+        self.go_to_page("SLR_Homepage", env)
+        self.slrreport.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}", env)
+        self.slrreport.select_data(slrtype[0][0], f"{slrtype[0][1]}", env)
+        self.slrreport.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.slrreport.getFilenameAndValidate(180)
         excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
@@ -982,12 +989,12 @@ class UtilityOutcome(Base):
             raise Exception("'Utility Summary' tab is missing in Complete Excel Report")
         
         self.refreshpage()
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        self.delete_file()
+        self.exbase.delete_file(extraction_file[0][2], env)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        self.go_to_page("SLR_Homepage", env)
         time.sleep(2)
     
     def econ_utility_summary_validation(self, webexcel_filename, excel_filename, util_filepath, word_filename):
@@ -1264,12 +1271,12 @@ class UtilityOutcome(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"Column name '{v}' is not present in Web Excel and "
                                                               f"Complete Excel Report",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception("Column name '{v}' is not present in Web Excel and Complete Excel Report")
+                    raise Exception(f"Column name '{v}' is not present in Web Excel and Complete Excel Report")
 
-    def check_column_names_in_previewresults(self, expected_dict):
+    def check_column_names_in_previewresults(self, expected_dict, env):
 
         result = []
-        tc1 = self.select_elements("web_table_column_names")
+        tc1 = self.select_elements("web_table_column_names", env)
         for m in tc1:
             result.append(m.text)
 

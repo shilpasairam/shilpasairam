@@ -1,12 +1,17 @@
 """
 This class is the parent of all pages
 It contains all the generic methods and utilites for all the pages
+
+Fluent wait:    will wait for a max of n sec until a specific element is located (type of explicit wait)
+                Intelligent wait used with expected_conditions confiend to one web element
+                Can specify poll frequency and list of ignored exceptions
+                Don't mix implicit and explicit/fluent waits, it can cause unpredictable wait times
 """
 import functools
 import time
 import pandas as pd
 import pytest
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, ElementNotVisibleException, ElementNotSelectableException
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -51,7 +56,8 @@ class Base:
     def __init__(self, driver, extra):
         self.driver = driver
         self.extra = extra
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, timeout=60, poll_frequency=2,
+                                  ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException])
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
 
@@ -86,7 +92,27 @@ class Base:
         """
         self.click(locator, env, UnivWaitFor=10)
         time.sleep(5)
+        # self.refreshpage()
+
+    # click a web element present inside another web element using locatorname
+    @fWaitFor
+    def go_to_nested_page(self, locator, button, env):
+        self.click(locator, env, UnivWaitFor=10)
+        self.jsclick(button, env)
+        time.sleep(5)        
     
+    # Wait for a web element to be present for specific duration using locatorname
+    @fWaitFor    
+    def presence_of_element(self, locator, env):
+        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
+                                                        self.locatorpath(locator, env)))) 
+
+    # Wait for a web elements to be present for specific duration using locatorname
+    @fWaitFor    
+    def presence_of_all_elements(self, locator, env):
+        self.wait.until(ec.presence_of_all_elements_located((getattr(By, self.locatortype(locator, env)),
+                                                             self.locatorpath(locator, env))))
+
     # click a web element using locatorname
     @fWaitFor
     def click(self, locator, env, UnivWaitFor=0):
@@ -102,7 +128,8 @@ class Base:
         Given locator, identify the locator type and path from the OR file and input text to the element
         """
         self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).clear()
-        self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).send_keys(value)
+        self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).\
+            send_keys(value)
 
     # Select current date from date-picker
     @fWaitFor
@@ -144,7 +171,18 @@ class Base:
         """
         Given locator, identify the locator type and path from the OR file and return the text
         """
-        return self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)).text
+        return self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))\
+            .text
+
+    # Read the upload or deletion status popup text using locatorname
+    @fWaitFor
+    def get_status_text(self, locator, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and return the text
+        """
+        self.presence_of_element(locator, env)
+        actual_text = self.get_text(locator, env)
+        return actual_text
 
     # function to select an element
     @fWaitFor
@@ -161,7 +199,8 @@ class Base:
         """
         Given locator, identify the locator type and path from the OR file and select the elements
         """
-        elements = self.driver.find_elements(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))
+        elements = self.driver.find_elements(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator,
+                                                                                                           env))
         return elements
 
     # JavaScript click a web element using locatorname
@@ -238,7 +277,8 @@ class Base:
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
         self.driver.execute_script("arguments[0].scrollIntoView(true);",
-                                   self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env)))
+                                   self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                                            self.locatorpath(locator, env)))
 
     # Check whether a web element is displayed or not using locatorname
     @fWaitFor

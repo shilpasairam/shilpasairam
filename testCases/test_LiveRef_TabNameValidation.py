@@ -20,7 +20,8 @@ class Test_TabNames:
 
     @pytest.mark.C29584
     @pytest.mark.C29826
-    def test_tabname_changes(self, extra):
+    def test_tabname_changes(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -29,8 +30,8 @@ class Test_TabNames:
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
 
         # Invoking the methods from loginpage
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         page_locs = ['searchpublications_button', 'liveref_importpublications_button',
                      'liveref_view_import_status_button', 'liveref_manageindications_button',
@@ -40,8 +41,8 @@ class Test_TabNames:
 
         for i in page_locs:
             try:
-                self.base.go_to_page(i)
-                page_name = self.base.get_text(i)
+                self.base.go_to_page(i, env)
+                page_name = self.base.get_text(i, env)
                 self.base.assertPageTitle("Cytel LiveRef", UnivWaitFor=10)
                 self.LogScreenshot.fLogScreenshot(message=f"Tab Name for '{page_name}' page is as expected.",
                                                   pass_=True, log=True, screenshot=True)
@@ -52,10 +53,11 @@ class Test_TabNames:
                 raise Exception("Error in during validation of tab names")
 
         # Logging out from the application
-        self.loginPage.logout("liveref_logout_button")
+        self.loginPage.logout("liveref_logout_button", env)
 
     @pytest.mark.C29826
-    def test_liveref_validate_duplicate_entries_in_admin_panel(self, extra):
+    def test_liveref_validate_duplicate_entries_in_admin_panel(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -64,11 +66,11 @@ class Test_TabNames:
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
 
         # Invoking the methods from loginpage
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         try:
-            admin_eles = self.base.select_elements("liveref_admin_panel_list")
+            admin_eles = self.base.select_elements("liveref_admin_panel_list", env)
             admin_eles_text = []
             for i in admin_eles:
                 admin_eles_text.append(i.text)
@@ -86,4 +88,4 @@ class Test_TabNames:
             raise Exception("Error in during validation of presence of navigation links")
 
         # Logging out from the application
-        self.loginPage.logout("liveref_logout_button")
+        self.loginPage.logout("liveref_logout_button", env)

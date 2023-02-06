@@ -105,9 +105,6 @@ class LineofTherapyPage(Base):
         # Read Expected LoT options from data sheet
         expected_lot_options = self.get_expected_data(filepath, 'Expected_lot_options')    
 
-        self.refreshpage()
-        time.sleep(5)
-
         # Validate the UI page elements
         self.check_lot_ui_elements(filepath, env)
 

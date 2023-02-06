@@ -59,16 +59,6 @@ def init_driver(request):
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     web_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-    # env = request.config.getoption("--env")
-    # print("Environment details are : ", env)
-    # if env == 'test':
-    #     web_driver.get("https://pse-portal-testing.azurewebsites.net/")
-    # elif env == 'staging':
-    #     web_driver.get("https://portal-stage.livehta.com")
-    # elif env == 'production':
-    #     web_driver.get("https://portal.livehta.com/")
-    
-
     request.cls.driver = web_driver
     # web_driver.maximize_window()
     web_driver.implicitly_wait(10)

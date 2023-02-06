@@ -5,6 +5,7 @@ Test will validate Excluded Studies Page
 
 import os
 import pytest
+from Pages.Base import Base
 
 from Pages.LoginPage import LoginPage
 from Pages.ExcludedStudiesPage import ExcludedStudiesPage
@@ -18,13 +19,15 @@ class Test_ExcludedStudiesPage:
     # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getexcludedstudiespath()
-    slrfilepath = ReadConfig.getslrtestdata()
+    # filepath = ReadConfig.getexcludedstudiespath()
+    # slrfilepath = ReadConfig.getslrtestdata()
 
     '''Check excluded studies option in admin section is viewable or not'''
     @pytest.mark.C29758
     def test_view_excluded_study_option(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -44,7 +47,7 @@ class Test_ExcludedStudiesPage:
                                                   f"check is started***", pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         # Check Manage Excluded Studies option is present in admin page or not
         self.exstdy.presence_of_elements("excluded_studies_link", env)
 
@@ -55,6 +58,9 @@ class Test_ExcludedStudiesPage:
     @pytest.mark.C29759
     def test_access_excludedstudy_page_elements(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getexcludedstudiespath(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -74,15 +80,15 @@ class Test_ExcludedStudiesPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         # Go to ExcludedStudies Page
-        self.exstdy.go_to_excludedstudies("excluded_studies_link", env)
+        self.base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
         try:
             for i in pop_list:
-                self.exstdy.access_excludedstudy_page_elements(i, self.filepath, env)
+                self.exstdy.access_excludedstudy_page_elements(i, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error while validating the presence of Excluded Study "
                                                       f"Page Elements",
@@ -97,6 +103,9 @@ class Test_ExcludedStudiesPage:
     @pytest.mark.C29764
     def test_add_and_delete_excluded_study(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getexcludedstudiespath(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -116,16 +125,16 @@ class Test_ExcludedStudiesPage:
                                                   f"started***", pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         # Go to ExcludedStudies Page
-        self.exstdy.go_to_excludedstudies("excluded_studies_link", env)
+        self.base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
         try:
             for i in pop_list:
-                self.exstdy.add_multiple_excluded_study_data(i, self.filepath, env)
-                self.exstdy.del_multiple_excluded_study_data(i, self.filepath, env)
+                self.exstdy.add_multiple_excluded_study_data(i, filepath, env)
+                self.exstdy.del_multiple_excluded_study_data(i, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
                                               pass_=False, log=True, screenshot=True)
@@ -139,6 +148,9 @@ class Test_ExcludedStudiesPage:
     @pytest.mark.C29765
     def test_update_and_delete_excluded_study(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getexcludedstudiespath(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -152,16 +164,16 @@ class Test_ExcludedStudiesPage:
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.exstdy.go_to_excludedstudies("excluded_studies_link", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
         try:
             for i in pop_list:
-                self.exstdy.add_multiple_excluded_study_data(i, self.filepath, env)
-                self.exstdy.update_multiple_excluded_study_data(i, self.filepath, env)
-                self.exstdy.del_multiple_excluded_study_data(i, self.filepath, env)
+                self.exstdy.add_multiple_excluded_study_data(i, filepath, env)
+                self.exstdy.update_multiple_excluded_study_data(i, filepath, env)
+                self.exstdy.del_multiple_excluded_study_data(i, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
                                               pass_=False, log=True, screenshot=True)
@@ -174,6 +186,7 @@ class Test_ExcludedStudiesPage:
     @pytest.mark.C29922
     def test_excluded_study_compare_with_excel_report(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getexcludedstudiespath(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -193,14 +206,14 @@ class Test_ExcludedStudiesPage:
                                           pass_=True, log=True, screenshot=False)
 
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         pop_list = ['pop1']
         
         try:
             for i in pop_list:
-                self.exstdy.compare_excludedstudy_file_with_report(self.filepath, i, env)
-                self.exstdy.del_after_studyfile_comparison(self.filepath, i, env)
+                self.exstdy.compare_excludedstudy_file_with_report(filepath, i, env)
+                self.exstdy.del_after_studyfile_comparison(filepath, i, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
                                               pass_=False, log=True, screenshot=True)

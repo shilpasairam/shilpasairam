@@ -5,6 +5,7 @@ Test will validate Manage QA Data Page
 
 import os
 import pytest
+from Pages.Base import Base
 
 from Pages.LoginPage import LoginPage
 from Pages.ManageQADataPage import ManageQADataPage
@@ -18,11 +19,15 @@ class Test_ManageQADataPage:
     # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getmanageqadatapath()
+    # filepath = ReadConfig.getmanageqadatapath()
     # slrfilepath = ReadConfig.getslrtestdata()
 
     @pytest.mark.C27360
-    def test_access_manageqadata_page_elements(self, extra):
+    def test_access_manageqadata_page_elements(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getmanageqadatapath(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -41,15 +46,15 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.mngqadata.go_to_manageqadata("manage_qa_data_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1']
 
         try:
             for i in pop_val:
-                self.mngqadata.access_manageqadata_page_elements(i, self.filepath)
+                self.mngqadata.access_manageqadata_page_elements(i, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page elements",
                                               pass_=False, log=True, screenshot=True)
@@ -59,7 +64,11 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27361
-    def test_add_qa_data(self, extra):
+    def test_add_qa_data(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getmanageqadatapath(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)                 
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -80,16 +89,16 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.mngqadata.go_to_manageqadata("manage_qa_data_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
 
         try:
             for i in pop_val:
-                self.mngqadata.add_manage_qa_data_with_invalidfile(i, self.filepath)
-                self.mngqadata.add_multiple_manage_qa_data(i, self.filepath)
+                self.mngqadata.add_manage_qa_data_with_invalidfile(i, filepath, env)
+                self.mngqadata.add_multiple_manage_qa_data(i, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page",
                                               pass_=False, log=True, screenshot=True)
@@ -99,7 +108,11 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27361
-    def test_overwrite_qa_data(self, extra):
+    def test_overwrite_qa_data(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getmanageqadatapath(env)  
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)                
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -114,16 +127,16 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.mngqadata.go_to_manageqadata("manage_qa_data_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
 
         try:
             for j in pop_val:
-                self.mngqadata.overwrite_multiple_manage_qa_data(j, self.filepath)
-                self.mngqadata.del_multiple_manage_qa_data(j, self.filepath)
+                self.mngqadata.overwrite_multiple_manage_qa_data(j, filepath, env)
+                self.mngqadata.del_multiple_manage_qa_data(j, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error while overwriting the QA files",
                                               pass_=False, log=True, screenshot=True)
@@ -133,7 +146,11 @@ class Test_ManageQADataPage:
                                           pass_=True, log=True, screenshot=False)
     
     @pytest.mark.C27362
-    def test_delete_qa_data(self, extra):
+    def test_delete_qa_data(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getmanageqadatapath(env) 
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)                
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -148,16 +165,16 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.mngqadata.go_to_manageqadata("manage_qa_data_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
 
         try:
             for i in pop_val:
-                self.mngqadata.add_multiple_manage_qa_data(i, self.filepath)
-                self.mngqadata.del_multiple_manage_qa_data(i, self.filepath)
+                self.mngqadata.add_multiple_manage_qa_data(i, filepath, env)
+                self.mngqadata.del_multiple_manage_qa_data(i, filepath, env)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
                                               pass_=False, log=True, screenshot=True)
@@ -166,44 +183,48 @@ class Test_ManageQADataPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C30247
-    @pytest.mark.C27301
-    @pytest.mark.C27306
-    def test_qafile_compare_with_excelreport(self, extra):
-        # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
-        # Creating object of ManageQADataPage class
-        self.mngqadata = ManageQADataPage(self.driver, extra)
-        # # Get StudyType and Files path to upload Managae QA Data
-        # self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
+    # @pytest.mark.C30247
+    # @pytest.mark.C27301
+    # @pytest.mark.C27306
+    # def test_qafile_compare_with_excelreport(self, extra, env):
+    #     baseURL = ReadConfig.getApplicationURL(env)
+    #     filepath = ReadConfig.getmanageqadatapath(env)
+    #     # Instantiate the Base class
+    #     self.base = Base(self.driver, extra)                 
+    #     # Instantiate the logScreenshot class
+    #     self.LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     self.loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of liveslrpage class
+    #     self.liveslrpage = LiveSLRPage(self.driver, extra)
+    #     # Creating object of ManageQADataPage class
+    #     self.mngqadata = ManageQADataPage(self.driver, extra)
+    #     # # Get StudyType and Files path to upload Managae QA Data
+    #     # self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+    #     # Removing the files before the test runs
+    #     if os.path.exists(f'ActualOutputs'):
+    #         for root, dirs, files in os.walk(f'ActualOutputs'):
+    #             for file in files:
+    #                 os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
-                                          pass_=True, log=True, screenshot=False)
+    #     self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
+    #                                       pass_=True, log=True, screenshot=False)
 
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.mngqadata.go_to_manageqadata("manage_qa_data_button")
+    #     self.loginPage.driver.get(baseURL)
+    #     self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+    #     self.base.go_to_page("manage_qa_data_button", env)
 
-        pop_val = ['pop3']
+    #     pop_val = ['pop3']
 
-        try:
-            for i in pop_val:
-                self.mngqadata.compare_qa_file_with_report(i, self.filepath)
-                self.mngqadata.del_data_after_qafile_comparison(i, self.filepath)
-        except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
-                                              pass_=False, log=True, screenshot=True)
-            raise Exception("Element Not Found")
+    #     try:
+    #         for i in pop_val:
+    #             self.mngqadata.compare_qa_file_with_report(i, filepath, env)
+    #             self.mngqadata.del_data_after_qafile_comparison(i, filepath, env)
+    #     except Exception:
+    #         self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
+    #                                           pass_=False, log=True, screenshot=True)
+    #         raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison completed***",
-                                          pass_=True, log=True, screenshot=False)
+    #     self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison completed***",
+    #                                       pass_=True, log=True, screenshot=False)

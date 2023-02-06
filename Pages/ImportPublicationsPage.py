@@ -28,10 +28,10 @@ class ImportPublicationPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_importpublications(self, locator, button, env):
-        self.click(locator, env, UnivWaitFor=10)
-        self.jsclick(button, env)
-        time.sleep(3)
+    # def go_to_importpublications(self, locator, button, env):
+    #     self.click(locator, env, UnivWaitFor=10)
+    #     self.jsclick(button, env)
+    #     time.sleep(3)
 
     # Reading Population data for Excluded Studies Page
     def get_file_details_to_upload(self, filepath, locatorname):

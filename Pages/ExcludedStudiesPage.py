@@ -39,9 +39,9 @@ class ExcludedStudiesPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_excludedstudies(self, locator, env):
-        self.click(locator, env, UnivWaitFor=10)
-        time.sleep(5)
+    # def go_to_excludedstudies(self, locator, env):
+    #     self.click(locator, env, UnivWaitFor=10)
+    #     time.sleep(5)
 
     # Reading slr study type and Excluded study files data for Excluded Studies Page -> upload feature validation
     def get_study_file_details(self, filepath, locatorname):
@@ -95,8 +95,7 @@ class ExcludedStudiesPage(Base):
 
         for i in new_pop_data:
             for j in stdy_data:
-                self.refreshpage()
-                time.sleep(4)
+                time.sleep(2)
                 self.click("ex_stdy_pop_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Population dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
@@ -148,8 +147,7 @@ class ExcludedStudiesPage(Base):
             for i in new_pop_data:
                 for j in stdy_data:
                     expected_table_values = []
-                    self.refreshpage()
-                    time.sleep(4)
+                    time.sleep(2)
                     pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(i[0])
@@ -240,8 +238,7 @@ class ExcludedStudiesPage(Base):
             for i in new_pop_data:
                 for j in stdy_data:
                     expected_table_values = []
-                    self.refreshpage()
-                    time.sleep(3)
+                    time.sleep(2)
                     pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(i[0])
@@ -268,7 +265,8 @@ class ExcludedStudiesPage(Base):
 
                     self.click("ex_stdy_upload_button", env)
                     time.sleep(3)
-                    self.jsclick("ex_stdy_popup_ok", env, message="Expected : popup reminder. Actual : popup is not shown")
+                    self.jsclick("ex_stdy_popup_ok", env, message="Expected : popup reminder. Actual : popup is "
+                                                                  "not shown")
                     time.sleep(3)
                     actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(1)
@@ -333,8 +331,7 @@ class ExcludedStudiesPage(Base):
         try:
             for i in new_pop_data:
                 for j in stdy_data:
-                    self.refreshpage()
-                    time.sleep(3)
+                    time.sleep(2)
                     pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(i[0])
@@ -389,9 +386,8 @@ class ExcludedStudiesPage(Base):
             for pop_val in new_pop_data:
                 for i in stdy_data:
                     expected_table_values = []
-                    self.refreshpage()
-                    time.sleep(4)
-                    self.go_to_excludedstudies("excluded_studies_link", env)
+                    self.go_to_page("excluded_studies_link", env)
+                    time.sleep(2)
                     pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(pop_val[0])
@@ -473,8 +469,7 @@ class ExcludedStudiesPage(Base):
                                 f'Actual values are : {actual_table_values}')
 
                     # Go to live slr page
-                    self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
-                    time.sleep(2)
+                    self.go_to_page("SLR_Homepage", env)
                     self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button", env)
                     self.slrreport.select_data(i[0], f"{i[0]}_radio_button", env)
                     self.slrreport.generate_download_report("excel_report", env)
@@ -552,9 +547,8 @@ class ExcludedStudiesPage(Base):
             for pop_val in new_pop_data:
                 for i in stdy_data:
                     expected_table_values = []
-                    self.refreshpage()
-                    time.sleep(4)
-                    self.go_to_excludedstudies("excluded_studies_link", env)
+                    self.go_to_page("excluded_studies_link", env)
+                    time.sleep(2)
                     pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
                     select1 = Select(pop_ele)
                     select1.select_by_visible_text(pop_val[0])
@@ -600,8 +594,7 @@ class ExcludedStudiesPage(Base):
                         raise Exception("Error in Excluded Studies File Deletion")
 
                     # Go to live slr page
-                    self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
-                    time.sleep(2)
+                    self.go_to_page("SLR_Homepage", env)
                     self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button", env)
                     self.slrreport.select_data(i[0], f"{i[0]}_radio_button", env)
                     self.slrreport.generate_download_report("excel_report", env)

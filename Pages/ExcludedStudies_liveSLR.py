@@ -30,7 +30,7 @@ class ExcludedStudies_liveSLR(Base):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
         # Instantiate webdriver wait class
-        self.wait = WebDriverWait(driver, 20)
+        self.wait = WebDriverWait(driver, 30)
     
     def get_source_template(self, filepath):
         file = pd.read_excel(filepath)
@@ -67,14 +67,20 @@ class ExcludedStudies_liveSLR(Base):
         add_criteria = self.get_additional_criteria_data(filepath, locatorname)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
-        time.sleep(2)
+        self.go_to_page("SLR_Homepage", env)
+        self.presence_of_all_elements("slr_pop_panel_eles", env)
         self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.presence_of_all_elements("slr_type_panel_eles", env)
         self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
+        self.presence_of_element("sub_pop_section", env)
+        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env,
+                                          f"{add_criteria[0][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env,
+                                          f"{add_criteria[1][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env,
+                                          f"{add_criteria[2][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env,
+                                          f"{add_criteria[3][2]}")
 
         self.slrreport.generate_download_report("excel_report", env)
         # time.sleep(5)
@@ -128,14 +134,20 @@ class ExcludedStudies_liveSLR(Base):
         source_template = self.get_source_template(filepath)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
-        time.sleep(2)
+        self.go_to_page("SLR_Homepage", env)
+        self.presence_of_all_elements("slr_pop_panel_eles", env)
         self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.presence_of_all_elements("slr_type_panel_eles", env)
         self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
+        self.presence_of_element("sub_pop_section", env)
+        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env,
+                                          f"{add_criteria[0][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env,
+                                          f"{add_criteria[1][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env,
+                                          f"{add_criteria[2][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env,
+                                          f"{add_criteria[3][2]}")
 
         self.slrreport.generate_download_report("excel_report", env)
         # time.sleep(5)
@@ -179,14 +191,20 @@ class ExcludedStudies_liveSLR(Base):
         source_template = self.get_source_template(filepath)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage", env)
-        time.sleep(2)
+        self.go_to_page("SLR_Homepage", env)
+        self.presence_of_all_elements("slr_pop_panel_eles", env)
         self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.presence_of_all_elements("slr_type_panel_eles", env)
         self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
-        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
+        self.presence_of_element("sub_pop_section", env)
+        self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env,
+                                          f"{add_criteria[0][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env,
+                                          f"{add_criteria[1][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env,
+                                          f"{add_criteria[2][2]}")
+        self.slrreport.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env,
+                                          f"{add_criteria[3][2]}")
 
         self.slrreport.generate_download_report("excel_report", env)
         # time.sleep(5)

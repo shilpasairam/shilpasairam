@@ -24,11 +24,13 @@ class LoginPage(Base):
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
 
     """Page Actions for LiveSLR Login page"""
-    def complete_login(self, username, password, launch_btn, title, env):
+    def complete_login(self, username, password, launch_btn, title, url, env):
         """
         application login page must be opened before calling this method
         """
         try:
+            self.LogScreenshot.fLogScreenshot(message=f"Application URL is : {url}",
+                                              pass_=True, log=True, screenshot=False)            
             # enter username
             self.input_text("username_textbox", username, env, UnivWaitFor=10)
             self.LogScreenshot.fLogScreenshot(message='Enter username',

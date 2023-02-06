@@ -11,7 +11,6 @@ class ReadConfig:
     @staticmethod
     def getApplicationURL(env):
         # env = config.get('commonInfo', 'environment')
-        # print("From properties file : ", env)
         if env == 'test':
             return f"https://pse-portal-testing.azurewebsites.net/"
         elif env == 'staging':
@@ -63,8 +62,8 @@ class ReadConfig:
 
     # Get test data file path for LiveSLR
     @staticmethod
-    def getslrtestdata():
-        env = config.get('commonInfo', 'environment')
+    def getslrtestdata(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             populationdata = config.get('commonInfo', 'slrpopulationdata_testing')
         elif env == 'staging':
@@ -75,8 +74,8 @@ class ReadConfig:
 
     # Get test data file path for LiveNMA
     @staticmethod
-    def getnmatestdata():
-        env = config.get('commonInfo', 'environment')
+    def getnmatestdata(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'testinglivenmadata')
         elif env == 'staging':
@@ -84,8 +83,8 @@ class ReadConfig:
 
     # Get file containing data for QOL Utility
     @staticmethod
-    def getutilityoutcome_QOL_data():
-        env = config.get('commonInfo', 'environment')
+    def getutilityoutcome_QOL_data(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'utilityoutcome_QOL_testing')
         elif env == 'staging':
@@ -95,8 +94,8 @@ class ReadConfig:
     
     # Get file containing data for ECON Utility
     @staticmethod
-    def getutilityoutcome_ECON_data():
-        env = config.get('commonInfo', 'environment')
+    def getutilityoutcome_ECON_data(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'utilityoutcome_ECON_testing')
         elif env == 'staging':
@@ -130,8 +129,8 @@ class ReadConfig:
     
     # Get file containing data for Manageupdates page actions
     @staticmethod
-    def getmanageupdatesdata():
-        env = config.get('commonInfo', 'environment')
+    def getmanageupdatesdata(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'manageupdatesdata_testing')
         elif env == 'staging':
@@ -148,8 +147,8 @@ class ReadConfig:
 
     # Get file containing data for PRISMAs page actions
     @staticmethod
-    def getprismadata():
-        env = config.get('commonInfo', 'environment')
+    def getprismadata(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return config.get('commonInfo', 'prismadata_testing')
         elif env == 'staging':
@@ -169,8 +168,8 @@ class ReadConfig:
 
     # Get file containing data for Excluded Studies page actions
     @staticmethod
-    def getexcludedstudiespath():
-        env = config.get('commonInfo', 'environment')
+    def getexcludedstudiespath(env):
+        # env = config.get('commonInfo', 'environment')
         if env == 'production':
             return config.get('commonInfo', 'ExcludedStudiesdata_prod')
         else:

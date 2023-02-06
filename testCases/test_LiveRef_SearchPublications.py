@@ -25,7 +25,8 @@ class Test_SearchPublications:
 
     @pytest.mark.C29813
     @pytest.mark.C29826
-    def test_filter_count_value(self, extra):
+    def test_filter_count_value(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -52,14 +53,14 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         scenarios = ['scenario1']
         for i in scenarios:
             try:
-                self.base.go_to_page("searchpublications_button")
-                self.base.click("searchpublications_reset_filter")
-                self.srchpub.filter_count_validation(i, self.TestData)
+                self.base.go_to_page("searchpublications_button", env)
+                self.base.click("searchpublications_reset_filter", env)
+                self.srchpub.filter_count_validation(i, self.TestData, env)
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of filter count",
@@ -68,7 +69,8 @@ class Test_SearchPublications:
 
     @pytest.mark.C29566
     @pytest.mark.C29826
-    def test_filter_count_value_with_excel(self, extra):
+    def test_filter_count_value_with_excel(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -95,14 +97,14 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         scenarios = ['scenario1']
         for i in scenarios:
             try:
-                self.base.go_to_page("searchpublications_button")
-                self.base.click("searchpublications_reset_filter")
-                self.srchpub.filter_count_validation_with_Excel_report(i, self.TestData)
+                self.base.go_to_page("searchpublications_button", env)
+                self.base.click("searchpublications_reset_filter", env)
+                self.srchpub.filter_count_validation_with_Excel_report(i, self.TestData, env)
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of filter count with Excel "
@@ -111,7 +113,8 @@ class Test_SearchPublications:
     
     @pytest.mark.C27393
     @pytest.mark.C37355
-    def test_presence_of_author_and_affiliation_ui(self, extra):
+    def test_presence_of_author_and_affiliation_ui(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -138,13 +141,13 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         try:
-            self.base.go_to_page("searchpublications_button")
-            self.base.click("searchpublications_reset_filter")
+            self.base.go_to_page("searchpublications_button", env)
+            self.base.click("searchpublications_reset_filter", env)
             self.srchpub.presence_of_author_and_affiliation_ui("reported_cols_sections", "reported_col_author",
-                                                               "reported_col_author_checkbox")
+                                                               "reported_col_author_checkbox", env)
 
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations option",
@@ -153,7 +156,8 @@ class Test_SearchPublications:
 
     @pytest.mark.C27394
     @pytest.mark.C37355
-    def test_presence_of_author_and_affiliation_column(self, extra):
+    def test_presence_of_author_and_affiliation_column(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -180,13 +184,13 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         try:
-            self.base.go_to_page("searchpublications_button")
-            self.base.click("searchpublications_reset_filter")
+            self.base.go_to_page("searchpublications_button", env)
+            self.base.click("searchpublications_reset_filter", env)
             self.srchpub.presence_of_author_and_affiliation_column("reported_cols_sections", "reported_col_author",
-                                                                   "reported_col_author_checkbox")
+                                                                   "reported_col_author_checkbox", env)
 
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations "
@@ -195,7 +199,8 @@ class Test_SearchPublications:
 
     @pytest.mark.C27395
     @pytest.mark.C37355
-    def test_validate_content_of_author_and_affiliation_for_previous_load(self, extra):
+    def test_validate_content_of_author_and_affiliation_for_previous_load(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -222,14 +227,15 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         try:
-            self.base.go_to_page("searchpublications_button")
-            self.base.click("searchpublications_reset_filter")
+            self.base.go_to_page("searchpublications_button", env)
+            self.base.click("searchpublications_reset_filter", env)
             self.srchpub.validate_content_of_author_and_affiliation_for_previous_load("reported_cols_sections",
                                                                                       "reported_col_author",
-                                                                                      "reported_col_author_checkbox")
+                                                                                      "reported_col_author_checkbox",
+                                                                                      env)
 
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column "
@@ -239,7 +245,8 @@ class Test_SearchPublications:
 
     @pytest.mark.C27396
     @pytest.mark.C37355
-    def test_validate_content_of_author_and_affiliation_for_latest_load(self, extra):
+    def test_validate_content_of_author_and_affiliation_for_latest_load(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -266,14 +273,14 @@ class Test_SearchPublications:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         try:
-            self.base.go_to_page("searchpublications_button")
-            self.base.click("searchpublications_reset_filter")
+            self.base.go_to_page("searchpublications_button", env)
+            self.base.click("searchpublications_reset_filter", env)
             self.srchpub.validate_content_of_author_and_affiliation_for_latest_load("reported_cols_sections",
                                                                                     "reported_col_author",
-                                                                                    "reported_col_author_checkbox")
+                                                                                    "reported_col_author_checkbox", env)
 
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error during validation of Author and Affiliations column "

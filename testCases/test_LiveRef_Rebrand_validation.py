@@ -22,7 +22,8 @@ class Test_LiveRef_Rebrand:
 
     @pytest.mark.C27354
     @pytest.mark.C29826
-    def test_validate_liveref_rebrand(self, extra):
+    def test_validate_liveref_rebrand(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -49,9 +50,9 @@ class Test_LiveRef_Rebrand:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         try:
-            self.rebrand.validate_liveref_rebrand(self.TestData)
+            self.rebrand.validate_liveref_rebrand(self.TestData, env)
         except Exception:
             raise Exception("Mismatch found during LiveRef brand validation")

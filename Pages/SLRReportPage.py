@@ -49,7 +49,6 @@ class SLRReport(Base):
         self.wait = WebDriverWait(driver, 20)
 
     def select_data(self, locator, locator_button, env):
-        time.sleep(3)
         if self.isselected(locator_button, env):
             self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
                                               pass_=True, log=True, screenshot=True)
@@ -60,7 +59,7 @@ class SLRReport(Base):
                                                   pass_=True, log=True, screenshot=True)
 
     def select_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env, UnivWaitFor=20):
+        if self.scroll(scroll, env, UnivWaitFor=60):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -83,9 +82,9 @@ class SLRReport(Base):
                                                       pass_=True, log=True, screenshot=True)
             self.scrollback("SLR_page_header", env)
 
-    def get_additional_criteria_values(self, locator_study, locator_var):
-        ele1 = self.select_elements(locator_study)
-        ele2 = self.select_elements(locator_var)
+    def get_additional_criteria_values(self, locator_study, locator_var, env):
+        ele1 = self.select_elements(locator_study, env)
+        ele2 = self.select_elements(locator_var, env)
         return ele1, ele2
 
     def get_source_template(self, filepath, col_name):
@@ -144,11 +143,11 @@ class SLRReport(Base):
 
         return res_list
     
-    def validate_additional_criteria_val(self, filepath, locator_study, locator_var):
+    def validate_additional_criteria_val(self, filepath, locator_study, locator_var, env):
         # Read reportedvariables and studydesign expected data values
         design_val, var_val = self.liveslrpage.get_data_values(filepath)
         # Get the actual values
-        act_study_design, act_rep_var = self.get_additional_criteria_values(locator_study, locator_var)
+        act_study_design, act_rep_var = self.get_additional_criteria_values(locator_study, locator_var, env)
         try:
             for k in act_study_design:
                 if k.text in design_val:
@@ -163,9 +162,9 @@ class SLRReport(Base):
         except Exception:
             raise Exception("Unable to validate Additional Criteria Values")
 
-    def validate_selected_area(self, pop, slr):
+    def validate_selected_area(self, pop, slr, env):
         pop_sel, slr_sel = self.collect_selected_area_details("selected_area_population",
-                                                              "selected_area_slrtype")
+                                                              "selected_area_slrtype", env)
         if pop in pop_sel and slr in slr_sel:
             self.LogScreenshot.fLogScreenshot(message=f"Selected elements are shown correct\n"
                                                       f"Selected Area value: {pop_sel} {slr_sel}\n"
@@ -176,7 +175,7 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Selected Population and SLR Type are not matching in Selected area")
 
-    def prism_value_validation(self, prism, efilename, wfilename, word_filename):
+    def prism_value_validation(self, prism, efilename, wfilename, word_filename, env):
 
         # Reading Study Identifier column values from WebExcel Sheet
         webexcel = openpyxl.load_workbook(f'ActualOutputs//{wfilename}')
@@ -224,29 +223,30 @@ class SLRReport(Base):
                                                       f"Records are not matching",
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Prisma count values are mismatching")
-        self.scrollback("SLR_page_header")
+        self.scrollback("SLR_page_header", env)
 
-    def collect_selected_area_details(self, locator1, locator2):
-        x = self.get_text(locator1)
-        y = self.get_text(locator2)
+    def collect_selected_area_details(self, locator1, locator2, env):
+        x = self.get_text(locator1, env)
+        y = self.get_text(locator2, env)
         return x, y
 
-    def preview_result(self, locator):
-        if self.clickable(locator):
-            self.jsclick(locator)
+    def preview_result(self, locator, env):
+        if self.clickable(locator, env):
+            self.jsclick(locator, env)
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is clickable",
                                               pass_=True, log=True, screenshot=False)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not clickable",
                                               pass_=False, log=True, screenshot=False)
 
-    def table_display_check(self, locator):
-        if self.isdisplayed(locator, UnivWaitFor=120):
+    def table_display_check(self, locator, env):
+        if self.isdisplayed(locator, env, UnivWaitFor=120):
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is displayed",
                                               pass_=True, log=True, screenshot=True)
         else:
             time.sleep(10)
-            self.driver.find_element(getattr(By, self.locatortype(locator)), self.locatorpath(locator)).is_displayed()
+            self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))\
+                .is_displayed()
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is displayed with extra wait time",
                                               pass_=True, log=True, screenshot=True)
 
@@ -300,25 +300,25 @@ class SLRReport(Base):
 
             if len(list_of_files_after_download) > len(list_of_files_before_download):
                 self.LogScreenshot.fLogScreenshot(message=f"Report download is success",
-                                    pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=False)
             else:
                 time.sleep(15)
                 # Get list of files after downloading the new report with extra wait time
                 list_of_files_after_download = glob.glob('ActualOutputs//*')
                 if len(list_of_files_after_download) > len(list_of_files_before_download):
                     self.LogScreenshot.fLogScreenshot(message=f"Report download is success with extra wait time",
-                                        pass_=True, log=True, screenshot=False)
+                                                      pass_=True, log=True, screenshot=False)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Report is not downloaded",
-                                                    pass_=False, log=True, screenshot=False)
+                                                      pass_=False, log=True, screenshot=False)
                     raise Exception("Report download is failed")                                                                                        
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Error in downloading the table",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Download table failed")
 
-    def back_to_report_page(self, locator):
-        self.jsclick(locator)
+    def back_to_report_page(self, locator, env):
+        self.jsclick(locator, env)
 
     @fWaitFor
     def get_latest_filename(self, UnivWaitFor=0):
@@ -327,8 +327,8 @@ class SLRReport(Base):
         latest_file_path = max(list_of_files, key=os.path.getctime)
         # Extracting the filename from the latest file path
         latest_filename = os.path.basename(latest_file_path)
-        # self.LogScreenshot.fLogScreenshot(message=f"Latest Filename from Actual Outputs folder is : {latest_filename}",
-        #                                     pass_=True, log=True, screenshot=False)
+        # self.LogScreenshot.fLogScreenshot(message=f"Latest Filename from Actual Outputs folder is : "
+        #                                           f"{latest_filename}", pass_=True, log=True, screenshot=False)
         return latest_filename                                                
     
     def get_and_validate_filename(self, filepath):
@@ -348,6 +348,10 @@ class SLRReport(Base):
                 self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded. Filename is {filename}",
                                                   pass_=True, log=True, screenshot=False)
                 return filename
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f" Downloaded Filename is {filename}, Expectedname is "
+                                                          f"{expectedname}",
+                                                  pass_=False, log=True, screenshot=False)                
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
                                                       f"Filenames are {expectedname} and Actual "
@@ -804,25 +808,27 @@ class SLRReport(Base):
                             raise Exception(f"For '{n}' in Short Reference, corresponding contents in column "
                                             f"'Publication Type' are not in sorted order in Web_excel report")
 
-    def test_prisma_ele_comparison_between_Excel_and_Word_Report(self, pop_data, slr_type, add_criteria, filepath):
+    def test_prisma_ele_comparison_between_Excel_and_Word_Report(self, pop_data, slr_type, add_criteria, filepath, env):
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        # self.go_to_page("SLR_Homepage", env)
+        # self.click("liveslr_reset_filter", env)
+        self.refreshpage()
         time.sleep(2)
-        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.generate_download_report("excel_report")
+        self.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.getFilenameAndValidate(180)
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
-        self.generate_download_report("word_report")
+        self.generate_download_report("word_report", env)
         # time.sleep(5)
         # word_filename = self.getFilenameAndValidate(180)
         # word_filename = self.get_latest_filename(UnivWaitFor=180)
@@ -862,24 +868,26 @@ class SLRReport(Base):
                             f"'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' "
                             f"table count is {word}")
 
-    def test_prisma_ele_comparison_between_Excel_and_UI(self, pop_data, slr_type, add_criteria, filepath):
+    def test_prisma_ele_comparison_between_Excel_and_UI(self, pop_data, slr_type, add_criteria, filepath, env):
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        # self.go_to_page("SLR_Homepage", env)
+        # self.click("liveslr_reset_filter", env)
+        self.refreshpage()
         time.sleep(2)
-        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.scroll("New_total_selected")
+        self.scroll("New_total_selected", env)
         locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
                     'Study_Design_Count', 'Reported_Var_Count', 'New_total_selected']
         ui_add_critera_values = []
         for i in locators:
-            ui_add_critera_values.append(self.get_text(i))
+            ui_add_critera_values.append(self.get_text(i, env))
         # Converting list values from str to int
         ui_add_critera_values = [int(x) for x in ui_add_critera_values]
         
@@ -905,7 +913,7 @@ class SLRReport(Base):
         #                                           f"{rptd_var_count}, Total Selected Count : {total_sel_count}",
         #                                   pass_=True, log=True, screenshot=True)
 
-        self.generate_download_report("excel_report")
+        self.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.getFilenameAndValidate(180)
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
@@ -932,19 +940,21 @@ class SLRReport(Base):
                             f"'Updated PRISMA table' in UI")
 
     def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type,
-                                                                                  add_criteria, filepath):
+                                                                                  add_criteria, filepath, env):
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        # self.go_to_page("SLR_Homepage", env)
+        # self.click("liveslr_reset_filter", env)
+        self.refreshpage()
         time.sleep(2)
-        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.generate_download_report("excel_report")
+        self.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.getFilenameAndValidate(180)
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
@@ -996,19 +1006,21 @@ class SLRReport(Base):
                                 f"Selected studies(Unique Study Identifier)count is not matching with the selected "
                                 f"count in Updated PRISMA tab")
 
-    def test_prisma_tab_format_changes(self, pop_data, slr_type, add_criteria, filepath):
+    def test_prisma_tab_format_changes(self, pop_data, slr_type, add_criteria, filepath, env):
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        # self.go_to_page("SLR_Homepage", env)
+        # self.click("liveslr_reset_filter", env)
+        self.refreshpage()
         time.sleep(2)
-        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.generate_download_report("excel_report")
+        self.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.getFilenameAndValidate(180)
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
@@ -1078,34 +1090,34 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception(f"Static text '{row_23}' has not been added.")                                            
 
-    def test_interventional_to_clinical_changes(self, filepath):
+    def test_interventional_to_clinical_changes(self, filepath, env):
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        self.go_to_page("SLR_Homepage", env)
+        self.select_data("NewImportLogic_1 - Test_Automation_1", "NewImportLogic_1 - Test_Automation_1_radio_button",
+                         env)
         time.sleep(1)
-        self.select_data("NewImportLogic_1 - Test_Automation_1", "NewImportLogic_1 - Test_Automation_1_radio_button")
-        time.sleep(1)
-        type_of_slr_text = self.get_text("slrtype_first_option_text")
-        self.select_data("Clinical", "Clinical_radio_button")
+        type_of_slr_text = self.get_text("slrtype_first_option_text", env)
+        self.select_data("Clinical", "Clinical_radio_button", env)
 
-        self.click("NMA_Button")
-        nma_param_clinical_list = self.get_text("NMA_parameters_list_clinical")
+        self.click("NMA_Button", env)
+        nma_param_clinical_list = self.get_text("NMA_parameters_list_clinical", env)
 
-        self.generate_download_report("excel_report")
+        self.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.getFilenameAndValidate(180)
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
-        self.preview_result("preview_results")
-        self.table_display_check("Table")
-        web_table_title = self.get_text("web_table_title")
-        self.generate_download_report("Export_as_excel")
+        self.preview_result("preview_results", env)
+        self.table_display_check("Table", env)
+        web_table_title = self.get_text("web_table_title", env)
+        self.generate_download_report("Export_as_excel", env)
         # time.sleep(5)
         # webexcel_filename = self.getFilenameAndValidate(180)
         # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
         webexcel_filename = self.get_and_validate_filename(filepath)
-        self.back_to_report_page("Back_to_search_page")
+        self.back_to_report_page("Back_to_search_page", env)
 
         if search("Clinical", type_of_slr_text) and not search("Interventional", type_of_slr_text):
             self.LogScreenshot.fLogScreenshot(message=f"From 'Search LiveSLR' page -> Under Select Type of SLR first "
@@ -1132,17 +1144,17 @@ class SLRReport(Base):
             raise Exception(f"From 'Search LiveSLR' page -> Go to 'Select Data for  NMA' -> Under select NMA "
                             f"parameters section is not updated from Interventional to 'Clinical'")
 
-        self.click("protocol_link")
+        self.click("protocol_link", env)
         pages = [['picos', 'picos_pop_dropdown', 'picos_study_type_dropdown'],
                  ['searchstrategy', 'searchstrategy_pop_dropdown', 'searchstrategy_study_type_dropdown'],
                  ['prismas', 'prisma_pop_dropdown', 'prisma_study_type_dropdown']]
         for i in pages:
-            self.click(i[0])
-            pop_ele = self.select_element(i[1])
+            self.click(i[0], env)
+            pop_ele = self.select_element(i[1], env)
             select1 = Select(pop_ele)
             select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
 
-            stdy_ele = self.select_element(i[2])
+            stdy_ele = self.select_element(i[2], env)
             select2 = Select(stdy_ele)
             opts = select2.options
             dropdown_li = []
@@ -1160,12 +1172,12 @@ class SLRReport(Base):
                 raise Exception(f"From page '{i[0]}' -> Under Study type dropdown Interventional is not changed "
                                 f"to 'Clinical'")
 
-        self.click("manage_qa_data_button")
-        pop_ele = self.select_element("select_pop_dropdown")
+        self.click("manage_qa_data_button", env)
+        pop_ele = self.select_element("select_pop_dropdown", env)
         select1 = Select(pop_ele)
         select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
 
-        stdy_ele = self.select_element("select_stdy_type_dropdown")
+        stdy_ele = self.select_element("select_stdy_type_dropdown", env)
         select2 = Select(stdy_ele)
         opts = select2.options
         qa_data_dropdown_li = []
@@ -1321,19 +1333,20 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception(f"Report sheet heading is not updated from Interventional to 'Clinical'")
 
-    def test_publication_identifier_count_in_updated_prisma_tab(self, pop_data, slr_type, add_criteria, filepath):
+    def test_publication_identifier_count_in_updated_prisma_tab(self, pop_data, slr_type, add_criteria, filepath, env):
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
-        time.sleep(2)
-        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}")
-        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}")
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", f"{add_criteria[3][2]}")
+        # self.go_to_page("SLR_Homepage", env)
+        # self.click("liveslr_reset_filter", env)
+        self.refreshpage()
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
+        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
+        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
+        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
-        self.generate_download_report("excel_report")
+        self.generate_download_report("excel_report", env)
         # time.sleep(5)
         # excel_filename = self.getFilenameAndValidate(180)
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
@@ -1398,7 +1411,7 @@ class SLRReport(Base):
                                 f"unique Publication Identifier count is not matching with the "
                                 f"count in Updated PRISMA tab -> 'Publications' column")            
 
-    def validate_population_col_in_wordreport(self, filepath, locatorname):
+    def validate_population_col_in_wordreport(self, filepath, locatorname, env):
         self.LogScreenshot.fLogScreenshot(message=f"Validate contents of Population/Sub-group column in Word Report",
                                           pass_=True, log=True, screenshot=False)
         source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)
@@ -1412,16 +1425,15 @@ class SLRReport(Base):
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)         
 
         self.refreshpage()
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
-        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1]) 
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1], env) 
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
-        time.sleep(2)
-        self.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}")
-        self.select_data(slrtype[0][0], f"{slrtype[0][1]}")
+        self.go_to_page("SLR_Homepage", env)
+        self.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}", env)
+        self.select_data(slrtype[0][0], f"{slrtype[0][1]}", env)
         
-        self.generate_download_report("word_report")
+        self.generate_download_report("word_report", env)
         # time.sleep(5)
         # word_filename = self.getFilenameAndValidate(180)
         # word_filename = self.get_latest_filename(UnivWaitFor=180)
@@ -1483,17 +1495,17 @@ class SLRReport(Base):
                     raise Exception("Column names are not matching between Source data and "
                                     "Word Report")
             self.refreshpage()
-            self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+            self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-            self.exbase.delete_file(extraction_file[0][2])
+            self.exbase.delete_file(extraction_file[0][2], env)
 
             # Go to live slr page
-            self.liveslrpage.go_to_liveslr("SLR_Homepage")
+            self.go_to_page("SLR_Homepage", env)
             time.sleep(2)
         except Exception:
             raise Exception("Error in Word report content validation")
 
-    def validate_control_chars_in_wordreport(self, filepath, locatorname):
+    def validate_control_chars_in_wordreport(self, filepath, locatorname, env):
         self.LogScreenshot.fLogScreenshot(message=f"Validate the accessibility of downloaded reports when extraction "
                                                   f"file contains control characters",
                                           pass_=True, log=True, screenshot=False)
@@ -1507,38 +1519,37 @@ class SLRReport(Base):
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)         
 
         self.refreshpage()
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
-        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1]) 
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1], env) 
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
-        time.sleep(2)
+        self.go_to_page("SLR_Homepage", env)
         try:
             for i in pop_list:
-                self.select_data(i[0], i[1])
+                self.select_data(i[0], i[1], env)
                 for j in slrtype:
-                    self.select_data(j[0], j[1])
+                    self.select_data(j[0], j[1], env)
 
-                    self.generate_download_report("excel_report")
+                    self.generate_download_report("excel_report", env)
                     # time.sleep(5)
                     # excel_filename = self.getFilenameAndValidate(180)
                     # excel_filename = self.get_latest_filename(UnivWaitFor=180)
                     excel_filename = self.get_and_validate_filename(filepath)
 
-                    self.generate_download_report("word_report")
+                    self.generate_download_report("word_report", env)
                     # time.sleep(5)
                     # word_filename = self.getFilenameAndValidate(180)
                     # word_filename = self.get_latest_filename(UnivWaitFor=180)
                     word_filename = self.get_and_validate_filename(filepath)
 
-                    self.preview_result("preview_results")
-                    self.table_display_check("Table")
-                    self.generate_download_report("Export_as_excel")
+                    self.preview_result("preview_results", env)
+                    self.table_display_check("Table", env)
+                    self.generate_download_report("Export_as_excel", env)
                     # time.sleep(5)
                     # webexcel_filename = self.getFilenameAndValidate(180)
                     # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
                     webexcel_filename = self.get_and_validate_filename(filepath)
-                    self.back_to_report_page("Back_to_search_page")
+                    self.back_to_report_page("Back_to_search_page", env)
 
                     '''Checking whether we are able to read data from downloaded reports or not'''
                     webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}')
@@ -1564,12 +1575,12 @@ class SLRReport(Base):
             raise Exception("Unable to select element")                  
 
         self.refreshpage()
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn")
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        self.exbase.delete_file(extraction_file[0][2])
+        self.exbase.delete_file(extraction_file[0][2], env)
 
         # Go to live slr page
-        self.liveslrpage.go_to_liveslr("SLR_Homepage")
+        self.go_to_page("SLR_Homepage", env)
 
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):

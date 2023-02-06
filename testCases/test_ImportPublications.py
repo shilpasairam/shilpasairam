@@ -4,6 +4,7 @@ Test will validate the Import publications page
 
 import os
 import pytest
+from Pages.Base import Base
 from Pages.ImportPublicationsPage import ImportPublicationPage
 
 from Pages.LoginPage import LoginPage
@@ -27,6 +28,8 @@ class Test_ImportPublicationPage:
     def test_upload_and_del_extraction_template_success(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -46,8 +49,8 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop1']
 
@@ -72,6 +75,8 @@ class Test_ImportPublicationPage:
     def test_upload_and_del_extraction_template_failure(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -91,8 +96,8 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop2']
 
@@ -113,6 +118,8 @@ class Test_ImportPublicationPage:
     def test_upload_extraction_template_with_header_mismatch(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -132,8 +139,8 @@ class Test_ImportPublicationPage:
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop3']
 
@@ -154,6 +161,8 @@ class Test_ImportPublicationPage:
     def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -174,8 +183,8 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop4']
 
@@ -197,6 +206,8 @@ class Test_ImportPublicationPage:
     def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -217,8 +228,8 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop5']
 
@@ -240,6 +251,8 @@ class Test_ImportPublicationPage:
     def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -260,8 +273,8 @@ class Test_ImportPublicationPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
-        self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop6']
 

@@ -25,9 +25,7 @@ class Test_Login:
         self.LogScreenshot = cLogScreenshot(self.driver, extra)        
         # Invoking the methods from loginpage
         self.loginPage.driver.get(baseURL)
-        self.LogScreenshot.fLogScreenshot(message=f"URL is {baseURL}",
-                                    pass_=True, log=True, screenshot=True)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
     @pytest.mark.smoketest
     def test_logout(self, extra, env):
@@ -37,8 +35,6 @@ class Test_Login:
         # instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)        
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)
-        self.LogScreenshot.fLogScreenshot(message=f"URL is {baseURL}",
-                                    pass_=True, log=True, screenshot=True)        
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.driver.get(baseURL)      
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         self.loginPage.logout("liveslr_logout_button", env)

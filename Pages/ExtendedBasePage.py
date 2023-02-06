@@ -106,25 +106,27 @@ class ExtendedBase(Base):
         result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]
         return result    
     
-    def upload_file(self, pop_name, file_to_upload):
+    def upload_file(self, pop_name, file_to_upload, env):
         expected_upload_status_text = "File(s) uploaded successfully"
     
-        ele = self.select_element("select_update_dropdown")
+        ele = self.select_element("select_update_dropdown", env)
         time.sleep(2)
         select = Select(ele)
         select.select_by_visible_text(pop_name)
         
         jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
         self.jsclick_hide(jscmd)
-        self.input_text("add_file", file_to_upload)
+        self.input_text("add_file", file_to_upload, env)
         try:
-            self.jsclick("upload_button", UnivWaitFor=30)
+            self.jsclick("upload_button", env, UnivWaitFor=30)
             time.sleep(4)
-            if self.isdisplayed("file_status_popup_text"):
-                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-            else:
-                time.sleep(2)
-                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+            # if self.isdisplayed("file_status_popup_text", env):
+            #     actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+            # else:
+            #     time.sleep(2)
+            #     actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+            
+            actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
             
             if actual_upload_status_text == expected_upload_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"File upload is success for Population : {pop_name}. "
@@ -137,7 +139,7 @@ class ExtendedBase(Base):
                 raise Exception("Unable to find status message during Extraction file uploading")
 
             time.sleep(10)
-            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
+            if self.isdisplayed("file_upload_status_pass", env, UnivWaitFor=180):
                 self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
                                                   pass_=True, log=True, screenshot=True)
             else:
@@ -148,13 +150,13 @@ class ExtendedBase(Base):
         except Exception:
             raise Exception("Error while uploading")
             
-    def delete_file(self, expected_filename):
+    def delete_file(self, expected_filename, env):
         expected_delete_status_text = "Import status deleted successfully"        
         self.refreshpage()
         time.sleep(5)
 
         result = []
-        td1 = self.select_elements('upload_table_row_1')
+        td1 = self.select_elements('upload_table_row_1', env)
         for m in td1:
             result.append(m.text)
 
@@ -164,12 +166,12 @@ class ExtendedBase(Base):
                                                       f"the table. Performing the delete operation.",
                                               pass_=True, log=True, screenshot=True)
         
-            self.click("delete_file")
+            self.click("delete_file", env)
             time.sleep(2)
-            self.click("delete_file_popup")
+            self.click("delete_file_popup", env)
             time.sleep(3)
 
-            actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+            actual_delete_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
             
             if actual_delete_status_text == expected_delete_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',

@@ -48,7 +48,7 @@ class Test_LineofTherapyPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         pop_val = ['pop1', 'pop2']
 
@@ -59,7 +59,7 @@ class Test_LineofTherapyPage:
                 self.added_lot_data.append(manage_lot_data)
                 self.LogScreenshot.fLogScreenshot(message=f"Added Line of Therapy is {self.added_lot_data}",
                                                   pass_=True, log=True, screenshot=False)
-                self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+                self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
                 self.imppubpage.upload_file_with_success(i, filepath, env)
                 self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
@@ -89,7 +89,7 @@ class Test_LineofTherapyPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         self.base.go_to_page("managelot_button", env)
 
         pop_val = ['pop1', 'pop2']
@@ -136,7 +136,7 @@ class Test_LineofTherapyPage:
                                           pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         pop_val = ['pop1', 'pop2']
 
@@ -146,8 +146,8 @@ class Test_LineofTherapyPage:
             try:
                 self.base.go_to_page("managelot_button", env)
                 self.lotpage.delete_multiple_manage_lot(i[1], "managelot_delete", "managelot_delete_popup",
-                                                            "managelot_table_rows", env)
-                self.imppubpage.go_to_importpublications("importpublications_button", "extraction_upload_btn", env)
+                                                        "managelot_table_rows", env)
+                self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
                 self.imppubpage.upload_file_with_errors(i[0], filepath, env)
                 self.imppubpage.delete_file(i[0], filepath, "file_status_popup_text",
                                             "upload_table_rows", env)

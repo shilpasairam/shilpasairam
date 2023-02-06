@@ -28,7 +28,7 @@ class Test_AppVersion:
 
         # Invoking the methods from loginpage
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         # Validating the application version
         self.appver.app_version_check("LiveSLR", "about_live_slr", "about_live_slr_text", "about_live_slr_close", env)
@@ -51,7 +51,7 @@ class Test_AppVersion:
 
         # Invoking the methods from loginpage
         self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", env)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         # Validating the application version
         self.appver.app_version_check("LiveRef", "about_live_ref", "about_live_ref_text", "about_live_ref_close", env)

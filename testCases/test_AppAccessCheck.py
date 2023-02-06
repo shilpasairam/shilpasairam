@@ -47,7 +47,7 @@ class Test_AppAccess:
         # self.loginPage.complete_login(username, password, "launch_live_slr", "Cytel LiveSLR")        
         
         # Validating the application version
-        self.appver.validate_liveslr_page_access(scenarios, self.testdata, env)
+        self.appver.validate_liveslr_page_access(scenarios, self.testdata, baseURL, env)
 
         # Logging out from the application
         self.loginPage.logout("liveslr_logout_button", env)        
@@ -59,7 +59,7 @@ class Test_AppAccess:
             ("scenario2", "Staff User"),
             ("scenario3", "Client User")
         ]
-    )    
+    )
     def test_liveref_application_access(self, scenarios, name, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         print(baseURL)        
@@ -73,7 +73,7 @@ class Test_AppAccess:
         # self.loginPage.complete_login(username, password, "launch_liveref", "Cytel LiveRef")        
         
         # Validating the application version
-        self.appver.validate_liveref_page_access(scenarios, self.testdata, env)
+        self.appver.validate_liveref_page_access(scenarios, self.testdata, baseURL, env)
 
         # Logging out from the application
         self.loginPage.logout("liveref_logout_button", env)        

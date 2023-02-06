@@ -28,7 +28,8 @@ class Test_ManageSourceData:
 
     @pytest.mark.C28989
     @pytest.mark.C29826
-    def test_add_invalid_managesourcedata(self, extra):
+    def test_add_invalid_managesourcedata(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -45,15 +46,15 @@ class Test_ManageSourceData:
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Invalid Manage Source Data validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         scenarios = ['scenario1']
 
         for i in scenarios:
             try:
-                self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
-                self.mngsrcpage.add_invalid_managesourcedata(i, self.TestData)                
+                self.mngsrcpage.go_to_managesourcedata("managesourcedata_button", env)
+                self.mngsrcpage.add_invalid_managesourcedata(i, self.TestData, env)                
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Source Data page",
                                                   pass_=False, log=True, screenshot=True)
@@ -64,7 +65,8 @@ class Test_ManageSourceData:
 
     @pytest.mark.C28989
     @pytest.mark.C29826
-    def test_add_valid_managesourcedata(self, extra):
+    def test_add_valid_managesourcedata(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -81,15 +83,16 @@ class Test_ManageSourceData:
         self.LogScreenshot.fLogScreenshot(message=f"***Addtion of Valid Manage Source Data validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
-        self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        self.mngsrcpage.go_to_managesourcedata("managesourcedata_button", env)
 
         scenarios = ['scenario2']
 
         for i in scenarios:
             try:
-                added_src_data = self.mngsrcpage.add_valid_managesourcedata(i, self.TestData, "sourcedata_table_rows")      
+                added_src_data = self.mngsrcpage.add_valid_managesourcedata(i, self.TestData, "sourcedata_table_rows",
+                                                                            env)
                 self.added_source_data.append(added_src_data)
                 self.LogScreenshot.fLogScreenshot(message=f"Added Manage Source data are {self.added_source_data}",
                                                   pass_=True, log=True, screenshot=False)          
@@ -103,7 +106,8 @@ class Test_ManageSourceData:
 
     @pytest.mark.C28989
     @pytest.mark.C29826
-    def test_edit_valid_managesourcedata(self, extra):
+    def test_edit_valid_managesourcedata(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -120,9 +124,9 @@ class Test_ManageSourceData:
         self.LogScreenshot.fLogScreenshot(message=f"**Updation of Existing Manage Source Data validation is started**",
                                           pass_=True, log=True, screenshot=False)
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
-        self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        self.mngsrcpage.go_to_managesourcedata("managesourcedata_button", env)
 
         scenarios = ['scenario2']
 
@@ -131,7 +135,7 @@ class Test_ManageSourceData:
         for i in result:
             try:
                 updated_src_data = self.mngsrcpage.edit_valid_managesourcedata(i[0], i[1], self.TestData,
-                                                                               "sourcedata_edit")
+                                                                               "sourcedata_edit", env)
                 self.updated_source_data.append(updated_src_data)
                 self.LogScreenshot.fLogScreenshot(message=f"Updated Manage Source data are {self.updated_source_data}",
                                                   pass_=True, log=True, screenshot=False)          
@@ -145,7 +149,8 @@ class Test_ManageSourceData:
 
     @pytest.mark.C28989
     @pytest.mark.C29826
-    def test_del_valid_managesourcedata(self, extra):
+    def test_del_valid_managesourcedata(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -162,13 +167,13 @@ class Test_ManageSourceData:
         self.LogScreenshot.fLogScreenshot(message=f"**Deletion of Existing Manage Source Data validation is started**",
                                           pass_=True, log=True, screenshot=False)
         
-        # self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
-        self.mngsrcpage.go_to_managesourcedata("managesourcedata_button")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        self.mngsrcpage.go_to_managesourcedata("managesourcedata_button", env)
 
         for i in self.updated_source_data:
             try:
-                self.mngsrcpage.delete_managesourcedata(i, "sourcedata_table_rows")       
+                self.mngsrcpage.delete_managesourcedata(i, "sourcedata_table_rows", env)       
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Source Data page",
                                                   pass_=False, log=True, screenshot=True)
