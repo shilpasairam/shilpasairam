@@ -34,6 +34,7 @@ class Test_AppAccess:
             ("scenario3", "Client User")
         ]
     )
+    @pytest.mark.C37915
     def test_liveslr_application_access(self, scenarios, name, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         print(baseURL)
@@ -60,6 +61,7 @@ class Test_AppAccess:
             ("scenario3", "Client User")
         ]
     )
+    @pytest.mark.C37915
     def test_liveref_application_access(self, scenarios, name, extra, env):
         baseURL = ReadConfig.getApplicationURL(env)
         print(baseURL)        
