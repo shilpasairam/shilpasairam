@@ -26,20 +26,20 @@ class SearchPublicationsPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
     
-    def select_data(self, locator, locator_button):
+    def select_data(self, locator, locator_button, env):
         time.sleep(2)        
-        self.jsclick(locator, UnivWaitFor=10)
-        if self.isselected(locator_button):
+        self.jsclick(locator, env, UnivWaitFor=10)
+        if self.isselected(locator_button, env):
             self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
                                               pass_=True, log=True, screenshot=True)
 
-    def select_sub_section(self, locator, locator_button, scroll=None):
-        if self.scroll(scroll, UnivWaitFor=20):            
-            self.jsclick(locator, UnivWaitFor=10)
-            if self.isselected(locator_button):
+    def select_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):            
+            self.jsclick(locator, env, UnivWaitFor=10)
+            if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                   pass_=True, log=True, screenshot=True)
-            self.scrollback("searchpublications_page_header")
+            self.scrollback("searchpublications_page_header", env)
     
     def get_indication_details(self, locatorname, filepath, element_locator, button_locator):
         df = pd.read_excel(filepath)
@@ -56,12 +56,13 @@ class SearchPublicationsPage(Base):
         result = [[webelement[i], webelement_btn[i], webelement_count[i]] for i in range(0, len(webelement))]
         return result
 
-    def validate_liveref_reportname(self):
+    def validate_liveref_reportname(self, env):
         expectedfilename = "LiveRef_Report.xlsx"
-        self.click("liveref_generate_report")
-        self.slrreport.table_display_check("liveref_web_table")
-        self.slrreport.generate_download_report("liveref_export_excel_btn")
-        excel_filename = self.slrreport.getFilenameAndValidate(180)
+        self.click("liveref_generate_report", env)
+        self.slrreport.table_display_check("liveref_web_table", env)
+        self.slrreport.generate_download_report("liveref_export_excel_btn", env)
+        # excel_filename = self.slrreport.getFilenameAndValidate(180)
+        excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         if excel_filename[16:] == expectedfilename:
             self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                               pass_=True, log=True, screenshot=False)
@@ -74,7 +75,7 @@ class SearchPublicationsPage(Base):
             raise Exception(f"Filename is not as expected. Expected Filename is {expectedfilename} and "
                             f"Filename is {excel_filename[16:]}")        
     
-    def filter_count_validation(self, locatorname, filepath):
+    def filter_count_validation(self, locatorname, filepath, env):
         # Read Indication Details
         ind = self.get_indication_details(locatorname, filepath, "Indication", "Indication_Checkbox")
 
@@ -83,15 +84,15 @@ class SearchPublicationsPage(Base):
                                           "Population_Count")
 
         for i in pop:
-            self.select_data(ind[0][0], ind[0][1])
-            self.select_sub_section(i[0], i[1], scroll="population_section")
+            self.select_data(ind[0][0], ind[0][1], env)
+            self.select_sub_section(i[0], i[1], env, scroll="population_section")
             time.sleep(1)
 
-            selected_pop_count = self.get_text(i[2])
+            selected_pop_count = self.get_text(i[2], env)
 
-            publications_count = self.get_text("publications_count")
+            publications_count = self.get_text("publications_count", env)
 
-            actual_publications_msg = self.get_text("publications_display_msg")
+            actual_publications_msg = self.get_text("publications_display_msg", env)
 
             if selected_pop_count == publications_count:
                 self.LogScreenshot.fLogScreenshot(message=f"Count is matching between selected population filter and "
@@ -119,9 +120,9 @@ class SearchPublicationsPage(Base):
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception(f"Mismatch found in Publication message")
             
-            self.click("searchpublications_reset_filter")
+            self.click("searchpublications_reset_filter", env)
 
-    def filter_count_validation_with_Excel_report(self, locatorname, filepath):
+    def filter_count_validation_with_Excel_report(self, locatorname, filepath, env):
         # Read Indication Details
         ind = self.get_indication_details(locatorname, filepath, "Indication", "Indication_Checkbox")
 
@@ -130,15 +131,15 @@ class SearchPublicationsPage(Base):
                                           "Population_Count")
 
         for i in pop:
-            self.select_data(ind[0][0], ind[0][1])
-            self.select_sub_section(i[0], i[1], scroll="population_section")
+            self.select_data(ind[0][0], ind[0][1], env)
+            self.select_sub_section(i[0], i[1], env, scroll="population_section")
             time.sleep(1)
 
-            publications_count = self.get_text("publications_count")
+            publications_count = self.get_text("publications_count", env)
 
-            excel_filename = self.validate_liveref_reportname()
+            excel_filename = self.validate_liveref_reportname(env)
             table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_col1")
+            table_col_eles = self.select_elements("liveref_web_table_col1", env)
             for x in table_col_eles:
                 table_col_data.append(x.text)
             # removing empty strings from list    
@@ -151,9 +152,9 @@ class SearchPublicationsPage(Base):
             if int(publications_count) != int(len(web_table_data)):
                 page_counter = math.ceil(int(publications_count)/30)
                 for j in range(1, page_counter):
-                    self.click("liveref_web_table_next")
+                    self.click("liveref_web_table_next", env)
                     time.sleep(1)
-                    table_col_eles1 = self.select_elements("liveref_web_table_col1")
+                    table_col_eles1 = self.select_elements("liveref_web_table_col1", env)
                     for k in table_col_eles1:
                         web_table_data.append(k.text)
                 # removing empty strings from list    
@@ -176,10 +177,10 @@ class SearchPublicationsPage(Base):
                 raise Exception(f"Count is not matching between Publication count, WebTable and Excel Report "
                                 f"data row count")
             
-            self.click("liveref_back_to_selection_page")
-            self.click("searchpublications_reset_filter")
+            self.click("liveref_back_to_selection_page", env)
+            self.click("searchpublications_reset_filter", env)
 
-    def validate_downloaded_filename(self, locatorname, filepath):
+    def validate_downloaded_filename(self, locatorname, filepath, env):
         # Read Indication Details
         ind = self.get_indication_details(locatorname, filepath, "Indication", "Indication_Checkbox")
 
@@ -188,22 +189,22 @@ class SearchPublicationsPage(Base):
                                           "Population_Count")
 
         try:
-            self.select_data(ind[0][0], ind[0][1])
-            self.select_sub_section(pop[0][0], pop[0][1], scroll="population_section")
+            self.select_data(ind[0][0], ind[0][1], env)
+            self.select_sub_section(pop[0][0], pop[0][1], env, scroll="population_section")
             time.sleep(1)            
-            excel_filename = self.validate_liveref_reportname()
+            excel_filename = self.validate_liveref_reportname(env)
             return excel_filename
         except Exception:
             raise Exception("Error while downloading and validating the LiveRef report")
 
-    def presence_of_author_and_affiliation_ui(self, section_locatorname, auth_locator, auth_locator_checkbox):
+    def presence_of_author_and_affiliation_ui(self, section_locatorname, auth_locator, auth_locator_checkbox, env):
 
-        self.select_sub_section(auth_locator, auth_locator_checkbox, section_locatorname)
+        self.select_sub_section(auth_locator, auth_locator_checkbox, env, section_locatorname)
         time.sleep(1)
-        auth_text = self.get_text(auth_locator)
+        auth_text = self.get_text(auth_locator, env)
 
         # Checking the presence of 'Authors And Affiliations' option in LiveRef UI
-        if 'Authors and Affiliations' == auth_text and self.isselected(auth_locator_checkbox, UnivWaitFor=10):
+        if 'Authors and Affiliations' == auth_text and self.isselected(auth_locator_checkbox, env, UnivWaitFor=10):
             self.LogScreenshot.fLogScreenshot(message=f"'Authors and Affiliations' option is present with Checkbox",
                                               pass_=True, log=True, screenshot=True)
         else:
@@ -212,14 +213,14 @@ class SearchPublicationsPage(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception("'Authors and Affiliations' option is not present with Checkbox")
 
-    def presence_of_author_and_affiliation_column(self, section_locatorname, auth_locator, auth_locator_checkbox):
+    def presence_of_author_and_affiliation_column(self, section_locatorname, auth_locator, auth_locator_checkbox, env):
 
-        self.select_sub_section(auth_locator, auth_locator_checkbox, section_locatorname)
+        self.select_sub_section(auth_locator, auth_locator_checkbox, env, section_locatorname)
         time.sleep(1)
-        if self.isselected(auth_locator_checkbox):
-            excel_filename = self.validate_liveref_reportname()
+        if self.isselected(auth_locator_checkbox, env):
+            excel_filename = self.validate_liveref_reportname(env)
             table_col_names = []
-            table_col_eles = self.select_elements("liveref_web_table_col_names")
+            table_col_eles = self.select_elements("liveref_web_table_col_names", env)
             for i in table_col_eles:
                 table_col_names.append(i.text)
             
@@ -248,18 +249,18 @@ class SearchPublicationsPage(Base):
             raise Exception("'Authors And Affiliations' checkbox is not selected.")                    
 
     def validate_content_of_author_and_affiliation_for_previous_load(self, section_locatorname, auth_locator,
-                                                                     auth_locator_checkbox):
+                                                                     auth_locator_checkbox, env):
 
-        self.click("sourceofdata_section")
+        self.click("sourceofdata_section", env)
         time.sleep(1)
-        self.click("sourceofdata_2020_tab")
-        self.select_data("sourceofdata_2020_btn", "sourceofdata_2020_radio_btn")
-        self.select_sub_section(auth_locator, auth_locator_checkbox, section_locatorname)
+        self.click("sourceofdata_2020_tab", env)
+        self.select_data("sourceofdata_2020_btn", "sourceofdata_2020_radio_btn", env)
+        self.select_sub_section(auth_locator, auth_locator_checkbox, env, section_locatorname)
         time.sleep(1)
-        if self.isselected(auth_locator_checkbox):
-            excel_filename = self.validate_liveref_reportname()
+        if self.isselected(auth_locator_checkbox, env):
+            excel_filename = self.validate_liveref_reportname(env)
             table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_auth_col")
+            table_col_eles = self.select_elements("liveref_web_table_auth_col", env)
             for i in table_col_eles:
                 table_col_data.append(i.text)
             # removing empty strings from list    
@@ -288,18 +289,18 @@ class SearchPublicationsPage(Base):
             raise Exception("'Authors And Affiliations' checkbox is not selected.")                    
 
     def validate_content_of_author_and_affiliation_for_latest_load(self, section_locatorname, auth_locator,
-                                                                   auth_locator_checkbox):
+                                                                   auth_locator_checkbox, env):
 
-        self.click("sourceofdata_section")
+        self.click("sourceofdata_section", env)
         time.sleep(1)
-        self.click("sourceofdata_2022_tab")
-        self.select_data("sourceofdata_2022_btn", "sourceofdata_2022_radio_btn")
-        self.select_sub_section(auth_locator, auth_locator_checkbox, section_locatorname)
+        self.click("sourceofdata_2022_tab", env)
+        self.select_data("sourceofdata_2022_btn", "sourceofdata_2022_radio_btn", env)
+        self.select_sub_section(auth_locator, auth_locator_checkbox, env, section_locatorname)
         time.sleep(1)
-        if self.isselected(auth_locator_checkbox):
-            excel_filename = self.validate_liveref_reportname()
+        if self.isselected(auth_locator_checkbox, env):
+            excel_filename = self.validate_liveref_reportname(env)
             table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_auth_col")
+            table_col_eles = self.select_elements("liveref_web_table_auth_col", env)
             for i in table_col_eles:
                 table_col_data.append(i.text)
             # removing empty strings from list    

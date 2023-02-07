@@ -4,6 +4,7 @@ Test will validate the Import publications page
 
 import os
 import pytest
+from Pages.Base import Base
 from Pages.PRISMAsPage import PRISMASPage
 
 from Pages.LoginPage import LoginPage
@@ -14,13 +15,17 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_PRISMAPage:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    filepath = ReadConfig.getprismadata()
+    # filepath = ReadConfig.getprismadata()
 
     @pytest.mark.C30243
-    def test_upload_prisma_details(self, extra):
+    def test_upload_prisma_details(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getprismadata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -39,17 +44,17 @@ class Test_PRISMAPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.prismapage.go_to_prisma("protocol_link", "prismas")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("protocol_link", "prismas", env)
 
         pop_val = ['pop1']
 
         for index, i in enumerate(pop_val):
             try:
-                self.prismapage.add_prisma_excel_file(i, self.filepath)
+                self.prismapage.add_prisma_excel_file(i, filepath, env)
 
-                self.prismapage.upload_prisma_image(i, self.filepath, index+1)
+                self.prismapage.upload_prisma_image(i, filepath, index+1, env)
                 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
@@ -60,7 +65,11 @@ class Test_PRISMAPage:
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30243
-    def test_del_prisma_details(self, extra):
+    def test_del_prisma_details(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getprismadata(env)        
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -73,16 +82,16 @@ class Test_PRISMAPage:
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-        self.prismapage.go_to_prisma("protocol_link", "prismas")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("protocol_link", "prismas", env)
 
         pop_val = ['pop1']
 
         for i in pop_val:
             try:
                 self.prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup",
-                                                      self.filepath)
+                                                      filepath, env)
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
                                                   pass_=False, log=True, screenshot=True)

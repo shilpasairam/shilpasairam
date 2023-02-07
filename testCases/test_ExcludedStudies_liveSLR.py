@@ -12,13 +12,14 @@ from utilities.logScreenshot import cLogScreenshot
 
 @pytest.mark.usefixtures("init_driver")
 class Test_ExcludedStudies_liveSLR:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     filepath = ReadConfig.getexcludedstudiesliveslrpath()
 
     @pytest.mark.C30712
-    def test_presenceof_excludedstudiesliveslr_into_excelreport(self, extra):
+    def test_presenceof_excludedstudiesliveslr_into_excelreport(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Creating object of liveslrpage class
@@ -49,20 +50,21 @@ class Test_ExcludedStudies_liveSLR:
                                                   f"Complete Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
         for i in scenarios:
             try:
-                self.exstdy_liveslr.presenceof_excludedstudiesliveslr_into_excelreport(i, self.filepath)
+                self.exstdy_liveslr.presenceof_excludedstudiesliveslr_into_excelreport(i, self.filepath, env)
             except Exception:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C30713
     @pytest.mark.C31841
-    def test_presenceof_columnnames_in_excludedstudiesliveslrtab(self, extra):
+    def test_presenceof_columnnames_in_excludedstudiesliveslrtab(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Creating object of liveslrpage class
@@ -93,20 +95,21 @@ class Test_ExcludedStudies_liveSLR:
                                                   f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
         for index, i in enumerate(scenarios):
             try:
-                self.exstdy_liveslr.presenceof_columnnames_in_excludedstudiesliveslrtab(i, self.filepath, index)
+                self.exstdy_liveslr.presenceof_columnnames_in_excludedstudiesliveslrtab(i, self.filepath, index, env)
             except Exception:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C30715
     @pytest.mark.C31843
-    def test_validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, extra):
+    def test_validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Creating object of liveslrpage class
@@ -137,14 +140,14 @@ class Test_ExcludedStudies_liveSLR:
                                                   f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
         for index, i in enumerate(scenarios):
             try:
                 self.exstdy_liveslr.validate_excludedstudiesliveslrtab_and_contents_into_excelreport(i, self.filepath,
-                                                                                                     index)
+                                                                                                     index, env)
             except Exception:
                 raise Exception("Unable to select element")

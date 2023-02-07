@@ -14,30 +14,32 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_AppVersion:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
     @pytest.mark.C29642
-    def test_liveslr_app_version(self, extra):
+    def test_liveslr_app_version(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Creating object of AppVersion class
         self.appver = AppVersion(self.driver, extra)
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         # Validating the application version
-        self.appver.app_version_check("LiveSLR", "about_live_slr", "about_live_slr_text", "about_live_slr_close")
+        self.appver.app_version_check("LiveSLR", "about_live_slr", "about_live_slr_text", "about_live_slr_close", env)
 
         # Logging out from the application
-        self.loginPage.logout("liveslr_logout_button")
+        self.loginPage.logout("liveslr_logout_button", env)
 
     @pytest.mark.C29577
     @pytest.mark.C29826
-    def test_liveref_app_version(self, extra):
+    def test_liveref_app_version(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -48,15 +50,15 @@ class Test_AppVersion:
         self.appver = AppVersion(self.driver, extra)
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         # Validating the application version
-        self.appver.app_version_check("LiveRef", "about_live_ref", "about_live_ref_text", "about_live_ref_close")
+        self.appver.app_version_check("LiveRef", "about_live_ref", "about_live_ref_text", "about_live_ref_close", env)
 
         # Checking the absence of Glossary option
         res_list = []
-        eles = self.base.select_elements("glossary_nav_bar", UnivWaitFor=3)
+        eles = self.base.select_elements("glossary_nav_bar", env, UnivWaitFor=3)
         for ele in eles:
             res_list.append(ele.text)
         
@@ -67,4 +69,4 @@ class Test_AppVersion:
             raise Exception(f"Glossary link is present as expected")
 
         # Logging out from the application
-        self.loginPage.logout("liveref_logout_button")
+        self.loginPage.logout("liveref_logout_button", env)

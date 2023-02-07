@@ -29,9 +29,9 @@ class ManagePopulationsPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_managepopulations(self, locator):
-        self.click(locator, UnivWaitFor=10)
-        time.sleep(5)
+    # def go_to_managepopulations(self, locator, env):
+    #     self.click(locator, env, UnivWaitFor=10)
+    #     time.sleep(5)
 
     # def get_template_file_details(self, filepath):
     #     file = pd.read_excel(filepath)
@@ -172,11 +172,11 @@ class ManagePopulationsPage(Base):
             raise Exception("Error in deleting the population")
 
     # Find the total row count if data is being ordered using Pagination
-    def get_table_length(self, table_info, table_next_btn, table_rows):
+    def get_table_length(self, table_info, table_next_btn, table_rows, env):
         self.refreshpage()
         time.sleep(2)
         # get the count info and extract the total value        
-        table_count_info = self.get_text(table_info)
+        table_count_info = self.get_text(table_info, env)
         ind1 = table_count_info.index('of')
         ind2 = table_count_info.index('entries')
         total_entries = int(table_count_info[ind1+3:ind2-1])
@@ -185,30 +185,29 @@ class ManagePopulationsPage(Base):
         # next nearest integer value
         page_counter = math.ceil(total_entries/10)
         # Get the length of row from the landing page
-        initial_rows_count = self.select_elements(table_rows)
+        initial_rows_count = self.select_elements(table_rows, env)
         table_row_count = len(initial_rows_count)
         # Iterate over the remaining pages and append the row counts
         for i in range(1, page_counter):
-            self.click(table_next_btn)
+            self.click(table_next_btn, env)
             time.sleep(1)
-            next_rows_count = self.select_elements(table_rows)
+            next_rows_count = self.select_elements(table_rows, env)
             table_row_count += len(next_rows_count)
         
         return table_row_count
 
-    def add_multiple_population(self, locatorname, add_locator, filepath, table_rows):
+    def add_multiple_population(self, locatorname, add_locator, filepath, table_rows, env):
         expected_status_text = "Population added successfully"
-        self.refreshpage()
-        time.sleep(2)
         
         # Fetching total rows count before adding a new population
-        table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", table_rows)
+        table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
+                                                  table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=False)        
 
-        self.scroll("managepopulation_page_heading")
-        self.click(add_locator, UnivWaitFor=10)
+        self.scroll("managepopulation_page_heading", env)
+        self.click(add_locator, env, UnivWaitFor=10)
 
         # Read the file name and path required to upload
         upload_file_path = self.get_template_file_details(filepath, locatorname, 'manage_population_file_to_upload')
@@ -216,13 +215,14 @@ class ManagePopulationsPage(Base):
         new_pop_data, new_pop_val = self.get_pop_data(filepath, locatorname, 'Add_population_value')
 
         for j in new_pop_data:
-            self.input_text(j[0], f'{j[1]}', UnivWaitFor=10)
+            self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
-        self.input_text("template_file_upload", upload_file_path)
-        self.click("submit_button")
-        time.sleep(4)
+        self.input_text("template_file_upload", upload_file_path, env)
+        self.click("submit_button", env)
+        # time.sleep(4)
 
-        actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
+        # actual_status_text = self.get_text("population_status_popup_text", env, UnivWaitFor=10)
+        actual_status_text = self.get_status_text("population_status_popup_text", env)
         # time.sleep(2)
 
         if actual_status_text == expected_status_text:
@@ -234,7 +234,8 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Unable to find status message while adding New Population")
 
         # Fetching total rows count after adding a new population
-        table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", table_rows)
+        table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
+                                                 table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
                                                   f'{table_rows_after}',
                                           pass_=True, log=True, screenshot=False)        
@@ -242,9 +243,9 @@ class ManagePopulationsPage(Base):
         try:
             if table_rows_after > table_rows_before != table_rows_after:
                 result = []
-                self.scroll("managepopulation_page_heading")
-                self.input_text("search_button", f'{new_pop_val[1]}')
-                td1 = self.select_elements('manage_pop_table_row_1')
+                self.scroll("managepopulation_page_heading", env)
+                self.input_text("search_button", f'{new_pop_val[1]}', env)
+                td1 = self.select_elements('manage_pop_table_row_1', env)
                 for m in td1:
                     result.append(m.text)
 
@@ -258,19 +259,17 @@ class ManagePopulationsPage(Base):
                     return population
                 else:
                     raise Exception("Population data is not added")
-            self.clear("search_button")
+            self.clear("search_button", env)
             self.refreshpage()
             time.sleep(2)
         except Exception:
             raise Exception("Error while adding the population")
 
-    def edit_multiple_population(self, locatorname, pop_name, edit_locator, filepath):
+    def edit_multiple_population(self, locatorname, pop_name, edit_locator, filepath, env):
         expected_status_text = "Population updated successfully"
-        self.refreshpage()
-        time.sleep(2)
 
-        self.input_text("search_button", f'{pop_name}')
-        self.click(edit_locator, UnivWaitFor=10)
+        self.input_text("search_button", f'{pop_name}', env)
+        self.click(edit_locator, env, UnivWaitFor=10)
         # Read the file name and path required to upload
         upload_file_path = self.get_template_file_details(filepath, locatorname,
                                                           'manage_population_updatedfile_to_upload')
@@ -278,13 +277,14 @@ class ManagePopulationsPage(Base):
         edit_pop_data, edit_pop_val = self.get_pop_data(filepath, locatorname, 'Edit_population_value')
 
         for j in edit_pop_data:
-            self.input_text(j[0], f'{j[1]}', UnivWaitFor=10)
+            self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
-        self.input_text("template_file_upload", upload_file_path)
-        self.click("submit_button")
+        self.input_text("template_file_upload", upload_file_path, env)
+        self.click("submit_button", env)
         time.sleep(2)
 
-        actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
+        # actual_status_text = self.get_text("population_status_popup_text", env, UnivWaitFor=10)
+        actual_status_text = self.get_status_text("population_status_popup_text", env)
         # time.sleep(2)
         
         if actual_status_text == expected_status_text:
@@ -298,8 +298,8 @@ class ManagePopulationsPage(Base):
 
         try:
             result = []
-            self.input_text("search_button", f'{edit_pop_val[1]}')
-            td1 = self.select_elements('manage_pop_table_row_1')
+            self.input_text("search_button", f'{edit_pop_val[1]}', env)
+            td1 = self.select_elements('manage_pop_table_row_1', env)
             for m in td1:
                 result.append(m.text)
 
@@ -312,30 +312,32 @@ class ManagePopulationsPage(Base):
                 population = f"{result[2]}"
                 return population
             
-            self.clear("search_button")
+            self.clear("search_button", env)
             self.refreshpage()
             time.sleep(2)
         except Exception:
             raise Exception("Error while editing the population")    
 
-    def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows):
+    def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows, env):
         expected_status_text = "Population deleted successfully"
         
         # Fetching total rows count before deleting a new population
-        table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", tablerows)
+        table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
+                                                  tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: '
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=False)        
 
-        self.scroll("managepopulation_page_heading")
-        self.input_text("search_button", pop_value)
+        self.scroll("managepopulation_page_heading", env)
+        self.input_text("search_button", pop_value, env)
         
-        self.click(del_locator)
+        self.click(del_locator, env)
         time.sleep(2)
-        self.click(del_locator_popup)
+        self.click(del_locator_popup, env)
         time.sleep(2)
         
-        actual_status_text = self.get_text("population_status_popup_text", UnivWaitFor=10)
+        # actual_status_text = self.get_text("population_status_popup_text", env, UnivWaitFor=10)
+        actual_status_text = self.get_status_text("population_status_popup_text", env)
         # time.sleep(2)
 
         if actual_status_text == expected_status_text:
@@ -348,7 +350,8 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Unable to find status message while deleting the Population data")
 
         # Fetching total rows count after deleting a new population
-        table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn", tablerows)
+        table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
+                                                 tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a population: {table_rows_after}',
                                           pass_=True, log=True, screenshot=False)        
 

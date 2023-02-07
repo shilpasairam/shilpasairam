@@ -47,11 +47,11 @@ class LineofTherapyPage(Base):
         return lot_options    
     
     # Find the total row data if data is being ordered using Pagination
-    def get_table_data(self, table_info, table_next_btn, table_rows_data):
+    def get_table_data(self, table_info, table_next_btn, table_rows_data, env):
         self.refreshpage()
         time.sleep(2)
         # get the count info and extract the total value        
-        table_count_info = self.get_text(table_info)
+        table_count_info = self.get_text(table_info, env)
         ind1 = table_count_info.index('of')
         ind2 = table_count_info.index('entries')
         total_entries = int(table_count_info[ind1+3:ind2-1])
@@ -60,25 +60,25 @@ class LineofTherapyPage(Base):
         # next nearest integer value
         page_counter = math.ceil(total_entries/10)
         lot_optns_text = []
-        options = self.select_elements(table_rows_data)
+        options = self.select_elements(table_rows_data, env)
         for k in options:
             lot_optns_text.append(k.text)
         
         # Iterate over the remaining pages and append the row data
         for i in range(1, page_counter):
-            self.click(table_next_btn)
+            self.click(table_next_btn, env)
             time.sleep(1)
-            options1 = self.select_elements(table_rows_data)
+            options1 = self.select_elements(table_rows_data, env)
             for v in options1:
                 lot_optns_text.append(v.text)
         
         return lot_optns_text    
     
-    def check_lot_ui_elements(self, filepath):
+    def check_lot_ui_elements(self, filepath, env):
         # Read Expected messages
         expected_data = self.get_expected_data(filepath, "Expected_ui_elements")
 
-        pagedetails = [self.get_text("managelot_page_heading"), self.get_text("managelot_pagecontent")]
+        pagedetails = [self.get_text("managelot_page_heading", env), self.get_text("managelot_pagecontent", env)]
 
         if expected_data == pagedetails:
             self.LogScreenshot.fLogScreenshot(message=f"Line of Therapy Page name and page content is present in UI",
@@ -88,7 +88,7 @@ class LineofTherapyPage(Base):
                                                       f"UI", pass_=False, log=True, screenshot=False)
             raise Exception(f"Line of Therapy Page name and page content is not present in UI")            
 
-        if self.isdisplayed("add_lot_btn") and self.isdisplayed("managelot_resultpanel_heading"):
+        if self.isdisplayed("add_lot_btn", env) and self.isdisplayed("managelot_resultpanel_heading", env):
             self.LogScreenshot.fLogScreenshot(message=f"Add Line of Therapy button and Result panel heading is "
                                                       f"present UI", pass_=True, log=True, screenshot=True)
         else:
@@ -96,7 +96,7 @@ class LineofTherapyPage(Base):
                                                       f"present UI", pass_=False, log=True, screenshot=False)
             raise Exception(f"Add Line of Therapy button and Result panel heading is not present UI")
     
-    def add_multiple_lot(self, locatorname, add_lot_button, table_rows, filepath):
+    def add_multiple_lot(self, locatorname, add_lot_button, table_rows, filepath, env):
         expected_add_status_text = "Line of Therapy added successfully"
 
         # Read LoT name details from data sheet
@@ -105,15 +105,12 @@ class LineofTherapyPage(Base):
         # Read Expected LoT options from data sheet
         expected_lot_options = self.get_expected_data(filepath, 'Expected_lot_options')    
 
-        self.refreshpage()
-        time.sleep(5)
-
         # Validate the UI page elements
-        self.check_lot_ui_elements(filepath)
+        self.check_lot_ui_elements(filepath, env)
 
         # Fetch the complete LoT data from the table
         complete_lot_table_data = self.get_table_data("managelot_table_rows_info", "managelot_table_next_btn",
-                                                      "managelot_table_rows_data")
+                                                      "managelot_table_rows_data", env)
         
         # Compare the expected mandatory lot option with actual table data
         for j in expected_lot_options:
@@ -127,19 +124,19 @@ class LineofTherapyPage(Base):
         
         # Fetching total rows count before adding a new LoT
         table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                             "managelot_table_next_btn", table_rows)
+                                                             "managelot_table_next_btn", table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new LoT: {table_rows_before}',
                                           pass_=True, log=True, screenshot=False)        
         
-        self.scroll("managelot_page_heading")
-        self.click(add_lot_button, UnivWaitFor=10)
+        self.scroll("managelot_page_heading", env)
+        self.click(add_lot_button, env, UnivWaitFor=10)
 
-        self.input_text("lot_name", lot_name[0])
+        self.input_text("lot_name", lot_name[0], env)
 
-        self.click("lot_submit_btn")
+        self.click("lot_submit_btn", env)
         time.sleep(2)
 
-        actual_add_status_text = self.get_text("managelot_status_text", UnivWaitFor=10)
+        actual_add_status_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
         # time.sleep(2)
 
         if actual_add_status_text == expected_add_status_text:
@@ -153,7 +150,7 @@ class LineofTherapyPage(Base):
 
         # Fetching total rows count after adding a new LoT
         table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                            "managelot_table_next_btn", table_rows)
+                                                            "managelot_table_next_btn", table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new LoT: {table_rows_after}',
                                           pass_=True, log=True, screenshot=False)        
 
@@ -161,8 +158,8 @@ class LineofTherapyPage(Base):
             if table_rows_after > table_rows_before != table_rows_after:
                 self.refreshpage()
                 result = []
-                self.input_text("managelot_search_box", f"{lot_name[0]}")
-                td1 = self.select_elements('managelot_table_row_1')
+                self.input_text("managelot_search_box", f"{lot_name[0]}", env)
+                td1 = self.select_elements('managelot_table_row_1', env)
                 for n in td1:
                     result.append(n.text)
                 
@@ -177,22 +174,22 @@ class LineofTherapyPage(Base):
         except Exception:
             raise Exception("Error while adding the Line of Therapy")
     
-    def edit_multiple_lot(self, locatorname, current_data, edit_upd_button, filepath):
+    def edit_multiple_lot(self, locatorname, current_data, edit_upd_button, filepath, env):
         self.refreshpage()
         time.sleep(5)
 
         # Read LoT name details from data sheet
         lot_name = self.get_lot_name(filepath, locatorname, "LOT_name")
 
-        self.input_text("managelot_search_box", current_data)
-        self.click(edit_upd_button, UnivWaitFor=10)
+        self.input_text("managelot_search_box", current_data, env)
+        self.click(edit_upd_button, env, UnivWaitFor=10)
 
-        self.input_text("lot_name", f"{lot_name[0]}_Update")
+        self.input_text("lot_name", f"{lot_name[0]}_Update", env)
 
-        self.click("sel_update_submit")
+        self.click("sel_update_submit", env)
         time.sleep(2)
 
-        update_text = self.get_text("managelot_status_text", UnivWaitFor=10)
+        update_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
         time.sleep(2)
                                           
         self.assertText("Line of Therapy updated successfully", update_text)
@@ -202,8 +199,8 @@ class LineofTherapyPage(Base):
         try:
             self.refreshpage()
             result = []
-            self.input_text("managelot_search_box", f"{lot_name[0]}_Update")
-            td1 = self.select_elements('manage_update_table_row_1')
+            self.input_text("managelot_search_box", f"{lot_name[0]}_Update", env)
+            td1 = self.select_elements('manage_update_table_row_1', env)
             for n in td1:
                 result.append(n.text)
             
@@ -217,27 +214,27 @@ class LineofTherapyPage(Base):
         except Exception:
             raise Exception("Error while editing the Line of Therapy")
 
-    def delete_multiple_manage_lot(self, added_update_val, del_locator, del_locator_popup, tablerows):
+    def delete_multiple_manage_lot(self, added_update_val, del_locator, del_locator_popup, tablerows, env):
         self.refreshpage()
         time.sleep(2)
 
         # Fetching total rows count before deleting a LoT
         table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                             "managelot_table_next_btn", tablerows)
+                                                             "managelot_table_next_btn", tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a LoT: {table_rows_before}',
                                           pass_=True, log=True, screenshot=False)
 
-        self.scroll("managelot_page_heading")
-        self.input_text("managelot_search_box", added_update_val)
+        self.scroll("managelot_page_heading", env)
+        self.input_text("managelot_search_box", added_update_val, env)
         self.LogScreenshot.fLogScreenshot(message=f'LoT option selected for deletion is : ',
                                           pass_=True, log=True, screenshot=True)        
         
-        self.click(del_locator)
+        self.click(del_locator, env)
         time.sleep(2)
-        self.click(del_locator_popup)
+        self.click(del_locator_popup, env)
         time.sleep(2)
 
-        del_text = self.get_text("managelot_status_text", UnivWaitFor=10)
+        del_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
         time.sleep(2)
                                           
         self.assertText("Line of Therapy deleted successfully", del_text)
@@ -246,7 +243,7 @@ class LineofTherapyPage(Base):
 
         # Fetching total rows count after deleting a LoT
         table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                            "managelot_table_next_btn", tablerows)
+                                                            "managelot_table_next_btn", tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a LoT: {table_rows_after}',
                                           pass_=True, log=True, screenshot=False)        
 

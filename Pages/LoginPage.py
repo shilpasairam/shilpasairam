@@ -24,27 +24,29 @@ class LoginPage(Base):
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
 
     """Page Actions for LiveSLR Login page"""
-    def complete_login(self, username, password, launch_btn, title):
+    def complete_login(self, username, password, launch_btn, title, url, env):
         """
         application login page must be opened before calling this method
         """
         try:
+            self.LogScreenshot.fLogScreenshot(message=f"Application URL is : {url}",
+                                              pass_=True, log=True, screenshot=False)            
             # enter username
-            self.input_text("username_textbox", username, UnivWaitFor=10)
+            self.input_text("username_textbox", username, env, UnivWaitFor=10)
             self.LogScreenshot.fLogScreenshot(message='Enter username',
                                               pass_=True, log=True, screenshot=True)
 
             # enter password
-            self.input_text("password_textbox", password, UnivWaitFor=3)
+            self.input_text("password_textbox", password, env, UnivWaitFor=3)
             self.LogScreenshot.fLogScreenshot(message='Enter password',
                                               pass_=True, log=True, screenshot=True)
 
             # submit password
-            self.click("login_button", UnivWaitFor=3)
+            self.click("login_button", env, UnivWaitFor=3)
             self.LogScreenshot.fLogScreenshot(message='Submit Credentials',
                                               pass_=True, log=True, screenshot=False)
             
-            self.jsclick(launch_btn, UnivWaitFor=5)
+            self.jsclick(launch_btn, env, UnivWaitFor=5)
             self.driver.switch_to.window(self.driver.window_handles[1])
         except Exception:
             pass
@@ -61,13 +63,13 @@ class LoginPage(Base):
                 pass_=False, log=True, screenshot=True)
             raise Exception("Login Unsuccessful")
 
-    def logout(self, logout_btn):
+    def logout(self, logout_btn, env):
         """
         this method is to logout from the application and arrive at the login landing page
         """
         try:
             # click on logout
-            self.click(logout_btn, UnivWaitFor=10)
+            self.click(logout_btn, env, UnivWaitFor=10)
             self.LogScreenshot.fLogScreenshot(message=f"Complete logout",
                                               pass_=True, log=True, screenshot=False)
 

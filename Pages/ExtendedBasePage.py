@@ -31,6 +31,41 @@ class ExtendedBase(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 20)
 
+    def select_data(self, locator, locator_button, env):
+        time.sleep(3)
+        if self.isselected(locator_button, env):
+            self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
+                                              pass_=True, log=True, screenshot=True)
+        else:
+            self.jsclick(locator, env, UnivWaitFor=10)
+            if self.isselected(locator_button, env):
+                self.LogScreenshot.fLogScreenshot(message=f"Selected Element: {locator}",
+                                                  pass_=True, log=True, screenshot=True)
+
+    def select_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):
+            if self.isselected(locator_button, env):
+                self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.jsclick(locator, env, UnivWaitFor=10)
+                if self.isselected(locator_button, env):
+                    self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
+                                                      pass_=True, log=True, screenshot=True)
+            self.scrollback("SLR_page_header", env)
+
+    def select_all_sub_section(self, locator, locator_button, env, scroll=None):
+        if self.scroll(scroll, env, UnivWaitFor=20):
+            if self.isselected(locator_button, env):
+                self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.jsclick(locator, env, UnivWaitFor=10)
+                if self.isselected(locator_button, env):
+                    self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
+                                                      pass_=True, log=True, screenshot=True)
+            self.scrollback("SLR_page_header", env)        
+
     # Read Population data for LIVESLR Page
     def get_population_data(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
@@ -46,6 +81,14 @@ class ExtendedBase(Base):
         slrtype_button = df.loc[df['Name'] == locatorname]['slrtype_Radio_button'].dropna().to_list()
         result = [[slrtype[i], slrtype_button[i]] for i in range(0, len(slrtype))]
         return result
+
+    # Read Required data for LIVESLR Page actions
+    def get_slrtest_data(self, filepath, sheet, locatorname, option, option_radio_btn):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        opt = df.loc[df['Name'] == locatorname][option].dropna().to_list()
+        opt_button = df.loc[df['Name'] == locatorname][option_radio_btn].dropna().to_list()
+        result = [[opt[i], opt_button[i]] for i in range(0, len(opt))]
+        return result        
     
     # Read expected test data file for comparison
     def get_source_template(self, filepath, sheet, locatorname):
@@ -63,25 +106,27 @@ class ExtendedBase(Base):
         result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]
         return result    
     
-    def upload_file(self, pop_name, file_to_upload):
+    def upload_file(self, pop_name, file_to_upload, env):
         expected_upload_status_text = "File(s) uploaded successfully"
     
-        ele = self.select_element("select_update_dropdown")
+        ele = self.select_element("select_update_dropdown", env)
         time.sleep(2)
         select = Select(ele)
         select.select_by_visible_text(pop_name)
         
         jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
         self.jsclick_hide(jscmd)
-        self.input_text("add_file", file_to_upload)
+        self.input_text("add_file", file_to_upload, env)
         try:
-            self.jsclick("upload_button", UnivWaitFor=30)
+            self.jsclick("upload_button", env, UnivWaitFor=30)
             time.sleep(4)
-            if self.isdisplayed("file_status_popup_text"):
-                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-            else:
-                time.sleep(2)
-                actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+            # if self.isdisplayed("file_status_popup_text", env):
+            #     actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+            # else:
+            #     time.sleep(2)
+            #     actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+            
+            actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
             
             if actual_upload_status_text == expected_upload_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"File upload is success for Population : {pop_name}. "
@@ -94,7 +139,7 @@ class ExtendedBase(Base):
                 raise Exception("Unable to find status message during Extraction file uploading")
 
             time.sleep(10)
-            if self.isdisplayed("file_upload_status_pass", UnivWaitFor=180):
+            if self.isdisplayed("file_upload_status_pass", env, UnivWaitFor=180):
                 self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
                                                   pass_=True, log=True, screenshot=True)
             else:
@@ -105,13 +150,13 @@ class ExtendedBase(Base):
         except Exception:
             raise Exception("Error while uploading")
             
-    def delete_file(self, expected_filename):
+    def delete_file(self, expected_filename, env):
         expected_delete_status_text = "Import status deleted successfully"        
         self.refreshpage()
         time.sleep(5)
 
         result = []
-        td1 = self.select_elements('upload_table_row_1')
+        td1 = self.select_elements('upload_table_row_1', env)
         for m in td1:
             result.append(m.text)
 
@@ -121,12 +166,12 @@ class ExtendedBase(Base):
                                                       f"the table. Performing the delete operation.",
                                               pass_=True, log=True, screenshot=True)
         
-            self.click("delete_file")
+            self.click("delete_file", env)
             time.sleep(2)
-            self.click("delete_file_popup")
+            self.click("delete_file_popup", env)
             time.sleep(3)
 
-            actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
+            actual_delete_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
             
             if actual_delete_status_text == expected_delete_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',

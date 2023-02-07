@@ -23,12 +23,12 @@ class LiveSLRPage(Base):
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
         # Instantiate webdriver wait class
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 30)
 
-    def go_to_liveslr(self, locator):
-        self.click(locator, UnivWaitFor=10)
-        self.LogScreenshot.fLogScreenshot(message='LiveSLR Search page is opened',
-                                          pass_=True, log=True, screenshot=True)
+    # def go_to_liveslr(self, locator, env):
+    #     self.click(locator, env, UnivWaitFor=10)
+    #     self.LogScreenshot.fLogScreenshot(message='LiveSLR Search page is opened',
+    #                                       pass_=True, log=True, screenshot=True)
 
     def get_population_data(self, filepath):
         file = pd.read_excel(filepath)
@@ -71,6 +71,6 @@ class LiveSLRPage(Base):
         result = [(data[i], value[i]) for i in range(0, len(data))]
         return result, value
 
-    def presence_of_elements(self, locator):
-        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator)),
-                                                        self.locatorpath(locator))))
+    def presence_of_elements(self, locator, env):
+        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
+                                                        self.locatorpath(locator, env))))

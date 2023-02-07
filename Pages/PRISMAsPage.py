@@ -25,10 +25,10 @@ class PRISMASPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_prisma(self, locator, button):
-        self.click(locator, UnivWaitFor=10)
-        self.jsclick(button)
-        time.sleep(5)
+    # def go_to_prisma(self, locator, button):
+    #     self.click(locator, UnivWaitFor=10)
+    #     self.jsclick(button)
+    #     time.sleep(5)
 
     # Reading Population data for PRISMAs Page
     def get_prisma_pop_data(self, filepath, locatorname):
@@ -53,26 +53,27 @@ class PRISMASPage(Base):
                         (os.getcwd()+sheet5[i])) for i in range(0, len(sheet_name))]
         return prisma_data
 
-    def add_prisma_excel_file(self, locatorname, filepath):
+    def add_prisma_excel_file(self, locatorname, filepath, env):
         expected_excel_upload_status_text = "PRISMA successfully uploaded"
 
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
         
-        self.refreshpage()
-        time.sleep(3)
+        # self.refreshpage()
+        # time.sleep(3)
         try:
-            pop_ele = self.select_element("prisma_pop_dropdown")
+            pop_ele = self.select_element("prisma_pop_dropdown", env)
             select = Select(pop_ele)
             select.select_by_visible_text(pop_name[0])
 
             # Read the PRISMA file path required to upload
             prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
 
-            self.input_text("prisma_excel_file", prisma_excel, UnivWaitFor=10)
-            self.click("prisma_excel_upload_btn")
-            time.sleep(3)
-            actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
+            self.input_text("prisma_excel_file", prisma_excel, env, UnivWaitFor=10)
+            self.click("prisma_excel_upload_btn", env)
+            time.sleep(2)
+            # actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
+            actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
             # time.sleep(2)
 
             if actual_excel_upload_status_text == expected_excel_upload_status_text:
@@ -86,28 +87,29 @@ class PRISMASPage(Base):
         except Exception:
             raise Exception("Unable to upload PRISMA Excel file")
     
-    def del_prisma_excel_file(self, locatorname, excel_del_locator, excel_del_popup, filepath):
+    def del_prisma_excel_file(self, locatorname, excel_del_locator, excel_del_popup, filepath, env):
         expected_excel_del_status_text = "PRISMA excel file successfully deleted"
 
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
         
-        self.refreshpage()
-        time.sleep(3)
+        # self.refreshpage()
+        # time.sleep(3)
         try:
-            pop_ele = self.select_element("prisma_pop_dropdown")
+            pop_ele = self.select_element("prisma_pop_dropdown", env)
             select = Select(pop_ele)
             select.select_by_visible_text(pop_name[0])
 
-            self.del_prisma_image(locatorname, filepath, "prisma_image_delete_btn", "prisma_image_delete_popup")
+            self.del_prisma_image(locatorname, filepath, "prisma_image_delete_btn", "prisma_image_delete_popup", env)
             time.sleep(2)
 
-            self.click(excel_del_locator)
+            self.click(excel_del_locator, env)
             time.sleep(2)
-            self.click(excel_del_popup)
+            self.click(excel_del_popup, env)
             time.sleep(2)
 
-            actual_excel_del_status_text = self.get_text("prisma_excel_status_text", UnivWaitFor=30)
+            # actual_excel_del_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
+            actual_excel_del_status_text = self.get_status_text("prisma_excel_status_text", env)
             # time.sleep(2)
 
             if actual_excel_del_status_text == expected_excel_del_status_text:
@@ -122,7 +124,7 @@ class PRISMASPage(Base):
         except Exception:
             raise Exception("Unable to delete PRISMA Excel file")
 
-    def upload_prisma_image(self, locatorname, filepath, index):
+    def upload_prisma_image(self, locatorname, filepath, index, env):
         expected_image_upload_status_text = "PRISMA successfully updated"
 
         # Read the Data required to upload for study types
@@ -130,26 +132,27 @@ class PRISMASPage(Base):
 
         try:
             for i in stdy_data:
-                stdy_ele = self.select_element("prisma_study_type_dropdown")
+                stdy_ele = self.select_element("prisma_study_type_dropdown", env)
                 select = Select(stdy_ele)
                 select.select_by_visible_text(i[0])
                 time.sleep(2)
 
-                self.input_text("original_studies", i[1]+index, UnivWaitFor=5)
+                self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
                 time.sleep(1)
-                self.input_text("records_number", i[2]+index, UnivWaitFor=5)
+                self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
                 time.sleep(1)
-                self.input_text("fulltext_review", i[3]+index, UnivWaitFor=5)
+                self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
                 time.sleep(1)
-                self.input_text("total_record_number", i[4]+index, UnivWaitFor=5)
+                self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
                 time.sleep(1)
-                self.input_text("prisma_image", i[5], UnivWaitFor=5)
+                self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
                 time.sleep(1)
 
-                self.click("prisma_image_save_btn")
-                time.sleep(3)
+                self.click("prisma_image_save_btn", env)
+                time.sleep(2)
                 
-                actual_image_upload_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=30)
+                # actual_image_upload_status_text = self.get_text("prisma_image_status_text", env, UnivWaitFor=30)
+                actual_image_upload_status_text = self.get_status_text("prisma_image_status_text", env)
                 # time.sleep(2)
 
                 if actual_image_upload_status_text == expected_image_upload_status_text:
@@ -163,7 +166,7 @@ class PRISMASPage(Base):
         except Exception:
             raise Exception("Unable to upload PRISMA image")
     
-    def del_prisma_image(self, locatorname, filepath, del_locator, del_popup):
+    def del_prisma_image(self, locatorname, filepath, del_locator, del_popup, env):
         expected_image_del_status_text = "PRISMA successfully deleted"
 
         # Read population details from data sheet
@@ -175,22 +178,23 @@ class PRISMASPage(Base):
             for i in stdy_data:
                 self.refreshpage()
                 time.sleep(3)
-                pop_ele = self.select_element("prisma_pop_dropdown")
+                pop_ele = self.select_element("prisma_pop_dropdown", env)
                 select = Select(pop_ele)
                 select.select_by_visible_text(pop_name[0])
                 time.sleep(1)
 
-                stdy_ele = self.select_element("prisma_study_type_dropdown")
+                stdy_ele = self.select_element("prisma_study_type_dropdown", env)
                 select = Select(stdy_ele)
                 select.select_by_visible_text(i[0])
                 time.sleep(1)
 
-                self.click(del_locator)
+                self.click(del_locator, env)
                 time.sleep(2)
-                self.click(del_popup)
+                self.click(del_popup, env)
                 time.sleep(2)
                 
-                actual_image_del_status_text = self.get_text("prisma_image_status_text", UnivWaitFor=30)
+                # actual_image_del_status_text = self.get_text("prisma_image_status_text", env, UnivWaitFor=30)
+                actual_image_del_status_text = self.get_status_text("prisma_image_status_text", env)
                 # time.sleep(2)
 
                 if actual_image_del_status_text == expected_image_del_status_text:

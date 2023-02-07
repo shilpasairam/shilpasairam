@@ -14,14 +14,15 @@ from utilities.customLogger import LogGen
 
 @pytest.mark.usefixtures("init_driver")
 class Test_SearchPublications_DownloadedFilename:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
     TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C29730
     @pytest.mark.C29826
-    def test_validate_downloaded_filename(self, extra):
+    def test_validate_downloaded_filename(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
         # Creating object of loginpage class
         self.loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
@@ -48,14 +49,14 @@ class Test_SearchPublications_DownloadedFilename:
                 for file in files:
                     os.remove(os.path.join(root, file))
         
-        self.loginPage.driver.get(self.baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef")
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
         scenarios = ['scenario1']
         for i in scenarios:
             try:
-                self.base.go_to_page("searchpublications_button")
-                self.base.click("searchpublications_reset_filter")
-                self.srchpub.validate_downloaded_filename(i, self.TestData)
+                self.base.go_to_page("searchpublications_button", env)
+                self.base.click("searchpublications_reset_filter", env)
+                self.srchpub.validate_downloaded_filename(i, self.TestData, env)
 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of downloaded filename",

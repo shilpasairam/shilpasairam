@@ -3,6 +3,7 @@ Test will validate the presence of SLR page elements in LiveSLR Application
 """
 
 import pytest
+from Pages.Base import Base
 
 from Pages.LoginPage import LoginPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
@@ -12,12 +13,15 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_LiveSLRPageElements:
-    baseURL = ReadConfig.getApplicationURL()
+    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
 
     @pytest.mark.smoketest
-    def test_liveslr_page_ele(self, extra):
+    def test_liveslr_page_ele(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -25,14 +29,14 @@ class Test_LiveSLRPageElements:
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         try:
-            self.loginPage.driver.get(self.baseURL)
-            self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR")
-            self.liveslrpage.go_to_liveslr("SLR_Homepage")
-            self.liveslrpage.presence_of_elements("SLR_Population")
-            self.liveslrpage.presence_of_elements("SLR_Type")
-            self.liveslrpage.presence_of_elements("Data_Report")
-            self.liveslrpage.presence_of_elements("NMA_Button")
-            self.liveslrpage.presence_of_elements("Preview_Button")
+            self.loginPage.driver.get(baseURL)
+            self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+            self.base.go_to_page("SLR_Homepage", env)
+            self.base.presence_of_element("SLR_Population", env)
+            self.base.presence_of_element("SLR_Type", env)
+            self.base.presence_of_element("Data_Report", env)
+            self.base.presence_of_element("NMA_Button", env)
+            self.base.presence_of_element("Preview_Button", env)
             self.LogScreenshot.fLogScreenshot(message=f"Elements are present in LiveSLR Page",
                                               pass_=True, log=True, screenshot=True)
         except Exception:
