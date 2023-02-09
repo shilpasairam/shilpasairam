@@ -136,7 +136,8 @@ class LineofTherapyPage(Base):
         self.click("lot_submit_btn", env)
         time.sleep(2)
 
-        actual_add_status_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
+        # actual_add_status_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
+        actual_add_status_text = self.get_status_text("managelot_status_text", env)
         # time.sleep(2)
 
         if actual_add_status_text == expected_add_status_text:
@@ -175,6 +176,7 @@ class LineofTherapyPage(Base):
             raise Exception("Error while adding the Line of Therapy")
     
     def edit_multiple_lot(self, locatorname, current_data, edit_upd_button, filepath, env):
+        expected_update_status_text = "Line of Therapy updated successfully"
         self.refreshpage()
         time.sleep(5)
 
@@ -189,12 +191,22 @@ class LineofTherapyPage(Base):
         self.click("sel_update_submit", env)
         time.sleep(2)
 
-        update_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
+        # update_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
+        actual_update_status_text = self.get_status_text("managelot_status_text", env)
         time.sleep(2)
                                           
-        self.assertText("Line of Therapy updated successfully", update_text)
-        self.LogScreenshot.fLogScreenshot(message=f'Able to edit the LoT record',
-                                          pass_=True, log=True, screenshot=True)
+        # self.assertText("Line of Therapy updated successfully", update_text)
+        # self.LogScreenshot.fLogScreenshot(message=f'Able to edit the LoT record',
+        #                                   pass_=True, log=True, screenshot=True)
+
+        if actual_update_status_text == expected_update_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f'Able to edit the LoT record',
+                                              pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(
+                message=f'Unable to find status message while edit the LoT record',
+                pass_=False, log=True, screenshot=True)
+            raise Exception("Unable to find status message while edit the LoT record")
 
         try:
             self.refreshpage()
@@ -215,6 +227,7 @@ class LineofTherapyPage(Base):
             raise Exception("Error while editing the Line of Therapy")
 
     def delete_multiple_manage_lot(self, added_update_val, del_locator, del_locator_popup, tablerows, env):
+        expected_del_status_text = "Line of Therapy deleted successfully"
         self.refreshpage()
         time.sleep(2)
 
@@ -234,12 +247,22 @@ class LineofTherapyPage(Base):
         self.click(del_locator_popup, env)
         time.sleep(2)
 
-        del_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
+        # del_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
+        actual_del_status_text = self.get_status_text("managelot_status_text", env)
         time.sleep(2)
                                           
-        self.assertText("Line of Therapy deleted successfully", del_text)
-        self.LogScreenshot.fLogScreenshot(message=f'Able to delete the LoT record',
-                                          pass_=True, log=True, screenshot=True)
+        # self.assertText("Line of Therapy deleted successfully", del_text)
+        # self.LogScreenshot.fLogScreenshot(message=f'Able to delete the LoT record',
+        #                                   pass_=True, log=True, screenshot=True)
+
+        if actual_del_status_text == expected_del_status_text:
+            self.LogScreenshot.fLogScreenshot(message=f'Able to delete the LoT record',
+                                              pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(
+                message=f'Unable to find status message while delete the LoT record',
+                pass_=False, log=True, screenshot=True)
+            raise Exception("Unable to find status message while delete the LoT record")                                          
 
         # Fetching total rows count after deleting a LoT
         table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
