@@ -155,9 +155,10 @@ class ImportPublicationPage(Base):
                 self.click("delete_file", env)
                 time.sleep(2)
                 self.click("delete_file_popup", env)
-                time.sleep(3)
+                time.sleep(2)
 
-                actual_delete_status_text = self.get_text(msg_popup, env, UnivWaitFor=30)
+                # actual_delete_status_text = self.get_text(msg_popup, env, UnivWaitFor=30)
+                actual_delete_status_text = self.get_status_text(msg_popup, env)
                 
                 if actual_delete_status_text == expected_delete_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
@@ -207,8 +208,9 @@ class ImportPublicationPage(Base):
             self.input_text("add_file", i[1], env)
             try:
                 self.jsclick("upload_button", env)
-                time.sleep(3)
-                actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+                time.sleep(2)
+                # actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+                actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
                 # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
@@ -283,8 +285,9 @@ class ImportPublicationPage(Base):
             self.input_text("add_file", i[1], env)
             try:
                 self.jsclick("upload_button", env)
-                time.sleep(4)
-                actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+                time.sleep(2)
+                # actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+                actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
                 # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:

@@ -245,10 +245,11 @@ class AppVersion(Base):
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"In LiveSLR -> Client user have access for "
                                                           f"given Population: '{pop_data[0][0]}'",
-                                                  pass_=True, log=True, screenshot=True)
+                                                  pass_=False, log=True, screenshot=True)
                 raise Exception("In LiveSLR -> Client user have access for given Population.")
 
-            if self.isvisible(pop_data[1][0], env, pop_data[1][1]):
+            self.presence_of_element(pop_data[1][0], env)
+            if self.isvisible(pop_data[1][0], env, pop_data[1][0]):
                 self.exbase.select_data(pop_data[1][0], pop_data[1][1], env)
                 self.exbase.select_data(slrtype_data[0][0], slrtype_data[0][0], env)
                 self.LogScreenshot.fLogScreenshot(message=f"In LiveSLR -> Client user have access for given "
