@@ -153,7 +153,16 @@ class ReadConfig:
             return config.get('commonInfo', 'prismadata_testing')
         elif env == 'staging':
             return config.get('commonInfo', 'prismadata_staging')
-    
+
+    # Get file containing data for PRISMAs page actions
+    @staticmethod
+    def getpicosdata(env):
+        # env = config.get('commonInfo', 'environment')
+        if env == 'test':
+            return config.get('commonInfo', 'picosdata_testing')
+        elif env == 'staging':
+            return config.get('commonInfo', 'picosdata_staging')
+
     # Get JS command to hide
     @staticmethod
     def get_remove_att_JScommand(index, value):

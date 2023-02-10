@@ -64,7 +64,21 @@ class ExtendedBase(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header", env)        
+            self.scrollback("SLR_page_header", env)
+
+    # Read individual column data
+    def get_individual_col_data(self, filepath, locatorname, sheet, col1):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        data = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
+        return data    
+    
+    # Read data using column names
+    def get_test_data(self, filepath, locatorname, sheet, col1, col2):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
+        data2 = df.loc[df['Name'] == locatorname][col2].dropna().to_list()
+        result = [[data1[i], data2[i]] for i in range(0, len(data1))]
+        return result
 
     # Read Population data for LIVESLR Page
     def get_population_data(self, filepath, sheet, locatorname):

@@ -4,6 +4,8 @@ import pandas as pd
 from selenium.webdriver.support.wait import WebDriverWait
 
 from Pages.Base import Base
+from Pages.ExtendedBasePage import ExtendedBase
+from Pages.SLRReportPage import SLRReport
 from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
 from selenium.webdriver.support.ui import Select
@@ -18,6 +20,10 @@ class PRISMASPage(Base):
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
+        # Creating object of ExtendedBase class
+        self.exbase = ExtendedBase(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)                 
         # Instantiate the logger class
         self.logger = LogGen.loggen()
         # Instantiate the logScreenshot class
@@ -208,3 +214,84 @@ class PRISMASPage(Base):
                 time.sleep(5)
         except Exception:
             raise Exception("Unable to delete PRISMA image")
+
+    def add_picos_details(self, locatorname, filepath, env):
+        expected_excel_upload_status_text = "Saved successfully"
+
+        # Read population details from data sheet
+        # pop_name = self.get_prisma_pop_data(filepath, locatorname)
+        pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
+        stdy_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Study_Types')
+        expected_row_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Row_headers')
+        expected_col_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Col_headers')
+
+        time.sleep(2)
+        try:
+            for j in stdy_data:
+                pop_ele = self.select_element("picos_pop_dropdown", env)
+                select = Select(pop_ele)
+                select.select_by_visible_text(pop_data[0])
+
+                stdy_ele = self.select_element("picos_study_type_dropdown", env)
+                select = Select(stdy_ele)
+                select.select_by_visible_text(j)
+
+                actual_row_headers = []
+                actual_row_eles = self.select_elements('row_header_values', env)
+                for k in actual_row_eles:
+                    actual_row_headers.append(k.text)
+
+                actual_col_headers = []
+                actual_col_eles = self.select_elements('col_header_values', env)
+                for v in actual_col_eles:
+                    actual_col_headers.append(v.text)
+                # Removing the empty column name
+                actual_col_headers.pop(0)
+
+                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers, actual_row_headers)
+
+                if len(row_header_comparison) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                        pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, Study Type -> {j}. Mismatch values are arranged in following order -> Expected row headers, Actual row headers. {row_header_comparison}",
+                                                        pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, Study Type -> {j}.")
+
+                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers, actual_col_headers)
+
+                if len(col_header_comparison) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                        pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for Population -> {pop_data[0]}, Study Type -> {j}. Mismatch values are arranged in following order -> Expected col headers, Actual col headers. {col_header_comparison}",
+                                                        pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, Study Type -> {j}.")
+
+                # Enter values in PICOS page
+                data_eles = self.select_elements('row_data', env)
+                for index, locator in enumerate(data_eles):
+                    # self.input_text(locator, f"Test_Automation_{index}", env)
+                    locator.clear()
+                    locator.send_keys(f"Test_Automation_{index}")
+
+                self.scrollback('picos_page_heading', env)
+                self.jsclick("picos_save_btn", env)
+                time.sleep(1)
+                # actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
+                actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
+                # time.sleep(2)
+
+                if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                    pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
+                                                            f"PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                    pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.")
+                
+                self.refreshpage()
+                time.sleep(2)
+        except Exception:
+            raise Exception("Unable to add PICOS data")
