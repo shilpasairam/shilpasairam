@@ -226,7 +226,7 @@ ProtocolPICOS,picos_page_heading,XPATH,//p[text()='Update PICOS & Inclusion-Excl
 ProtocolPICOS,picos_save_btn,XPATH,//button[@class='btn btn-primary'],
 ProtocolPICOS,picos_status_text,XPATH,//div[@role='alertdialog'],
 ProtocolSearchStrategy,searchstrategy,LINK_TEXT,Search Strategy,
-ProtocolSearchStrategy,searchstrategy_pop_dropdown,XPATH,//select[@class='custom-select custom-select-sm'],
+ProtocolSearchStrategy,searchstrategy_pop_dropdown,ID,populationddl,//select[@class='custom-select custom-select-sm']
 ProtocolSearchStrategy,searchstrategy_study_type_dropdown,XPATH,//select[@class='custom-select custom-select-sm ng-untouched ng-pristine ng-valid'],
 ProtocolSearchStrategy,searchstrategy_template_download_btn,XPATH,//button[@class='btn btn-primary mb-2 w-100'],
 ProtocolSearchStrategy,searchstrategy_date,ID,newSearchDate,

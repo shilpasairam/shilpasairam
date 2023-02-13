@@ -390,6 +390,8 @@ class ProtocolPage(Base):
                 stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
                 select = Select(stdy_ele)
                 select.select_by_visible_text(j[0])
+                self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
+                                                    pass_=True, log=True, screenshot=True)                
 
                 self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
                 downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
