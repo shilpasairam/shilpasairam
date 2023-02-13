@@ -219,7 +219,7 @@ class ManagePopulationsPage(Base):
             
         self.input_text("template_file_upload", upload_file_path, env)
         self.click("submit_button", env)
-        # time.sleep(4)
+        time.sleep(2)
 
         # actual_status_text = self.get_text("population_status_popup_text", env, UnivWaitFor=10)
         actual_status_text = self.get_status_text("population_status_popup_text", env)

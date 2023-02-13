@@ -66,19 +66,38 @@ class ExtendedBase(Base):
                                                       pass_=True, log=True, screenshot=True)
             self.scrollback("SLR_page_header", env)
 
-    # Read individual column data
+    # Read individual column data using locatorname and column name
     def get_individual_col_data(self, filepath, locatorname, sheet, col1):
         df = pd.read_excel(filepath, sheet_name=sheet)
         data = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
         return data    
     
-    # Read data using column names
-    def get_test_data(self, filepath, locatorname, sheet, col1, col2):
+    # Read 2 columns data at once using locatorname and column names
+    def get_double_col_data(self, filepath, locatorname, sheet, col1, col2):
         df = pd.read_excel(filepath, sheet_name=sheet)
         data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
         data2 = df.loc[df['Name'] == locatorname][col2].dropna().to_list()
         result = [[data1[i], data2[i]] for i in range(0, len(data1))]
         return result
+
+    # Reading 3 columns data at once using locatorname and column names
+    def get_triple_col_data(self, filepath, locatorname, sheet, col1, col2, col3):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
+        data2 = df.loc[df['Name'] == locatorname][col2].dropna().to_list()
+        data3 = df.loc[df['Name'] == locatorname][col3].dropna().to_list()
+        result = [[data1[i], os.getcwd() + data2[i], data3[i]] for i in range(0, len(data1))]
+        return result
+
+    # Reading 3 columns data at once using locatorname and column names
+    def get_four_cols_data(self, filepath, locatorname, sheet, col1, col2, col3, col4):
+        df = pd.read_excel(filepath, sheet_name=sheet)
+        data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
+        data2 = df.loc[df['Name'] == locatorname][col2].dropna().to_list()
+        data3 = df.loc[df['Name'] == locatorname][col3].dropna().to_list()
+        data4 = df.loc[df['Name'] == locatorname][col4].dropna().to_list()
+        result = [[data1[i], data2[i], data3[i], data4[i]] for i in range(0, len(data1))]
+        return result        
 
     # Read Population data for LIVESLR Page
     def get_population_data(self, filepath, sheet, locatorname):

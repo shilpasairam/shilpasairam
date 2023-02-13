@@ -154,7 +154,7 @@ class ReadConfig:
         elif env == 'staging':
             return config.get('commonInfo', 'prismadata_staging')
 
-    # Get file containing data for PRISMAs page actions
+    # Get file containing data for PICOS page actions
     @staticmethod
     def getpicosdata(env):
         # env = config.get('commonInfo', 'environment')
@@ -162,6 +162,15 @@ class ReadConfig:
             return config.get('commonInfo', 'picosdata_testing')
         elif env == 'staging':
             return config.get('commonInfo', 'picosdata_staging')
+
+    # Get file containing data for Search Strategy page actions
+    @staticmethod
+    def getsearchstrategydata(env):
+        # env = config.get('commonInfo', 'environment')
+        if env == 'test':
+            return config.get('commonInfo', 'searchstrategydata_testing')
+        elif env == 'staging':
+            return config.get('commonInfo', 'searchstrategydata_staging')            
 
     # Get JS command to hide
     @staticmethod
