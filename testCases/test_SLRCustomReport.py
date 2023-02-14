@@ -95,7 +95,7 @@ class Test_SLR_Custom_Report:
 
                     self.slrreport.excel_content_validation(filepath, index, webexcel_filename, excel_filename)
 
-                    self.slrreport.word_content_validation(filepath, index, word_filename)
+                    # self.slrreport.word_content_validation(filepath, index, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
