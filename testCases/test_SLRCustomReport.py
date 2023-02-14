@@ -20,6 +20,78 @@ class Test_SLR_Custom_Report:
     testdata_723 = ReadConfig.getTestdata("livehta_723_data")
     testdata_931 = ReadConfig.getTestdata("livehta_931_data")
 
+    @pytest.mark.smoketest
+    def test_e2e_smoketest(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getslrtestdata(env)        
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)         
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of slrreport class
+        self.slrreport = SLRReport(self.driver, extra)
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Read population data values
+        self.pop_list = self.liveslrpage.get_population_data(filepath)
+        # Read slrtype data values
+        self.slrtype = self.liveslrpage.get_slrtype_data(filepath)
+        # Read reportedvariables data values
+        self.rpt_data, self.rpt_data_chkbox = self.liveslrpage.get_reported_variables(filepath)
+
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+        #
+        # # Removing the screenshots before the test runs
+        # if os.path.exists(f'Reports/screenshots'):
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_page("SLR_Homepage", env)
+        for i in self.pop_list:
+            try:
+                self.slrreport.select_data(i[0], i[1], env)
+                for index, j in enumerate(self.slrtype):
+                    self.slrreport.select_data(j[0], j[1], env)
+                    if j[0] == "Clinical":
+                        self.slrreport.select_sub_section(self.rpt_data[3], self.rpt_data_chkbox[3], env,
+                                                          "reported_variable_section")
+
+                    self.slrreport.generate_download_report("excel_report", env)
+                    # time.sleep(5)
+                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    excel_filename = self.slrreport.get_and_validate_filename(filepath)
+
+                    self.slrreport.generate_download_report("word_report", env)
+                    # time.sleep(5)
+                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    word_filename = self.slrreport.get_and_validate_filename(filepath)
+
+                    self.slrreport.preview_result("preview_results", env)
+                    self.slrreport.table_display_check("Table", env)
+                    self.slrreport.generate_download_report("Export_as_excel", env)
+                    # time.sleep(5)
+                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
+                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                    webexcel_filename = self.slrreport.get_and_validate_filename(filepath)
+                    self.slrreport.back_to_report_page("Back_to_search_page", env)
+
+            except Exception:
+                raise Exception("Unable to select element")
+
     @pytest.mark.C26790
     @pytest.mark.C26859
     @pytest.mark.C26860
@@ -95,7 +167,7 @@ class Test_SLR_Custom_Report:
 
                     self.slrreport.excel_content_validation(filepath, index, webexcel_filename, excel_filename)
 
-                    # self.slrreport.word_content_validation(filepath, index, word_filename)
+                    self.slrreport.word_content_validation(filepath, index, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
