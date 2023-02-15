@@ -5,7 +5,7 @@ Test will validate the Import publications page
 import os
 import pytest
 from Pages.Base import Base
-from Pages.PRISMAsPage import PRISMASPage
+from Pages.ProtocolPage import ProtocolPage
 
 from Pages.LoginPage import LoginPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
@@ -14,7 +14,7 @@ from utilities.readProperties import ReadConfig
 
 
 @pytest.mark.usefixtures("init_driver")
-class Test_PRISMAPage:
+class Test_ProtocolPage:
     # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
@@ -33,7 +33,7 @@ class Test_PRISMAPage:
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.prismapage = PRISMASPage(self.driver, extra)
+        self.prismapage = ProtocolPage(self.driver, extra)
 
         # Removing the files before the test runs
         if os.path.exists(f'ActualOutputs'):
@@ -77,7 +77,7 @@ class Test_PRISMAPage:
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.prismapage = PRISMASPage(self.driver, extra)
+        self.prismapage = ProtocolPage(self.driver, extra)
 
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -113,7 +113,7 @@ class Test_PRISMAPage:
         # Creating object of liveslrpage class
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.prismapage = PRISMASPage(self.driver, extra)
+        self.picospage = ProtocolPage(self.driver, extra)
 
         # Removing the files before the test runs
         if os.path.exists(f'ActualOutputs'):
@@ -132,7 +132,7 @@ class Test_PRISMAPage:
 
         for index, i in enumerate(pop_val):
             try:
-                self.prismapage.add_picos_details(i, filepath, env)
+                self.picospage.add_picos_details(i, filepath, env)
                 
             except Exception:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing PICOS page",
@@ -140,4 +140,88 @@ class Test_PRISMAPage:
                 raise Exception("Error in accessing PICOS page")
         
         self.LogScreenshot.fLogScreenshot(message=f"***PICOS page validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C37921
+    def test_add_invalid_search_strategy_details(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getsearchstrategydata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        self.srchpage = ProtocolPage(self.driver, extra)
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
+                                          pass_=True, log=True, screenshot=False)
+        
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("protocol_link", "searchstrategy", env)
+
+        pop_val = ['pop1']
+
+        for index, i in enumerate(pop_val):
+            try:
+                self.srchpage.add_invalid_search_strategy_details(i, filepath, env)
+                
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",
+                                                  pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing Search Strategy page")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is completed***",
+                                          pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C37921
+    def test_add_valid_search_strategy_details(self, extra, env):
+        baseURL = ReadConfig.getApplicationURL(env)
+        filepath = ReadConfig.getsearchstrategydata(env)
+        # Instantiate the Base class
+        self.base = Base(self.driver, extra)        
+        # Instantiate the logScreenshot class
+        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        self.loginPage = LoginPage(self.driver, extra)
+        # Creating object of liveslrpage class
+        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        self.srchpage = ProtocolPage(self.driver, extra)
+
+        # Removing the files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
+                                          pass_=True, log=True, screenshot=False)
+        
+        self.loginPage.driver.get(baseURL)
+        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        self.base.go_to_nested_page("protocol_link", "searchstrategy", env)
+
+        pop_val = ['pop1']
+
+        for index, i in enumerate(pop_val):
+            try:
+                self.srchpage.add_valid_search_strategy_details(i, filepath, env)
+                
+            except Exception:
+                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",
+                                                  pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing Search Strategy page")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is completed***",
                                           pass_=True, log=True, screenshot=False)

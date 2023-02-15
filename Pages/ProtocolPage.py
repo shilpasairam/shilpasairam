@@ -1,8 +1,10 @@
+from datetime import date, timedelta
 import os
 import time
 import pandas as pd
 from selenium.webdriver.support.wait import WebDriverWait
 
+from pathlib import Path
 from Pages.Base import Base
 from Pages.ExtendedBasePage import ExtendedBase
 from Pages.SLRReportPage import SLRReport
@@ -10,10 +12,12 @@ from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
 from selenium.webdriver.support.ui import Select
 
+from utilities.readProperties import ReadConfig
 
-class PRISMASPage(Base):
 
-    """Constructor of the PRISMAs Page class"""
+class ProtocolPage(Base):
+
+    """Constructor of the Protocol Page class"""
     def __init__(self, driver, extra):
         # initializing the driver from base class
         super().__init__(driver, extra)  
@@ -216,7 +220,7 @@ class PRISMASPage(Base):
             raise Exception("Unable to delete PRISMA image")
 
     def add_picos_details(self, locatorname, filepath, env):
-        expected_excel_upload_status_text = "Saved successfully"
+        expected_status_text = "Saved successfully"
 
         # Read population details from data sheet
         # pop_name = self.get_prisma_pop_data(filepath, locatorname)
@@ -279,19 +283,152 @@ class PRISMASPage(Base):
                 self.jsclick("picos_save_btn", env)
                 time.sleep(1)
                 # actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
-                actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
+                actual_status_text = self.get_status_text("prisma_excel_status_text", env)
                 # time.sleep(2)
 
-                if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                if actual_status_text == expected_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> {pop_data[0]}, Study Type -> {j}.",
                                                     pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
                                                             f"PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.",
                                                     pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.")
+                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.")
                 
                 self.refreshpage()
                 time.sleep(2)
         except Exception:
             raise Exception("Unable to add PICOS data")
+
+    def add_valid_search_strategy_details(self, locatorname, filepath, env):
+        expected_excel_upload_status_text = "File(s) uploaded successfully"
+
+        today = date.today()
+        # Manipulating the date values when day point to month end
+        if today.day in [30, 31]:
+            day_val = (today - timedelta(10)).strftime("%d")
+        else:
+            day_val = today.day
+
+        # Read population details from data sheet
+        pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
+        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Files_to_upload', 'db_search_val', 'Template_name')
+        template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
+
+        time.sleep(2)
+        try:
+            for j in stdy_data:
+                pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
+                select = Select(pop_ele)
+                select.select_by_visible_text(pop_data[0])
+
+                stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
+                select = Select(stdy_ele)
+                select.select_by_visible_text(j[0])
+
+                self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
+                downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                if downloaded_template_name == j[3]:
+                    self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
+                                                        pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch in search strategy template name. Expected Template name is {template_name[0]} and Actual Template name is {downloaded_template_name}",
+                                                        pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch in search strategy template name.")
+
+                self.click("searchstrategy_date", env)
+                self.select_calendar_date(day_val)
+
+                self.input_text("searchstrategy_dbsearch", j[2], env)
+
+                jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
+                self.jsclick_hide(jscmd)
+                self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env) # f"{os.getcwd()} + {j[1]}"
+
+                self.jsclick("searchstrategy_upload_btn", env)
+                time.sleep(1)
+
+                actual_excel_upload_status_text = self.get_status_text("searchstrategy_status_text", env)
+                # time.sleep(2)
+
+                if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"Addition of Search strategy data is success for Population -> {pop_data[0]}, Study Type -> {j[0]}.",
+                                                    pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
+                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.",
+                                                    pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while adding Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.")
+                
+                self.refreshpage()
+                time.sleep(2)
+        except Exception:
+            raise Exception("Unable to add Search strategy data")
+
+    def add_invalid_search_strategy_details(self, locatorname, filepath, env):
+        expected_error_text = "Error while uploading file(s)"
+
+        today = date.today()
+        # Manipulating the date values when day point to month end
+        if today.day in [30, 31]:
+            day_val = (today - timedelta(10)).strftime("%d")
+        else:
+            day_val = today.day
+
+        # Read population details from data sheet
+        pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
+        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Invalid_Files', 'db_search_val', 'Template_name')
+        template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
+
+        time.sleep(2)
+        try:
+            for j in stdy_data:
+                pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
+                select = Select(pop_ele)
+                select.select_by_visible_text(pop_data[0])
+
+                stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
+                select = Select(stdy_ele)
+                select.select_by_visible_text(j[0])
+                self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
+                                                    pass_=True, log=True, screenshot=True)                
+
+                self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
+                downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                if downloaded_template_name == j[3]:
+                    self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
+                                                        pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch in search strategy template name. Expected Template name is {template_name[0]} and Actual Template name is {downloaded_template_name}",
+                                                        pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch in search strategy template name.")
+
+                self.click("searchstrategy_date", env)
+                self.select_calendar_date(day_val)
+
+                self.input_text("searchstrategy_dbsearch", j[2], env)
+
+                jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
+                self.jsclick_hide(jscmd)
+                self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env)
+
+                self.jsclick("searchstrategy_upload_btn", env)
+                time.sleep(2)
+
+                actual_error_text = self.get_status_text("searchstrategy_status_text", env)
+                # time.sleep(2)
+
+                if actual_error_text == expected_error_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"File with invalid format is not uploaded as expected. "
+                                                              f"Invalid file is '{os.path.basename(j[1])}'",
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
+                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.",
+                                                    pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while adding Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.")
+                
+                self.refreshpage()
+                time.sleep(2)
+        except Exception:
+            raise Exception("Unable to add Search strategy data")

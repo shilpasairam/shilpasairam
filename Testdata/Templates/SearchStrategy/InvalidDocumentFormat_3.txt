@@ -1,0 +1,27 @@
+Steps:
+1.Admin user clicks on “Manage QA data” link under Admin panel (on the left)
+2.Admin user selects a population (e.g. RRMM, MM Maintenance) on the “Manage QA data” page.
+3.Admin user selects an SLR type (e.g. Interventional) on the “Manage QA data” page.
+4.Admin user selects excel files from their laptop using the Browse button on the “Manage QA data” page.
+5.Admin user clicks the "Upload" button to upload a QA file on the “Manage QA data” page.
+6.Admin user enters information about the QA checklist they are uploading on the “Manage QA data” page.
+7.Admin user repeats the QA file upload for all the remaining SLR Types - Econ, QoL, RWE (Steps 1-6)
+Expected Result:
+1.Admin user should be able to see the “Manage QA data” page
+2.Admin user should be able to select a population on the “Manage QA data” page.
+3.Admin user should be able to select an SLR type on the “Manage QA data” page.
+4.Admin user should be able to select excel files from their laptop using the Browse button on the “Manage QA data” page.
+5.Admin user should be able to click the "Upload" button to upload a QA file on the “Manage QA data” page.
+6.Admin user should be able to enter information about the QA checklist they are uploading on the “Manage QA data” page as follows
+a. User should be able to enter or update information for the mandatory QA checklist text fields using the following text buttons: 
+QA Checklist Name (Note: enter any text value in the text box, such as name, number, special characters, etc. If the field is blank, the user will be an error message)
+QA Checklist in-text Citation (Note: enter any text value in the text box, such as name, number, special characters, etc. If the field is blank, the user will be an error message)
+QA Checklist Complete Reference (Note: enter any text value in the text box, such as name, number, special characters, etc. If the field is blank, the user will be an error message)
+b. User should be able to upload one QA file for each population and its SLR type
+Verify the uploaded excel files added to the (PSE_Portal_Testing) database table (dbo.LSLR_QualityAssessments)
+Verify only the excel file gets loaded and added to the database or the Azure storage
+Verify any file with the invalid file format (word, text) does not get loaded
+c. Verify if the admin uploads another file for a Population and SLR type that already has a file, then the new file should replace the old file but previous versions of the file should be archived in the same blob container (the archived files will have their filename appended with their date and time of deletion).
+d. Verify the uploaded document is stored in the Blob container in Azure Storage and the file name follows a naming convention in the format population_ID and study_type_ID (SLR Type)
+e. Verify the uploaded document is stored in a new database table (dbo.LSLR_QualityAssessments)
+7.User should be able to upload QA files for all the remaining SLR Types - Econ, QoL, RWE
