@@ -732,8 +732,8 @@ class ManagePopulationsPage(Base):
     def non_onocolgy_edit_population(self, locatorname, pop_name, edit_locator, filepath, env):
         self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population is started***",
                                         pass_=True, log=True, screenshot=False)        
-        # expected_status_text = "Population updated successfully"
-        expected_status_text = "Project updated successfully"
+        expected_status_text = "Population updated successfully"
+        # expected_status_text = "Project updated successfully"
 
         # Read required population and endpoint details
         pop_locs = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'population_field', 'edit_population_name')               
