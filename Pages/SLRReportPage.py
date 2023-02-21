@@ -1173,6 +1173,7 @@ class SLRReport(Base):
                                 f"to 'Clinical'")
 
         self.click("manage_qa_data_button", env)
+        time.sleep(1)
         pop_ele = self.select_element("select_pop_dropdown", env)
         select1 = Select(pop_ele)
         select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
