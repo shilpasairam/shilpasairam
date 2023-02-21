@@ -559,7 +559,7 @@ class ManagePopulationsPage(Base):
         # Check whether Save and Download Master Extraction Template button is disabled when no details are entered in fields
         if self.isenabled("submit_button", env):
             self.click('submit_button', env)
-            # time.sleep(2)
+            time.sleep(2)
 
             actual_status_text = self.get_status_text("population_status_popup_text", env)
 
@@ -571,7 +571,6 @@ class ManagePopulationsPage(Base):
                                                     pass_=False, log=True, screenshot=True)
                 raise Exception(f"Unable to find status message while adding New Non-Oncology Population")
             
-            time.sleep(20)
             template_name = self.exbase.get_latest_filename(UnivWaitFor=180)
             if template_name == f"LIVEHTA Automation-{pop_locs[0][1]}-Master Template.xlsx":
                 self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Tempalte name is {template_name}",
