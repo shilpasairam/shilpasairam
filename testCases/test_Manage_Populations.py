@@ -221,7 +221,7 @@ class Test_ManagePopultionsPage:
                 added_pop, tempalte_name = mngpoppage.non_onocolgy_add_population(i, "add_population_btn", filepath[0],
                                                                     "manage_pop_table_rows", env)
                 self.non_onco_population_val.append(added_pop)
-                LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology populations are {self.non_onco_population_val}",
+                LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology populations are: {self.non_onco_population_val}",
                                                   pass_=True, log=True, screenshot=False)
                 mngpoppage.non_onocolgy_add_duplicate_population(i, "add_population_btn", filepath[0],
                                                                     "manage_pop_table_rows", env)
@@ -277,7 +277,7 @@ class Test_ManagePopultionsPage:
                 edited_pop = mngpoppage.non_onocolgy_edit_population(i[0], i[1], "edit_population", filepath[0], env)
 
                 self.non_onco_edited_population_val.append(edited_pop)
-                LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology populations are {self.non_onco_edited_population_val}",
+                LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology populations are: {self.non_onco_edited_population_val}",
                                                   pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",

@@ -568,7 +568,7 @@ class ManagePopulationsPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Details entered for Endpoint3 :',
                                         pass_=True, log=True, screenshot=True)
 
-        # Check whether Save and Download Master Extraction Template button is disabled when no details are entered in fields
+        # Save and Download Master Extraction Template button should be enabled after entering all 3 endpoint details
         if self.isenabled("submit_button", env):
             self.click('submit_button', env)
             time.sleep(2)
@@ -590,7 +590,8 @@ class ManagePopulationsPage(Base):
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Downloaded Filename is {template_name}, Expectedname is "
                                             f"LIVEHTA Automation-{pop_locs[0][1]}-Master Template",
-                                    pass_=False, log=True, screenshot=False)           
+                                    pass_=False, log=True, screenshot=False)
+                raise Exception(f"Downloaded Filename is {template_name}, Expectedname is LIVEHTA Automation-{pop_locs[0][1]}-Master Template")
         else:
             self.LogScreenshot.fLogScreenshot(message='Save and Download Master Extraction Template button is disabled after entering all the mandatory details. Please recheck.', pass_=False, log=True, screenshot=False)
             raise Exception('Save and Download Master Extraction Template button is disabled after entering all the mandatory details. Please recheck.')
