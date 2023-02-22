@@ -46,9 +46,6 @@ class Test_ManagePopultionsPage:
             for root, dirs, files in os.walk(f'ActualOutputs'):
                 for file in files:
                     os.remove(os.path.join(root, file))
-
-        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is started***",
-                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -68,9 +65,6 @@ class Test_ManagePopultionsPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
-            
-        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Population validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30244
     def test_edit_population(self, extra, env):
@@ -85,9 +79,6 @@ class Test_ManagePopultionsPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         self.mngpoppage = ManagePopulationsPage(self.driver, extra)
-
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is started***",
-                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -108,9 +99,6 @@ class Test_ManagePopultionsPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
-        
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit the Population validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30244
     def test_delete_population(self, extra, env):
@@ -125,9 +113,6 @@ class Test_ManagePopultionsPage:
         self.liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         self.mngpoppage = ManagePopulationsPage(self.driver, extra)
-
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***",
-                                          pass_=True, log=True, screenshot=False)
         
         self.loginPage.driver.get(baseURL)
         self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -141,9 +126,6 @@ class Test_ManagePopultionsPage:
                 self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
-
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38392
     def test_add_non_oncology_population_ui_validation(self, extra, env):
@@ -331,10 +313,7 @@ class Test_ManagePopultionsPage:
         if os.path.exists(f'ActualOutputs'):
             for root, dirs, files in os.walk(f'ActualOutputs'):
                 for file in files:
-                    os.remove(os.path.join(root, file))        
-
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of Non-Oncology Population validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                    os.remove(os.path.join(root, file))
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -348,9 +327,6 @@ class Test_ManagePopultionsPage:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
-
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of Non-Oncology Population validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38394
     def test_validate_non_oncology_population_ep_details(self, extra, env):

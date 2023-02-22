@@ -202,6 +202,8 @@ class ManagePopulationsPage(Base):
         return table_row_count
 
     def add_multiple_population(self, locatorname, add_locator, filepath, table_rows, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Addition of Oncology Population validation is started***",
+                                          pass_=True, log=True, screenshot=False)        
         expected_status_text = "Population added successfully"
         
         # Fetching total rows count before adding a new population
@@ -267,10 +269,14 @@ class ManagePopulationsPage(Base):
             self.clear("search_button", env)
             self.refreshpage()
             time.sleep(2)
+            self.LogScreenshot.fLogScreenshot(message=f"***Addition of Oncology Population validation is started***",
+                                            pass_=True, log=True, screenshot=False)            
         except Exception:
             raise Exception("Error while adding the population")
 
     def edit_multiple_population(self, locatorname, pop_name, edit_locator, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Oncology population validation is started***",
+                                        pass_=True, log=True, screenshot=False)        
         expected_status_text = "Population updated successfully"
 
         self.input_text("search_button", f'{pop_name}', env)
@@ -320,10 +326,14 @@ class ManagePopulationsPage(Base):
             self.clear("search_button", env)
             self.refreshpage()
             time.sleep(2)
+            self.LogScreenshot.fLogScreenshot(message=f"***Edit Oncology population validation is completed***",
+                                            pass_=True, log=True, screenshot=False)            
         except Exception:
             raise Exception("Error while editing the population")
 
     def delete_multiple_population(self, pop_value, del_locator, del_locator_popup, tablerows, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***",
+                                          pass_=True, log=True, screenshot=False)
         expected_status_text = "Population deleted successfully"
         
         # Fetching total rows count before deleting a new population
@@ -368,7 +378,9 @@ class ManagePopulationsPage(Base):
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
                                                   pass_=True, log=True, screenshot=False)
             self.refreshpage()
-            time.sleep(2)                
+            time.sleep(2)
+            self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is completed***",
+                                    pass_=True, log=True, screenshot=False)
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
                                               pass_=False, log=True, screenshot=False)
@@ -489,7 +501,7 @@ class ManagePopulationsPage(Base):
             raise Exception("Error while adding the population")
 
     def non_onocolgy_add_population(self, locatorname, add_locator, filepath, table_rows, env):
-        self.LogScreenshot.fLogScreenshot(message=f"***Addition of new Non-Oncology population is started***",
+        self.LogScreenshot.fLogScreenshot(message=f"***Addition of new Non-Oncology population validation is started***",
                                         pass_=True, log=True, screenshot=False)
 
         expected_status_text = "Population added successfully"
@@ -613,13 +625,13 @@ class ManagePopulationsPage(Base):
             self.refreshpage()
             time.sleep(2)
 
-            self.LogScreenshot.fLogScreenshot(message=f"***Addition of new Non-Oncology population is completed***",
+            self.LogScreenshot.fLogScreenshot(message=f"***Addition of new Non-Oncology population validation is completed***",
                                             pass_=True, log=True, screenshot=False)            
         except Exception:
             raise Exception("Error while adding the population")
 
     def non_onocolgy_add_duplicate_population(self, locatorname, add_locator, filepath, table_rows, env):
-        self.LogScreenshot.fLogScreenshot(message=f"***Adding duplicate entry of existing Non-Oncology population is started***",
+        self.LogScreenshot.fLogScreenshot(message=f"***Adding duplicate entry of existing Non-Oncology population validation is started***",
                                         pass_=True, log=True, screenshot=False)
         expected_status_text = "A population with the same name and unique company id already exists."
 
@@ -724,14 +736,14 @@ class ManagePopulationsPage(Base):
 
             self.refreshpage()
             time.sleep(2)
-            self.LogScreenshot.fLogScreenshot(message=f"***Adding duplicate entry of existing Non-Oncology population is completed***",
+            self.LogScreenshot.fLogScreenshot(message=f"***Adding duplicate entry of existing Non-Oncology population validation is completed***",
                                         pass_=True, log=True, screenshot=False)
         except Exception:
             raise Exception("Error while adding the population")
 
     def non_onocolgy_edit_population(self, locatorname, pop_name, edit_locator, filepath, env):
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population is started***",
-                                        pass_=True, log=True, screenshot=False)        
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population validation is started***",
+                                        pass_=True, log=True, screenshot=False)
         expected_status_text = "Population updated successfully"
         # expected_status_text = "Project updated successfully"
 
@@ -784,7 +796,7 @@ class ManagePopulationsPage(Base):
             self.clear("search_button", env)
             self.refreshpage()
             time.sleep(2)
-            self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population is completed***",
+            self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population validation is completed***",
                                             pass_=True, log=True, screenshot=False)             
         except Exception:
             raise Exception("Error while editing the population")
