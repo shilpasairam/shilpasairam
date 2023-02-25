@@ -43,18 +43,6 @@ class AppVersion(Base):
         # instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
     
-    # Check whether a web element is displayed or not using locatorname
-    def isvisible(self, locator, env, locator_name):
-        """
-        Given locator, identify the locator type and path from the OR file and return the bool value
-        """
-        try:
-            return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
-                                            self.locatorpath(locator, env)).is_displayed()
-        except NoSuchElementException:
-            self.LogScreenshot.fLogScreenshot(message=f"{locator_name} is not present.",
-                                              pass_=True, log=True, screenshot=False)    
-    
     def get_expected_application_version(self, filepath, locatorname):
         df = pd.read_excel(filepath)
         version_details = df.loc[df['Application'] == locatorname]['Version'].dropna().to_list()

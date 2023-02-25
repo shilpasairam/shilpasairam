@@ -203,7 +203,7 @@ class ManageUpdatesPage(Base):
             self.LogScreenshot.fLogScreenshot(message=f"Addition of New Update is success",
                                               pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding New Update",
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding New Update. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while adding New Update")        
 
@@ -282,7 +282,7 @@ class ManageUpdatesPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while editing the "
-                                                      f"Update data",
+                                                      f"Update data. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while editing the Update data")        
 
@@ -338,7 +338,7 @@ class ManageUpdatesPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the "
-                                                      f"Update data",
+                                                      f"Update data Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while deleting the Update data")        
 

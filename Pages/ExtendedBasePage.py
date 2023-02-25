@@ -1,3 +1,4 @@
+import glob
 import os
 from pathlib import Path
 import time
@@ -67,6 +68,18 @@ class ExtendedBase(Base):
             self.scrollback("SLR_page_header", env)
 
     # Read individual column data using locatorname and column name
+    def get_testdata_filepath(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        data = (os.getcwd()+(df.loc[df['Environment'] == locatorname]['Testdata_path'].
+                                         dropna())).to_list()
+        return data           
+    
+    def get_template_file_details(self, filepath, locatorname, column_name):
+        df = pd.read_excel(filepath)
+        upload_sheet_path = os.getcwd()+(df.loc[df['Name'] == locatorname][column_name].to_list()[0])
+        return upload_sheet_path    
+    
+    # Read individual column data using locatorname and column name
     def get_individual_col_data(self, filepath, locatorname, sheet, col1):
         df = pd.read_excel(filepath, sheet_name=sheet)
         data = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
@@ -99,6 +112,65 @@ class ExtendedBase(Base):
         result = [[data1[i], data2[i], data3[i], data4[i]] for i in range(0, len(data1))]
         return result        
 
+    def list_comparison_between_reports_data(self, source_list, compex_list, webex_list=None, word=None):
+        idx = 0
+        res_index = []
+        res_list = []
+        if webex_list is not None and word is not None:
+            for i in source_list:
+                if i != compex_list[idx] and i != webex_list[idx] and i != word[idx]:
+                    res_index.append(idx)
+                idx = idx + 1
+        elif webex_list is None and word is not None:
+            for i in source_list:
+                if i != compex_list[idx] and i != word[idx]:
+                    res_index.append(idx)
+                idx = idx + 1
+        elif webex_list is not None and word is None:
+            for i in source_list:
+                if i != compex_list[idx] and i != webex_list[idx]:
+                    res_index.append(idx)
+                idx = idx + 1
+        else:
+            for i in source_list:
+                if i != compex_list[idx]:
+                    res_index.append(idx)
+                idx = idx + 1
+
+        if webex_list is not None and word is not None:
+            for index, n in enumerate(res_index):
+                res_list.append([source_list[n]])
+                res_list[index].append(compex_list[n])
+                res_list[index].append(webex_list[n])
+                res_list[index].append(word[n])
+        elif webex_list is None and word is not None:
+            for index, n in enumerate(res_index):
+                res_list.append([source_list[n]])
+                res_list[index].append(compex_list[n])
+                res_list[index].append(word[n])
+        elif webex_list is not None and word is None:
+            for index, n in enumerate(res_index):
+                res_list.append([source_list[n]])
+                res_list[index].append(compex_list[n])
+                res_list[index].append(webex_list[n])
+        else:
+            for index, n in enumerate(res_index):
+                res_list.append([source_list[n]])
+                res_list[index].append(compex_list[n])
+
+        return res_list
+    
+    @fWaitFor
+    def get_latest_filename(self, UnivWaitFor=0):
+        list_of_files = glob.glob('ActualOutputs//*')
+        # Get the latest downloaded file name with full path based on the downloaded time
+        latest_file_path = max(list_of_files, key=os.path.getctime)
+        # Extracting the filename from the latest file path
+        latest_filename = os.path.basename(latest_file_path)
+        # self.LogScreenshot.fLogScreenshot(message=f"Latest Filename from Actual Outputs folder is : "
+        #                                           f"{latest_filename}", pass_=True, log=True, screenshot=False)
+        return latest_filename    
+    
     # Read Population data for LIVESLR Page
     def get_population_data(self, filepath, sheet, locatorname):
         df = pd.read_excel(filepath, sheet_name=sheet)
@@ -167,7 +239,7 @@ class ExtendedBase(Base):
                                                   pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction '
-                                                          f'File for Population : {pop_name}.',
+                                                          f'File for Population : {pop_name}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message during Extraction file uploading")
 

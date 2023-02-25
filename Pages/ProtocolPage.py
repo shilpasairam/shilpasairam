@@ -91,7 +91,7 @@ class ProtocolPage(Base):
                                                   pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                          f"PRISMA Excel File.",
+                                                          f"PRISMA Excel File. Actual status message is {actual_excel_upload_status_text} and Expected status message is {expected_excel_upload_status_text}",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message while uploading PRISMA Excel File.")
         except Exception:
@@ -127,7 +127,7 @@ class ProtocolPage(Base):
                                                   pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
-                                                          f"PRISMA Excel File.",
+                                                          f"PRISMA Excel File. Actual status message is {actual_excel_del_status_text} and Expected status message is {expected_excel_del_status_text}",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message while deleting PRISMA Excel File.")
             time.sleep(5)
@@ -170,7 +170,7 @@ class ProtocolPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                              f"PRISMA Image File.",
+                                                              f"PRISMA Image File. Actual status message is {actual_image_upload_status_text} and Expected status message is {expected_image_upload_status_text}",
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message while uploading PRISMA Image File.")
         except Exception:
@@ -212,7 +212,7 @@ class ProtocolPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
-                                                              f"PRISMA Image File.",
+                                                              f"PRISMA Image File. Actual status message is {actual_image_del_status_text} and Expected status message is {expected_image_del_status_text}",
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message while deleting PRISMA Image File.")
                 time.sleep(5)
@@ -291,7 +291,7 @@ class ProtocolPage(Base):
                                                     pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                            f"PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                            f"PICOS data for Population -> {pop_data[0]}, Study Type -> {j}. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
                                                     pass_=False, log=True, screenshot=True)
                     raise Exception(f"Unable to find status message while adding PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.")
                 
@@ -301,7 +301,7 @@ class ProtocolPage(Base):
             raise Exception("Unable to add PICOS data")
 
     def add_valid_search_strategy_details(self, locatorname, filepath, env):
-        expected_excel_upload_status_text = "File(s) uploaded successfully"
+        expected_excel_upload_status_text = "Search strategy updated successfully"
 
         today = date.today()
         # Manipulating the date values when day point to month end
@@ -346,7 +346,7 @@ class ProtocolPage(Base):
                 self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env) # f"{os.getcwd()} + {j[1]}"
 
                 self.jsclick("searchstrategy_upload_btn", env)
-                time.sleep(1)
+                time.sleep(2)
 
                 actual_excel_upload_status_text = self.get_status_text("searchstrategy_status_text", env)
                 # time.sleep(2)
@@ -356,7 +356,7 @@ class ProtocolPage(Base):
                                                     pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.",
+                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}. Actual message is {actual_excel_upload_status_text} and Expected message is {expected_excel_upload_status_text}",
                                                     pass_=False, log=True, screenshot=True)
                     raise Exception(f"Unable to find status message while adding Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.")
                 
@@ -366,7 +366,7 @@ class ProtocolPage(Base):
             raise Exception("Unable to add Search strategy data")
 
     def add_invalid_search_strategy_details(self, locatorname, filepath, env):
-        expected_error_text = "Error while uploading file(s)"
+        expected_error_text = "Error while updating search strategy: The file extension should belong to this list: [.xls, .xlsx]"
 
         today = date.today()
         # Manipulating the date values when day point to month end
@@ -413,7 +413,7 @@ class ProtocolPage(Base):
                 self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env)
 
                 self.jsclick("searchstrategy_upload_btn", env)
-                time.sleep(2)
+                # time.sleep(2)
 
                 actual_error_text = self.get_status_text("searchstrategy_status_text", env)
                 # time.sleep(2)
@@ -424,7 +424,7 @@ class ProtocolPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.",
+                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}. Actual status message is {actual_error_text} and Expected status message is {expected_error_text}",
                                                     pass_=False, log=True, screenshot=True)
                     raise Exception(f"Unable to find status message while adding Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.")
                 

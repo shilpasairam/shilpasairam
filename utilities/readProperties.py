@@ -203,3 +203,8 @@ class ReadConfig:
     def getTestdata(wrapperfile):
         TestData = config.get('commonInfo', wrapperfile)
         return TestData
+
+    @staticmethod
+    def getnononcologybasefile(wrapperfile):
+        TestData = config.get('NonOncology', wrapperfile)
+        return TestData        
