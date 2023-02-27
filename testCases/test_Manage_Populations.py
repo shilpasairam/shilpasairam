@@ -130,7 +130,7 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38392
-    def test_add_non_oncology_population_ui_validation(self, extra, env):
+    def test_add_non_oncology_population_ui_validation(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -143,6 +143,9 @@ class Test_ManagePopultionsPage:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Field Level Error Messages while adding new Non-Oncology Population"        
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -177,7 +180,7 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_add_non_oncology_population(self, extra, env):
+    def test_add_non_oncology_population(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -190,6 +193,9 @@ class Test_ManagePopultionsPage:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Addition of New Non-Oncology Population"        
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -229,7 +235,7 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_edit_non_oncology_population(self, extra, env):
+    def test_edit_non_oncology_population(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -242,6 +248,9 @@ class Test_ManagePopultionsPage:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Editing the existing Non-Oncology Population"        
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -281,7 +290,7 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_delete_non_oncology_population(self, extra, env):
+    def test_delete_non_oncology_population(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         # Instantiate the Base class
         base = Base(self.driver, extra)
@@ -293,6 +302,9 @@ class Test_ManagePopultionsPage:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Deletion of Existing Non-Oncology Population"        
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -323,7 +335,7 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38394
-    def test_validate_non_oncology_population_ep_details(self, extra, env):
+    def test_validate_non_oncology_population_ep_details(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -336,6 +348,9 @@ class Test_ManagePopultionsPage:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Endpoint details in downloaded Extraction Template after creating new Non-Oncology Population"        
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
