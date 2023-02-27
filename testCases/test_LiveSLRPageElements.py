@@ -6,7 +6,6 @@ import pytest
 from Pages.Base import Base
 
 from Pages.LoginPage import LoginPage
-from Pages.OpenLiveSLRPage import LiveSLRPage
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
 
@@ -18,29 +17,31 @@ class Test_LiveSLRPageElements:
     password = ReadConfig.getPassword()
 
     @pytest.mark.smoketest
-    def test_liveslr_page_ele(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_liveslr_page_ele(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)         
+        base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate presence of elements in LiveSLR Page"
+
         try:
-            self.loginPage.driver.get(baseURL)
-            self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-            self.base.go_to_page("SLR_Homepage", env)
-            self.base.presence_of_element("SLR_Population", env)
-            self.base.presence_of_element("SLR_Type", env)
-            self.base.presence_of_element("Data_Report", env)
-            self.base.presence_of_element("NMA_Button", env)
-            self.base.presence_of_element("Preview_Button", env)
-            self.LogScreenshot.fLogScreenshot(message=f"Elements are present in LiveSLR Page",
+            loginPage.driver.get(baseURL)
+            loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+            base.go_to_page("SLR_Homepage", env)
+            base.presence_of_element("SLR_Population", env)
+            base.presence_of_element("SLR_Type", env)
+            base.presence_of_element("Data_Report", env)
+            base.presence_of_element("NMA_Button", env)
+            base.presence_of_element("Preview_Button", env)
+            LogScreenshot.fLogScreenshot(message=f"Elements are present in LiveSLR Page",
                                               pass_=True, log=True, screenshot=True)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(
+            LogScreenshot.fLogScreenshot(
                 message=f"Complete login and check if application landing page visible",
                 pass_=True, log=True, screenshot=True)
             raise Exception("Element Not Found")

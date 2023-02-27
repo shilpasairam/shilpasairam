@@ -23,7 +23,47 @@ class LoginPage(Base):
         # instantiate the logScreenshot class
         self.LogScreenshot = cLogScreenshot(self.driver, self.extra)
 
-    """Page Actions for LiveSLR Login page"""
+    """Page Actions for LiveHTA Portal Login page"""
+    def complete_portal_login(self, username, password, launch_btn, title, url, env):
+        """
+        application login page must be opened before calling this method
+        """
+        try:
+            self.LogScreenshot.fLogScreenshot(message=f"Portal URL is : {url}",
+                                              pass_=True, log=True, screenshot=False)            
+            # enter username
+            self.input_text("username_textbox", username, env, UnivWaitFor=10)
+            self.LogScreenshot.fLogScreenshot(message='Enter username',
+                                              pass_=True, log=True, screenshot=True)
+
+            # enter password
+            self.input_text("password_textbox", password, env, UnivWaitFor=3)
+            self.LogScreenshot.fLogScreenshot(message='Enter password',
+                                              pass_=True, log=True, screenshot=True)
+
+            # submit password
+            self.click("login_button", env, UnivWaitFor=3)
+            self.LogScreenshot.fLogScreenshot(message='Submit Credentials',
+                                              pass_=True, log=True, screenshot=False)
+            
+            self.jsclick(launch_btn, env, UnivWaitFor=5)
+            self.driver.switch_to.window(self.driver.window_handles[1])
+        except Exception:
+            pass
+        # check whether the login page opened or not
+        try:
+            self.assertPageTitle(title, UnivWaitFor=10)
+            time.sleep(5)
+            self.LogScreenshot.fLogScreenshot(
+                message=f"Portal Login Successful. Application home page launched from LiveHTA portal.",
+                pass_=True, log=True, screenshot=True)
+        except Exception:
+            self.LogScreenshot.fLogScreenshot(
+                message=f"Login Unsuccessful. Please check the application availability and try again",
+                pass_=False, log=True, screenshot=True)
+            raise Exception("Login Unsuccessful")        
+
+    """Page Actions for LiveSLR/LiveRef Login page"""
     def complete_login(self, username, password, launch_btn, title, url, env):
         """
         application login page must be opened before calling this method
@@ -45,9 +85,6 @@ class LoginPage(Base):
             self.click("login_button", env, UnivWaitFor=3)
             self.LogScreenshot.fLogScreenshot(message='Submit Credentials',
                                               pass_=True, log=True, screenshot=False)
-            
-            self.jsclick(launch_btn, env, UnivWaitFor=5)
-            self.driver.switch_to.window(self.driver.window_handles[1])
         except Exception:
             pass
         # check whether the login page opened or not

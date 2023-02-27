@@ -6,7 +6,6 @@ import time
 import pytest
 
 from Pages.LoginPage import LoginPage
-from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
 
 
@@ -17,24 +16,28 @@ class Test_Login:
     password = ReadConfig.getPassword()
 
     @pytest.mark.smoketest
-    def test_login_page(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_login_page(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)        
+        loginPage = LoginPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate LiveSLR Login Scenario"
+
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
     @pytest.mark.smoketest
-    def test_logout(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_logout(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)        
+        loginPage = LoginPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate LiveSLR Logout Scenario"
+
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)      
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.loginPage.logout("liveslr_logout_button", env)
+        loginPage.driver.get(baseURL)      
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.logout("liveslr_logout_button", env)

@@ -24,19 +24,22 @@ class Test_LineofTherapyPage:
     edited_lot_data = []
 
     @pytest.mark.C34623
-    def test_add_lot(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_add_lot(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanagelotdata(env)
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of LineofTherapy Page class
-        self.lotpage = LineofTherapyPage(self.driver, extra)
+        lotpage = LineofTherapyPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Addition of Line Of Therapy"
 
         # Removing the files before the test runs
         if os.path.exists(f'ActualOutputs'):
@@ -44,53 +47,56 @@ class Test_LineofTherapyPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         pop_val = ['pop1', 'pop2']
 
         for i in pop_val:
             try:
-                self.base.go_to_page("managelot_button", env)
-                manage_lot_data = self.lotpage.add_multiple_lot(i, "add_lot_btn", "managelot_table_rows", filepath, env)
+                base.go_to_page("managelot_button", env)
+                manage_lot_data = lotpage.add_multiple_lot(i, "add_lot_btn", "managelot_table_rows", filepath, env)
                 self.added_lot_data.append(manage_lot_data)
-                self.LogScreenshot.fLogScreenshot(message=f"Added Line of Therapy is {self.added_lot_data}",
+                LogScreenshot.fLogScreenshot(message=f"Added Line of Therapy is {self.added_lot_data}",
                                                   pass_=True, log=True, screenshot=False)
-                self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
-                self.imppubpage.upload_file_with_success(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+                imppubpage.upload_file_with_success(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C34623
-    def test_edit_lot(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_edit_lot(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanagelotdata(env)
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)         
+        base = Base(self.driver, extra)         
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of LineofTherapy Page class
-        self.lotpage = LineofTherapyPage(self.driver, extra)
+        lotpage = LineofTherapyPage(self.driver, extra)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit Line of Therapy validation is started***",
+        request.node._tcid = caseid
+        request.node._title = "Validate Editing the Line Of Therapy data"
+
+        LogScreenshot.fLogScreenshot(message=f"***Edit Line of Therapy validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("managelot_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("managelot_button", env)
 
         pop_val = ['pop1', 'pop2']
 
@@ -98,33 +104,36 @@ class Test_LineofTherapyPage:
 
         for i in result:
             try:
-                manage_lot_data = self.lotpage.edit_multiple_lot(i[0], i[1], "managelot_edit", filepath, env)
+                manage_lot_data = lotpage.edit_multiple_lot(i[0], i[1], "managelot_edit", filepath, env)
                 self.edited_lot_data.append(manage_lot_data)
-                self.LogScreenshot.fLogScreenshot(message=f"Edited Line of Therapy is {self.edited_lot_data}",
+                LogScreenshot.fLogScreenshot(message=f"Edited Line of Therapy is {self.edited_lot_data}",
                                                   pass_=True, log=True, screenshot=False)
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Edit Line of Therapy validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Edit Line of Therapy validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C34623
-    def test_del_lot(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_del_lot(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanagelotdata(env)
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of LineofTherapy Page class
-        self.lotpage = LineofTherapyPage(self.driver, extra)
+        lotpage = LineofTherapyPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Deletion of Line Of Therapy"
 
         # Removing the files before the test runs
         if os.path.exists(f'ActualOutputs'):
@@ -132,11 +141,11 @@ class Test_LineofTherapyPage:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of New Line of Therapy validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of New Line of Therapy validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         pop_val = ['pop1', 'pop2']
 
@@ -144,19 +153,19 @@ class Test_LineofTherapyPage:
 
         for i in result:
             try:
-                self.base.go_to_page("managelot_button", env)
-                self.lotpage.delete_multiple_manage_lot(i[1], "managelot_delete", "managelot_delete_popup",
+                base.go_to_page("managelot_button", env)
+                lotpage.delete_multiple_manage_lot(i[1], "managelot_delete", "managelot_delete_popup",
                                                         "managelot_table_rows", env)
-                self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
-                self.imppubpage.upload_file_with_errors(i[0], filepath, env)
-                self.imppubpage.delete_file(i[0], filepath, "file_status_popup_text",
+                base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+                imppubpage.upload_file_with_errors(i[0], filepath, env)
+                imppubpage.delete_file(i[0], filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of New Line of Therapy validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of New Line of Therapy validation is completed***",
                                           pass_=True, log=True, screenshot=False)
                                           

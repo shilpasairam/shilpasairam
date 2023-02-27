@@ -3,8 +3,6 @@ import os
 import pytest
 
 from Pages.LoginPage import LoginPage
-from Pages.OpenLiveSLRPage import LiveSLRPage
-from Pages.SLRReportPage import SLRReport
 from Pages.ExcludedStudies_liveSLR import ExcludedStudies_liveSLR
 from utilities.readProperties import ReadConfig
 from utilities.logScreenshot import cLogScreenshot
@@ -18,18 +16,17 @@ class Test_ExcludedStudies_liveSLR:
     filepath = ReadConfig.getexcludedstudiesliveslrpath()
 
     @pytest.mark.C30712
-    def test_presenceof_excludedstudiesliveslr_into_excelreport(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_presenceof_excludedstudiesliveslr_into_excelreport(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
-        # Creating object of slrreport class
-        self.slrreport = SLRReport(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ExcludedStudies_liveSLR class
-        self.exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Presence of ExcludedStudies_LiveSLR sheet in Complete Excel Report"
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -46,35 +43,34 @@ class Test_ExcludedStudies_liveSLR:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in "
+        LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in "
                                                   f"Complete Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
         for i in scenarios:
             try:
-                self.exstdy_liveslr.presenceof_excludedstudiesliveslr_into_excelreport(i, self.filepath, env)
+                exstdy_liveslr.presenceof_excludedstudiesliveslr_into_excelreport(i, self.filepath, env)
             except Exception:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C30713
     @pytest.mark.C31841
-    def test_presenceof_columnnames_in_excludedstudiesliveslrtab(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_presenceof_columnnames_in_excludedstudiesliveslrtab(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
-        # Creating object of slrreport class
-        self.slrreport = SLRReport(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ExcludedStudies_liveSLR class
-        self.exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Presence of ExcludedStudies_LiveSLR sheet column names in Complete Excel Report"
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -91,35 +87,34 @@ class Test_ExcludedStudies_liveSLR:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
+        LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
                                                   f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
         for index, i in enumerate(scenarios):
             try:
-                self.exstdy_liveslr.presenceof_columnnames_in_excludedstudiesliveslrtab(i, self.filepath, index, env)
+                exstdy_liveslr.presenceof_columnnames_in_excludedstudiesliveslrtab(i, self.filepath, index, env)
             except Exception:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C30715
     @pytest.mark.C31843
-    def test_validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_validate_excludedstudiesliveslrtab_and_contents_into_excelreport(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
-        # Creating object of slrreport class
-        self.slrreport = SLRReport(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ExcludedStudies_liveSLR class
-        self.exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Contents of ExcludedStudies_LiveSLR sheet in Complete Excel Report"
 
         # # Clearing the logs before test runs
         # open(".\\Logs\\testlog.log", "w").close()
@@ -136,18 +131,18 @@ class Test_ExcludedStudies_liveSLR:
                 for file in files:
                     os.remove(os.path.join(root, file))
 
-        self.LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
+        LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
                                                   f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
         for index, i in enumerate(scenarios):
             try:
-                self.exstdy_liveslr.validate_excludedstudiesliveslrtab_and_contents_into_excelreport(i, self.filepath,
+                exstdy_liveslr.validate_excludedstudiesliveslrtab_and_contents_into_excelreport(i, self.filepath,
                                                                                                      index, env)
             except Exception:
                 raise Exception("Unable to select element")

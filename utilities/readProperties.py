@@ -9,7 +9,7 @@ class ReadConfig:
 
     # static method helps you read the function in another file without instantiating the class
     @staticmethod
-    def getApplicationURL(env):
+    def getPortalURL(env):
         # env = config.get('commonInfo', 'environment')
         if env == 'test':
             return f"https://pse-portal-testing.azurewebsites.net/"
@@ -17,6 +17,26 @@ class ReadConfig:
             return f"https://portal-stage.livehta.com"
         elif env == 'production':
             return f"https://portal.livehta.com/"
+
+    @staticmethod
+    def getLiveSLRAppURL(env):
+        # env = config.get('commonInfo', 'environment')
+        if env == 'test':
+            return f"https://pse-liveslr-ng-testing.azurewebsites.net/"
+        elif env == 'staging':
+            return f"https://slr-stage.livehta.com/"
+        elif env == 'production':
+            return f"https://slr.livehta.com/"
+
+    @staticmethod
+    def getLiveRefAppURL(env):
+        # env = config.get('commonInfo', 'environment')
+        if env == 'test':
+            return f"https://pubtracker-testing.azurewebsites.net/"
+        elif env == 'staging':
+            return f"https://liveref-stage.livehta.com/"
+        elif env == 'production':
+            return f"https://liveref.livehta.com/"
 
     @staticmethod
     def getappversionfilepath():
