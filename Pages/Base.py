@@ -294,6 +294,19 @@ class Base:
                                               pass_=False, log=True, screenshot=False)
             return False                                              
 
+    # Check whether a web element is displayed or not using locatorname
+    def isvisible(self, locator, env, locator_name):
+        """
+        Given locator, identify the locator type and path from the OR file and return the bool value
+        """
+        try:
+            return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
+                                            self.locatorpath(locator, env)).is_displayed()
+        except NoSuchElementException:
+            self.LogScreenshot.fLogScreenshot(message=f"{locator_name} is not present.",
+                                              pass_=True, log=True, screenshot=False)
+            return False    
+    
     # Check whether a web element is enabled or not using locatorname
     @fWaitFor
     def isenabled(self, locator, env, UnivWaitFor=0):

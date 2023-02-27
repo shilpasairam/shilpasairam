@@ -165,7 +165,7 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting '
-                                                              f'Extraction File',
+                                                              f'Extraction File. Actual status message is {actual_delete_status_text} and Expected status message is {expected_delete_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Error during Extraction File Deletion")
 
@@ -218,7 +218,7 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
-                                                              f'Extraction File for Population : {i[0]}.',
+                                                              f'Extraction File for Population : {i[0]}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message during Extraction file uploading")
 
@@ -295,7 +295,7 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
-                                                              f'Extraction File for Population : {i[0]}.',
+                                                              f'Extraction File for Population : {i[0]}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message during Extraction file uploading")
 
