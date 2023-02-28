@@ -41,20 +41,8 @@ class Test_UtilityOutcome_ECON:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -118,20 +106,8 @@ class Test_UtilityOutcome_ECON:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with Old Import Logic"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # # Removing the files before the test runs
-        # if os.path.exists(f'ActualOutputs'):
-        #     for root, dirs, files in os.walk(f'ActualOutputs'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -190,25 +166,13 @@ class Test_UtilityOutcome_ECON:
         request.node._tcid = caseid
         request.node._title = "ECON -> Validate presence of Newly added Utility Column Names"
 
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
+
         expected_dict = {"FK-14": "Other Utility Data (Excluding point estimates)",
                          "FK-127": "Utility point estimates reported with health states",
                          "FK-128": "Disutility point estimates reported with health states",
                          "FK-129": "Utility Elicitation Method and Source"}
-
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
             
         LogScreenshot.fLogScreenshot(message=f"*****Column names validation started*****",
                                           pass_=True, log=True, screenshot=False)

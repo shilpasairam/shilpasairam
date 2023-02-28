@@ -41,11 +41,8 @@ class Test_ManagePopultionsPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of New Oncology Population"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -147,20 +144,8 @@ class Test_ManagePopultionsPage:
         request.node._tcid = caseid
         request.node._title = "Validate Field Level Error Messages while adding new Non-Oncology Population"        
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        # Clearing the Logs before the test start execution
+        base.clear_logs()       
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -197,20 +182,8 @@ class Test_ManagePopultionsPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of New Non-Oncology Population"        
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -251,21 +224,6 @@ class Test_ManagePopultionsPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate Editing the existing Non-Oncology Population"        
-
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -293,9 +251,7 @@ class Test_ManagePopultionsPage:
     def test_delete_non_oncology_population(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         # Instantiate the Base class
-        base = Base(self.driver, extra)
-        # Creating object of ExtendedBase class
-        exbase = ExtendedBase(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -304,22 +260,7 @@ class Test_ManagePopultionsPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Deletion of Existing Non-Oncology Population"        
-
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._title = "Validate Deletion of Existing Non-Oncology Population"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -350,22 +291,10 @@ class Test_ManagePopultionsPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Endpoint details in downloaded Extraction Template after creating new Non-Oncology Population"        
-
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        request.node._title = "Validate Endpoint details in downloaded Extraction Template after creating new Non-Oncology Population"
+        
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)

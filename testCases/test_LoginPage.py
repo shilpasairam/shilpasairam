@@ -4,6 +4,7 @@ Test case deals with Login and Logout functionality of LiveSLR application
 
 import time
 import pytest
+from Pages.Base import Base
 
 from Pages.LoginPage import LoginPage
 from utilities.readProperties import ReadConfig
@@ -18,11 +19,16 @@ class Test_Login:
     @pytest.mark.smoketest
     def test_login_page(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate LiveSLR Login Scenario"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)

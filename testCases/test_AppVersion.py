@@ -21,13 +21,18 @@ class Test_AppVersion:
     @pytest.mark.C29642
     def test_liveslr_app_version(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)        
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of AppVersion class
         appver = AppVersion(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate LiveSLR Application Version and Build Number"        
+        request.node._title = "Validate LiveSLR Application Version and Build Number"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)
@@ -54,6 +59,9 @@ class Test_AppVersion:
 
         request.node._tcid = caseid
         request.node._title = "Validate LiveRef Application Version and Build Number"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)

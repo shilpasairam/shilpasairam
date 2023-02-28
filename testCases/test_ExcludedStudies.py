@@ -24,7 +24,9 @@ class Test_ExcludedStudiesPage:
     '''Check excluded studies option in admin section is viewable or not'''
     @pytest.mark.C29758
     def test_view_excluded_study_option(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getPortalURL(env)       
+        baseURL = ReadConfig.getPortalURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -35,11 +37,8 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Presence of Manage Excluded Studies option in Admin section"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Manage Excluded Studies option in Admin page "
                                                   f"check is started***", pass_=True, log=True, screenshot=False)
@@ -69,11 +68,8 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Manage Excluded Studies page accessibility"
 
-        # # Removing the files before the test runs
-        # if os.path.exists(f'ActualOutputs'):
-        #     for root, dirs, files in os.walk(f'ActualOutputs'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Excluded Study Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -115,11 +111,8 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition and Deletion of Excluded Studies file"
 
-        # # Removing the files before the test runs
-        # if os.path.exists(f'ActualOutputs'):
-        #     for root, dirs, files in os.walk(f'ActualOutputs'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Excluded Studies validation is "
                                                   f"started***", pass_=True, log=True, screenshot=False)
@@ -150,7 +143,7 @@ class Test_ExcludedStudiesPage:
         baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getexcludedstudiespath(env)
         # Instantiate the Base class
-        base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -160,6 +153,9 @@ class Test_ExcludedStudiesPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate Addition, Updation and Deletion of Excluded Studies file"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Addition, Updation and Deletion of Excluded Studies file "
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
@@ -188,6 +184,8 @@ class Test_ExcludedStudiesPage:
     def test_excluded_study_compare_with_excel_report(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getexcludedstudiespath(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -198,11 +196,8 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Excluded Studies file comparison with Complete Excel Report"
 
-        # # Removing the files before the test runs
-        # if os.path.exists(f'ActualOutputs'):
-        #     for root, dirs, files in os.walk(f'ActualOutputs'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Excluded Studies File comparison started***",
                                           pass_=True, log=True, screenshot=False)

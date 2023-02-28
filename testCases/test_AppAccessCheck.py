@@ -2,6 +2,7 @@
 Test case deals with Application access check for LiveSLR and LiveRef
 """
 
+import os
 import pytest
 from re import search
 from Pages.Base import Base
@@ -37,6 +38,8 @@ class Test_AppAccess:
     @pytest.mark.C37915
     def test_liveslr_application_access(self, scenarios, name, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)        
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)        
         # Creating object of AppVersion class
@@ -44,6 +47,9 @@ class Test_AppAccess:
 
         request.node._tcid = caseid
         request.node._title = "Validate LiveSLR Application Access"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)

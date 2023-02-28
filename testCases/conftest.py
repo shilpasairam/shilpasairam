@@ -1,5 +1,7 @@
 import configparser
 import os
+import shutil
+import zipfile
 
 from py.xml import html
 import pytest
@@ -133,3 +135,24 @@ def pytest_html_results_table_row(report, cells):
 # # This deletes the log window in the report
 # def pytest_html_results_table_html(data):
 #         del data[-1]
+
+@pytest.hookimpl(trylast=True)
+def pytest_sessionfinish(session, exitstatus):
+    dir_list = ['ActualOutputs', 'Logs', 'Reports']
+    zip_name = f"{session.config.getoption('-m')}_results.zip"
+
+    zip_file = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
+    for dir in dir_list:
+        for dirpath, dirnames, filenames in os.walk(dir):
+            for filename in filenames:
+                zip_file.write(
+                    os.path.join(dirpath, filename),
+                    os.path.relpath(os.path.join(dirpath, filename), os.path.join(dir_list[0], '..')))
+
+    zip_file.close()
+
+    # results_folders = ['ActualOutputs', 'Logs', 'Reports']
+    # # Removing the results before the test runs
+    # for folder in results_folders:
+    #     if os.path.exists(f'{folder}'):
+    #         shutil.rmtree(f'{folder}')

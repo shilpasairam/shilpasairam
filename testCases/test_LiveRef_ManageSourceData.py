@@ -40,12 +40,6 @@ class Test_ManageSourceData:
         request.node._tcid = caseid
         request.node._title = "Validate by Adding invalid Manage Source of Data under LiveRef"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
-
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Invalid Manage Source Data validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
@@ -79,12 +73,6 @@ class Test_ManageSourceData:
 
         request.node._tcid = caseid
         request.node._title = "Validate by Adding valid Manage Source of Data under LiveRef"
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Valid Manage Source Data validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -123,12 +111,6 @@ class Test_ManageSourceData:
 
         request.node._tcid = caseid
         request.node._title = "Validate by Editing existing Manage Source of Data under LiveRef"
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
 
         LogScreenshot.fLogScreenshot(message=f"**Updation of Existing Manage Source Data validation is started**",
                                           pass_=True, log=True, screenshot=False)
@@ -169,12 +151,6 @@ class Test_ManageSourceData:
 
         request.node._tcid = caseid
         request.node._title = "Validate by Deleting existing Manage Source of Data under LiveRef"
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
 
         LogScreenshot.fLogScreenshot(message=f"**Deletion of Existing Manage Source Data validation is started**",
                                           pass_=True, log=True, screenshot=False)

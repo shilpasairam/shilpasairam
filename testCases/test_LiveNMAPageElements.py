@@ -45,22 +45,8 @@ class Test_LiveNMA:
         request.node._tcid = caseid
         request.node._title = "Validate of LiveNMA Datatable with OS Switch Tab"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             print(file)
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    print(file)
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -116,23 +102,6 @@ class Test_LiveNMA:
 
         request.node._tcid = caseid
         request.node._title = "Validate of LiveNMA Datatable with PFS Switch Tab"
-
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             print(file)
-        #             os.remove(os.path.join(root, file))
-
-        # # Removing the files before the test runs
-        # if os.path.exists(f'ActualOutputs'):
-        #     for root, dirs, files in os.walk(f'ActualOutputs'):
-        #         for file in files:
-        #             print(file)
-        #             os.remove(os.path.join(root, file))
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)

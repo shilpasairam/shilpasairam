@@ -46,20 +46,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA Count between UI, WebExcel, Complete Excel and Word Report in Search LIVESLR page"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -128,20 +116,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA elements comparison between Complete Excel and Word Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel "
                                                   f"and Word Report*****",
@@ -182,20 +158,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA elements comparison between Complete Excel and UI"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel "
                                                   f"and UI*****",
@@ -235,20 +199,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA count between PRISMA Tab and ExcludedStudies_LiveSLR Tab in Complete Excel Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Prisma Counts Comparison between 'Updated PRISMA' sheet and "
                                                   f"'Excluded studies - LiveSLR' sheet in Complete Excel Report*****",
@@ -292,20 +244,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA Tab format changes in Complete Excel Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Updated PRISMA tab format changes in Complete Excel "
                                                   f"Report*****",
@@ -344,20 +284,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Compare Publications Count between 'Updated PRISMA' sheet and 'Excluded studies - LiveSLR' sheet in Complete Excel Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Publications Count Comparison between 'Updated PRISMA' sheet "
                                                   f"and 'Excluded studies - LiveSLR' sheet in Complete Excel Report***",

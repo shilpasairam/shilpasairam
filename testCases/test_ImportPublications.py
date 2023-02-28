@@ -34,19 +34,14 @@ class Test_ImportPublicationPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Success Icon"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -84,19 +79,11 @@ class Test_ImportPublicationPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Failure Icon"
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -130,19 +117,14 @@ class Test_ImportPublicationPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Column Header Mismatch"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
@@ -176,19 +158,14 @@ class Test_ImportPublicationPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Letters in Publication Identifier column"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
                                                   f"Identifier validation is started***",
@@ -224,19 +201,14 @@ class Test_ImportPublicationPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Empty value in Publication Identifier column"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
                                                   f"Identifier validation is started***",
@@ -272,19 +244,14 @@ class Test_ImportPublicationPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Duplicate value in Interventions(per arm) column"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions(per arm) validation is started***",
                                           pass_=True, log=True, screenshot=False)

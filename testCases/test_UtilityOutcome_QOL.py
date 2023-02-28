@@ -28,8 +28,6 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
@@ -46,20 +44,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
                                                   f"Report validation*****",
@@ -95,8 +81,6 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
@@ -113,20 +97,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
                                                   f"Source Utility File and Complete Excel Report*****",
@@ -163,8 +135,6 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
@@ -181,20 +151,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Word Report "
                                                   f"validation*****",
@@ -230,8 +188,6 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
@@ -248,20 +204,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
                                                   f"Source Utility File and Word Report*****",
@@ -298,8 +242,6 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
@@ -316,20 +258,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -362,14 +292,10 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
         utiloutcome = UtilityOutcome(self.driver, extra)
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Read population data values
         pop_list = utiloutcome.get_population_data_specific_sheet(util_filepath, 'NewImportLogic')
         # Read slrtype data values
@@ -380,20 +306,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -426,14 +340,10 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
         utiloutcome = UtilityOutcome(self.driver, extra)
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Read population data values
         pop_list = utiloutcome.get_population_data_specific_sheet(util_filepath, 'NewImportLogic')
         # Read slrtype data values
@@ -444,20 +354,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -506,14 +404,10 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
         utiloutcome = UtilityOutcome(self.driver, extra)
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Read population data values
         pop_list = utiloutcome.get_population_data_specific_sheet(util_filepath, 'OldImportLogic')
         # Read slrtype data values
@@ -524,20 +418,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -580,13 +462,11 @@ class Test_UtilityOutcome_QOL:
     @pytest.mark.C31498
     def test_qol_validate_utilitysummarytab_and_contents_into_excelreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
-        util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)        
+        util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
-        # Creating object of slrreport class
-        slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
         utiloutcome = UtilityOutcome(self.driver, extra)
         # Instantiate the logScreenshot class
@@ -595,20 +475,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
         
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
                                                   f"Report validation*****",
@@ -633,8 +501,6 @@ class Test_UtilityOutcome_QOL:
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
         # Creating object of utilityoutcome class
@@ -650,26 +516,14 @@ class Test_UtilityOutcome_QOL:
 
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
         
         expected_dict = {"FH-1": "Utility/Disutility Summary (Excluding point estimates)",
                          "FH-2": "Utility Point Estimate Reported with Health States",
                          "FH-3": "Disutility Point Estimate Reported with Health States",
                          "FH-4": "Utility Elicitation Method and Source"}
-
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
 
         LogScreenshot.fLogScreenshot(message=f"*****Column names validation started*****",
                                           pass_=True, log=True, screenshot=False)

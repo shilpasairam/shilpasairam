@@ -39,11 +39,8 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of Manage Update for selected population"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***",
                                           pass_=True, log=True, screenshot=False)

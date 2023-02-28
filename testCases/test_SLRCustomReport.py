@@ -42,21 +42,6 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Smoke Test -> Validate Search LIVESLR Page Navigation and download the reports"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
@@ -117,20 +102,8 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate Downloaded Reports content comparison from Search LIVESLR page"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -195,20 +168,8 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate presence of PublicationType column in Complete Word Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -248,7 +209,9 @@ class Test_SLR_Custom_Report:
     @pytest.mark.C31466
     def test_interventional_to_clinical_changes(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
-        filepath = ReadConfig.getslrtestdata(env)        
+        filepath = ReadConfig.getslrtestdata(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)        
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
@@ -257,20 +220,8 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate label format changes -> From Interventional to Clinical"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -282,6 +233,8 @@ class Test_SLR_Custom_Report:
     @pytest.mark.C37419
     def test_validate_population_col_in_wordreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
@@ -290,20 +243,8 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate Population Column in Complete Word Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -317,6 +258,8 @@ class Test_SLR_Custom_Report:
     @pytest.mark.C31565
     def test_validate_control_chars_in_wordreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
@@ -325,20 +268,8 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate Control Chars in Complete Word Report"
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)

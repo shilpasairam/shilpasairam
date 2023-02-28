@@ -37,11 +37,8 @@ class Test_ManageQADataPage:
         request.node._tcid = caseid
         request.node._title = "Validate Manage QA Data page accessibility"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -81,11 +78,8 @@ class Test_ManageQADataPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of QA Data file"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -165,6 +159,9 @@ class Test_ManageQADataPage:
         request.node._tcid = caseid
         request.node._title = "Validate Deletion of existing QA Data file"
 
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
+
         LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
@@ -206,11 +203,8 @@ class Test_ManageQADataPage:
         request.node._tcid = caseid
         request.node._title = "Validate content of QA Data file with Complete Excel Report"
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
                                           pass_=True, log=True, screenshot=False)
