@@ -112,8 +112,8 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
     setattr(report, "duration_formatter", "%M:%S")
-    report._title = getattr(item, '_title', '')
     report._tcid = getattr(item, '_tcid', '')
+    report._title = getattr(item, '_title', '')
     # report._filepath = getattr(item,'_filepath','')
 
 @pytest.mark.optionalhook
@@ -127,9 +127,11 @@ def pytest_html_results_table_header(cells):
 @pytest.mark.optionalhook
 def pytest_html_results_table_row(report, cells):
     del cells[1]
-    cells.insert(1,html.td(report._tcid))
-    cells.insert(2, html.td(report._title))
+    # cells.insert(1,html.td(report._tcid))
+    # cells.insert(2, html.td(report._title))
     # cells.insert(3,html.td(report._filepath))
+    cells.insert(1, html.td(getattr(report, '_tcid', '')))
+    cells.insert(2, html.td(getattr(report, '_title', '')))
     cells.pop()
 
 # # This deletes the log window in the report
