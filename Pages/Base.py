@@ -349,3 +349,8 @@ class Base:
             for root, dirs, files in os.walk(f'ActualOutputs'):
                 for file in files:
                     os.remove(os.path.join(root, file))
+
+    # Renaming the filename
+    @fWaitFor
+    def file_rename(self, oldfilename, newfilename):
+        os.rename(os.path.join(f"{os.getcwd()}\\ActualOutputs", oldfilename), os.path.join(f"{os.getcwd()}\\ActualOutputs", newfilename))
