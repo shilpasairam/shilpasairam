@@ -332,17 +332,17 @@ class Base:
     # Clear the Logs before the test execution starts
     @fWaitFor
     def clear_logs(self):
-        # Clearing the logs before test runs
-        open(".\\Logs\\testlog.log", "w").close()
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
 
-        # Removing the screenshots and results reports before the test runs
-        if os.path.exists(f'Reports'):
-            for root, dirs, files in os.walk(f'Reports'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
-            for root, dirs, files in os.walk(f'Reports/screenshots'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        # # Removing the screenshots and results reports before the test runs
+        # if os.path.exists(f'Reports'):
+        #     for root, dirs, files in os.walk(f'Reports'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
 
         # Removing the downloaded report files before the test runs
         if os.path.exists(f'ActualOutputs'):
