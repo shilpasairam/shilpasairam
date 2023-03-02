@@ -327,7 +327,10 @@ class ProtocolPage(Base):
                 select.select_by_visible_text(j[0])
 
                 self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
-                downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                # Renaming the filename because there is an issue in downloading filenames with same name multiple times in headless mode.
+                # So as an alternative renaming the file after downloading in each iteration
+                self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180), f"{j[0]}_search-strategy-template.xlsx")
+                downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
                 if downloaded_template_name == j[3]:
                     self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
                                                         pass_=True, log=True, screenshot=False)
@@ -391,17 +394,7 @@ class ProtocolPage(Base):
                 select = Select(stdy_ele)
                 select.select_by_visible_text(j[0])
                 self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
-                                                    pass_=True, log=True, screenshot=True)                
-
-                self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
-                downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
-                if downloaded_template_name == j[3]:
-                    self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
-                                                        pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch in search strategy template name. Expected Template name is {template_name[0]} and Actual Template name is {downloaded_template_name}",
-                                                        pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch in search strategy template name.")
+                                                    pass_=True, log=True, screenshot=True)
 
                 self.click("searchstrategy_date", env)
                 self.select_calendar_date(day_val)

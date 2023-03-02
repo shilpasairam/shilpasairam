@@ -20,18 +20,21 @@ class Test_TabNames:
 
     @pytest.mark.C29584
     @pytest.mark.C29826
-    def test_tabname_changes(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_tabname_changes(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)
+        base = Base(self.driver, extra)
         # instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "LiveRef - Validate Tab Name changes in LiveRef Homepage"
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         page_locs = ['searchpublications_button', 'liveref_importpublications_button',
                      'liveref_view_import_status_button', 'liveref_manageindications_button',
@@ -41,51 +44,54 @@ class Test_TabNames:
 
         for i in page_locs:
             try:
-                self.base.go_to_page(i, env)
-                page_name = self.base.get_text(i, env)
-                self.base.assertPageTitle("Cytel LiveRef", UnivWaitFor=10)
-                self.LogScreenshot.fLogScreenshot(message=f"Tab Name for '{page_name}' page is as expected.",
+                base.go_to_page(i, env)
+                page_name = base.get_text(i, env)
+                base.assertPageTitle("Cytel LiveRef", UnivWaitFor=10)
+                LogScreenshot.fLogScreenshot(message=f"Tab Name for '{page_name}' page is as expected.",
                                                   pass_=True, log=True, screenshot=True)
 
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of tab names",
+                LogScreenshot.fLogScreenshot(message=f"Error in during validation of tab names",
                                                   pass_=False, log=True, screenshot=False)
                 raise Exception("Error in during validation of tab names")
 
         # Logging out from the application
-        self.loginPage.logout("liveref_logout_button", env)
+        loginPage.logout("liveref_logout_button", env)
 
     @pytest.mark.C29826
-    def test_liveref_validate_duplicate_entries_in_admin_panel(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_liveref_validate_duplicate_entries_in_admin_panel(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)
+        base = Base(self.driver, extra)
         # instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "LiveRef - Validate duplicate entries in LiveRef Homepage - Admin Panel"
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         try:
-            admin_eles = self.base.select_elements("liveref_admin_panel_list", env)
+            admin_eles = base.select_elements("liveref_admin_panel_list", env)
             admin_eles_text = []
             for i in admin_eles:
                 admin_eles_text.append(i.text)
             if len(admin_eles_text) == len(set(admin_eles_text)):
-                self.LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
+                LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
                                                   pass_=True, log=True, screenshot=True)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. "
+                LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. "
                                                           f"Values are : {admin_eles_text}",
                                                   pass_=False, log=True, screenshot=True)
 
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in during validation of presence of navigation links",
+            LogScreenshot.fLogScreenshot(message=f"Error in during validation of presence of navigation links",
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Error in during validation of presence of navigation links")
 
         # Logging out from the application
-        self.loginPage.logout("liveref_logout_button", env)
+        loginPage.logout("liveref_logout_button", env)

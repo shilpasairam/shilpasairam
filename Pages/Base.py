@@ -8,6 +8,7 @@ Fluent wait:    will wait for a max of n sec until a specific element is located
                 Don't mix implicit and explicit/fluent waits, it can cause unpredictable wait times
 """
 import functools
+import os
 import time
 import pandas as pd
 import pytest
@@ -327,3 +328,29 @@ class Base:
         Assert the text
         """
         assert expected_text == actual_text
+
+    # Clear the Logs before the test execution starts
+    @fWaitFor
+    def clear_logs(self):
+        # # Clearing the logs before test runs
+        # open(".\\Logs\\testlog.log", "w").close()
+
+        # # Removing the screenshots and results reports before the test runs
+        # if os.path.exists(f'Reports'):
+        #     for root, dirs, files in os.walk(f'Reports'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
+        #         for file in files:
+        #             os.remove(os.path.join(root, file))
+
+        # Removing the downloaded report files before the test runs
+        if os.path.exists(f'ActualOutputs'):
+            for root, dirs, files in os.walk(f'ActualOutputs'):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+
+    # Renaming the filename
+    @fWaitFor
+    def file_rename(self, oldfilename, newfilename):
+        os.rename(os.path.join(f"{os.getcwd()}\\ActualOutputs", oldfilename), os.path.join(f"{os.getcwd()}\\ActualOutputs", newfilename))

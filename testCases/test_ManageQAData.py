@@ -9,7 +9,6 @@ from Pages.Base import Base
 
 from Pages.LoginPage import LoginPage
 from Pages.ManageQADataPage import ManageQADataPage
-from Pages.OpenLiveSLRPage import LiveSLRPage
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
 
@@ -23,208 +22,207 @@ class Test_ManageQADataPage:
     # slrfilepath = ReadConfig.getslrtestdata()
 
     @pytest.mark.C27360
-    def test_access_manageqadata_page_elements(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_access_manageqadata_page_elements(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanageqadatapath(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)         
+        base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManageQADataPage class
-        self.mngqadata = ManageQADataPage(self.driver, extra)
+        mngqadata = ManageQADataPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Manage QA Data page accessibility"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("manage_qa_data_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1']
 
         try:
             for i in pop_val:
-                self.mngqadata.access_manageqadata_page_elements(i, filepath, env)
+                mngqadata.access_manageqadata_page_elements(i, filepath, env)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page elements",
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page elements",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Error in accessing ManageQAData page elements")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27361
-    def test_add_qa_data(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_add_qa_data(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanageqadatapath(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)                 
+        base = Base(self.driver, extra)                 
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManageQADataPage class
-        self.mngqadata = ManageQADataPage(self.driver, extra)
+        mngqadata = ManageQADataPage(self.driver, extra)
         # # Get StudyType and Files path to upload Managae QA Data
         # self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Addition of QA Data file"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("manage_qa_data_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
 
         try:
             for i in pop_val:
-                self.mngqadata.add_manage_qa_data_with_invalidfile(i, filepath, env)
-                self.mngqadata.add_multiple_manage_qa_data(i, filepath, env)
+                mngqadata.add_manage_qa_data_with_invalidfile(i, filepath, env)
+                mngqadata.add_multiple_manage_qa_data(i, filepath, env)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page",
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Error while uploading QA File")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27361
-    def test_overwrite_qa_data(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_overwrite_qa_data(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanageqadatapath(env)  
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)                
+        base = Base(self.driver, extra)                
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManageQADataPage class
-        self.mngqadata = ManageQADataPage(self.driver, extra)
+        mngqadata = ManageQADataPage(self.driver, extra)
         # # Get StudyType and Files path to Override the existing Managae QA Data
         # self.stdy_data_override = self.mngqadata.get_qa_file_details_override(self.filepath)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is started***",
+        request.node._tcid = caseid
+        request.node._title = "Validate Overwriting of existing QA Data file"
+
+        LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("manage_qa_data_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
 
         try:
             for j in pop_val:
-                self.mngqadata.overwrite_multiple_manage_qa_data(j, filepath, env)
-                self.mngqadata.del_multiple_manage_qa_data(j, filepath, env)
+                mngqadata.overwrite_multiple_manage_qa_data(j, filepath, env)
+                mngqadata.del_multiple_manage_qa_data(j, filepath, env)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error while overwriting the QA files",
+            LogScreenshot.fLogScreenshot(message=f"Error while overwriting the QA files",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Error while uploading QA File to the same population and same study type")
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is completed***",
                                           pass_=True, log=True, screenshot=False)
     
     @pytest.mark.C27362
-    def test_delete_qa_data(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_delete_qa_data(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getmanageqadatapath(env) 
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)                
+        base = Base(self.driver, extra)                
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManageQADataPage class
-        self.mngqadata = ManageQADataPage(self.driver, extra)
+        mngqadata = ManageQADataPage(self.driver, extra)
         # # Get StudyType and Files path to upload Managae QA Data
         # self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
+        request.node._tcid = caseid
+        request.node._title = "Validate Deletion of existing QA Data file"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
+
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("manage_qa_data_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
 
         try:
             for i in pop_val:
-                self.mngqadata.add_multiple_manage_qa_data(i, filepath, env)
-                self.mngqadata.del_multiple_manage_qa_data(i, filepath, env)
+                mngqadata.add_multiple_manage_qa_data(i, filepath, env)
+                mngqadata.del_multiple_manage_qa_data(i, filepath, env)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30247
     @pytest.mark.C27301
     @pytest.mark.C27306
-    def test_qafile_compare_with_excelreport(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_qafile_compare_with_excelreport(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getmanageqadatapath(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)                 
+        base = Base(self.driver, extra)                 
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManageQADataPage class
-        self.mngqadata = ManageQADataPage(self.driver, extra)
+        mngqadata = ManageQADataPage(self.driver, extra)
         # # Get StudyType and Files path to upload Managae QA Data
         # self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate content of QA Data file with Complete Excel Report"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
                                           pass_=True, log=True, screenshot=False)
 
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("manage_qa_data_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop3']
 
         try:
             for i in pop_val:
-                self.mngqadata.compare_qa_file_with_report(i, filepath, env)
-                self.mngqadata.del_data_after_qafile_comparison(i, filepath, env)
+                mngqadata.compare_qa_file_with_report(i, filepath, env)
+                mngqadata.del_data_after_qafile_comparison(i, filepath, env)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison completed***",
+        LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison completed***",
                                           pass_=True, log=True, screenshot=False)

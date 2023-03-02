@@ -1,7 +1,9 @@
 import configparser
 import os
+import shutil
+import zipfile
 
-# from py.xml import html
+from py.xml import html
 import pytest
 import platform,socket,psutil
 import datetime
@@ -22,6 +24,10 @@ def pytest_addoption(parser):
 @pytest.fixture()
 def env(request):
     return request.config.getoption("--env")
+
+@pytest.fixture()
+def caseid(request):
+    return request.config.getoption("-m")
 
 # @pytest.fixture(params=["chrome", "edge"])
 # def init_driver(request):
@@ -58,6 +64,8 @@ def init_driver(request):
     options.add_experimental_option("detach", True)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     web_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    params = {'behavior': 'allow', 'downloadPath': f"{os.getcwd()}\\ActualOutputs"}
+    web_driver.execute_cdp_cmd('Page.setDownloadBehavior', params)
 
     request.cls.driver = web_driver
     # web_driver.maximize_window()
@@ -83,7 +91,7 @@ def pytest_configure(config):
     reports_dir = Path('Reports')
     reports_dir.mkdir(parents=True, exist_ok=True)
     # custom report file
-    report = reports_dir / f"report_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}.html"
+    report = reports_dir / f"{config.getoption('-m')}_report_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}.html"
     # adjust plugin options
     config.option.htmlpath = report
     config.option.self_contained_html = True
@@ -99,31 +107,54 @@ def pytest_html_report_title(report):
     ''' modifying the title  of html report'''
     report.title = "Automation Report"
 
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     outcome = yield
-#     report = outcome.get_result()
-#     setattr(report, "duration_formatter", "%M:%S")
-#     report._title = getattr(item, '_title', '')
-#     report._tcid = getattr(item, '_tcid', '')
-#     report._filepath = getattr(item,'_filepath','')
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    setattr(report, "duration_formatter", "%M:%S")
+    report._tcid = getattr(item, '_tcid', '')
+    report._title = getattr(item, '_title', '')
+    # report._filepath = getattr(item,'_filepath','')
 
-# @pytest.mark.optionalhook
-# def pytest_html_results_table_header(cells):
-#     del cells[1]
-#     cells.insert(1,html.th('TC ID'))
-#     cells.insert(2,html.th('Title'))
-#     cells.insert(3,html.th('Data file path'))
-#     cells.pop()
+@pytest.mark.optionalhook
+def pytest_html_results_table_header(cells):
+    del cells[1]
+    cells.insert(1,html.th('TC ID'))
+    cells.insert(2,html.th('TC Title'))
+    # cells.insert(3,html.th('Data file path'))
+    cells.pop()
 
-# @pytest.mark.optionalhook
-# def pytest_html_results_table_row(report, cells):
-#     del cells[1]
-#     cells.insert(1,html.td(report._tcid))
-#     cells.insert(2, html.td(report._title))
-#     cells.insert(3,html.td(report._filepath))
-#     cells.pop()
+@pytest.mark.optionalhook
+def pytest_html_results_table_row(report, cells):
+    del cells[1]
+    # cells.insert(1,html.td(report._tcid))
+    # cells.insert(2, html.td(report._title))
+    # cells.insert(3,html.td(report._filepath))
+    cells.insert(1, html.td(getattr(report, '_tcid', '')))
+    cells.insert(2, html.td(getattr(report, '_title', '')))
+    cells.pop()
 
 # # This deletes the log window in the report
 # def pytest_html_results_table_html(data):
 #         del data[-1]
+
+@pytest.hookimpl(trylast=True)
+def pytest_sessionfinish(session, exitstatus):
+    dir_list = ['ActualOutputs', 'Logs', 'Reports']
+    zip_name = f"{session.config.getoption('-m')}_results.zip"
+
+    zip_file = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
+    for dir in dir_list:
+        for dirpath, dirnames, filenames in os.walk(dir):
+            for filename in filenames:
+                zip_file.write(
+                    os.path.join(dirpath, filename),
+                    os.path.relpath(os.path.join(dirpath, filename), os.path.join(dir_list[0], '..')))
+
+    zip_file.close()
+
+    # results_folders = ['ActualOutputs', 'Logs', 'Reports']
+    # # Removing the results before the test runs
+    # for folder in results_folders:
+    #     if os.path.exists(f'{folder}'):
+    #         shutil.rmtree(f'{folder}')

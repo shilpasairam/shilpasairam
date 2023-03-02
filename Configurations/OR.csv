@@ -193,7 +193,7 @@ ManagePopulations,delete_population,XPATH,//table[@id='DataTables_Table_0']//tbo
 ManagePopulations,delete_population_popup,XPATH,//div[@class='modal-content']//div[3]//button[1],
 ManagePopulations_NonOncology,non_oncology_tab,XPATH,//button[@class='btn btn-nononcology'],
 ManagePopulations_NonOncology,non_oncology_name,NAME,nononcologyname,
-ManagePopulations_NonOncology,non_oncology_clientid_drpdwn,XPATH,//select[@name='clientId'],
+ManagePopulations_NonOncology,non_oncology_clientid_drpdwn,XPATH,//select[@name='clientCompanyName'],//select[@name='clientId']
 ManagePopulations_NonOncology,non_oncology_descr,NAME,nononcologydescription,
 ManagePopulations_NonOncology,ep1_name,NAME,endpoint1name,
 ManagePopulations_NonOncology,ep1_abbreviation,NAME,abbreviation,

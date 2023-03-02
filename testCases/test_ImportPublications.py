@@ -25,46 +25,44 @@ class Test_ImportPublicationPage:
     @pytest.mark.C27546
     @pytest.mark.C27381
     @pytest.mark.C28987
-    def test_upload_and_del_extraction_template_success(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_upload_and_del_extraction_template_success(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Upload Extraction Template with Success Icon"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop1']
 
         for index, i in enumerate(pop_list):
             try:
-                self.imppubpage.upload_file_with_success(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                imppubpage.upload_file_with_success(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
                                           pass_=True, log=True, screenshot=False)
     
     @pytest.mark.C30246
@@ -72,222 +70,207 @@ class Test_ImportPublicationPage:
     @pytest.mark.C27546
     @pytest.mark.C27381
     @pytest.mark.C28987
-    def test_upload_and_del_extraction_template_failure(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_upload_and_del_extraction_template_failure(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Upload Extraction Template with Failure Icon"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop2']
 
         for index, i in enumerate(pop_list):
             try:
-                self.imppubpage.upload_file_with_errors(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27547
-    def test_upload_extraction_template_with_header_mismatch(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_upload_extraction_template_with_header_mismatch(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Upload Extraction Template with Column Header Mismatch"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop3']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch validation "
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch validation "
                                                   f"is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27379
-    def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Upload Extraction Template with Letters in Publication Identifier column"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
                                                   f"Identifier validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop4']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
                                                   f"Identifier validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27380
-    def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Upload Extraction Template with Empty value in Publication Identifier column"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
                                                   f"Identifier validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop5']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
                                                   f"Identifier validation is completed***",
                                           pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28986
-    def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ImportPublicationPage class
-        self.imppubpage = ImportPublicationPage(self.driver, extra)
+        imppubpage = ImportPublicationPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Upload Extraction Template with Duplicate value in Interventions(per arm) column"
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
-                                                  f"Identifier validation is started***",
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions(per arm) validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop6']
 
         for i in pop_list:
             try:
-                self.imppubpage.upload_file_with_errors(i, filepath, env)
-                self.imppubpage.delete_file(i, filepath, "file_status_popup_text",
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text",
                                             "upload_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
-                                                  f"Identifier validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions(per arm) validation is completed***",
                                           pass_=True, log=True, screenshot=False)

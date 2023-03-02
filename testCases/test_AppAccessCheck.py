@@ -2,6 +2,7 @@
 Test case deals with Application access check for LiveSLR and LiveRef
 """
 
+import os
 import pytest
 from re import search
 from Pages.Base import Base
@@ -35,23 +36,30 @@ class Test_AppAccess:
         ]
     )
     @pytest.mark.C37915
-    def test_liveslr_application_access(self, scenarios, name, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
-        print(baseURL)
+    def test_liveslr_application_access(self, scenarios, name, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)        
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)        
+        loginPage = LoginPage(self.driver, extra)        
         # Creating object of AppVersion class
-        self.appver = AppVersion(self.driver, extra)
+        appver = AppVersion(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate LiveSLR Application Access"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)
+        loginPage.driver.get(baseURL)
         # self.loginPage.complete_login(username, password, "launch_live_slr", "Cytel LiveSLR")        
         
         # Validating the application version
-        self.appver.validate_liveslr_page_access(scenarios, self.testdata, baseURL, env)
+        appver.validate_liveslr_page_access(scenarios, self.testdata, baseURL, env)
 
         # Logging out from the application
-        self.loginPage.logout("liveslr_logout_button", env)        
+        loginPage.logout("liveslr_logout_button", env)        
 
     @pytest.mark.parametrize(
         "scenarios, name",
@@ -62,20 +70,22 @@ class Test_AppAccess:
         ]
     )
     @pytest.mark.C37915
-    def test_liveref_application_access(self, scenarios, name, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
-        print(baseURL)        
+    def test_liveref_application_access(self, scenarios, name, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)        
+        loginPage = LoginPage(self.driver, extra)        
         # Creating object of AppVersion class
-        self.appver = AppVersion(self.driver, extra)
+        appver = AppVersion(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate LiveRef Application Access"
 
         # Invoking the methods from loginpage
-        self.loginPage.driver.get(baseURL)
+        loginPage.driver.get(baseURL)
         # self.loginPage.complete_login(username, password, "launch_liveref", "Cytel LiveRef")        
         
         # Validating the application version
-        self.appver.validate_liveref_page_access(scenarios, self.testdata, baseURL, env)
+        appver.validate_liveref_page_access(scenarios, self.testdata, baseURL, env)
 
         # Logging out from the application
-        self.loginPage.logout("liveref_logout_button", env)        
+        loginPage.logout("liveref_logout_button", env)        

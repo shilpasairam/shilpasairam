@@ -11,7 +11,6 @@ from Pages.ExtendedBasePage import ExtendedBase
 from Pages.ManagePopulationsPage import ManagePopulationsPage
 
 from Pages.LoginPage import LoginPage
-from Pages.OpenLiveSLRPage import LiveSLRPage
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
 
@@ -28,61 +27,60 @@ class Test_ManagePopultionsPage:
     non_onco_edited_population_val = []    
 
     @pytest.mark.C30244
-    def test_add_population(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_add_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)         
+        base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
-        self.mngpoppage = ManagePopulationsPage(self.driver, extra)
+        mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Addition of New Oncology Population"
+
+        # Clearing the Logs before the test start execution
+        base.clear_logs()
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("managepopulations_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1', 'pop2', 'pop3']
 
         for i in pop_list:
             try:
-                added_pop = self.mngpoppage.add_multiple_population(i, "add_population_btn", self.filepath,
+                added_pop = mngpoppage.add_multiple_population(i, "add_population_btn", self.filepath,
                                                                     "manage_pop_table_rows", env)
 
                 self.onco_population_val.append(added_pop)
-                self.LogScreenshot.fLogScreenshot(message=f"Added populations are {self.onco_population_val}",
+                LogScreenshot.fLogScreenshot(message=f"Added populations are: {self.onco_population_val}",
                                                   pass_=True, log=True, screenshot=False)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C30244
-    def test_edit_population(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_edit_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)         
+        base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
-        self.mngpoppage = ManagePopulationsPage(self.driver, extra)
+        mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Editing the existing Oncology Population"
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("managepopulations_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1', 'pop2', 'pop3']
 
@@ -90,46 +88,47 @@ class Test_ManagePopultionsPage:
 
         for i in result:
             try:
-                edited_pop = self.mngpoppage.edit_multiple_population(i[0], i[1], "edit_population", self.filepath, env)
+                edited_pop = mngpoppage.edit_multiple_population(i[0], i[1], "edit_population", self.filepath, env)
 
                 self.onco_edited_population_val.append(edited_pop)
-                self.LogScreenshot.fLogScreenshot(message=f"Edited populations are {self.onco_edited_population_val}",
+                LogScreenshot.fLogScreenshot(message=f"Edited populations are: {self.onco_edited_population_val}",
                                                   pass_=True, log=True, screenshot=False)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C30244
-    def test_delete_population(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_delete_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         # Instantiate the Base class
-        self.base = Base(self.driver, extra)         
+        base = Base(self.driver, extra)         
         # Instantiate the logScreenshot class
-        self.LogScreenshot = cLogScreenshot(self.driver, extra)
+        LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
-        self.loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        self.liveslrpage = LiveSLRPage(self.driver, extra)
+        loginPage = LoginPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
-        self.mngpoppage = ManagePopulationsPage(self.driver, extra)
+        mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate Deletion of Existing Oncology Population"
         
-        self.loginPage.driver.get(baseURL)
-        self.loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        self.base.go_to_page("managepopulations_button", env)
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("managepopulations_button", env)
 
         for i in self.onco_edited_population_val:
             try:
-                self.mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup",
+                mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup",
                                                            "manage_pop_table_rows", env)
             except Exception:
-                self.LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38392
-    def test_add_non_oncology_population_ui_validation(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_add_non_oncology_population_ui_validation(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
         base = Base(self.driver, extra)
@@ -139,25 +138,14 @@ class Test_ManagePopultionsPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Field Level Error Messages while adding new Non-Oncology Population"        
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        # Clearing the Logs before the test start execution
+        base.clear_logs()       
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -177,8 +165,8 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_add_non_oncology_population(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_add_non_oncology_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
         base = Base(self.driver, extra)
@@ -188,25 +176,14 @@ class Test_ManagePopultionsPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Addition of New Non-Oncology Population"        
 
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -231,8 +208,8 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_edit_non_oncology_population(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_edit_non_oncology_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
         base = Base(self.driver, extra)
@@ -242,25 +219,11 @@ class Test_ManagePopultionsPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        request.node._tcid = caseid
+        request.node._title = "Validate Editing the existing Non-Oncology Population"        
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -285,35 +248,19 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_delete_non_oncology_population(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_delete_non_oncology_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         # Instantiate the Base class
-        base = Base(self.driver, extra)
-        # Creating object of ExtendedBase class
-        exbase = ExtendedBase(self.driver, extra)        
+        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
+        request.node._tcid = caseid
+        request.node._title = "Validate Deletion of Existing Non-Oncology Population"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -329,8 +276,8 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38394
-    def test_validate_non_oncology_population_ep_details(self, extra, env):
-        baseURL = ReadConfig.getApplicationURL(env)
+    def test_validate_non_oncology_population_ep_details(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
         base = Base(self.driver, extra)
@@ -340,25 +287,14 @@ class Test_ManagePopultionsPage:
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of liveslrpage class
-        liveslrpage = LiveSLRPage(self.driver, extra)
         # Creating object of ManagePopulationsPage class
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-        #
-        # # Removing the screenshots before the test runs
-        # if os.path.exists(f'Reports/screenshots'):
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))        
+        request.node._tcid = caseid
+        request.node._title = "Validate Endpoint details in downloaded Extraction Template after creating new Non-Oncology Population"
+        
+        # Clearing the Logs before the test start execution
+        base.clear_logs()        
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
