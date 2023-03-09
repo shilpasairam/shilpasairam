@@ -41,7 +41,7 @@ class Test_ManageSourceData:
         request.node._title = "Validate by Adding invalid Manage Source of Data under LiveRef"
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Invalid Manage Source Data validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
@@ -54,11 +54,11 @@ class Test_ManageSourceData:
                 mngsrcpage.add_invalid_managesourcedata(i, self.TestData, env)                
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Source Data page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"**Addtion of Invalid Manage Source Data validation is completed**",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
     @pytest.mark.C29826
@@ -75,7 +75,7 @@ class Test_ManageSourceData:
         request.node._title = "Validate by Adding valid Manage Source of Data under LiveRef"
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Valid Manage Source Data validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
@@ -85,18 +85,17 @@ class Test_ManageSourceData:
 
         for i in scenarios:
             try:
-                added_src_data = mngsrcpage.add_valid_managesourcedata(i, self.TestData, "sourcedata_table_rows",
-                                                                            env)
+                added_src_data = mngsrcpage.add_valid_managesourcedata(i, self.TestData, "sourcedata_table_rows", env)
                 self.added_source_data.append(added_src_data)
                 LogScreenshot.fLogScreenshot(message=f"Added Manage Source data are {self.added_source_data}",
-                                                  pass_=True, log=True, screenshot=False)          
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Source Data page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Valid Manage Source Data validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
     @pytest.mark.C29826
@@ -113,7 +112,7 @@ class Test_ManageSourceData:
         request.node._title = "Validate by Editing existing Manage Source of Data under LiveRef"
 
         LogScreenshot.fLogScreenshot(message=f"**Updation of Existing Manage Source Data validation is started**",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
@@ -126,17 +125,17 @@ class Test_ManageSourceData:
         for i in result:
             try:
                 updated_src_data = mngsrcpage.edit_valid_managesourcedata(i[0], i[1], self.TestData,
-                                                                               "sourcedata_edit", env)
+                                                                          "sourcedata_edit", env)
                 self.updated_source_data.append(updated_src_data)
                 LogScreenshot.fLogScreenshot(message=f"Updated Manage Source data are {self.updated_source_data}",
-                                                  pass_=True, log=True, screenshot=False)          
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Source Data page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"*Updation of Existing Manage Source Data validation is completed*",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28989
     @pytest.mark.C29826
@@ -153,7 +152,7 @@ class Test_ManageSourceData:
         request.node._title = "Validate by Deleting existing Manage Source of Data under LiveRef"
 
         LogScreenshot.fLogScreenshot(message=f"**Deletion of Existing Manage Source Data validation is started**",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
@@ -164,11 +163,11 @@ class Test_ManageSourceData:
                 mngsrcpage.delete_managesourcedata(i, "sourcedata_table_rows", env)       
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Source Data page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"*Deletion of Existing Manage Source Data validation is completed*",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
 
 #  ########### For custom report generation ############

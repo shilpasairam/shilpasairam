@@ -44,9 +44,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "QOL -> Presence of Utility Summary Sheet in Complete Excel Report"
 
-        LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
-                                                  f"Report validation*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel Report "
+                                             f"validation*****", pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -56,8 +55,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -94,9 +92,9 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "QOL -> Utility Summary Sheet Row count validation in Complete Excel Report"
 
-        LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
-                                                  f"Source Utility File and Complete Excel Report*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between Source "
+                                             f"Utility File and Complete Excel Report*****",
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -106,8 +104,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -115,8 +112,7 @@ class Test_UtilityOutcome_QOL:
                     excel_filename = slrreport.get_latest_filename(UnivWaitFor=180)
                     utiloutcome.validate_filename(excel_filename, util_filepath, 'NewImportLogic')
                     
-                    utiloutcome.qol_verify_source_to_target_row_counts_excelreport(excel_filename,
-                                                                                        util_filepath)
+                    utiloutcome.qol_verify_source_to_target_row_counts_excelreport(excel_filename, util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -145,9 +141,8 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "QOL -> Presence of Utility Summary Sheet in Word Report"
 
-        LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Word Report "
-                                                  f"validation*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Word Report validation*****",
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -157,8 +152,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
 
                     slrreport.generate_download_report("word_report", env)
                     # time.sleep(5)
@@ -195,9 +189,9 @@ class Test_UtilityOutcome_QOL:
         request.node._tcid = caseid
         request.node._title = "QOL -> Utility Summary Sheet Row count validation in Complete Word Report"
 
-        LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
-                                                  f"Source Utility File and Word Report*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between Source "
+                                             f"Utility File and Word Report*****",
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -207,8 +201,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
 
                     slrreport.generate_download_report("word_report", env)
                     # time.sleep(5)
@@ -216,8 +209,7 @@ class Test_UtilityOutcome_QOL:
                     word_filename = slrreport.get_latest_filename(UnivWaitFor=180)
                     utiloutcome.validate_filename(word_filename, util_filepath, 'NewImportLogic')
 
-                    utiloutcome.qol_verify_source_to_target_row_counts_wordreport(word_filename,
-                                                                                       util_filepath)
+                    utiloutcome.qol_verify_source_to_target_row_counts_wordreport(word_filename, util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -254,8 +246,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -263,8 +254,7 @@ class Test_UtilityOutcome_QOL:
                     excel_filename = slrreport.get_latest_filename(UnivWaitFor=180)
                     utiloutcome.validate_filename(excel_filename, util_filepath, 'NewImportLogic')
 
-                    utiloutcome.qol_verify_excelreport_utility_summary_sorting_order(excel_filename,
-                                                                                          util_filepath)
+                    utiloutcome.qol_verify_excelreport_utility_summary_sorting_order(excel_filename, util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -299,8 +289,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("word_report", env)
                     # time.sleep(5)
@@ -308,8 +297,7 @@ class Test_UtilityOutcome_QOL:
                     word_filename = slrreport.get_latest_filename(UnivWaitFor=180)
                     utiloutcome.validate_filename(word_filename, util_filepath, 'NewImportLogic')
 
-                    utiloutcome.qol_verify_wordreport_utility_table_sorting_order(word_filename,
-                                                                                       util_filepath)
+                    utiloutcome.qol_verify_wordreport_utility_table_sorting_order(word_filename, util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -344,8 +332,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -369,7 +356,7 @@ class Test_UtilityOutcome_QOL:
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
                     utiloutcome.qol_utility_summary_validation(webexcel_filename, excel_filename,
-                                                                    util_filepath, word_filename)
+                                                               util_filepath, word_filename)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -405,8 +392,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -430,7 +416,7 @@ class Test_UtilityOutcome_QOL:
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
                     utiloutcome.qol_utility_summary_validation_old_imports(webexcel_filename, excel_filename,
-                                                                                util_filepath)
+                                                                           util_filepath)
 
             except Exception:
                 raise Exception("Unable to select element")
@@ -457,8 +443,7 @@ class Test_UtilityOutcome_QOL:
 
         for index, i in enumerate(scenarios):
             try:
-                utiloutcome.qol_validate_utilitysummarytab_and_contents_into_excelreport(i, util_filepath,
-                                                                                              index, env)
+                utiloutcome.qol_validate_utilitysummarytab_and_contents_into_excelreport(i, util_filepath, index, env)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -492,7 +477,7 @@ class Test_UtilityOutcome_QOL:
                          "FH-4": "Utility Elicitation Method and Source"}
 
         LogScreenshot.fLogScreenshot(message=f"*****Column names validation started*****",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -502,8 +487,7 @@ class Test_UtilityOutcome_QOL:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -524,6 +508,6 @@ class Test_UtilityOutcome_QOL:
                     utiloutcome.presenceof_utilitycolumn_names(webexcel_filename, excel_filename, expected_dict)
                 
                 LogScreenshot.fLogScreenshot(message=f"*****Column names validation Completed*****",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 raise Exception("Unable to select element")

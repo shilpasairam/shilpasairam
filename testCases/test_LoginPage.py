@@ -19,8 +19,6 @@ class Test_Login:
     @pytest.mark.smoketest
     def test_login_page(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
 

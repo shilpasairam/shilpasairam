@@ -168,7 +168,9 @@ class ManageQADataPage(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading File "
                                                               f"with invalid format for Population : {pop_value} -> "
                                                               f"SLR Type : {i[0]}. Invalid file is "
-                                                              f"'{Path(f'{i[1]}').stem}'. Actual status message is {actual_error_text} and Expected status message is {expected_error_text}",
+                                                              f"'{Path(f'{i[1]}').stem}'. Actual status message is "
+                                                              f"{actual_error_text} and Expected status message is "
+                                                              f"{expected_error_text}",
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception(f"Unable to find status message while uploading File with invalid format "
                                     f"for Population : {pop_value} -> SLR Type : {i[0]}. "
@@ -221,7 +223,10 @@ class ManageQADataPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading QA File '
-                                                              f'for Population : {pop_value} -> SLR Type : {i[0]}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
+                                                              f'for Population : {pop_value} -> SLR Type : {i[0]}. '
+                                                              f'Actual status message is {actual_upload_status_text} '
+                                                              f'and Expected status message is '
+                                                              f'{expected_upload_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception(f"Unable to find status message while uploading QA File for Population : "
                                     f"{pop_value} -> SLR Type : {i[0]}.")
@@ -273,10 +278,12 @@ class ManageQADataPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while Updating the '
-                                                              f'existing QA Filefor Population : {pop_value} -> '
-                                                              f'SLR Type : {i[0]}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
+                                                              f'existing QA File for Population : {pop_value} -> '
+                                                              f'SLR Type : {i[0]}. Actual status message is '
+                                                              f'{actual_upload_status_text} and Expected status '
+                                                              f'message is {expected_upload_status_text}',
                                                       pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while Updating the existing QA Filefor "
+                    raise Exception(f"Unable to find status message while Updating the existing QA File for "
                                     f"Population : {pop_value} -> SLR Type : {i[0]}")
         except Exception:
             raise Exception("Unable to overwrite the Manage QA Data")
@@ -322,7 +329,10 @@ class ManageQADataPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting QA File '
-                                                              f'for Population : {pop_value} -> SLR Type : {i[0]}. Actual status message is {actual_delete_status_text} and Expected status message is {expected_delete_status_text}',
+                                                              f'for Population : {pop_value} -> SLR Type : {i[0]}. '
+                                                              f'Actual status message is {actual_delete_status_text} '
+                                                              f'and Expected status message is '
+                                                              f'{expected_delete_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception(f"Unable to find status message while deleting QA File for Population : "
                                     f"{pop_value} -> SLR Type : {i[0]}.")

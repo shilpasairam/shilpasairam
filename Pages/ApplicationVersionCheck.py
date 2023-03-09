@@ -92,7 +92,7 @@ class AppVersion(Base):
         credentials = self.get_user_credentials(filepath, locatorname)
 
         self.loginPage.complete_portal_login(credentials[0][0], credentials[0][1], "launch_live_slr", "Cytel LiveSLR",
-                                      url, env)
+                                             url, env)
 
         # Read population data
         pop_data = self.exbase.get_slrtest_data(filepath, "Sheet1", locatorname, "Population",
@@ -264,7 +264,8 @@ class AppVersion(Base):
 
         credentials = self.get_user_credentials(filepath, locatorname)
 
-        self.loginPage.complete_portal_login(credentials[0][0], credentials[0][1], "launch_liveref", "Cytel LiveRef", url, env)        
+        self.loginPage.complete_portal_login(credentials[0][0], credentials[0][1], "launch_liveref", "Cytel LiveRef",
+                                             url, env)
 
         # Read indication data
         ind_data = self.exbase.get_slrtest_data(filepath, "Sheet1", locatorname, "Indication", "Indication_Checkbox")

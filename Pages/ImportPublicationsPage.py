@@ -168,7 +168,9 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting '
-                                                              f'Extraction File. Actual status message is {actual_delete_status_text} and Expected status message is {expected_delete_status_text}',
+                                                              f'Extraction File. Actual status message is '
+                                                              f'{actual_delete_status_text} and Expected status '
+                                                              f'message is {expected_delete_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Error during Extraction File Deletion")
 
@@ -230,7 +232,10 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
-                                                              f'Extraction File for Population : {i[0]}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
+                                                              f'Extraction File for Population : {i[0]}. Actual '
+                                                              f'status message is {actual_upload_status_text} and '
+                                                              f'Expected status message is '
+                                                              f'{expected_upload_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message during Extraction file uploading")
 
@@ -284,11 +289,15 @@ class ImportPublicationPage(Base):
                     actual_err_msg = self.sort_nested_list(actual_err_msg, 1)
 
                     if expected_err_msg == actual_err_msg:
-                        self.LogScreenshot.fLogScreenshot(message=f"Upload failed as expected error message matches with actual results.",
-                                                        pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(message=f"Upload failed as expected error message matches "
+                                                                  f"with actual results.",
+                                                          pass_=True, log=True, screenshot=True)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Error Messages while uploading invalid data. Expected Error Messages : '{expected_err_msg}'. Actual Error Message. '{actual_err_msg}'",
-                                                        pass_=False, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Error Messages while uploading "
+                                                                  f"invalid data. Expected Error Messages : "
+                                                                  f"'{expected_err_msg}'. Actual Error Message : "
+                                                                  f"'{actual_err_msg}'",
+                                                          pass_=False, log=True, screenshot=True)
                         raise Exception(f"Mismatch found in Error Messages while uploading invalid data")                                                      
                     self.click("back_to_view_action_btn", env, UnivWaitFor=10)
                 else:
@@ -330,7 +339,10 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
-                                                              f'Extraction File for Population : {i[0]}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
+                                                              f'Extraction File for Population : {i[0]}. '
+                                                              f'Actual status message is {actual_upload_status_text} '
+                                                              f'and Expected status message is '
+                                                              f'{expected_upload_status_text}',
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message during Extraction file uploading")
 

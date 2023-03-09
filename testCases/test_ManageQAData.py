@@ -38,7 +38,7 @@ class Test_ManageQADataPage:
         request.node._title = "Validate Manage QA Data page accessibility"
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -51,11 +51,11 @@ class Test_ManageQADataPage:
                 mngqadata.access_manageqadata_page_elements(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page elements",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Error in accessing ManageQAData page elements")
         
         LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27361
     def test_add_qa_data(self, extra, env, request, caseid):
@@ -76,7 +76,7 @@ class Test_ManageQADataPage:
         request.node._title = "Validate Addition of QA Data file"
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -90,11 +90,11 @@ class Test_ManageQADataPage:
                 mngqadata.add_multiple_manage_qa_data(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing ManageQAData page",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Error while uploading QA File")
         
         LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27361
     def test_overwrite_qa_data(self, extra, env, request, caseid):
@@ -115,7 +115,7 @@ class Test_ManageQADataPage:
         request.node._title = "Validate Overwriting of existing QA Data file"
 
         LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -129,11 +129,11 @@ class Test_ManageQADataPage:
                 mngqadata.del_multiple_manage_qa_data(j, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error while overwriting the QA files",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Error while uploading QA File to the same population and same study type")
 
         LogScreenshot.fLogScreenshot(message=f"***Overwriting the ManageQAData validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
     
     @pytest.mark.C27362
     def test_delete_qa_data(self, extra, env, request, caseid):
@@ -154,7 +154,7 @@ class Test_ManageQADataPage:
         request.node._title = "Validate Deletion of existing QA Data file" 
 
         LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -168,11 +168,11 @@ class Test_ManageQADataPage:
                 mngqadata.del_multiple_manage_qa_data(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30247
     @pytest.mark.C27301
@@ -195,7 +195,7 @@ class Test_ManageQADataPage:
         request.node._title = "Validate content of QA Data file with Complete Excel Report"
 
         LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -209,8 +209,8 @@ class Test_ManageQADataPage:
                 mngqadata.del_data_after_qafile_comparison(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage QA Data page",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)

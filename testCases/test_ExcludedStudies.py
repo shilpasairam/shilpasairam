@@ -25,8 +25,6 @@ class Test_ExcludedStudiesPage:
     @pytest.mark.C29758
     def test_view_excluded_study_option(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -38,7 +36,7 @@ class Test_ExcludedStudiesPage:
         request.node._title = "Validate Presence of Manage Excluded Studies option in Admin section"
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Manage Excluded Studies option in Admin page "
-                                                  f"check is started***", pass_=True, log=True, screenshot=False)
+                                             f"check is started***", pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -46,7 +44,7 @@ class Test_ExcludedStudiesPage:
         exstdy.presence_of_elements("excluded_studies_link", env)
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Manage Excluded Studies option in Admin page "
-                                                  f"check is completed***", pass_=True, log=True, screenshot=False)
+                                             f"check is completed***", pass_=True, log=True, screenshot=False)
 
     '''Check excluded studies page elements is accessible or not'''
     @pytest.mark.C29759
@@ -66,7 +64,7 @@ class Test_ExcludedStudiesPage:
         request.node._title = "Validate Manage Excluded Studies page accessibility"
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Excluded Study Page Elements check is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -80,12 +78,11 @@ class Test_ExcludedStudiesPage:
                 exstdy.access_excludedstudy_page_elements(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error while validating the presence of Excluded Study "
-                                                      f"Page Elements",
-                                              pass_=False, log=True, screenshot=True)
+                                                 f"Page Elements", pass_=False, log=True, screenshot=True)
             raise Exception("Error while validating the presence of Excluded Study Page Elements")
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Excluded Study Page Elements check is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     '''Addition and Deletion of Excluded Studies File'''
     @pytest.mark.C29760
@@ -106,7 +103,7 @@ class Test_ExcludedStudiesPage:
         request.node._title = "Validate Addition and Deletion of Excluded Studies file"
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Excluded Studies validation is "
-                                                  f"started***", pass_=True, log=True, screenshot=False)
+                                             f"started***", pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -121,11 +118,11 @@ class Test_ExcludedStudiesPage:
                 exstdy.del_multiple_excluded_study_data(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Error in accessing Excluded Studies page")
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Excluded Studies validation is "
-                                                  f"completed***", pass_=True, log=True, screenshot=False)
+                                             f"completed***", pass_=True, log=True, screenshot=False)
 
     '''Addition, Updation and Deletion of Excluded Studies File'''
     @pytest.mark.C29761
@@ -146,7 +143,7 @@ class Test_ExcludedStudiesPage:
         request.node._title = "Validate Addition, Updation and Deletion of Excluded Studies file"
 
         LogScreenshot.fLogScreenshot(message=f"***Addition, Updation and Deletion of Excluded Studies file "
-                                                  f"validation is started***", pass_=True, log=True, screenshot=False)
+                                             f"validation is started***", pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -161,19 +158,17 @@ class Test_ExcludedStudiesPage:
                 exstdy.del_multiple_excluded_study_data(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Error in accessing Excluded Studies page")
 
         LogScreenshot.fLogScreenshot(message=f"***Addition, Updation and Deletion of Excluded Studies file "
-                                                  f"validation is completed***", pass_=True, log=True, screenshot=False)
+                                             f"validation is completed***", pass_=True, log=True, screenshot=False)
 
     '''Compare Excluded Studies File data with Complete Excel Report'''
     @pytest.mark.C29922
     def test_excluded_study_compare_with_excel_report(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getexcludedstudiespath(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -185,7 +180,7 @@ class Test_ExcludedStudiesPage:
         request.node._title = "Validate Excluded Studies file comparison with Complete Excel Report"
 
         LogScreenshot.fLogScreenshot(message=f"***Excluded Studies File comparison started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -198,8 +193,8 @@ class Test_ExcludedStudiesPage:
                 exstdy.del_after_studyfile_comparison(filepath, i, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing Excluded Studies page",
-                                              pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Error while comparing the Excluded Studies file with Completed Excel Report")
 
         LogScreenshot.fLogScreenshot(message=f"***Excluded Studies File comparison completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)

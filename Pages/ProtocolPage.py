@@ -91,7 +91,9 @@ class ProtocolPage(Base):
                                                   pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                          f"PRISMA Excel File. Actual status message is {actual_excel_upload_status_text} and Expected status message is {expected_excel_upload_status_text}",
+                                                          f"PRISMA Excel File. Actual status message is "
+                                                          f"{actual_excel_upload_status_text} and Expected status "
+                                                          f"message is {expected_excel_upload_status_text}",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message while uploading PRISMA Excel File.")
         except Exception:
@@ -127,7 +129,9 @@ class ProtocolPage(Base):
                                                   pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
-                                                          f"PRISMA Excel File. Actual status message is {actual_excel_del_status_text} and Expected status message is {expected_excel_del_status_text}",
+                                                          f"PRISMA Excel File. Actual status message is "
+                                                          f"{actual_excel_del_status_text} and Expected status "
+                                                          f"message is {expected_excel_del_status_text}",
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message while deleting PRISMA Excel File.")
             time.sleep(5)
@@ -170,7 +174,9 @@ class ProtocolPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                              f"PRISMA Image File. Actual status message is {actual_image_upload_status_text} and Expected status message is {expected_image_upload_status_text}",
+                                                              f"PRISMA Image File. Actual status message is "
+                                                              f"{actual_image_upload_status_text} and Expected "
+                                                              f"status message is {expected_image_upload_status_text}",
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message while uploading PRISMA Image File.")
         except Exception:
@@ -212,7 +218,9 @@ class ProtocolPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
-                                                              f"PRISMA Image File. Actual status message is {actual_image_del_status_text} and Expected status message is {expected_image_del_status_text}",
+                                                              f"PRISMA Image File. Actual status message is "
+                                                              f"{actual_image_del_status_text} and Expected status "
+                                                              f"message is {expected_image_del_status_text}",
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find status message while deleting PRISMA Image File.")
                 time.sleep(5)
@@ -252,25 +260,39 @@ class ProtocolPage(Base):
                 # Removing the empty column name
                 actual_col_headers.pop(0)
 
-                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers, actual_row_headers)
+                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers,
+                                                                                            actual_row_headers)
 
                 if len(row_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for Population -> {pop_data[0]}, Study Type -> {j}.",
-                                                        pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for"
+                                                              f" Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, Study Type -> {j}. Mismatch values are arranged in following order -> Expected row headers, Actual row headers. {row_header_comparison}",
-                                                        pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, Study Type -> {j}.")
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for "
+                                                              f"Population -> {pop_data[0]}, Study Type -> {j}. "
+                                                              f"Mismatch values are arranged in following order -> "
+                                                              f"Expected row headers, Actual row headers. "
+                                                              f"{row_header_comparison}",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, "
+                                    f"Study Type -> {j}.")
 
-                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers, actual_col_headers)
+                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers,
+                                                                                            actual_col_headers)
 
                 if len(col_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for Population -> {pop_data[0]}, Study Type -> {j}.",
-                                                        pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for "
+                                                              f"Population -> {pop_data[0]}, Study Type -> {j}.",
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for Population -> {pop_data[0]}, Study Type -> {j}. Mismatch values are arranged in following order -> Expected col headers, Actual col headers. {col_header_comparison}",
-                                                        pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, Study Type -> {j}.")
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for "
+                                                              f"Population -> {pop_data[0]}, Study Type -> {j}. "
+                                                              f"Mismatch values are arranged in following order -> "
+                                                              f"Expected col headers, Actual col headers. "
+                                                              f"{col_header_comparison}",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, "
+                                    f"Study Type -> {j}.")
 
                 # Enter values in PICOS page
                 data_eles = self.select_elements('row_data', env)
@@ -287,13 +309,17 @@ class ProtocolPage(Base):
                 # time.sleep(2)
 
                 if actual_status_text == expected_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> {pop_data[0]}, Study Type -> {j}.",
-                                                    pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> "
+                                                              f"{pop_data[0]}, Study Type -> {j}.",
+                                                      pass_=True, log=True, screenshot=True)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                            f"PICOS data for Population -> {pop_data[0]}, Study Type -> {j}. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
-                                                    pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> {pop_data[0]}, Study Type -> {j}.")
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding PICOS data "
+                                                              f"for Population -> {pop_data[0]}, Study Type -> {j}. "
+                                                              f"Actual status message is {actual_status_text} and "
+                                                              f"Expected status message is {expected_status_text}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
+                                    f"{pop_data[0]}, Study Type -> {j}.")
                 
                 self.refreshpage()
                 time.sleep(2)
@@ -312,7 +338,8 @@ class ProtocolPage(Base):
 
         # Read population details from data sheet
         pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
-        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Files_to_upload', 'db_search_val', 'Template_name')
+        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Files_to_upload',
+                                                   'db_search_val', 'Template_name')
         template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
 
         time.sleep(2)
@@ -327,16 +354,20 @@ class ProtocolPage(Base):
                 select.select_by_visible_text(j[0])
 
                 self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
-                # Renaming the filename because there is an issue in downloading filenames with same name multiple times in headless mode.
-                # So as an alternative renaming the file after downloading in each iteration
-                self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180), f"{j[0]}_search-strategy-template.xlsx")
+                # Renaming the filename because there is an issue in downloading filenames with same name multiple
+                # times in headless mode. So as an alternative renaming the file after downloading in each iteration
+                self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
+                                 f"{j[0]}_search-strategy-template.xlsx")
                 downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
                 if downloaded_template_name == j[3]:
-                    self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
-                                                        pass_=True, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is "
+                                                              f"{downloaded_template_name}",
+                                                      pass_=True, log=True, screenshot=False)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch in search strategy template name. Expected Template name is {template_name[0]} and Actual Template name is {downloaded_template_name}",
-                                                        pass_=False, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch in search strategy template name. Expected "
+                                                              f"Template name is {template_name[0]} and Actual "
+                                                              f"Template name is {downloaded_template_name}",
+                                                      pass_=False, log=True, screenshot=False)
                     raise Exception(f"Mismatch in search strategy template name.")
 
                 self.click("searchstrategy_date", env)
@@ -346,7 +377,7 @@ class ProtocolPage(Base):
 
                 jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
                 self.jsclick_hide(jscmd)
-                self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env) # f"{os.getcwd()} + {j[1]}"
+                self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env)  # f"{os.getcwd()} + {j[1]}"
 
                 self.jsclick("searchstrategy_upload_btn", env)
                 time.sleep(2)
@@ -355,13 +386,18 @@ class ProtocolPage(Base):
                 # time.sleep(2)
 
                 if actual_excel_upload_status_text == expected_excel_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"Addition of Search strategy data is success for Population -> {pop_data[0]}, Study Type -> {j[0]}.",
-                                                    pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"Addition of Search strategy data is success for "
+                                                              f"Population -> {pop_data[0]}, Study Type -> {j[0]}.",
+                                                      pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}. Actual message is {actual_excel_upload_status_text} and Expected message is {expected_excel_upload_status_text}",
-                                                    pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.")
+                                                              f"Search strategy data for Population -> {pop_data[0]}, "
+                                                              f"Study Type -> {j[0]}. Actual message is "
+                                                              f"{actual_excel_upload_status_text} and Expected "
+                                                              f"message is {expected_excel_upload_status_text}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while adding Search strategy data for "
+                                    f"Population -> {pop_data[0]}, Study Type -> {j[0]}.")
                 
                 self.refreshpage()
                 time.sleep(2)
@@ -369,7 +405,8 @@ class ProtocolPage(Base):
             raise Exception("Unable to add Search strategy data")
 
     def add_invalid_search_strategy_details(self, locatorname, filepath, env):
-        expected_error_text = "Error while updating search strategy: The file extension should belong to this list: [.xls, .xlsx]"
+        expected_error_text = "Error while updating search strategy: The file extension should belong to this " \
+                              "list: [.xls, .xlsx]"
 
         today = date.today()
         # Manipulating the date values when day point to month end
@@ -380,7 +417,8 @@ class ProtocolPage(Base):
 
         # Read population details from data sheet
         pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
-        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Invalid_Files', 'db_search_val', 'Template_name')
+        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Invalid_Files',
+                                                   'db_search_val', 'Template_name')
         template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
 
         time.sleep(2)
@@ -394,7 +432,7 @@ class ProtocolPage(Base):
                 select = Select(stdy_ele)
                 select.select_by_visible_text(j[0])
                 self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
-                                                    pass_=True, log=True, screenshot=True)
+                                                  pass_=True, log=True, screenshot=True)
 
                 self.click("searchstrategy_date", env)
                 self.select_calendar_date(day_val)
@@ -417,9 +455,13 @@ class ProtocolPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                            f"Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}. Actual status message is {actual_error_text} and Expected status message is {expected_error_text}",
-                                                    pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding Search strategy data for Population -> {pop_data[0]}, Study Type -> {j[0]}.")
+                                                              f"Search strategy data for Population -> {pop_data[0]}, "
+                                                              f"Study Type -> {j[0]}. Actual status message is "
+                                                              f"{actual_error_text} and Expected status message is "
+                                                              f"{expected_error_text}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while adding Search strategy data for Population "
+                                    f"-> {pop_data[0]}, Study Type -> {j[0]}.")
                 
                 self.refreshpage()
                 time.sleep(2)

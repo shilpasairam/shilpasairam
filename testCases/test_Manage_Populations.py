@@ -50,14 +50,14 @@ class Test_ManagePopultionsPage:
         for i in pop_list:
             try:
                 added_pop = mngpoppage.add_multiple_population(i, "add_population_btn", self.filepath,
-                                                                    "manage_pop_table_rows", env)
+                                                               "manage_pop_table_rows", env)
 
                 self.onco_population_val.append(added_pop)
                 LogScreenshot.fLogScreenshot(message=f"Added populations are: {self.onco_population_val}",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C30244
@@ -89,10 +89,10 @@ class Test_ManagePopultionsPage:
 
                 self.onco_edited_population_val.append(edited_pop)
                 LogScreenshot.fLogScreenshot(message=f"Edited populations are: {self.onco_edited_population_val}",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C30244
@@ -117,12 +117,12 @@ class Test_ManagePopultionsPage:
         for i in self.onco_edited_population_val:
             try:
                 mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_cancel",
-                                                           "manage_pop_table_rows", env)
+                                                      "manage_pop_table_rows", env)
                 mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_ok",
-                                                           "manage_pop_table_rows", env)
+                                                      "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38392
@@ -154,10 +154,10 @@ class Test_ManagePopultionsPage:
         for i in pop_list:
             try:
                 mngpoppage.non_onocolgy_check_field_level_err_msg(i, "add_population_btn", filepath,
-                                                                    "manage_pop_table_rows", env)
+                                                                  "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
@@ -189,15 +189,16 @@ class Test_ManagePopultionsPage:
         for i in pop_list:
             try:
                 added_pop, tempalte_name = mngpoppage.non_onocolgy_add_population(i, "add_population_btn", filepath,
-                                                                    "manage_pop_table_rows", env)
+                                                                                  "manage_pop_table_rows", env)
                 self.non_onco_population_val.append(added_pop)
-                LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology populations are: {self.non_onco_population_val}",
-                                                  pass_=True, log=True, screenshot=False)
+                LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology populations are: "
+                                                     f"{self.non_onco_population_val}",
+                                             pass_=True, log=True, screenshot=False)
                 mngpoppage.non_onocolgy_add_duplicate_population(i, "add_population_btn", filepath,
                                                                     "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
@@ -233,11 +234,12 @@ class Test_ManagePopultionsPage:
                 edited_pop = mngpoppage.non_onocolgy_edit_population(i[0], i[1], "edit_population", filepath, env)
 
                 self.non_onco_edited_population_val.append(edited_pop)
-                LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology populations are: {self.non_onco_edited_population_val}",
-                                                  pass_=True, log=True, screenshot=False)
+                LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology populations are: "
+                                                     f"{self.non_onco_edited_population_val}",
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
@@ -262,12 +264,12 @@ class Test_ManagePopultionsPage:
         for i in self.non_onco_edited_population_val:
             try:
                 mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_cancel",
-                                                           "manage_pop_table_rows", env)
+                                                      "manage_pop_table_rows", env)
                 mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_ok",
-                                                           "manage_pop_table_rows", env)
+                                                      "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38394
@@ -287,7 +289,8 @@ class Test_ManagePopultionsPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Column IDs in downloaded Extraction Template after creating new Non-Oncology Population"
+        request.node._title = "Validate Column IDs in downloaded Extraction Template after creating new Non-Oncology " \
+                              "Population"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -300,17 +303,17 @@ class Test_ManagePopultionsPage:
         for i in pop_list:
             try:
                 added_pop, template_name = mngpoppage.non_onocolgy_add_population(i, "add_population_btn", filepath,
-                                                                    "manage_pop_table_rows", env)
+                                                                                  "manage_pop_table_rows", env)
                 LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology populations are {added_pop}",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
                 mngpoppage.non_onocolgy_endpoint_details_validation(i, filepath, template_name)
                 mngpoppage.non_oncology_extraction_file_col_name_validation(i, filepath, template_name)
 
                 mngpoppage.delete_multiple_population(added_pop, "delete_population", "delete_population_popup_ok",
-                                            "manage_pop_table_rows", env)
+                                                      "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C34902
@@ -329,7 +332,8 @@ class Test_ManagePopultionsPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Verify Newly added columns 'Oncology/Non-Oncology', 'Custom Endpoints' in Manage Population page."
+        request.node._title = "Verify Newly added columns 'Oncology/Non-Oncology', 'Custom Endpoints' in Manage " \
+                              "Population page. "
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -344,7 +348,7 @@ class Test_ManagePopultionsPage:
                 mngpoppage.verify_new_col_managepopulation_page(i, filepath, env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C36193
@@ -375,11 +379,15 @@ class Test_ManagePopultionsPage:
 
         for i in scenarios:
             try:
-                mngpoppage.non_onocolgy_edit_population_by_uploading_invalid_template(i, 'Test_Non_Oncology_Pop_Categorical', 'edit_population', filepath, 'Categorical', env)
+                mngpoppage.\
+                    non_onocolgy_edit_population_by_uploading_invalid_template(i,
+                                                                               'Test_Non_Oncology_Pop_Categorical',
+                                                                               'edit_population', filepath,
+                                                                               'Categorical', env)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C36194
@@ -410,11 +418,14 @@ class Test_ManagePopultionsPage:
 
         for i in scenarios:
             try:
-                mngpoppage.non_onocolgy_edit_population_by_uploading_invalid_template(i, 'Test_Non_Oncology_Pop_Continuous', 'edit_population', filepath, 'Continuous', env)
+                mngpoppage.\
+                    non_onocolgy_edit_population_by_uploading_invalid_template(i, 'Test_Non_Oncology_Pop_Continuous',
+                                                                               'edit_population', filepath,
+                                                                               'Continuous', env)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
     @pytest.mark.C36243
@@ -445,9 +456,12 @@ class Test_ManagePopultionsPage:
 
         for i in scenarios:
             try:
-                mngpoppage.non_onocolgy_edit_population_by_uploading_invalid_template(i, 'Test_Non_Oncology_Pop_TimeToEvent', 'edit_population', filepath, 'TimetoEvent', env)
+                mngpoppage.\
+                    non_onocolgy_edit_population_by_uploading_invalid_template(i, 'Test_Non_Oncology_Pop_TimeToEvent',
+                                                                               'edit_population', filepath,
+                                                                               'TimetoEvent', env)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")

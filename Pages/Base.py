@@ -332,7 +332,8 @@ class Base:
     # Renaming the filename
     @fWaitFor
     def file_rename(self, oldfilename, newfilename, UnivWaitFor=0):
-        os.rename(os.path.join(f"{os.getcwd()}\\ActualOutputs", oldfilename), os.path.join(f"{os.getcwd()}\\ActualOutputs", newfilename))
+        os.rename(os.path.join(f"{os.getcwd()}\\ActualOutputs", oldfilename),
+                  os.path.join(f"{os.getcwd()}\\ActualOutputs", newfilename))
 
     # Sorting the nested list based on the given index
     @fWaitFor

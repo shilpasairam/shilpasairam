@@ -244,7 +244,9 @@ class ExtendedBase(Base):
                                                   pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction '
-                                                          f'File for Population : {pop_name}. Actual status message is {actual_upload_status_text} and Expected status message is {expected_upload_status_text}',
+                                                          f'File for Population : {pop_name}. Actual status message is '
+                                                          f'{actual_upload_status_text} and Expected status message is '
+                                                          f'{expected_upload_status_text}',
                                                   pass_=False, log=True, screenshot=True)
                 raise Exception("Unable to find status message during Extraction file uploading")
 

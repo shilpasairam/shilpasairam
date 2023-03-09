@@ -51,8 +51,7 @@ class Test_SLR_Custom_Report:
                 for index, j in enumerate(slrtype):
                     slrreport.select_data(j[0], j[1], env)
                     if j[0] == "Clinical":
-                        slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env,
-                                                          "reported_variable_section")
+                        slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
 
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -111,8 +110,7 @@ class Test_SLR_Custom_Report:
                 for index, j in enumerate(slrtype):
                     slrreport.select_data(j[0], j[1], env)
                     if j[0] == "Clinical":
-                        slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env,
-                                                          "reported_variable_section")
+                        slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
 
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -171,8 +169,7 @@ class Test_SLR_Custom_Report:
         try:
             slrreport.select_data(pop_list[0][0], pop_list[0][1], env)
             slrreport.select_data(slrtype[0][0], slrtype[0][1], env)
-            slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env,
-                                              "reported_variable_section")
+            slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
 
             slrreport.generate_download_report("excel_report", env)
             # time.sleep(5)
@@ -195,8 +192,7 @@ class Test_SLR_Custom_Report:
             webexcel_filename = slrreport.get_and_validate_filename(filepath)
             slrreport.back_to_report_page("Back_to_search_page", env)
 
-            slrreport.presencof_publicationtype_col_in_wordreport(webexcel_filename, excel_filename,
-                                                                       word_filename)
+            slrreport.presencof_publicationtype_col_in_wordreport(webexcel_filename, excel_filename, word_filename)
         except Exception:
             raise Exception("Unable to select element")
 
@@ -204,8 +200,6 @@ class Test_SLR_Custom_Report:
     def test_interventional_to_clinical_changes(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getslrtestdata(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)        
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
@@ -224,8 +218,6 @@ class Test_SLR_Custom_Report:
     @pytest.mark.C37419
     def test_validate_population_col_in_wordreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
@@ -246,8 +238,6 @@ class Test_SLR_Custom_Report:
     @pytest.mark.C31565
     def test_validate_control_chars_in_wordreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)         
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class

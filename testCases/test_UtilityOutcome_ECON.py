@@ -49,8 +49,7 @@ class Test_UtilityOutcome_ECON:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -77,7 +76,7 @@ class Test_UtilityOutcome_ECON:
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
                     utiloutcome.econ_utility_summary_validation(webexcel_filename, excel_filename,
-                                                                     util_filepath, word_filename)
+                                                                util_filepath, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -111,8 +110,7 @@ class Test_UtilityOutcome_ECON:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -132,7 +130,7 @@ class Test_UtilityOutcome_ECON:
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
                     utiloutcome.econ_utility_summary_validation_old_imports(webexcel_filename, excel_filename,
-                                                                                 util_filepath)
+                                                                            util_filepath)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -166,7 +164,7 @@ class Test_UtilityOutcome_ECON:
                          "FK-129": "Utility Elicitation Method and Source"}
             
         LogScreenshot.fLogScreenshot(message=f"*****Column names validation started*****",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -176,8 +174,7 @@ class Test_UtilityOutcome_ECON:
                 slrreport.select_data(i[0], i[1], env)
                 for j in slrtype:
                     slrreport.select_data(j[0], j[1], env)
-                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env, "reported_variable_section")
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)
@@ -200,6 +197,6 @@ class Test_UtilityOutcome_ECON:
                     utiloutcome.presenceof_utilitycolumn_names(webexcel_filename, excel_filename, expected_dict)
                 
                 LogScreenshot.fLogScreenshot(message=f"*****Column names validation Completed*****",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 raise Exception("Unable to select element")

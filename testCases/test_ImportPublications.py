@@ -42,7 +42,7 @@ class Test_ImportPublicationPage:
         request.node._title = "Validate Upload Extraction Template with Success Icon"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -53,15 +53,14 @@ class Test_ImportPublicationPage:
         for index, i in enumerate(pop_list):
             try:
                 imppubpage.upload_file_with_success(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C30246
     @pytest.mark.C27544
@@ -85,7 +84,7 @@ class Test_ImportPublicationPage:
         request.node._title = "Validate Upload Extraction Template with Column Header Mismatch"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
-                                                  f"validation is started***", pass_=True, log=True, screenshot=False)
+                                             f"validation is started***", pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -96,15 +95,14 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch validation "
-                                                  f"is completed***", pass_=True, log=True, screenshot=False)
+                                             f"is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27379
     def test_upload_extraction_template_with_letters_in_publication_identifier(self, extra, env, request, caseid):
@@ -122,9 +120,8 @@ class Test_ImportPublicationPage:
         request.node._tcid = caseid
         request.node._title = "Validate Upload Extraction Template with Letters in Publication Identifier column"
 
-        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
-                                                  f"Identifier validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication Identifier "
+                                             f"validation is started***", pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -135,16 +132,14 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication "
-                                                  f"Identifier validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication Identifier "
+                                             f"validation is completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C27380
     def test_upload_extraction_template_with_empty_value_in_publication_identifier(self, extra, env, request, caseid):
@@ -163,8 +158,8 @@ class Test_ImportPublicationPage:
         request.node._title = "Validate Upload Extraction Template with Empty value in Publication Identifier column"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
-                                                  f"Identifier validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                             f"Identifier validation is started***",
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -175,16 +170,15 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
-                                                  f"Identifier validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                             f"Identifier validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28986
     def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra, env, request, caseid):
@@ -200,10 +194,12 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Upload Extraction Template with Duplicate value in Interventions(per arm) column"
+        request.node._title = "Validate Upload Extraction Template with Duplicate value in Interventions(per arm) " \
+                              "column "
 
-        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions(per arm) validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions("
+                                             f"per arm) validation is started***",
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -214,15 +210,15 @@ class Test_ImportPublicationPage:
         for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions(per arm) validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions("
+                                             f"per arm) validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38840
     def test_nononcology_upload_and_del_extraction_template_success(self, extra, env, request, caseid):
@@ -243,7 +239,7 @@ class Test_ImportPublicationPage:
         request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction Template with Success Icon"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -256,15 +252,14 @@ class Test_ImportPublicationPage:
         for index, i in enumerate(pop_list):
             try:
                 imppubpage.upload_file_with_success(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38858
     def test_nononcology_upload_and_del_extraction_template_failure(self, extra, env, request, caseid):
@@ -285,7 +280,7 @@ class Test_ImportPublicationPage:
         request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction Template with Failure Icon"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -298,12 +293,11 @@ class Test_ImportPublicationPage:
         for index, i in enumerate(pop_list):
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
-                imppubpage.delete_file(i, filepath, "file_status_popup_text",
-                                            "upload_table_rows", env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
