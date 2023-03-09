@@ -37,9 +37,6 @@ class Test_ManageQADataPage:
         request.node._tcid = caseid
         request.node._title = "Validate Manage QA Data page accessibility"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Presence of ManageQAData Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
         
@@ -77,9 +74,6 @@ class Test_ManageQADataPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate Addition of QA Data file"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -157,10 +151,7 @@ class Test_ManageQADataPage:
         # self.stdy_data = self.mngqadata.get_qa_file_details(self.filepath)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Deletion of existing QA Data file"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()        
+        request.node._title = "Validate Deletion of existing QA Data file" 
 
         LogScreenshot.fLogScreenshot(message=f"***Deletion of ManageQAData validation is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -202,9 +193,6 @@ class Test_ManageQADataPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate content of QA Data file with Complete Excel Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***ManageQAData File comparison started***",
                                           pass_=True, log=True, screenshot=False)

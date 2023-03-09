@@ -37,9 +37,6 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Presence of Manage Excluded Studies option in Admin section"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Presence of Manage Excluded Studies option in Admin page "
                                                   f"check is started***", pass_=True, log=True, screenshot=False)
 
@@ -67,9 +64,6 @@ class Test_ExcludedStudiesPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate Manage Excluded Studies page accessibility"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Excluded Study Page Elements check is started***",
                                           pass_=True, log=True, screenshot=False)
@@ -111,9 +105,6 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition and Deletion of Excluded Studies file"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Excluded Studies validation is "
                                                   f"started***", pass_=True, log=True, screenshot=False)
 
@@ -154,9 +145,6 @@ class Test_ExcludedStudiesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition, Updation and Deletion of Excluded Studies file"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Addition, Updation and Deletion of Excluded Studies file "
                                                   f"validation is started***", pass_=True, log=True, screenshot=False)
 
@@ -195,9 +183,6 @@ class Test_ExcludedStudiesPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate Excluded Studies file comparison with Complete Excel Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Excluded Studies File comparison started***",
                                           pass_=True, log=True, screenshot=False)

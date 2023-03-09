@@ -41,9 +41,6 @@ class Test_LineofTherapyPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of Line Of Therapy"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is started***",
                                           pass_=True, log=True, screenshot=False)
         

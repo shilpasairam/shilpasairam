@@ -42,10 +42,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Presence of Utility Summary Sheet in Complete Excel Report"
 
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
                                                   f"Report validation*****",
@@ -95,10 +92,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Utility Summary Sheet Row count validation in Complete Excel Report"
 
         LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
                                                   f"Source Utility File and Complete Excel Report*****",
@@ -149,10 +143,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Presence of Utility Summary Sheet in Word Report"
 
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Word Report "
                                                   f"validation*****",
@@ -202,10 +193,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Utility Summary Sheet Row count validation in Complete Word Report"
 
         LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Row count validation between "
                                                   f"Source Utility File and Word Report*****",
@@ -256,10 +244,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Validate sorting order of Utility Summary sheet in Complete Excel Report"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -304,10 +289,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Validate sorting order of Utility Summary sheet in Complete Word Report"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -352,10 +334,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Utility Outcome comparison with New Import Logic"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -416,10 +395,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'OldImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "QOL -> Utility Outcome comparison with Old Import Logic"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -473,14 +449,7 @@ class Test_UtilityOutcome_QOL:
         LogScreenshot = cLogScreenshot(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-        
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
-        LogScreenshot.fLogScreenshot(message=f"*****Presence of Utility Summary Sheet in Complete Excel "
-                                                  f"Report validation*****",
-                                          pass_=True, log=True, screenshot=False)
+        request.node._title = "QOL -> Workflow of Utility Outcome with different data"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -515,10 +484,7 @@ class Test_UtilityOutcome_QOL:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()        
+        request.node._title = "QOL -> Validate presence of newly added Utility Column names"
         
         expected_dict = {"FH-1": "Utility/Disutility Summary (Excluding point estimates)",
                          "FH-2": "Utility Point Estimate Reported with Health States",

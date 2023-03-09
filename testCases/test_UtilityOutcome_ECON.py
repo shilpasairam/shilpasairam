@@ -41,9 +41,6 @@ class Test_UtilityOutcome_ECON:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with New Import Logic"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
@@ -106,9 +103,6 @@ class Test_UtilityOutcome_ECON:
         request.node._tcid = caseid
         request.node._title = "ECON -> Utility Outcome comparison with Old Import Logic"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
@@ -164,10 +158,7 @@ class Test_UtilityOutcome_ECON:
         rpt_data, rpt_data_chkbox = utiloutcome.get_reported_variables_specific_sheet(util_filepath, 'NewImportLogic')
 
         request.node._tcid = caseid
-        request.node._title = "ECON -> Validate presence of Newly added Utility Column Names"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()        
+        request.node._title = "ECON -> Validate presence of Newly added Utility Column Names"    
 
         expected_dict = {"FK-14": "Other Utility Data (Excluding point estimates)",
                          "FK-127": "Utility point estimates reported with health states",

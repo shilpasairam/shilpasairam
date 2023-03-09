@@ -45,9 +45,6 @@ class Test_LiveNMA:
         request.node._tcid = caseid
         request.node._title = "Validate of LiveNMA Datatable with OS Switch Tab"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)

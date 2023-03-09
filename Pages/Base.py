@@ -329,28 +329,13 @@ class Base:
         """
         assert expected_text == actual_text
 
-    # Clear the Logs before the test execution starts
-    @fWaitFor
-    def clear_logs(self):
-        # # Clearing the logs before test runs
-        # open(".\\Logs\\testlog.log", "w").close()
-
-        # # Removing the screenshots and results reports before the test runs
-        # if os.path.exists(f'Reports'):
-        #     for root, dirs, files in os.walk(f'Reports'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-        #     for root, dirs, files in os.walk(f'Reports/screenshots'):
-        #         for file in files:
-        #             os.remove(os.path.join(root, file))
-
-        # Removing the downloaded report files before the test runs
-        if os.path.exists(f'ActualOutputs'):
-            for root, dirs, files in os.walk(f'ActualOutputs'):
-                for file in files:
-                    os.remove(os.path.join(root, file))
-
     # Renaming the filename
     @fWaitFor
-    def file_rename(self, oldfilename, newfilename):
+    def file_rename(self, oldfilename, newfilename, UnivWaitFor=0):
         os.rename(os.path.join(f"{os.getcwd()}\\ActualOutputs", oldfilename), os.path.join(f"{os.getcwd()}\\ActualOutputs", newfilename))
+
+    # Sorting the nested list based on the given index
+    @fWaitFor
+    def sort_nested_list(self, List, index, UnivWaitFor=0):
+        List.sort(key=lambda l: l[index])
+        return List

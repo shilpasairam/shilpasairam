@@ -76,6 +76,27 @@ def init_driver(request):
     web_driver.quit()
 
 ############# pytest HTML Report ##############
+@pytest.hookimpl(tryfirst=True)
+def pytest_sessionstart(session):
+    if os.path.exists(f'Logs'):
+        # Clearing the logs before test runs
+        open(".\\Logs\\testlog.log", "w").close()
+
+    # Removing the screenshots and results reports before the test runs
+    if os.path.exists(f'Reports'):
+        for root, dirs, files in os.walk(f'Reports'):
+            for file in files:
+                os.remove(os.path.join(root, file))
+        for root, dirs, files in os.walk(f'Reports/screenshots'):
+            for file in files:
+                os.remove(os.path.join(root, file))
+
+    # Removing the downloaded report files before the test runs
+    if os.path.exists(f'ActualOutputs'):
+        for root, dirs, files in os.walk(f'ActualOutputs'):
+            for file in files:
+                os.remove(os.path.join(root, file))    
+
 # @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
     # config._metadata['Test Suite'] = ReadConfig.getTestdata("liveref_data").replace(".xlsx","")
@@ -114,22 +135,17 @@ def pytest_runtest_makereport(item, call):
     setattr(report, "duration_formatter", "%M:%S")
     report._tcid = getattr(item, '_tcid', '')
     report._title = getattr(item, '_title', '')
-    # report._filepath = getattr(item,'_filepath','')
 
 @pytest.mark.optionalhook
 def pytest_html_results_table_header(cells):
     del cells[1]
     cells.insert(1,html.th('TC ID'))
     cells.insert(2,html.th('TC Title'))
-    # cells.insert(3,html.th('Data file path'))
     cells.pop()
 
 @pytest.mark.optionalhook
 def pytest_html_results_table_row(report, cells):
     del cells[1]
-    # cells.insert(1,html.td(report._tcid))
-    # cells.insert(2, html.td(report._title))
-    # cells.insert(3,html.td(report._filepath))
     cells.insert(1, html.td(getattr(report, '_tcid', '')))
     cells.insert(2, html.td(getattr(report, '_title', '')))
     cells.pop()
@@ -152,9 +168,3 @@ def pytest_sessionfinish(session, exitstatus):
                     os.path.relpath(os.path.join(dirpath, filename), os.path.join(dir_list[0], '..')))
 
     zip_file.close()
-
-    # results_folders = ['ActualOutputs', 'Logs', 'Reports']
-    # # Removing the results before the test runs
-    # for folder in results_folders:
-    #     if os.path.exists(f'{folder}'):
-    #         shutil.rmtree(f'{folder}')

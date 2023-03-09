@@ -31,9 +31,6 @@ class Test_ExcludedStudies_liveSLR:
         request.node._tcid = caseid
         request.node._title = "Validate Presence of ExcludedStudies_LiveSLR sheet in Complete Excel Report"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in "
                                                   f"Complete Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
@@ -65,9 +62,6 @@ class Test_ExcludedStudies_liveSLR:
         request.node._tcid = caseid
         request.node._title = "Validate Presence of ExcludedStudies_LiveSLR sheet column names in Complete Excel Report"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
                                                   f"Excel Report validation*****",
                                           pass_=True, log=True, screenshot=False)
@@ -98,9 +92,6 @@ class Test_ExcludedStudies_liveSLR:
 
         request.node._tcid = caseid
         request.node._title = "Validate Contents of ExcludedStudies_LiveSLR sheet in Complete Excel Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"*****Presence of Excluded studies - LiveSLR Sheet in Complete "
                                                   f"Excel Report validation*****",

@@ -35,9 +35,6 @@ class Test_ProtocolPage:
         request.node._tcid = caseid
         request.node._title = "Validate Uploading PRISMA details under Protocol -> PRISMA Page"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
@@ -114,9 +111,6 @@ class Test_ProtocolPage:
         request.node._tcid = caseid
         request.node._title = "Validate PICOS functionality under Protocol -> PICOS Page"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***PICOS page validation is started***",
                                           pass_=True, log=True, screenshot=False)
         
@@ -153,9 +147,6 @@ class Test_ProtocolPage:
 
         request.node._tcid = caseid
         request.node._title = "Validate SearchStrategy functionality with invalid data under Protocol -> Search Strategy Page"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
                                           pass_=True, log=True, screenshot=False)

@@ -39,9 +39,6 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of Manage Update for selected population"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***",
                                           pass_=True, log=True, screenshot=False)
 

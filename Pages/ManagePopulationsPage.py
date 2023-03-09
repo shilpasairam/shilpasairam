@@ -347,25 +347,44 @@ class ManagePopulationsPage(Base):
         self.input_text("search_button", pop_value, env)
 
         self.LogScreenshot.fLogScreenshot(message=f"Selected Population for Deletion is : ",
-                                            pass_=True, log=True, screenshot=True)        
+                                            pass_=True, log=True, screenshot=True)
+        
+        result = []
+        td1 = self.select_elements('manage_pop_table_row_1', env)
+        for m in td1:
+            result.append(m.text)
+        
+        expected_popup_msg = f"Are you sure you want to delete population '{result[0]} - {result[2]}' ?"
         
         self.click(del_locator, env)
         time.sleep(2)
-        self.click(del_locator_popup, env)
-        time.sleep(2)
-        
-        # actual_status_text = self.get_text("population_status_popup_text", env, UnivWaitFor=10)
-        actual_status_text = self.get_status_text("population_status_popup_text", env)
-        # time.sleep(2)
 
-        if actual_status_text == expected_status_text:
-            self.LogScreenshot.fLogScreenshot(message=f"Deleting the existing Population is success",
-                                              pass_=True, log=True, screenshot=True)
+        # Check the Pop-up message details
+        actual_popup_msg = self.get_text("delete_popup_msg", env)
+
+        if actual_popup_msg == expected_popup_msg:
+            self.LogScreenshot.fLogScreenshot(message=f"Delete Confirmation Pop-up window : ",
+                                    pass_=True, log=True, screenshot=True)
+            self.click(del_locator_popup, env)
+            time.sleep(2)
+            if del_locator_popup == 'delete_population_popup_cancel':
+                self.clear("search_button", env)
+                self.refreshpage()
+                time.sleep(2)
+            else:
+                actual_status_text = self.get_status_text("population_status_popup_text", env)
+                if actual_status_text == expected_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"Deleting the existing Population is success",
+                                                    pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the "
+                                                            f"Population data. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
+                                                    pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while deleting the Population data")
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the "
-                                                      f"Population data. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
-                                              pass_=False, log=True, screenshot=True)
-            raise Exception(f"Unable to find status message while deleting the Population data")
+            self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Delete pop-up message. Actual popup message is : {actual_popup_msg}. Expected popup message is : {expected_popup_msg}.",
+                                                pass_=False, log=True, screenshot=True)
+            raise Exception(f"Mismatch found in Delete pop-up message.")
 
         # Fetching total rows count after deleting a new population
         table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
@@ -374,15 +393,22 @@ class ManagePopulationsPage(Base):
                                           pass_=True, log=True, screenshot=False)        
 
         try:
-            if table_rows_before > table_rows_after != table_rows_before:
+            if table_rows_before == table_rows_after:
+                self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not deleted as expected after clicking on cancel button.',
+                                                  pass_=True, log=True, screenshot=False)
+            elif table_rows_before > table_rows_after != table_rows_before:
                 self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
                                                   pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Record deletion is not successful. Table length before deletion is : '{table_rows_before}' and Table lenght after deletion is : '{table_rows_after}'.",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"Record deletion is not successful.")
             self.refreshpage()
             time.sleep(2)
             self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is completed***",
                                     pass_=True, log=True, screenshot=False)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
+            self.LogScreenshot.fLogScreenshot(message=f'Population Record deletion is not successful',
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Error in deleting the population")
 
@@ -463,7 +489,7 @@ class ManagePopulationsPage(Base):
             self.LogScreenshot.fLogScreenshot(message=f'Field Level Error Messages displayed correctly. Error messages are {actual_field_level_err_msg}',
                                             pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f'Mismatch found in Field Level Error Messages. Mismatch values are arranged in following order -> Actual Error Message, Expected Error Message. {comparison_result}',
+            self.LogScreenshot.fLogScreenshot(message=f'Mismatch found in Field Level Error Messages. Mismatch values are arranged in following order -> Expected Error Message, Actual Error Message. {comparison_result}',
                                             pass_=False, log=True, screenshot=False)
             raise Exception(f"Mismatch found in Field Level Error Messages")
 
@@ -868,4 +894,197 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Mismatch found in Extraction template -> Endpoint 3 Type details. Kindly recheck and try again.")            
 
         self.LogScreenshot.fLogScreenshot(message=f"***Validation of Endpoint Details in Extraction Template for newly created Non-Oncology population is completed***",
+                                        pass_=True, log=True, screenshot=False)
+
+    def verify_new_col_managepopulation_page(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of Newly added columns in Manage Population page is started***",
+                                        pass_=True, log=True, screenshot=False)
+
+        # Read required population and endpoint details
+        testdata = self.exbase.get_triple_col_data(filepath, locatorname, 'Sheet1', 'population_name', 'indication_type', 'endpoints')
+
+        for i in testdata:
+            col_name = []
+            col_eles = self.select_elements('manage_pop_table_col_names', env)
+            for m in col_eles:
+                col_name.append(m.text)
+            
+            if col_name[1] == 'Oncology/Non-oncology' and col_name[4] == 'Custom Endpoints':
+                self.LogScreenshot.fLogScreenshot(message=f"'Oncology/Non-Oncology' column present in between Name and Unique ID columns. 'Custom Endpoints' column present in between Description and Last Update columns.",
+                                                pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Newly added columns 'Oncology/Non-Oncology', 'Custom Endpoints' are not aligned in the desired position. Actual column names are {col_name}",
+                                                pass_=False, log=True, screenshot=True)
+                raise Exception(f"Newly added columns 'Oncology/Non-Oncology', 'Custom Endpoints' are not aligned in the desired position. Kindy recheck the table column names under Manage Population page")
+            
+            result = []
+            self.input_text("search_button", f'{i[0]}', env)
+            td1 = self.select_elements('manage_pop_table_row_1', env)
+            for n in td1:
+                result.append(n.text)
+            
+            if result[1] == f'{i[1]}' and result[4] == f'{i[2]}':
+                self.LogScreenshot.fLogScreenshot(message=f"For population -> '{i[0]}', values are displayed correctly. 'Oncology/Non-Oncology' -> {result[1]} and 'Custom Endpoints' -> {result[4]}.",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"For population -> '{i[0]}', values are not displayed correctly. 'Oncology/Non-Oncology' -> {result[1]} and 'Custom Endpoints' -> {result[4]}.",
+                                                  pass_=False, log=True, screenshot=True)
+                raise Exception(f"For population -> '{i[0]}', values are not displayed correctly under newly added columns.")
+
+            self.clear("search_button", env)
+            self.refreshpage()
+            time.sleep(2)
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of Newly added columns in Manage Population page is completed***",
+                                            pass_=True, log=True, screenshot=False)
+
+    def non_onocolgy_edit_population_by_uploading_invalid_template(self, locatorname, pop_name, edit_locator, filepath, ep, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population with invalid template validation for Endpoint {ep} -> {locatorname} is started***",
+                                        pass_=True, log=True, screenshot=False)
+
+        # Read expected error messages
+        expected_err_msg = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'expected_error_msgs')
+        
+        # Read required population and endpoint details
+        pop_locs = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'population_field', 'edit_population_name')
+
+        # Read template file
+        invalid_template = self.exbase.get_template_file_details(filepath, locatorname, 'Files_to_upload')
+
+        self.input_text("search_button", pop_name, env)
+        self.click(edit_locator, env, UnivWaitFor=10)
+
+        for j in pop_locs:
+            self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
+
+        self.input_text("non_onco_template_file_upload", f'{invalid_template}', env)
+        self.click("submit_button", env)
+        time.sleep(1)
+        self.scrollback("non_onco_error_msg_heading", env)
+
+        error_msg_heading = self.get_text('non_onco_error_msg_heading', env)
+        error_msg_details = self.get_text('non_onco_error_msg_details', env)                                              
+
+        actual_err_msg = []
+        error_list_eles = self.select_elements('non_onco_list_of_errors', env)
+        for k in error_list_eles:
+            actual_err_msg.append(k.text)
+        
+        if error_msg_heading == 'Upload failed' and error_msg_details == f'There are {len(actual_err_msg)} columns with errors.':
+            self.LogScreenshot.fLogScreenshot(message=f"Error Message Heading and Error Message Information is displayed. Message Heading is '{error_msg_heading}' and Message Information is '{error_msg_details}'",
+                                                pass_=True, log=True, screenshot=True)
+            error_comparison_res = self.exbase.list_comparison_between_reports_data(expected_err_msg, actual_err_msg)
+            if len(error_comparison_res) == 0:
+                self.LogScreenshot.fLogScreenshot(message=f'Upload Error Messages displayed correctly. Error messages are {actual_err_msg}',
+                                                pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f'Mismatch found in Upload Error Messages. Mismatch values are arranged in following order -> Expected Error Message, Actual Error Message. {error_comparison_res}',
+                                                pass_=False, log=True, screenshot=True)
+                raise Exception(f"Mismatch found in Upload Error Messages")
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Error Message Heading and Error Message Information. Actual Message Heading is '{error_msg_heading}' and Actual Message Information is '{error_msg_details}'",
+                                                pass_=False, log=True, screenshot=True)
+            raise Exception("Mismatch found in Error Message Heading and Error Message Information")    
+
+        self.click("cancel_btn", env)
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population with invalid template validation for Endpoint {ep} -> {locatorname} is completed***",
+                                            pass_=True, log=True, screenshot=False)
+
+    def non_oncology_extraction_file_col_name_validation(self, locatorname, filepath, master_template):
+        self.LogScreenshot.fLogScreenshot(message=f"***Non-Oncology Extraction file column IDs for Study Characteristics, Treatment Characteristics, Patient Characteristics, Clinical Study Characteristics validation is started***",
+                                        pass_=True, log=True, screenshot=False)
+
+        # Read expected column IDs
+        e_stdy_char_cols = self.exbase.get_data_values(filepath, 'study_char_cols')
+        e_treatment_char_cols = self.exbase.get_data_values(filepath, 'treatment_char_cols')
+        e_patient_char_cols = self.exbase.get_data_values(filepath, 'patient_char_cols')
+        e_clinical_study_char_cols = self.exbase.get_data_values(filepath, 'clinical_study_char_cols')
+        e_ep1_cols = self.exbase.get_data_values(filepath, 'ep1_cols')
+        e_ep2_cols = self.exbase.get_data_values(filepath, 'ep2_cols')
+        e_ep3_cols = self.exbase.get_data_values(filepath, 'ep3_cols')
+        e_other_clinical_eps = self.exbase.get_data_values(filepath, 'other_clinical_eps')
+        e_clinical_safety_cols = self.exbase.get_data_values(filepath, 'clinical_safety_cols')
+        e_clinical_safety_maping = self.exbase.get_data_values(filepath, 'clinical_safety_mapping')
+
+        # Get master template file path
+        master_file_path = f'ActualOutputs//{master_template}'
+
+        # Read the actual column IDs
+        a_stdy_char_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="A:T")
+        a_treatment_char_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="U:X")
+        a_patient_char_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="Y:AJ")
+        a_clinical_study_char_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="AK:AM")
+        a_ep1_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="AN:BK")
+        a_ep2_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="BL:CP")
+        a_ep3_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="CQ:DM")
+        a_other_clinical_eps = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="DN:DO")
+        a_clinical_safety_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="DP:DV")
+        a_clinical_safety_maping = pd.read_excel(master_file_path, skiprows=4, sheet_name='Extraction sheet upload', usecols="DP:DV")
+
+        # Compare the Expected and Actual Column IDs
+        res1 = self.exbase.list_comparison_between_reports_data(e_stdy_char_cols, a_stdy_char_cols.columns.values)
+        res2 = self.exbase.list_comparison_between_reports_data(e_treatment_char_cols, a_treatment_char_cols.columns.values)
+        res3 = self.exbase.list_comparison_between_reports_data(e_patient_char_cols, a_patient_char_cols.columns.values)
+        res4 = self.exbase.list_comparison_between_reports_data(e_clinical_study_char_cols, a_clinical_study_char_cols.columns.values)
+        res5 = self.exbase.list_comparison_between_reports_data(e_ep1_cols, a_ep1_cols.columns.values)
+        res6 = self.exbase.list_comparison_between_reports_data(e_ep2_cols, a_ep2_cols.columns.values)
+        res7 = self.exbase.list_comparison_between_reports_data(e_ep3_cols, a_ep3_cols.columns.values)
+        res8 = self.exbase.list_comparison_between_reports_data(e_other_clinical_eps, a_other_clinical_eps.columns.values)
+        res9 = self.exbase.list_comparison_between_reports_data(e_clinical_safety_cols, a_clinical_safety_cols.columns.values)
+        res10 = self.exbase.list_comparison_between_reports_data(e_clinical_safety_maping, a_clinical_safety_maping.columns.values)
+
+        res = {'Study Characteristics': [res1, a_stdy_char_cols.columns.values],
+        'Treatment Characteristics': [res2, a_treatment_char_cols.columns.values],
+        'Patient Characteristics': [res3, a_patient_char_cols.columns.values],
+        'Clinical Study Characteristics': [res4, a_clinical_study_char_cols.columns.values],
+        'Endpoint 1': [res5, a_ep1_cols.columns.values],
+        'Endpoint 2': [res6, a_ep2_cols.columns.values],
+        'Endpoint 3': [res7, a_ep3_cols.columns.values],
+        'Other Clinical Endpoint': [res8, a_other_clinical_eps.columns.values],
+        'Clinical Saftey Column IDs': [res9, a_clinical_safety_cols.columns.values],
+        'Clinical Saftey Column Mapping': [res10, a_clinical_safety_maping.columns.values]}
+
+        for k, v in res.items():
+            if len(v[0]) == 0:
+                self.LogScreenshot.fLogScreenshot(message=f"'{k}' column IDs are present in Extraction Template. IDs are : '{v[1]}'",
+                                                pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in '{k}' column IDs. Mismatch values are arranged in following order -> Expected Column IDs, Actual Column IDs. {v[0]}",
+                                                pass_=False, log=True, screenshot=False)
+                raise Exception(f"Mismatch found in '{k}' column IDs")
+
+        # if len(res1) == 0:
+        #     self.LogScreenshot.fLogScreenshot(message=f"'Study Characteristics' column IDs are present in Extraction Template. IDs are : '{a_stdy_char_cols.columns.values}'",
+        #                                     pass_=True, log=True, screenshot=False)
+        # else:
+        #     self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in 'Study Characteristics' column IDs. Mismatch values are arranged in following order -> Expected Column IDs, Actual Column IDs. {res1}",
+        #                                     pass_=False, log=True, screenshot=False)
+        #     raise Exception(f"Mismatch found in 'Study Characteristics' column IDs")
+
+        # if len(res2) == 0:
+        #     self.LogScreenshot.fLogScreenshot(message=f"'Treatment Characteristics' column IDs are present in Extraction Template. IDs are : '{a_treatment_char_cols.columns.values}'",
+        #                                     pass_=True, log=True, screenshot=False)
+        # else:
+        #     self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in 'Treatment Characteristics' column IDs. Mismatch values are arranged in following order -> Expected Column IDs, Actual Column IDs. {res2}",
+        #                                     pass_=False, log=True, screenshot=False)
+        #     raise Exception(f"Mismatch found in 'Treatment Characteristics' column IDs")
+
+        # if len(res3) == 0:
+        #     self.LogScreenshot.fLogScreenshot(message=f"'Patient Characteristics' column IDs are present in Extraction Template. IDs are : '{a_patient_char_cols.columns.values}'",
+        #                                     pass_=True, log=True, screenshot=False)
+        # else:
+        #     self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in 'Patient Characteristics' column IDs. Mismatch values are arranged in following order -> Expected Column IDs, Actual Column IDs. {res3}",
+        #                                     pass_=False, log=True, screenshot=False)
+        #     raise Exception(f"Mismatch found in 'Patient Characteristics' column IDs")
+
+        # if len(res4) == 0:
+        #     self.LogScreenshot.fLogScreenshot(message=f"'Clinical Study Characteristics' column IDs are present in Extraction Template. IDs are : '{a_clinical_study_char_cols.columns.values}'",
+        #                                     pass_=True, log=True, screenshot=False)
+        # else:
+        #     self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in 'Clinical Study Characteristics' column IDs. Mismatch values are arranged in following order -> Expected Column IDs, Actual Column IDs. {res4}",
+        #                                     pass_=False, log=True, screenshot=False)
+        #     raise Exception(f"Mismatch found in 'Clinical Study Characteristics' column IDs")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Non-Oncology Extraction file column IDs for Study Characteristics, Treatment Characteristics, Patient Characteristics, Clinical Study Characteristics validation is completed***",
                                         pass_=True, log=True, screenshot=False)

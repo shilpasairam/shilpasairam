@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 from Pages.Base import Base
+from Pages.ExtendedBasePage import ExtendedBase
 from utilities.readProperties import ReadConfig
 from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
@@ -21,6 +22,8 @@ class ImportPublicationPage(Base):
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
+        # Creating object of ExtendedBase class
+        self.exbase = ExtendedBase(self.driver, extra)        
         # Instantiate the logger class
         self.logger = LogGen.loggen()
         # Instantiate the logScreenshot class
@@ -191,6 +194,15 @@ class ImportPublicationPage(Base):
         # Read population details from data sheet
         pop_data = self.get_file_details_to_upload(filepath, locatorname)
 
+        # Read expected error messages data
+        col1_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'error_msg_col1')
+        # Converting list values from float to int
+        col1_data = [int(x) for x in col1_data]
+
+        col2_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'error_msg_col2')
+
+        expected_err_msg = [[col1_data[i], col2_data[i]] for i in range(0, len(col1_data))]        
+
         for i in pop_data:
             ele = self.select_element("select_update_dropdown", env)
             time.sleep(2)
@@ -248,13 +260,36 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                     self.click("view_action", env, UnivWaitFor=10)
                     time.sleep(2)
-                    td = self.select_elements('error_data_table', env)
-                    error_data = []
-                    for n in td:
-                        error_data.append(n.text)
-                    self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: '
-                                                              f'{error_data}',
-                                                      pass_=True, log=True, screenshot=True)
+                    td1 = self.select_elements('error_data_table_col1', env)
+                    error_data_col1 = []
+                    for k in td1:
+                        error_data_col1.append(k.text)
+                    # Converting list values from string to int
+                    error_data_col1 = [int(x) for x in error_data_col1]
+
+                    td2 = self.select_elements('error_data_table_col2', env)
+                    error_data_col2 = []
+                    for v in td2:
+                        error_data_col2.append(v.text)
+                    
+                    actual_err_msg = [[error_data_col1[i], error_data_col2[i]] for i in range(0, len(error_data_col1))]
+
+                    # self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: '
+                    #                                           f'{error_data}',
+                    #                                   pass_=True, log=True, screenshot=True)
+                    expected_err_msg = self.sort_nested_list(expected_err_msg, 0)
+                    actual_err_msg = self.sort_nested_list(actual_err_msg, 0)
+
+                    expected_err_msg = self.sort_nested_list(expected_err_msg, 1)
+                    actual_err_msg = self.sort_nested_list(actual_err_msg, 1)
+
+                    if expected_err_msg == actual_err_msg:
+                        self.LogScreenshot.fLogScreenshot(message=f"Upload failed as expected error message matches with actual results.",
+                                                        pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Error Messages while uploading invalid data. Expected Error Messages : '{expected_err_msg}'. Actual Error Message. '{actual_err_msg}'",
+                                                        pass_=False, log=True, screenshot=True)
+                        raise Exception(f"Mismatch found in Error Messages while uploading invalid data")                                                      
                     self.click("back_to_view_action_btn", env, UnivWaitFor=10)
                 else:
                     raise Exception("Error while uploading the extraction file")
@@ -323,6 +358,11 @@ class ImportPublicationPage(Base):
                 if self.isdisplayed("file_upload_status_pass", env, UnivWaitFor=180):
                     self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
                                                       pass_=True, log=True, screenshot=True)
+                    self.click("view_action", env, UnivWaitFor=10)
+                    time.sleep(2)
+                    self.LogScreenshot.fLogScreenshot(message=f'Success Status Details : ',
+                                                      pass_=True, log=True, screenshot=True)
+                    self.click("back_to_view_action_btn", env, UnivWaitFor=10)
                 else:
                     raise Exception("Error while uploading the extraction file")
                 self.refreshpage()

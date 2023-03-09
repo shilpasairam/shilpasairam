@@ -98,9 +98,6 @@ class Test_SearchPublications:
 
         request.node._tcid = caseid
         request.node._title = "LiveRef - Check presence of Author and Affiliation option in UI"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)

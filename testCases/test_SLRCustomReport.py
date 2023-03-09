@@ -102,9 +102,6 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate Downloaded Reports content comparison from Search LIVESLR page"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
@@ -168,9 +165,6 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate presence of PublicationType column in Complete Word Report"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
@@ -220,9 +214,6 @@ class Test_SLR_Custom_Report:
         request.node._tcid = caseid
         request.node._title = "Validate label format changes -> From Interventional to Clinical"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         try:
@@ -242,9 +233,6 @@ class Test_SLR_Custom_Report:
 
         request.node._tcid = caseid
         request.node._title = "Validate Population Column in Complete Word Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -267,9 +255,6 @@ class Test_SLR_Custom_Report:
 
         request.node._tcid = caseid
         request.node._title = "Validate Control Chars in Complete Word Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)

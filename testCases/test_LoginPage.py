@@ -27,9 +27,6 @@ class Test_Login:
         request.node._tcid = caseid
         request.node._title = "Validate LiveSLR Login Scenario"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)

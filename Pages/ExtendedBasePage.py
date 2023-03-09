@@ -70,8 +70,7 @@ class ExtendedBase(Base):
     # Read individual column data using locatorname and column name
     def get_testdata_filepath(self, filepath, locatorname):
         df = pd.read_excel(filepath)
-        data = (os.getcwd()+(df.loc[df['Environment'] == locatorname]['Testdata_path'].
-                                         dropna())).to_list()
+        data = (os.getcwd()+(df.loc[df['Testdata_name'] == locatorname]['Testdata_path'].dropna())).to_list()[0]
         return data           
     
     def get_template_file_details(self, filepath, locatorname, column_name):
@@ -95,14 +94,14 @@ class ExtendedBase(Base):
 
     # Reading 3 columns data at once using locatorname and column names
     def get_triple_col_data(self, filepath, locatorname, sheet, col1, col2, col3):
-        df = pd.read_excel(filepath, sheet_name=sheet)
+        df = pd.read_excel(filepath, sheet_name=sheet, na_filter=False)
         data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
         data2 = df.loc[df['Name'] == locatorname][col2].dropna().to_list()
         data3 = df.loc[df['Name'] == locatorname][col3].dropna().to_list()
-        result = [[data1[i], os.getcwd() + data2[i], data3[i]] for i in range(0, len(data1))]
+        result = [[data1[i], data2[i], data3[i]] for i in range(0, len(data1))]
         return result
 
-    # Reading 3 columns data at once using locatorname and column names
+    # Reading 4 columns data at once using locatorname and column names
     def get_four_cols_data(self, filepath, locatorname, sheet, col1, col2, col3, col4):
         df = pd.read_excel(filepath, sheet_name=sheet)
         data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
@@ -112,6 +111,12 @@ class ExtendedBase(Base):
         result = [[data1[i], data2[i], data3[i], data4[i]] for i in range(0, len(data1))]
         return result        
 
+    # Read the individual column values
+    def get_data_values(self, filepath, colname):
+        file = pd.read_excel(filepath)
+        value = list(file[colname].dropna())
+        return value
+    
     def list_comparison_between_reports_data(self, source_list, compex_list, webex_list=None, word=None):
         idx = 0
         res_index = []
@@ -209,7 +214,7 @@ class ExtendedBase(Base):
         path = df.loc[df['Name'] == locatorname]['Files_to_upload'].dropna().to_list()
         filename = df.loc[df['Name'] == locatorname]['Expected_File_names'].dropna().to_list()
         result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]
-        return result    
+        return result
     
     def upload_file(self, pop_name, file_to_upload, env):
         expected_upload_status_text = "File(s) uploaded successfully"

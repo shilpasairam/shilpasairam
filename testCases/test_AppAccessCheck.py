@@ -48,9 +48,6 @@ class Test_AppAccess:
         request.node._tcid = caseid
         request.node._title = "Validate LiveSLR Application Access"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)
         # self.loginPage.complete_login(username, password, "launch_live_slr", "Cytel LiveSLR")        
