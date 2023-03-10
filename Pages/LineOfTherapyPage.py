@@ -145,7 +145,8 @@ class LineofTherapyPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(
-                message=f'Unable to find status message while adding the LoT record. Actual status message is {actual_add_status_text} and Expected status message is {expected_add_status_text}',
+                message=f'Unable to find status message while adding the LoT record. Actual status message is '
+                        f'{actual_add_status_text} and Expected status message is {expected_add_status_text}',
                 pass_=False, log=True, screenshot=True)
             raise Exception("Unable to find status message while adding the LoT record")        
 
@@ -204,7 +205,8 @@ class LineofTherapyPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(
-                message=f'Unable to find status message while edit the LoT record. Actual status message is {actual_update_status_text} and Expected status message is {expected_update_status_text}',
+                message=f'Unable to find status message while edit the LoT record. Actual status message is '
+                        f'{actual_update_status_text} and Expected status message is {expected_update_status_text}',
                 pass_=False, log=True, screenshot=True)
             raise Exception("Unable to find status message while edit the LoT record")
 
@@ -260,7 +262,8 @@ class LineofTherapyPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(
-                message=f'Unable to find status message while delete the LoT record. Actual status message is {actual_del_status_text} and Expected status message is {expected_del_status_text}',
+                message=f'Unable to find status message while delete the LoT record. Actual status message is '
+                        f'{actual_del_status_text} and Expected status message is {expected_del_status_text}',
                 pass_=False, log=True, screenshot=True)
             raise Exception("Unable to find status message while delete the LoT record")                                          
 

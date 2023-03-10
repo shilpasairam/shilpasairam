@@ -39,11 +39,8 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of Manage Update for selected population"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y")
@@ -58,18 +55,18 @@ class Test_ManageUpdatesPage:
         for i in pop_val:
             try:
                 manage_update_data = mngupdpage.add_multiple_updates(i, filepath, "add_update_btn", self.day_val,
-                                                                          "manage_update_table_rows", self.dateval, env)
+                                                                     "manage_update_table_rows", self.dateval, env)
                 self.added_updates_data.append(manage_update_data)
                 LogScreenshot.fLogScreenshot(message=f"Added population udpate is {self.added_updates_data}",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.smoketest_manageupdate
     def test_edit_updates(self, extra, env, request, caseid):
@@ -87,7 +84,7 @@ class Test_ManageUpdatesPage:
         request.node._title = "Validate Editing the existing Manage Update data for selected population"
 
         LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.day_val = today.day
@@ -104,18 +101,18 @@ class Test_ManageUpdatesPage:
         for i in self.added_updates_data:
             try:
                 manage_update_data = mngupdpage.edit_multiple_updates(i, "edit_updates", self.day_val,
-                                                                           self.dateval, env)
+                                                                      self.dateval, env)
                 self.edited_updates_data.append(manage_update_data)
                 LogScreenshot.fLogScreenshot(message=f"Edited population udpate is {self.edited_updates_data}",
-                                                  pass_=True, log=True, screenshot=False)
+                                             pass_=True, log=True, screenshot=False)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
         LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.smoketest_manageupdate
     def test_delete_updates(self, extra, env, request, caseid):
@@ -133,7 +130,7 @@ class Test_ManageUpdatesPage:
         request.node._title = "Validate Deletion of existing Manage Update data for selected population"
 
         LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is started***",
-                                          pass_=True, log=True, screenshot=False)
+                                     pass_=True, log=True, screenshot=False)
 
         today = date.today()
         self.dateval = today.strftime("%m/%d/%Y").replace('/', '')
@@ -145,12 +142,12 @@ class Test_ManageUpdatesPage:
         for i in self.edited_updates_data:
             try:
                 mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup",
-                                                               "manage_update_table_rows", env)
+                                                          "manage_update_table_rows", env)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-                                                  pass_=False, log=True, screenshot=True)
+                                             pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
         LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is "
-                                                  f"completed***", pass_=True, log=True, screenshot=False)
+                                             f"completed***", pass_=True, log=True, screenshot=False)

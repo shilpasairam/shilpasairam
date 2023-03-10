@@ -31,7 +31,8 @@ class Test_LiveSLRPageElements:
 
         try:
             loginPage.driver.get(baseURL)
-            loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+            loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL,
+                                            env)
             base.go_to_page("SLR_Homepage", env)
             base.presence_of_element("SLR_Population", env)
             base.presence_of_element("SLR_Type", env)
@@ -39,7 +40,7 @@ class Test_LiveSLRPageElements:
             base.presence_of_element("NMA_Button", env)
             base.presence_of_element("Preview_Button", env)
             LogScreenshot.fLogScreenshot(message=f"Elements are present in LiveSLR Page",
-                                              pass_=True, log=True, screenshot=True)
+                                         pass_=True, log=True, screenshot=True)
         except Exception:
             LogScreenshot.fLogScreenshot(
                 message=f"Complete login and check if application landing page visible",

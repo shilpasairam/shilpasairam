@@ -44,10 +44,8 @@ class Test_PRISMA_Elements:
         design_val, var_val = liveslrpage.get_data_values(filepath)
 
         request.node._tcid = caseid
-        request.node._title = "Validate PRISMA Count between UI, WebExcel, Complete Excel and Word Report in Search LIVESLR page"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "Validate PRISMA Count between UI, WebExcel, Complete Excel and Word Report in Search " \
+                              "LIVESLR page "
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -60,16 +58,12 @@ class Test_PRISMA_Elements:
                     slrreport.select_data(j[0], j[1], env)
                     slrreport.validate_selected_area(i[0], j[0], env)
                     
-                    slrreport.select_sub_section(study_data[1], study_data_chkbox[1], env,
-                                                      "study_design_section")
-                    slrreport.select_sub_section(study_data[3], study_data_chkbox[3], env,
-                                                      "study_design_section")
-                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env,
-                                                      "reported_variable_section")
-                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                      "reported_variable_section")
+                    slrreport.select_sub_section(study_data[1], study_data_chkbox[1], env, "study_design_section")
+                    slrreport.select_sub_section(study_data[3], study_data_chkbox[3], env, "study_design_section")
+                    slrreport.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env, "reported_variable_section")
+                    slrreport.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     slrreport.validate_additional_criteria_val(filepath, "study_design_value",
-                                                                    "reported_variable_value", env)                                                                    
+                                                               "reported_variable_value", env)
 
                     base.scroll("New_total_selected", env)
                     prism = base.get_text("New_total_selected", env)
@@ -116,12 +110,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA elements comparison between Complete Excel and Word Report"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
-        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel "
-                                                  f"and Word Report*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel and Word "
+                                             f"Report*****", pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -136,8 +126,8 @@ class Test_PRISMA_Elements:
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
                 slrreport.test_prisma_ele_comparison_between_Excel_and_Word_Report(pop_data, slr_type,
-                                                                                        add_criteria, self.prisma_path,
-                                                                                        env)
+                                                                                   add_criteria, self.prisma_path,
+                                                                                   env)
             except Exception:
                 raise Exception("Unable to select element")
                 
@@ -158,12 +148,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA elements comparison between Complete Excel and UI"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
-        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel "
-                                                  f"and UI*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel and UI*****",
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -178,7 +164,7 @@ class Test_PRISMA_Elements:
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
                 slrreport.test_prisma_ele_comparison_between_Excel_and_UI(pop_data, slr_type, add_criteria,
-                                                                               self.prisma_path, env)
+                                                                          self.prisma_path, env)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -197,14 +183,12 @@ class Test_PRISMA_Elements:
         LogScreenshot = cLogScreenshot(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate PRISMA count between PRISMA Tab and ExcludedStudies_LiveSLR Tab in Complete Excel Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "Validate PRISMA count between PRISMA Tab and ExcludedStudies_LiveSLR Tab in Complete " \
+                              "Excel Report"
 
         LogScreenshot.fLogScreenshot(message=f"*****Prisma Counts Comparison between 'Updated PRISMA' sheet and "
-                                                  f"'Excluded studies - LiveSLR' sheet in Complete Excel Report*****",
-                                          pass_=True, log=True, screenshot=False)
+                                             f"'Excluded studies - LiveSLR' sheet in Complete Excel Report*****",
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -219,11 +203,10 @@ class Test_PRISMA_Elements:
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
                 slrreport.test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(pop_data,
-                                                                                                         slr_type,
-                                                                                                         add_criteria,
-                                                                                                         self.
-                                                                                                         prisma_path,
-                                                                                                         env)
+                                                                                                    slr_type,
+                                                                                                    add_criteria,
+                                                                                                    self.prisma_path,
+                                                                                                    env)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -244,12 +227,8 @@ class Test_PRISMA_Elements:
         request.node._tcid = caseid
         request.node._title = "Validate PRISMA Tab format changes in Complete Excel Report"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
-        LogScreenshot.fLogScreenshot(message=f"*****Updated PRISMA tab format changes in Complete Excel "
-                                                  f"Report*****",
-                                          pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"*****Updated PRISMA tab format changes in Complete Excel Report*****",
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -282,14 +261,12 @@ class Test_PRISMA_Elements:
         LogScreenshot = cLogScreenshot(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Compare Publications Count between 'Updated PRISMA' sheet and 'Excluded studies - LiveSLR' sheet in Complete Excel Report"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
+        request.node._title = "Compare Publications Count between 'Updated PRISMA' sheet and 'Excluded studies - " \
+                              "LiveSLR' sheet in Complete Excel Report "
 
         LogScreenshot.fLogScreenshot(message=f"***Publications Count Comparison between 'Updated PRISMA' sheet "
-                                                  f"and 'Excluded studies - LiveSLR' sheet in Complete Excel Report***",
-                                          pass_=True, log=True, screenshot=False)
+                                             f"and 'Excluded studies - LiveSLR' sheet in Complete Excel Report***",
+                                     pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -304,7 +281,6 @@ class Test_PRISMA_Elements:
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
                 slrreport.test_publication_identifier_count_in_updated_prisma_tab(pop_data, slr_type,
-                                                                                       add_criteria, self.prisma_path,
-                                                                                       env)
+                                                                                  add_criteria, self.prisma_path, env)
             except Exception:
                 raise Exception("Unable to select element")

@@ -5,7 +5,9 @@ import zipfile
 
 from py.xml import html
 import pytest
-import platform,socket,psutil
+import platform
+import socket
+import psutil
 import datetime
 from pathlib import Path
 from utilities.readProperties import ReadConfig
@@ -21,9 +23,11 @@ def pytest_addoption(parser):
     config.read(os.getcwd()+"\\Configurations\\config.ini")
     parser.addoption("--env", action="store", default=config.get('commonInfo', 'environment'))
 
+
 @pytest.fixture()
 def env(request):
     return request.config.getoption("--env")
+
 
 @pytest.fixture()
 def caseid(request):
@@ -48,6 +52,7 @@ def caseid(request):
 #
 #     yield
 #     web_driver.close()
+
 
 @pytest.fixture()
 def init_driver(request):
@@ -75,11 +80,35 @@ def init_driver(request):
     yield
     web_driver.quit()
 
-############# pytest HTML Report ##############
+
+# ############ pytest HTML Report ##############
+@pytest.hookimpl(tryfirst=True)
+def pytest_sessionstart(session):
+    if os.path.exists(f'Logs'):
+        # Clearing the logs before test runs
+        open(".\\Logs\\testlog.log", "w").close()
+
+    # Removing the screenshots and results reports before the test runs
+    if os.path.exists(f'Reports'):
+        for root, dirs, files in os.walk(f'Reports'):
+            for file in files:
+                os.remove(os.path.join(root, file))
+        for root, dirs, files in os.walk(f'Reports/screenshots'):
+            for file in files:
+                os.remove(os.path.join(root, file))
+
+    # Removing the downloaded report files before the test runs
+    if os.path.exists(f'ActualOutputs'):
+        for root, dirs, files in os.walk(f'ActualOutputs'):
+            for file in files:
+                os.remove(os.path.join(root, file))    
+
+
 # @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
     # config._metadata['Test Suite'] = ReadConfig.getTestdata("liveref_data").replace(".xlsx","")
-    config._metadata['Machine Configuration'] = f'{socket.getfqdn()}, {platform.processor()}, {str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"}'
+    config._metadata['Machine Configuration'] = f'{socket.getfqdn()}, {platform.processor()}, ' \
+                                                f'{str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"}'
     # config._metadata['Application URL'] = ReadConfig.getApplicationURL()
     config._metadata['Environment'] = config.getoption("--env")
     config._metadata['Tester'] = ReadConfig.getUserName()
@@ -96,16 +125,19 @@ def pytest_configure(config):
     config.option.htmlpath = report
     config.option.self_contained_html = True
 
+
 def pytest_metadata(metadata):
     metadata.pop("JAVA_HOME", None)
     metadata.pop("Plugins", None)
-    metadata.pop("Packages",None)
-    metadata.pop("Platform",None)
-    metadata.pop("Python",None)
+    metadata.pop("Packages", None)
+    metadata.pop("Platform", None)
+    metadata.pop("Python", None)
+
 
 def pytest_html_report_title(report):
-    ''' modifying the title  of html report'''
+    """ modifying the title  of html report"""
     report.title = "Automation Report"
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -114,22 +146,19 @@ def pytest_runtest_makereport(item, call):
     setattr(report, "duration_formatter", "%M:%S")
     report._tcid = getattr(item, '_tcid', '')
     report._title = getattr(item, '_title', '')
-    # report._filepath = getattr(item,'_filepath','')
+
 
 @pytest.mark.optionalhook
 def pytest_html_results_table_header(cells):
     del cells[1]
-    cells.insert(1,html.th('TC ID'))
-    cells.insert(2,html.th('TC Title'))
-    # cells.insert(3,html.th('Data file path'))
+    cells.insert(1, html.th('TC ID'))
+    cells.insert(2, html.th('TC Title'))
     cells.pop()
+
 
 @pytest.mark.optionalhook
 def pytest_html_results_table_row(report, cells):
     del cells[1]
-    # cells.insert(1,html.td(report._tcid))
-    # cells.insert(2, html.td(report._title))
-    # cells.insert(3,html.td(report._filepath))
     cells.insert(1, html.td(getattr(report, '_tcid', '')))
     cells.insert(2, html.td(getattr(report, '_title', '')))
     cells.pop()
@@ -137,6 +166,7 @@ def pytest_html_results_table_row(report, cells):
 # # This deletes the log window in the report
 # def pytest_html_results_table_html(data):
 #         del data[-1]
+
 
 @pytest.hookimpl(trylast=True)
 def pytest_sessionfinish(session, exitstatus):
@@ -152,9 +182,3 @@ def pytest_sessionfinish(session, exitstatus):
                     os.path.relpath(os.path.join(dirpath, filename), os.path.join(dir_list[0], '..')))
 
     zip_file.close()
-
-    # results_folders = ['ActualOutputs', 'Logs', 'Reports']
-    # # Removing the results before the test runs
-    # for folder in results_folders:
-    #     if os.path.exists(f'{folder}'):
-    #         shutil.rmtree(f'{folder}')

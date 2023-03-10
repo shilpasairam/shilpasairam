@@ -45,9 +45,6 @@ class Test_LiveNMA:
         request.node._tcid = caseid
         request.node._title = "Validate of LiveNMA Datatable with OS Switch Tab"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
@@ -59,20 +56,16 @@ class Test_LiveNMA:
                     base.presence_of_all_elements("slr_type_panel_eles", env)
                     nma.select_data(j[0], j[1], env)
                     base.presence_of_element("study_design_section", env)
-                    nma.select_sub_section(std_data[0], std_data_chkbox[0], env,
-                                                "study_design_section")
-                    nma.select_sub_section(std_data[1], std_data_chkbox[1], env,
-                                                "study_design_section")
-                    nma.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env,
-                                                "reported_variable_section")
-                    nma.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                "reported_variable_section")
+                    nma.select_sub_section(std_data[0], std_data_chkbox[0], env, "study_design_section")
+                    nma.select_sub_section(std_data[1], std_data_chkbox[1], env, "study_design_section")
+                    nma.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env, "reported_variable_section")
+                    nma.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     nma.launch_nma("launch_live_nma", env, UnivWaitFor=5)
                     nma.table_display_check("live_nma_switch_1", "live_nma_data_table", env)
                     nma.validate_nma_selected_criteria_val(filepath, i[0], "live_nma_study_design",
-                                                                "live_nma_reported_variable", "live_nma_pop_data", env)
+                                                           "live_nma_reported_variable", "live_nma_pop_data", env)
                     nma.form_fill("add_study_button", filepath, "add_button", "live_nma_data_table_rows",
-                                       "show_network", env)
+                                  "show_network", env)
                     time.sleep(3)
                     nma.driver.close()
                     nma.driver.switch_to.window(self.driver.window_handles[1])
@@ -114,20 +107,16 @@ class Test_LiveNMA:
                     base.presence_of_all_elements("slr_type_panel_eles", env)
                     nma.select_data(j[0], j[1], env)
                     base.presence_of_element("study_design_section", env)
-                    nma.select_sub_section(std_data[0], std_data_chkbox[0], env,
-                                                "study_design_section")
-                    nma.select_sub_section(std_data[1], std_data_chkbox[1], env,
-                                                "study_design_section")
-                    nma.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env,
-                                                "reported_variable_section")
-                    nma.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env,
-                                                "reported_variable_section")
+                    nma.select_sub_section(std_data[0], std_data_chkbox[0], env, "study_design_section")
+                    nma.select_sub_section(std_data[1], std_data_chkbox[1], env, "study_design_section")
+                    nma.select_sub_section(rpt_data[0], rpt_data_chkbox[0], env, "reported_variable_section")
+                    nma.select_sub_section(rpt_data[1], rpt_data_chkbox[1], env, "reported_variable_section")
                     nma.launch_nma("launch_live_nma", env, UnivWaitFor=5)
                     nma.table_display_check("live_nma_switch_2", "live_nma_data_table", env)
                     nma.validate_nma_selected_criteria_val(filepath, i[0], "live_nma_study_design",
-                                                                "live_nma_reported_variable", "live_nma_pop_data", env)
+                                                           "live_nma_reported_variable", "live_nma_pop_data", env)
                     nma.form_fill("add_study_button", filepath, "add_button", "live_nma_data_table_rows",
-                                       "show_network", env)
+                                  "show_network", env)
                     time.sleep(3)
                     nma.driver.close()
                     nma.driver.switch_to.window(self.driver.window_handles[1])

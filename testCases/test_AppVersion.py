@@ -21,8 +21,6 @@ class Test_AppVersion:
     @pytest.mark.C29642
     def test_liveslr_app_version(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)        
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of AppVersion class
@@ -30,9 +28,6 @@ class Test_AppVersion:
 
         request.node._tcid = caseid
         request.node._title = "Validate LiveSLR Application Version and Build Number"
-
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
 
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)
@@ -60,9 +55,6 @@ class Test_AppVersion:
         request.node._tcid = caseid
         request.node._title = "Validate LiveRef Application Version and Build Number"
 
-        # Clearing the Logs before the test start execution
-        base.clear_logs()
-
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
@@ -78,7 +70,7 @@ class Test_AppVersion:
         
         if not search("Glossary", res_list[0]):
             LogScreenshot.fLogScreenshot(message=f"Glossary link is not present as expected",
-                                              pass_=True, log=True, screenshot=True)
+                                         pass_=True, log=True, screenshot=True)
         else:
             raise Exception(f"Glossary link is present as expected")
 

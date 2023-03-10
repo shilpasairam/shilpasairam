@@ -34,10 +34,6 @@ class ManageUpdatesPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    # def go_to_manageupdates(self, locator):
-    #     self.click(locator, UnivWaitFor=10)
-    #     time.sleep(5)
-    
     # Reading Population data for ManageUpdates Page
     def get_updates_pop_data(self, filepath, locatorname):
         df = pd.read_excel(filepath)
@@ -203,7 +199,9 @@ class ManageUpdatesPage(Base):
             self.LogScreenshot.fLogScreenshot(message=f"Addition of New Update is success",
                                               pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding New Update. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
+            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding New Update. "
+                                                      f"Actual status message is {actual_status_text} and Expected "
+                                                      f"status message is {expected_status_text}",
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while adding New Update")        
 
@@ -282,7 +280,8 @@ class ManageUpdatesPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while editing the "
-                                                      f"Update data. Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
+                                                      f"Update data. Actual status message is {actual_status_text} "
+                                                      f"and Expected status message is {expected_status_text}",
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while editing the Update data")        
 
@@ -338,7 +337,8 @@ class ManageUpdatesPage(Base):
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting the "
-                                                      f"Update data Actual status message is {actual_status_text} and Expected status message is {expected_status_text}",
+                                                      f"Update data Actual status message is {actual_status_text} "
+                                                      f"and Expected status message is {expected_status_text}",
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while deleting the Update data")        
 
