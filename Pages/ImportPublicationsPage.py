@@ -289,8 +289,8 @@ class ImportPublicationPage(Base):
                     actual_err_msg = self.sort_nested_list(actual_err_msg, 1)
 
                     if expected_err_msg == actual_err_msg:
-                        self.LogScreenshot.fLogScreenshot(message=f"Upload failed as expected error message matches "
-                                                                  f"with actual results.",
+                        self.LogScreenshot.fLogScreenshot(message=f"Upload is Successful. Expected error messages matches "
+                                                                  f"with Actual error messages.",
                                                           pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Error Messages while uploading "
