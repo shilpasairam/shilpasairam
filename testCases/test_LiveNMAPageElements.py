@@ -47,6 +47,7 @@ class Test_LiveNMA:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("SLR_Homepage", env)
         base.go_to_page("SLR_Homepage", env)
         for i in pop_list:
             try:
@@ -98,6 +99,7 @@ class Test_LiveNMA:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("SLR_Homepage", env)
         base.go_to_page("SLR_Homepage", env)
         for i in pop_list:
             try:

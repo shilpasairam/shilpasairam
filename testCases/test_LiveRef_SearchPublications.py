@@ -41,6 +41,7 @@ class Test_SearchPublications:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         scenarios = ['scenario1']
         for i in scenarios:
             try:
@@ -71,6 +72,7 @@ class Test_SearchPublications:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         scenarios = ['scenario1']
         for i in scenarios:
             try:
@@ -101,6 +103,7 @@ class Test_SearchPublications:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         try:
             base.go_to_page("searchpublications_button", env)
             base.click("searchpublications_reset_filter", env)
@@ -130,6 +133,7 @@ class Test_SearchPublications:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         try:
             base.go_to_page("searchpublications_button", env)
             base.click("searchpublications_reset_filter", env)
@@ -159,6 +163,7 @@ class Test_SearchPublications:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         try:
             base.go_to_page("searchpublications_button", env)
             base.click("searchpublications_reset_filter", env)
@@ -191,6 +196,7 @@ class Test_SearchPublications:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         try:
             base.go_to_page("searchpublications_button", env)
             base.click("searchpublications_reset_filter", env)

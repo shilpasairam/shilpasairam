@@ -46,6 +46,7 @@ class Test_ImportPublicationPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop1']
@@ -88,6 +89,7 @@ class Test_ImportPublicationPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop2']
@@ -125,6 +127,7 @@ class Test_ImportPublicationPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop3']
@@ -163,6 +166,7 @@ class Test_ImportPublicationPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop4']
@@ -203,6 +207,7 @@ class Test_ImportPublicationPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop5']
@@ -245,6 +250,7 @@ class Test_ImportPublicationPage:
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_importtool")
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop1']
@@ -286,6 +292,7 @@ class Test_ImportPublicationPage:
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_importtool")
+        base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
         pop_list = ['pop2', 'pop3', 'pop4', 'pop5', 'pop6']

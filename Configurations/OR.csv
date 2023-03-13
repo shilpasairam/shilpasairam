@@ -306,7 +306,7 @@ ProtocolPRISMAs,prisma_image_save_btn,XPATH,//button[@class='btn btn-primary' an
 ProtocolPRISMAs,prisma_image_delete_btn,XPATH,//button[@class='btn btn-outline-danger ml-2' and text()='Delete existing data'],
 ProtocolPRISMAs,prisma_image_delete_popup,XPATH,//div[@class='modal-content']//div[3]//button[1],
 ProtocolPRISMAs,prisma_image_status_text,XPATH,//div[@role='alertdialog'],
-ExcludedStudies,excluded_studies_link,LINK_TEXT,Manage Excluded Studies,
+ExcludedStudies,excluded_studies_link,LINK_TEXT,Manage Excluded Publications,
 ExcludedStudies,ex_stdy_pop_dropdown,XPATH,//select[@name='populationId'],
 ExcludedStudies,ex_stdy_stdytype_dropdown,XPATH,//select[@name='selectedStudyType'],
 ExcludedStudies,ex_stdy_update_dropdown,XPATH,//select[@name='updateId'],

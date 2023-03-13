@@ -40,6 +40,7 @@ class Test_ProtocolPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("protocol_link", env)
         base.go_to_nested_page("protocol_link", "prismas", env)
 
         pop_val = ['pop1']
@@ -79,6 +80,7 @@ class Test_ProtocolPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("protocol_link", env)
         base.go_to_nested_page("protocol_link", "prismas", env)
 
         pop_val = ['pop1']
@@ -116,6 +118,7 @@ class Test_ProtocolPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("protocol_link", env)
         base.go_to_nested_page("protocol_link", "picos", env)
 
         pop_val = ['pop1']
@@ -154,6 +157,7 @@ class Test_ProtocolPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("protocol_link", env)
         base.go_to_nested_page("protocol_link", "searchstrategy", env)
 
         pop_val = ['pop1']
@@ -198,6 +202,7 @@ class Test_ProtocolPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("protocol_link", env)
         base.go_to_nested_page("protocol_link", "searchstrategy", env)
 
         pop_val = ['pop1']

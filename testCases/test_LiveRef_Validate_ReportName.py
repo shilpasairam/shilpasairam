@@ -39,6 +39,7 @@ class Test_SearchPublications_DownloadedFilename:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
+        base.presence_of_admin_page_option("searchpublications_button", env)
         scenarios = ['scenario1']
         for i in scenarios:
             try:

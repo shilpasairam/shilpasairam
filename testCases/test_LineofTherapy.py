@@ -46,6 +46,7 @@ class Test_LineofTherapyPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managelot_button", env)
 
         pop_val = ['pop1', 'pop2']
 
@@ -89,6 +90,7 @@ class Test_LineofTherapyPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managelot_button", env)
         base.go_to_page("managelot_button", env)
 
         pop_val = ['pop1', 'pop2']
@@ -133,6 +135,7 @@ class Test_LineofTherapyPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managelot_button", env)
 
         pop_val = ['pop1', 'pop2']
 

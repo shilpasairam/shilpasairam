@@ -43,6 +43,7 @@ class Test_ManagePopultionsPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1', 'pop2', 'pop3']
@@ -77,6 +78,7 @@ class Test_ManagePopultionsPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1', 'pop2', 'pop3']
@@ -112,6 +114,7 @@ class Test_ManagePopultionsPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         for i in self.onco_edited_population_val:
@@ -147,6 +150,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1']
@@ -182,6 +186,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1']
@@ -223,6 +228,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1']
@@ -259,6 +265,7 @@ class Test_ManagePopultionsPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         for i in self.non_onco_edited_population_val:
@@ -296,6 +303,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1']
@@ -339,6 +347,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "managepopulation_additional_col_check")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         pop_list = ['pop1', 'pop2']
@@ -373,6 +382,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "edit_ep_categorical_invaliddata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4', 'scenario5', 'scenario6']
@@ -412,6 +422,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "edit_ep_continuous_invaliddata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
@@ -450,6 +461,7 @@ class Test_ManagePopultionsPage:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "edit_ep_timetoevent_invaliddata")
+        base.presence_of_admin_page_option("managepopulations_button", env)
         base.go_to_page("managepopulations_button", env)
 
         scenarios = ['scenario1', 'scenario2']

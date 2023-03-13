@@ -126,7 +126,7 @@ class LineofTherapyPage(Base):
         table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",
                                                              "managelot_table_next_btn", table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new LoT: {table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
         
         self.scroll("managelot_page_heading", env)
         self.click(add_lot_button, env, UnivWaitFor=10)
@@ -154,7 +154,7 @@ class LineofTherapyPage(Base):
         table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
                                                             "managelot_table_next_btn", table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new LoT: {table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_after > table_rows_before != table_rows_after:
@@ -237,7 +237,7 @@ class LineofTherapyPage(Base):
         table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",
                                                              "managelot_table_next_btn", tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a LoT: {table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)
+                                          pass_=True, log=True, screenshot=True)
 
         self.scroll("managelot_page_heading", env)
         self.input_text("managelot_search_box", added_update_val, env)
@@ -271,7 +271,7 @@ class LineofTherapyPage(Base):
         table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
                                                             "managelot_table_next_btn", tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a LoT: {table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_before > table_rows_after != table_rows_before:

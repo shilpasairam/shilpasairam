@@ -211,7 +211,7 @@ class ManagePopulationsPage(Base):
                                                   table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
                                                   f'{table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         self.scroll("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
@@ -247,7 +247,7 @@ class ManagePopulationsPage(Base):
                                                  table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
                                                   f'{table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_after > table_rows_before != table_rows_after:
@@ -344,7 +344,7 @@ class ManagePopulationsPage(Base):
                                                   tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a population: '
                                                   f'{table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         self.scroll("managepopulation_page_heading", env)
         self.input_text("search_button", pop_value, env)
@@ -397,7 +397,7 @@ class ManagePopulationsPage(Base):
         table_rows_after = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
                                                  tablerows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a population: {table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_before == table_rows_after:
@@ -439,7 +439,7 @@ class ManagePopulationsPage(Base):
                                                   table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
                                                   f'{table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         self.scroll("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
@@ -529,7 +529,7 @@ class ManagePopulationsPage(Base):
                                                  table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after clicking on cancel button: '
                                                   f'{table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_after == table_rows_before:
@@ -567,7 +567,7 @@ class ManagePopulationsPage(Base):
                                                   table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
                                                   f'{table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         self.scroll("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
@@ -659,7 +659,7 @@ class ManagePopulationsPage(Base):
                                                  table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new population: '
                                                   f'{table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_after > table_rows_before != table_rows_after:
@@ -706,7 +706,7 @@ class ManagePopulationsPage(Base):
                                                   table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new population: '
                                                   f'{table_rows_before}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         self.scroll("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
@@ -791,7 +791,7 @@ class ManagePopulationsPage(Base):
                                                  table_rows, env)
         self.LogScreenshot.fLogScreenshot(message=f'Table length after clicking on cancel button: '
                                                   f'{table_rows_after}',
-                                          pass_=True, log=True, screenshot=False)        
+                                          pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_after == table_rows_before:
