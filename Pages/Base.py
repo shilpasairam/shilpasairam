@@ -114,6 +114,14 @@ class Base:
         self.wait.until(ec.presence_of_all_elements_located((getattr(By, self.locatortype(locator, env)),
                                                              self.locatorpath(locator, env))))
 
+    # Check the presence of Admin page options in Admin section
+    def presence_of_admin_page_option(self, locator, env):
+        self.scrollback(locator, env)
+        self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
+                                                        self.locatorpath(locator, env))))
+        self.LogScreenshot.fLogScreenshot(message=f'{self.locatorpath(locator, env)} option is present in Admin page.',
+                                          pass_=True, log=True, screenshot=True)
+    
     # click a web element using locatorname
     @fWaitFor
     def click(self, locator, env, UnivWaitFor=0):

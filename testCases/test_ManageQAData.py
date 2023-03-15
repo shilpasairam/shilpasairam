@@ -42,6 +42,7 @@ class Test_ManageQADataPage:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("manage_qa_data_button", env)
         base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1']
@@ -80,6 +81,7 @@ class Test_ManageQADataPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("manage_qa_data_button", env)
         base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
@@ -119,6 +121,7 @@ class Test_ManageQADataPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("manage_qa_data_button", env)
         base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
@@ -158,6 +161,7 @@ class Test_ManageQADataPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("manage_qa_data_button", env)
         base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop1', 'pop2']
@@ -199,6 +203,7 @@ class Test_ManageQADataPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("manage_qa_data_button", env)
         base.go_to_page("manage_qa_data_button", env)
 
         pop_val = ['pop3']

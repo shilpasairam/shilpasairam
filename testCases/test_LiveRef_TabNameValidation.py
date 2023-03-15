@@ -44,6 +44,7 @@ class Test_TabNames:
 
         for i in page_locs:
             try:
+                base.presence_of_admin_page_option(i, env)
                 base.go_to_page(i, env)
                 page_name = base.get_text(i, env)
                 base.assertPageTitle("Cytel LiveRef", UnivWaitFor=10)

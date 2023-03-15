@@ -33,6 +33,7 @@ class Test_LiveSLRPageElements:
             loginPage.driver.get(baseURL)
             loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL,
                                             env)
+            base.presence_of_admin_page_option("SLR_Homepage", env)
             base.go_to_page("SLR_Homepage", env)
             base.presence_of_element("SLR_Population", env)
             base.presence_of_element("SLR_Type", env)
