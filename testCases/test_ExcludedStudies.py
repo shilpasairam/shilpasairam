@@ -41,7 +41,7 @@ class Test_ExcludedStudiesPage:
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         # Check Manage Excluded Studies option is present in admin page or not
-        base.presence_of_admin_page_option("manage_qa_data_button", env)
+        base.presence_of_admin_page_option("excluded_studies_link", env)
 
         LogScreenshot.fLogScreenshot(message=f"***Presence of Manage Excluded Studies option in Admin page "
                                              f"check is completed***", pass_=True, log=True, screenshot=False)
@@ -68,7 +68,7 @@ class Test_ExcludedStudiesPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("manage_qa_data_button", env)
+        base.presence_of_admin_page_option("excluded_studies_link", env)
         # Go to ExcludedStudies Page
         base.go_to_page("excluded_studies_link", env)
 
@@ -108,7 +108,7 @@ class Test_ExcludedStudiesPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("manage_qa_data_button", env)
+        base.presence_of_admin_page_option("excluded_studies_link", env)
         # Go to ExcludedStudies Page
         base.go_to_page("excluded_studies_link", env)
 
@@ -149,7 +149,7 @@ class Test_ExcludedStudiesPage:
 
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("manage_qa_data_button", env)
+        base.presence_of_admin_page_option("excluded_studies_link", env)
         base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
