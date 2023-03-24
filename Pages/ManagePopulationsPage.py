@@ -813,8 +813,8 @@ class ManagePopulationsPage(Base):
     def non_onocolgy_edit_population(self, locatorname, pop_name, edit_locator, filepath, env):
         self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population validation is started***",
                                           pass_=True, log=True, screenshot=False)
-        # expected_status_text = "Population updated successfully"
-        expected_status_text = "Project updated successfully"
+        expected_status_text = "Population updated successfully"
+        # expected_status_text = "Project updated successfully"
 
         # Renaming the file which downloaded while creating the new non-oncology population
         self.file_rename(self.exbase.get_latest_filename(UnivWaitFor=180), f"New Template.xlsx")
