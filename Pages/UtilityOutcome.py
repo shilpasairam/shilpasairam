@@ -1243,6 +1243,14 @@ class UtilityOutcome(Base):
                 raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         else:
+            self.LogScreenshot.fLogScreenshot(message=f"Contents in column 'Study Identifier' are not in sorted order. "
+                                                      f"Values are Sourcefile: {sourcefile_col1}, "
+                                                      f"SortedSourcefile: {sorted(sourcefile_col1)}, "
+                                                      f"ActualExcel: {actualexcel_col1}, "
+                                                      f"SortedActualExcel: {sorted(actualexcel_col1)}, "
+                                                      f"ActualWebExcel: {actualwebexcel_col1}, "
+                                                      f"SortedActualWebExcel: {sorted(actualwebexcel_col1)}",
+                                              pass_=True, log=True, screenshot=False)
             raise Exception("Contents in column 'Study Identifier' are not in Sorted order")
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, "
