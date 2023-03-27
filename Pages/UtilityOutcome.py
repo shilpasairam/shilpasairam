@@ -776,73 +776,6 @@ class UtilityOutcome(Base):
                                                   f"Summary Completed*****",
                                           pass_=True, log=True, screenshot=False)
 
-    # def upload_file(self, pop_name, file_to_upload, env):
-    #     expected_upload_status_text = "File(s) uploaded successfully"
-    
-    #     ele = self.select_element("select_update_dropdown", env)
-    #     time.sleep(2)
-    #     select = Select(ele)
-    #     select.select_by_visible_text(pop_name)
-        
-    #     jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
-    #     self.jsclick_hide(jscmd)
-    #     self.input_text("add_file", file_to_upload, env)
-    #     try:
-    #         self.jsclick("upload_button", env, UnivWaitFor=30)
-    #         time.sleep(4)
-    #         if self.isdisplayed("file_status_popup_text", env):
-    #             actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-    #         else:
-    #             time.sleep(2)
-    #             actual_upload_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-    #
-    #         if actual_upload_status_text == expected_upload_status_text:
-    #             self.LogScreenshot.fLogScreenshot(message=f"File upload is success for Population : {pop_name}. "
-    #                                                       f"Extraction Filename is "
-    #                                                       f"'{Path(f'{file_to_upload}').stem}'",
-    #                                               pass_=True, log=True, screenshot=True)
-    #         else:
-    #             self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading Extraction '
-    #                                                       f'File for Population : {pop_name}.',
-    #                                               pass_=False, log=True, screenshot=True)
-    #             raise Exception("Unable to find status message during Extraction file uploading")
-
-    #         time.sleep(10)
-    #         if self.isdisplayed("file_upload_status_pass", env, UnivWaitFor=180):
-    #             self.LogScreenshot.fLogScreenshot(message=f'File uploading is done with Success Icon',
-    #                                               pass_=True, log=True, screenshot=True)
-    #         else:
-    #             raise Exception("Error while uploading the extraction file")
-
-    #         self.refreshpage()
-    #         time.sleep(5)
-    #     except Exception:
-    #         raise Exception("Error while uploading")
-    
-    # def delete_file(self, env):
-    #     expected_delete_status_text = "Import status deleted successfully"        
-    #     self.refreshpage()
-    #     time.sleep(5)
-        
-    #     self.click("delete_file", env)
-    #     time.sleep(2)
-    #     self.click("delete_file_popup", env)
-    #     time.sleep(2)
-
-    #     if self.isdisplayed("file_status_popup_text", env):
-    #         actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)
-    #     else:
-    #         time.sleep(2)
-    #         actual_delete_status_text = self.get_text("file_status_popup_text", UnivWaitFor=30)         
-        
-    #     if actual_delete_status_text == expected_delete_status_text:
-    #         self.LogScreenshot.fLogScreenshot(message=f'Extraction File Deletion is success.',
-    #                                           pass_=True, log=True, screenshot=True)
-    #     else:
-    #         self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting Extraction File',
-    #                                           pass_=False, log=True, screenshot=True)
-    #         raise Exception("Error during Extraction File Deletion")
-
     def qol_validate_utilitysummarytab_and_contents_into_excelreport(self, locatorname, util_filepath, index, env):
         source_template = self.get_util_source_template(util_filepath, 'prodfix')
 
@@ -1243,6 +1176,14 @@ class UtilityOutcome(Base):
                 raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         else:
+            self.LogScreenshot.fLogScreenshot(message=f"Contents in column 'Study Identifier' are not in sorted order. "
+                                                      f"Values are Sourcefile: {sourcefile_col1}, "
+                                                      f"SortedSourcefile: {sorted(sourcefile_col1)}, "
+                                                      f"ActualExcel: {actualexcel_col1}, "
+                                                      f"SortedActualExcel: {sorted(actualexcel_col1)}, "
+                                                      f"ActualWebExcel: {actualwebexcel_col1}, "
+                                                      f"SortedActualWebExcel: {sorted(actualwebexcel_col1)}",
+                                              pass_=True, log=True, screenshot=False)
             raise Exception("Contents in column 'Study Identifier' are not in Sorted order")
         
         self.LogScreenshot.fLogScreenshot(message=f"*****Content validation between Extraction Template, "

@@ -813,24 +813,44 @@ class ManagePopulationsPage(Base):
     def non_onocolgy_edit_population(self, locatorname, pop_name, edit_locator, filepath, env):
         self.LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology population validation is started***",
                                           pass_=True, log=True, screenshot=False)
-        expected_status_text = "Population updated successfully"
-        # expected_status_text = "Project updated successfully"
+        # expected_status_text = "Population updated successfully"
+        expected_status_text = "Project updated successfully"
+
+        # Renaming the file which downloaded while creating the new non-oncology population
+        self.file_rename(self.exbase.get_latest_filename(UnivWaitFor=180), f"New Template.xlsx")
 
         # Read required population and endpoint details
         pop_locs = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'population_field',
                                                    'edit_population_name')
+        popname = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'population_name')
 
         self.input_text("search_button", f'{pop_name}', env)
         self.click(edit_locator, env, UnivWaitFor=10)
 
         for j in pop_locs:
             self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
+
+        self.LogScreenshot.fLogScreenshot(message=f'Edited Name and Description Details are :',
+                                          pass_=True, log=True, screenshot=True)
         
         self.click("template_download_btn", env)
         time.sleep(2)
         template_name = self.exbase.get_latest_filename(UnivWaitFor=180)
+        if template_name == f"LIVEHTA Automation-{popname[0]}-Master Template.xlsx":
+            self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded in Edit Non-Oncology Window. "
+                                                      f"Tempalte name is {template_name}",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Downloaded Filename is {template_name}, Expectedname is "
+                                                      f"LIVEHTA Automation-{popname[0]}-Master Template",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Downloaded Filename is : {template_name}, Expectedname is : "
+                            f"LIVEHTA Automation-{popname[0]}-Master Template")
             
+        self.scrollback("non_onco_template_file_upload", env)
         self.input_text("non_onco_template_file_upload", f'{os.getcwd()}//ActualOutputs//{template_name}', env)
+        self.LogScreenshot.fLogScreenshot(message=f'File upload details are :',
+                                          pass_=True, log=True, screenshot=True)
         self.click("submit_button", env)
         time.sleep(1)
 
