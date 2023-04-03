@@ -1109,6 +1109,12 @@ class SLRReport(Base):
         # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
+        self.generate_download_report("word_report", env)
+        # time.sleep(5)
+        # word_filename1 = self.slrreport.getFilenameAndValidate(180)
+        # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
+        word_filename = self.get_and_validate_filename(filepath)
+
         self.preview_result("preview_results", env)
         self.table_display_check("Table", env)
         web_table_title = self.get_text("web_table_title", env)
