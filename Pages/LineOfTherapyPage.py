@@ -118,9 +118,9 @@ class LineofTherapyPage(Base):
                 self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is present in the table.",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is present in the table.",
+                self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is absent in the table.",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Mandatory LoT '{j}' option is present in the table.")            
+                raise Exception(f"Mandatory LoT '{j}' option is absent in the table.")            
         
         # Fetching total rows count before adding a new LoT
         table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",

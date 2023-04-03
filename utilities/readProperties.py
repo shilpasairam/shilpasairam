@@ -100,6 +100,8 @@ class ReadConfig:
             return config.get('commonInfo', 'testinglivenmadata')
         elif env == 'staging':
             return config.get('commonInfo', 'staginglivenmadata')
+        elif env == 'production':
+            return config.get('commonInfo', 'prodlivenmadata')
 
     # Get file containing data for QOL Utility
     @staticmethod
@@ -155,6 +157,8 @@ class ReadConfig:
             return config.get('commonInfo', 'manageupdatesdata_testing')
         elif env == 'staging':
             return config.get('commonInfo', 'manageupdatesdata_staging')
+        elif env == 'production':
+            return config.get('commonInfo', 'manageupdatesdata_prod')
 
     # Get file containing data for LineofTherapy page actions
     @staticmethod
