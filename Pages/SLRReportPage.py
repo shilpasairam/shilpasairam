@@ -349,9 +349,7 @@ class SLRReport(Base):
                                                   pass_=True, log=True, screenshot=False)
                 return filename
             else:
-                self.LogScreenshot.fLogScreenshot(message=f" Downloaded Filename is {filename}, Expectedname is "
-                                                          f"{expectedname}",
-                                                  pass_=False, log=True, screenshot=False)                
+                raise Exception
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
                                                       f"Filenames are {expectedname} and Actual "
