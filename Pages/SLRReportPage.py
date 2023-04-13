@@ -1088,12 +1088,11 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception(f"Static text '{row_23}' has not been added.")                                            
 
-    def test_interventional_to_clinical_changes(self, filepath, env):
+    def test_interventional_to_clinical_changes(self, filepath, pop_list, env):
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
-        self.select_data("NewImportLogic_1 - Test_Automation_1", "NewImportLogic_1 - Test_Automation_1_radio_button",
-                         env)
+        self.select_data(pop_list[0][0], pop_list[0][1], env)
         time.sleep(1)
         type_of_slr_text = self.get_text("slrtype_first_option_text", env)
         self.select_data("Clinical", "Clinical_radio_button", env)
@@ -1102,24 +1101,15 @@ class SLRReport(Base):
         nma_param_clinical_list = self.get_text("NMA_parameters_list_clinical", env)
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
         self.generate_download_report("word_report", env)
-        # time.sleep(5)
-        # word_filename1 = self.slrreport.getFilenameAndValidate(180)
-        # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
         word_filename = self.get_and_validate_filename(filepath)
 
         self.preview_result("preview_results", env)
         self.table_display_check("Table", env)
         web_table_title = self.get_text("web_table_title", env)
         self.generate_download_report("Export_as_excel", env)
-        # time.sleep(5)
-        # webexcel_filename = self.getFilenameAndValidate(180)
-        # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
         webexcel_filename = self.get_and_validate_filename(filepath)
         self.back_to_report_page("Back_to_search_page", env)
 

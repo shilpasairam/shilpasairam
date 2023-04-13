@@ -56,6 +56,8 @@ Population,NewImportLogic_3 - Test_Automation_3,XPATH,//input[@type='radio' and 
 Population,NewImportLogic_3 - Test_Automation_3_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=602],
 Population,QOL_and_ECON - UtilityOutcome,XPATH,//input[@type='radio' and @name='populationFilters' and @value=603]/following::span[1],
 Population,QOL_and_ECON - UtilityOutcome_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=603],
+Population,LIVEHTA Automation - Test_NonOncology_Automation_2,XPATH,//input[@type='radio' and @name='populationFilters' and @value=471]/following::span[1],
+Population,LIVEHTA Automation - Test_NonOncology_Automation_2_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=471],
 SLRType,slrtype_first_option_text,XPATH,//label[text()='Clinical '],
 SLRType,Clinical,XPATH,//label//input[@type='radio' and @name='slrType' and @value=1]/following::span[1],
 SLRType,Clinical_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=1],

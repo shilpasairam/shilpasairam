@@ -133,11 +133,11 @@ class Test_SLR_Custom_Report:
                     webexcel_filename = slrreport.get_and_validate_filename(filepath)
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
-                    # slrreport.check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
+                    slrreport.check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
 
-                    # slrreport.excel_content_validation(filepath, index, webexcel_filename, excel_filename)
+                    slrreport.excel_content_validation(filepath, index, webexcel_filename, excel_filename)
 
-                    # slrreport.word_content_validation(filepath, index, word_filename)
+                    slrreport.word_content_validation(filepath, index, word_filename)
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -204,6 +204,10 @@ class Test_SLR_Custom_Report:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
+        # Creating object of liveslrpage class
+        liveslrpage = LiveSLRPage(self.driver, extra)
+        # Read population data values
+        pop_list = liveslrpage.get_population_data(filepath)
 
         request.node._tcid = caseid
         request.node._title = "Validate label format changes -> From Interventional to Clinical"
@@ -211,7 +215,7 @@ class Test_SLR_Custom_Report:
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         try:
-            slrreport.test_interventional_to_clinical_changes(filepath, env)
+            slrreport.test_interventional_to_clinical_changes(filepath, pop_list, env)
         except Exception:
             raise Exception("Unable to select element")
 

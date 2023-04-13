@@ -268,7 +268,7 @@ class Test_ImportPublicationPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38858
-    def test_nononcology_upload_template_failure_for_fixed_col(self, extra, env, request, caseid):
+    def test_nononcology_upload_template_failure_for_invalid_col_id_and_colname(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -295,7 +295,7 @@ class Test_ImportPublicationPage:
         base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        pop_list = ['pop2', 'pop3', 'pop4', 'pop5', 'pop6']
+        pop_list = ['pop2']
 
         for index, i in enumerate(pop_list):
             try:
@@ -310,7 +310,7 @@ class Test_ImportPublicationPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C39016
-    def test_nononcology_upload_template_failure_for_custom_col(self, extra, env, request, caseid):
+    def test_nononcology_upload_template_failure_for_invaid_col_mapping_and_data(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -337,7 +337,7 @@ class Test_ImportPublicationPage:
         base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        pop_list = ['pop7', 'pop8', 'pop9']
+        pop_list = ['pop3', 'pop4']
 
         for index, i in enumerate(pop_list):
             try:

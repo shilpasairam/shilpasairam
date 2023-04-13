@@ -31,11 +31,6 @@ class ImportPublicationPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    # def go_to_importpublications(self, locator, button, env):
-    #     self.click(locator, env, UnivWaitFor=10)
-    #     self.jsclick(button, env)
-    #     time.sleep(3)
-
     # Reading Population data for Excluded Studies Page
     def get_file_details_to_upload(self, filepath, locatorname):
         df = pd.read_excel(filepath)
@@ -279,26 +274,27 @@ class ImportPublicationPage(Base):
                     
                     actual_err_msg = [[error_data_col1[i], error_data_col2[i]] for i in range(0, len(error_data_col1))]
 
-                    # self.LogScreenshot.fLogScreenshot(message=f'Excel sheet contains the following errors: '
-                    #                                           f'{error_data}',
-                    #                                   pass_=True, log=True, screenshot=True)
                     expected_err_msg = self.sort_nested_list(expected_err_msg, 0)
                     actual_err_msg = self.sort_nested_list(actual_err_msg, 0)
 
                     expected_err_msg = self.sort_nested_list(expected_err_msg, 1)
                     actual_err_msg = self.sort_nested_list(actual_err_msg, 1)
 
-                    if expected_err_msg == actual_err_msg:
-                        self.LogScreenshot.fLogScreenshot(message=f"Upload is Successful. Expected error messages matches "
-                                                                  f"with Actual error messages.",
+                    comparison_result = self.exbase.list_comparison_between_reports_data(sorted(col2_data),
+                                                                                         sorted(error_data_col2))
+
+                    if len(comparison_result) == 0 and expected_err_msg == actual_err_msg:
+                        self.LogScreenshot.fLogScreenshot(message=f"Upload is Successful. Expected error messages "
+                                                                  f"matches with Actual error messages.",
                                                           pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Error Messages while uploading "
-                                                                  f"invalid data. Expected Error Messages : "
-                                                                  f"'{expected_err_msg}'. Actual Error Message : "
-                                                                  f"'{actual_err_msg}'",
+                                                                  f"invalid data. Mismatch values are arranged in "
+                                                                  f"following order -> Expected Error Message, "
+                                                                  f"Actual Error Message. {comparison_result}",
                                                           pass_=False, log=True, screenshot=True)
-                        raise Exception(f"Mismatch found in Error Messages while uploading invalid data")                                                      
+                        raise Exception(f"Mismatch found in Error Messages while uploading invalid data")
+
                     self.click("back_to_view_action_btn", env, UnivWaitFor=10)
                 else:
                     raise Exception("Error while uploading the extraction file")
