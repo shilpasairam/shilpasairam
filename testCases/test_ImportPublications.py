@@ -267,7 +267,7 @@ class Test_ImportPublicationPage:
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C38858
+    @pytest.mark.C38857
     def test_nononcology_upload_template_failure_for_invalid_col_id_and_colname(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
@@ -283,7 +283,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction File with Failure Icon for Fixed columns"
+        request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction File with Failure Icon for " \
+                              "Invalid Column ID and Column Name "
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -309,8 +310,8 @@ class Test_ImportPublicationPage:
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C39016
-    def test_nononcology_upload_template_failure_for_invaid_col_mapping_and_data(self, extra, env, request, caseid):
+    @pytest.mark.C38858
+    def test_nononcology_upload_template_failure_for_invaid_col_mapping(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -325,7 +326,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction File with Failure Icon for Custom Columns"
+        request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction File with Failure Icon for " \
+                              "Invalid Column Mapping "
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -337,7 +339,50 @@ class Test_ImportPublicationPage:
         base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        pop_list = ['pop3', 'pop4']
+        pop_list = ['pop3']
+
+        for index, i in enumerate(pop_list):
+            try:
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+        
+        LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C39016
+    def test_nononcology_upload_template_failure_for_invaid_data(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology Import Tool - Validate Upload Extraction File with Failure Icon for " \
+                              "Invalid Data "
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononcology_importtool")
+        base.presence_of_admin_page_option("importpublications_button", env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+
+        pop_list = ['pop4']
 
         for index, i in enumerate(pop_list):
             try:
