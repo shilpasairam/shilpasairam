@@ -33,8 +33,8 @@ steps:
     testRunTitle: 'Py Result'
 - task: publishhtmlreport@1
   inputs:
-    htmlType: 'Jmeter'
-    JmeterReportsPath: '$(Build.BinariesDirectory)/Reports'
+    htmlType: 'genericHTML'
+    htmlPath: '$(Build.BinariesDirectory)/Reports/*.html'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: test-automation'
