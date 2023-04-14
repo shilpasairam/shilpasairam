@@ -117,6 +117,7 @@ class LiveNMA(Base):
         # Switch the driver to LiveNMA tab
         self.driver.switch_to.window(self.driver.window_handles[2])
         try:
+            self.presence_of_element("live_nma_data_table", env)
             self.assertPageTitle("Live NMA", UnivWaitFor=30)
             self.LogScreenshot.fLogScreenshot(message=f"LiveNMA Page Opened successfully",
                                               pass_=True, log=True, screenshot=True)
@@ -133,32 +134,24 @@ class LiveNMA(Base):
         self.click(locator, env)
 
         study_values, expected_val = self.liveslrpage.get_addstudy_data(filepath)
-        self.LogScreenshot.fLogScreenshot(message=f'List values are: {study_values}',
-                                          pass_=True, log=True, screenshot=False)
+
         for i in study_values:
             self.input_text(i[0], i[1], env, UnivWaitFor=10)
-            # self.LogScreenshot.fLogScreenshot(message=f'Enter value for: {i[0]}',
-            #                                   pass_=True, log=True, screenshot=False)
 
         ele = self.select_element("reference_dropdown", env)
         select = Select(ele)
         select.select_by_index(1)
         # Adding dropdown value to expected values list as we are selecting the dropdown with index
         expected_val.append(select.first_selected_option.text)
-        self.LogScreenshot.fLogScreenshot(message=f'Expected values are: {expected_val}',
+        self.LogScreenshot.fLogScreenshot(message=f"Expected Study values are: {expected_val}",
                                           pass_=True, log=True, screenshot=False)
-        # select.select_by_visible_text("Lenalidomide")
-        # self.LogScreenshot.fLogScreenshot(message=f'Dropdown value is: {ele.text}\n'
-        #                                           f'Dropdown ele value is: {select.first_selected_option.text}',
-        #                                   pass_=True, log=True, screenshot=False)
+        
+        self.LogScreenshot.fLogScreenshot(message=f"Entered User Study Values are : ",
+                                          pass_=True, log=True, screenshot=True)  
         self.click(add_button, env)
-        # options_list = select.options
-        # for i in options_list:
-        #     self.LogScreenshot.fLogScreenshot(message=f'DropDown Value is {i.text}',
-        #                                       pass_=True, log=True, screenshot=False)
-        # Fetching total rows count after adding study data
+
         table_rows_after = self.select_elements(trows_locator, env)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new study: {len(table_rows_after)}',
+        self.LogScreenshot.fLogScreenshot(message=f"Table length after adding a new study: {len(table_rows_after)}",
                                           pass_=True, log=True, screenshot=False)
 
         try:
@@ -184,11 +177,70 @@ class LiveNMA(Base):
                         raise Exception("Wrong values entered")
 
                 if self.clickable(network_loc, env):
-                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is clickable',
+                    self.LogScreenshot.fLogScreenshot(message=f"Show Network Button is clickable",
                                                       pass_=True, log=True, screenshot=False)
                     self.click(network_loc, env)
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Show Network Button is not clickable',
+                    self.LogScreenshot.fLogScreenshot(message=f"Show Network Button is not clickable",
                                                       pass_=False, log=True, screenshot=False)
+                    raise Exception("Show Network Button is not clickable")
+                
+                self.presence_of_element("network_section", env)
+                if self.isdisplayed("network_section", env, UnivWaitFor=30):
+                    self.LogScreenshot.fLogScreenshot(message=f"'Network Section' is displayed",
+                                              pass_=True, log=True, screenshot=True)
+                    
+                    panel_ele = self.select_elements("network_panel_txt", env)
+                    panel_txt = [m.text for m in panel_ele]
+                    self.LogScreenshot.fLogScreenshot(message=f"Panel text from Network section is '{panel_txt}'",
+                                              pass_=True, log=True, screenshot=True)
+
+                    if self.clickable("run_nma", env):
+                        self.LogScreenshot.fLogScreenshot(message=f"Run NMA Button is clickable",
+                                                        pass_=True, log=True, screenshot=False)
+                        self.click("run_nma", env)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Run NMA Button is not clickable",
+                                                        pass_=False, log=True, screenshot=False)
+                        raise Exception("Run NMA Button is not clickable")
+                    
+                    if self.isdisplayed("result_forestplot", env, UnivWaitFor=30):
+                        self.LogScreenshot.fLogScreenshot(message=f"'Forest plot' is displayed in Result section.",
+                                                    pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"'Forest plot' is not displayed in Result section.",
+                                                    pass_=False, log=True, screenshot=True)
+                        raise Exception("'Forest plot' is not displayed in Result section.")
+
+                    if self.isdisplayed("result_userstudy", env, UnivWaitFor=30):
+                        self.LogScreenshot.fLogScreenshot(message=f"'User Study' is displayed in Result section.",
+                                                    pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"'User Study' is not displayed in Result section.",
+                                                    pass_=False, log=True, screenshot=True)
+                        raise Exception("'User Study' is not displayed in Result section.")
+
+                    if self.isdisplayed("result_network", env, UnivWaitFor=30):
+                        self.LogScreenshot.fLogScreenshot(message=f"'Network' is displayed in Result section.",
+                                                    pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"'Network' is not displayed in Result section.",
+                                                    pass_=False, log=True, screenshot=True)
+                        raise Exception("'Network' is not displayed in Result section.")
+
+                    if self.clickable("print_screen", env):
+                        self.LogScreenshot.fLogScreenshot(message=f"Print Screen Button is clickable",
+                                                        pass_=True, log=True, screenshot=False)
+                        self.scroll("print_screen", env)
+                        self.LogScreenshot.fLogScreenshot(message=f"Print Screen Details : ",
+                                                        pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Print Screen Button is not clickable",
+                                                        pass_=False, log=True, screenshot=False)
+                        raise Exception("Print Screen Button is not clickable")
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"'Network Section' is not displayed",
+                                              pass_=False, log=True, screenshot=True)
+                    raise Exception("'Network Section' is not displayed")
         except Exception:
             raise Exception("Failed in adding new study data to table")

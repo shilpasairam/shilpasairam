@@ -106,12 +106,12 @@ class UtilityOutcome(Base):
                 self.LogScreenshot.fLogScreenshot(message=f"Correct file is downloaded",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. "
-                                                          f"Expected Filenames are {expectedname} and "
-                                                          f"Actual Filename is {actualname}",
-                                                  pass_=False, log=True, screenshot=False)
+                raise Exception
         except Exception:
-            raise Exception("Error during filename validation")
+            self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
+                                                      f"Filenames are {expectedname} and Actual "
+                                                      f"Filename is {actualname}",
+                                                      pass_=False, log=True, screenshot=False)
 
     def qol_presenceof_utilitysummary_into_excelreport(self, excel_filename, util_filepath):
         source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
@@ -797,8 +797,6 @@ class UtilityOutcome(Base):
         self.slrreport.select_data(f"{pop_list[0][0]}", f"{pop_list[0][1]}", env)
         self.slrreport.select_data(slrtype[0][0], f"{slrtype[0][1]}", env)
         self.slrreport.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.slrreport.getFilenameAndValidate(180)
         excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         self.validate_filename(excel_filename, util_filepath, "prodfix")
 
