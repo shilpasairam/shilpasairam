@@ -16,7 +16,8 @@ SLRPAGE,SLR_Population,XPATH,//*[text()='1. Select SLR Project'],//*[text()='1. 
 SLRPAGE,slr_pop_panel_eles,XPATH,//div[@id='collapse01']/div/div,
 SLRPAGE,SLR_Type,XPATH,//*[text()='2. Select Type of SLR'],
 SLRPAGE,slr_type_panel_eles,XPATH,//div[@id='collapse02']/div/div,
-SLRPAGE,Data_Report,XPATH,//*[text()='3. Select Category(ies) to View'],//*[text()='3. Select Data to Report']
+SLRPAGE,Category_view,XPATH,//*[text()='3. Select Category(ies) to View'],//*[text()='3. Select Data to Report']
+SLRPAGE,cat_view_eles,XPATH,//div[@id='collapse03']/div[2]/div/div/label,
 SLRPAGE,NMA_Button,XPATH,//button[@type='button' and text()='Select Data for NMA'],
 SLRPAGE,NMA_parameters_list_clinical,XPATH,"//label[contains(text(), 'Clinical SLR')]",
 SLRPAGE,Preview_Button,XPATH,//button[text()='Preview Results (0)'],
@@ -56,6 +57,8 @@ Population,NewImportLogic_3 - Test_Automation_3,XPATH,//input[@type='radio' and 
 Population,NewImportLogic_3 - Test_Automation_3_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=602],
 Population,QOL_and_ECON - UtilityOutcome,XPATH,//input[@type='radio' and @name='populationFilters' and @value=603]/following::span[1],
 Population,QOL_and_ECON - UtilityOutcome_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=603],
+Population,LIVEHTA Automation - Test_NonOncology_Automation_1,XPATH,//input[@type='radio' and @name='populationFilters' and @value=431]/following::span[1],
+Population,LIVEHTA Automation - Test_NonOncology_Automation_1_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=431],
 Population,LIVEHTA Automation - Test_NonOncology_Automation_2,XPATH,//input[@type='radio' and @name='populationFilters' and @value=471]/following::span[1],
 Population,LIVEHTA Automation - Test_NonOncology_Automation_2_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=471],
 SLRType,slrtype_first_option_text,XPATH,//label[text()='Clinical '],

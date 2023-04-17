@@ -1577,6 +1577,65 @@ class SLRReport(Base):
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
 
+    def validate_presence_of_ep_details_in_liveslr_page(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is started***",
+                                     pass_=True, log=True, screenshot=False)
+
+        # Read expected categoris from data sheet
+        expected_cats = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Expected_Categories')       
+
+        # Read population data values
+        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        # Read slrtype data values
+        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
+
+        # Read extraction file path
+        extraction_file = self.exbase.get_template_file_details(filepath, locatorname, 'Files_to_upload')
+
+        # Check the Endpoint details in extraction template
+        template_data = openpyxl.load_workbook(f'{extraction_file}')
+        template_sheet = template_data['Extraction sheet upload']
+
+        ep_abbr_from_extraction_file = [template_sheet['AO2'].value, template_sheet['BM2'].value, template_sheet['CR2'].value]
+
+        self.refreshpage()
+        self.presence_of_admin_page_option("importpublications_button", env)
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.upload_file_with_success(locatorname, filepath, env)
+
+        self.go_to_page("SLR_Homepage", env)
+        self.select_data(pop_list[0][0], pop_list[0][1], env)
+        self.select_data(slrtype[0][0], slrtype[0][1], env)
+        
+        actual_cats = [i.text for i in self.select_elements('cat_view_eles', env)]      
+
+        for j in ep_abbr_from_extraction_file:
+            if j in actual_cats:
+                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is matching with details present under Select Category(ies) to View section in UI",
+                                                pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is not matching with details present under Select Category(ies) to View section in UI",
+                                                pass_=False, log=True, screenshot=True)
+                raise Exception(f"Endpoint '{j}' is not matching with details present under Select Category(ies) to View section in UI")
+        
+        cats_comparison = self.exbase.list_comparison_between_reports_data(expected_cats, actual_cats)
+
+        if len(cats_comparison) == 0:
+            self.LogScreenshot.fLogScreenshot(message=f"Endpoint details are present in 'Select Category(ies) to View' as expected with other filters",
+                                                pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Endpoint Details. Mismatch values are arranged in "
+                                                        f"following order -> Expected Error Message, "
+                                                        f"Actual Error Message. {cats_comparison}",
+                                                pass_=False, log=True, screenshot=True)
+            raise Exception(f"Mismatch found in Endpont Details.")
+
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is completed***",
+                                     pass_=True, log=True, screenshot=False)        
+
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
