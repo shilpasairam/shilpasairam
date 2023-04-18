@@ -4,7 +4,7 @@ parameters:
 - name: testcase
   displayName: Test Case Name
   type: object
-  default: ''
+  default:
 steps:
 - task: CopyFiles@2
   displayName: 'Copy Files: To Build Binaries Directory'
