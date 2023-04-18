@@ -36,10 +36,6 @@ steps:
     testResultsFormat: NUnit
     searchFolder: '$(Build.BinariesDirectory)'
     testRunTitle: 'Py Result'
-- task: publishhtmlreport@1
-  inputs:
-    htmlType: 'genericHTML'
-    htmlPath: '$(Build.BinariesDirectory)/Reports/*.html'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: test-automation'
