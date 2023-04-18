@@ -9,7 +9,10 @@ parameters:
 - name: env
   displayName: Environment
   type: string
-  default: ''
+  values:
+    - 'test'
+    - 'staging'
+    - 'production'
 
 steps:
 - task: CopyFiles@2
