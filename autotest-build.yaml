@@ -3,8 +3,8 @@ pool:
 parameters:
 - name: testcase
   displayName: Test Case Name
-  type: object
-  default: ""
+  type: string
+  default: ''
 
 steps:
 - task: CopyFiles@2
