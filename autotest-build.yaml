@@ -3,7 +3,11 @@ pool:
 
 parameters:
 - name: testcase
-  displayName: Test Case Name
+  displayName: Test Case ID
+  type: string
+  default: ''
+- name: env
+  displayName: Environment
   type: string
   default: ''
 
@@ -25,7 +29,7 @@ steps:
    cd $(Build.BinariesDirectory)\
    dir
    python -m pip install -r requirements.txt
-   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="test"
+   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="${{ parameters.env }}"
    
    echo "FETCH LOG FILE - DISPLAY CONTENT"
    cd $(Build.BinariesDirectory)\logs\
