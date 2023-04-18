@@ -37,7 +37,7 @@ class Test_LiveSLRPageElements:
             base.go_to_page("SLR_Homepage", env)
             base.presence_of_element("SLR_Population", env)
             base.presence_of_element("SLR_Type", env)
-            base.presence_of_element("Data_Report", env)
+            base.presence_of_element("Category_view", env)
             base.presence_of_element("NMA_Button", env)
             base.presence_of_element("Preview_Button", env)
             LogScreenshot.fLogScreenshot(message=f"Elements are present in LiveSLR Page",

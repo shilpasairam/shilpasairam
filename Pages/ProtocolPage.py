@@ -444,7 +444,7 @@ class ProtocolPage(Base):
                 self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env)
 
                 self.jsclick("searchstrategy_upload_btn", env)
-                # time.sleep(2)
+                time.sleep(2)
 
                 actual_error_text = self.get_status_text("searchstrategy_status_text", env)
                 # time.sleep(2)
