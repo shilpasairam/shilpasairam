@@ -1,5 +1,5 @@
 pool:
-  name: cyt-vs2019-eastus
+  name: cyt-solaris-eastus
 
 parameters:
 - name: testcase
