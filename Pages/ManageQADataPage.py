@@ -395,9 +395,6 @@ class ManageQADataPage(Base):
                 self.slrreport.select_data(f"{pop_name[0]}", f"{pop_name[0]}_radio_button", env)
                 self.slrreport.select_data(i[0], f"{i[0]}_radio_button", env)
                 self.slrreport.generate_download_report("excel_report", env)
-                # time.sleep(5)
-                # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                 excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
                 excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')

@@ -34,24 +34,6 @@ class ManagePopulationsPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    # def go_to_managepopulations(self, locator, env):
-    #     self.click(locator, env, UnivWaitFor=10)
-    #     time.sleep(5)
-
-    # def get_template_file_details(self, filepath):
-    #     file = pd.read_excel(filepath)
-    #     sheet_name = list(file['manage_population_file_name'].dropna())
-    #     sheet_path = list(os.getcwd()+file['manage_population_file_to_upload'].dropna())
-    #     manage_pop_template = [(sheet_name[i], sheet_path[i]) for i in range(0, len(sheet_name))]
-    #     return manage_pop_template
-    
-    # def get_pop_data(self, filepath):
-    #     file = pd.read_excel(filepath)
-    #     data = list(file['Add_population_field'].dropna())
-    #     value = list(file['Add_population_value'].dropna())
-    #     result = [(data[i], value[i]) for i in range(0, len(data))]
-    #     return result, value
-
     def get_template_file_details(self, filepath, locatorname, column_name):
         df = pd.read_excel(filepath)
         upload_sheet_path = os.getcwd()+(df.loc[df['Name'] == locatorname][column_name].to_list()[0])
@@ -669,16 +651,15 @@ class ManagePopulationsPage(Base):
                 td1 = self.select_elements('manage_pop_table_row_1', env)
                 for m in td1:
                     result.append(m.text)
-
-                self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
-                                                  pass_=True, log=True, screenshot=False)
                 
                 if result[0] == f'{pop_locs[0][1]}' and result[3] == f'{pop_locs[1][1]}':
-                    self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
-                                                      pass_=True, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f"Population data is present in table. Population detais are: {result}",
+                                                      pass_=True, log=True, screenshot=True)
                     population = f"{result[0]}"
                     return population, template_name
                 else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Population data is not present in table. Population detais are: {result}",
+                                                      pass_=False, log=True, screenshot=True)                    
                     raise Exception("Population data is not added")
             self.clear("search_button", env)
             self.refreshpage()
@@ -874,13 +855,10 @@ class ManagePopulationsPage(Base):
             td1 = self.select_elements('manage_pop_table_row_1', env)
             for m in td1:
                 result.append(m.text)
-
-            self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the existing Non-Oncology population: '
-                                                      f'{result}', pass_=True, log=True, screenshot=False)
             
             if result[0] == f'{pop_locs[0][1]}' and result[3] == f'{pop_locs[1][1]}':
-                self.LogScreenshot.fLogScreenshot(message=f'Edited Non-Oncology Population data is present in table',
-                                                  pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology Population data is present in table. Edited population details are: {result}",
+                                                  pass_=True, log=True, screenshot=True)
                 population = f"{result[0]}"
                 return population
             

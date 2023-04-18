@@ -349,9 +349,7 @@ class SLRReport(Base):
                                                   pass_=True, log=True, screenshot=False)
                 return filename
             else:
-                self.LogScreenshot.fLogScreenshot(message=f" Downloaded Filename is {filename}, Expectedname is "
-                                                          f"{expectedname}",
-                                                  pass_=False, log=True, screenshot=False)                
+                raise Exception
         except Exception:
             self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
                                                       f"Filenames are {expectedname} and Actual "
@@ -1090,12 +1088,11 @@ class SLRReport(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception(f"Static text '{row_23}' has not been added.")                                            
 
-    def test_interventional_to_clinical_changes(self, filepath, env):
+    def test_interventional_to_clinical_changes(self, filepath, pop_list, env):
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
-        self.select_data("NewImportLogic_1 - Test_Automation_1", "NewImportLogic_1 - Test_Automation_1_radio_button",
-                         env)
+        self.select_data(pop_list[0][0], pop_list[0][1], env)
         time.sleep(1)
         type_of_slr_text = self.get_text("slrtype_first_option_text", env)
         self.select_data("Clinical", "Clinical_radio_button", env)
@@ -1104,24 +1101,15 @@ class SLRReport(Base):
         nma_param_clinical_list = self.get_text("NMA_parameters_list_clinical", env)
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
         self.generate_download_report("word_report", env)
-        # time.sleep(5)
-        # word_filename1 = self.slrreport.getFilenameAndValidate(180)
-        # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
         word_filename = self.get_and_validate_filename(filepath)
 
         self.preview_result("preview_results", env)
         self.table_display_check("Table", env)
         web_table_title = self.get_text("web_table_title", env)
         self.generate_download_report("Export_as_excel", env)
-        # time.sleep(5)
-        # webexcel_filename = self.getFilenameAndValidate(180)
-        # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
         webexcel_filename = self.get_and_validate_filename(filepath)
         self.back_to_report_page("Back_to_search_page", env)
 
@@ -1588,6 +1576,65 @@ class SLRReport(Base):
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
+
+    def validate_presence_of_ep_details_in_liveslr_page(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is started***",
+                                     pass_=True, log=True, screenshot=False)
+
+        # Read expected categoris from data sheet
+        expected_cats = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Expected_Categories')       
+
+        # Read population data values
+        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        # Read slrtype data values
+        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
+
+        # Read extraction file path
+        extraction_file = self.exbase.get_template_file_details(filepath, locatorname, 'Files_to_upload')
+
+        # Check the Endpoint details in extraction template
+        template_data = openpyxl.load_workbook(f'{extraction_file}')
+        template_sheet = template_data['Extraction sheet upload']
+
+        ep_abbr_from_extraction_file = [template_sheet['AO2'].value, template_sheet['BM2'].value, template_sheet['CR2'].value]
+
+        self.refreshpage()
+        self.presence_of_admin_page_option("importpublications_button", env)
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.upload_file_with_success(locatorname, filepath, env)
+
+        self.go_to_page("SLR_Homepage", env)
+        self.select_data(pop_list[0][0], pop_list[0][1], env)
+        self.select_data(slrtype[0][0], slrtype[0][1], env)
+        
+        actual_cats = [i.text for i in self.select_elements('cat_view_eles', env)]      
+
+        for j in ep_abbr_from_extraction_file:
+            if j in actual_cats:
+                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is matching with details present under Select Category(ies) to View section in UI",
+                                                pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is not matching with details present under Select Category(ies) to View section in UI",
+                                                pass_=False, log=True, screenshot=True)
+                raise Exception(f"Endpoint '{j}' is not matching with details present under Select Category(ies) to View section in UI")
+        
+        cats_comparison = self.exbase.list_comparison_between_reports_data(expected_cats, actual_cats)
+
+        if len(cats_comparison) == 0:
+            self.LogScreenshot.fLogScreenshot(message=f"Endpoint details are present in 'Select Category(ies) to View' as expected with other filters",
+                                                pass_=True, log=True, screenshot=True)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Endpoint Details. Mismatch values are arranged in "
+                                                        f"following order -> Expected Error Message, "
+                                                        f"Actual Error Message. {cats_comparison}",
+                                                pass_=False, log=True, screenshot=True)
+            raise Exception(f"Mismatch found in Endpont Details.")
+
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is completed***",
+                                     pass_=True, log=True, screenshot=False)        
 
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):

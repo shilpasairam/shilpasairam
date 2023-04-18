@@ -3,6 +3,8 @@ import time
 
 import pytest
 from Pages.Base import Base
+from Pages.ExtendedBasePage import ExtendedBase
+from Pages.ImportPublicationsPage import ImportPublicationPage
 
 from Pages.LoginPage import LoginPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
@@ -204,6 +206,10 @@ class Test_SLR_Custom_Report:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
+        # Creating object of liveslrpage class
+        liveslrpage = LiveSLRPage(self.driver, extra)
+        # Read population data values
+        pop_list = liveslrpage.get_population_data(filepath)
 
         request.node._tcid = caseid
         request.node._title = "Validate label format changes -> From Interventional to Clinical"
@@ -211,7 +217,7 @@ class Test_SLR_Custom_Report:
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         try:
-            slrreport.test_interventional_to_clinical_changes(filepath, env)
+            slrreport.test_interventional_to_clinical_changes(filepath, pop_list, env)
         except Exception:
             raise Exception("Unable to select element")
 
@@ -254,3 +260,38 @@ class Test_SLR_Custom_Report:
                 slrreport.validate_control_chars_in_wordreport(self.testdata_931, i, env)
             except Exception:
                 raise Exception("Unable to select element")
+
+    @pytest.mark.C37775
+    def test_nononcology_validate_ep_details_liveslr_page(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology Import Tool - Validate presence of Endpoint Details in LiveSLR -> Select Category(ies) to View section"
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononcology_liveslr_data")
+
+        pop_list = ['scenario1']
+
+        for index, i in enumerate(pop_list):
+            try:
+                slrreport.validate_presence_of_ep_details_in_liveslr_page(i, filepath, env)
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
