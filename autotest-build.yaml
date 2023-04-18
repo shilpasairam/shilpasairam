@@ -1,5 +1,10 @@
 pool:
   name: cyt-vs2019-eastus
+parameters:
+- name: testcase
+  displayName: Test Case Name
+  type: object
+  default: ''
 steps:
 - task: CopyFiles@2
   displayName: 'Copy Files: To Build Binaries Directory'
@@ -18,7 +23,7 @@ steps:
    cd $(Build.BinariesDirectory)\
    dir
    python -m pip install -r requirements.txt
-   python -m pytest -v -m C29642 --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="test"
+   python -m pytest -v -m ${{ testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="test"
    
    echo "FETCH LOG FILE - DISPLAY CONTENT"
    cd $(Build.BinariesDirectory)\logs\
@@ -39,5 +44,5 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: test-automation'
   inputs:
-    PathtoPublish: '$(Build.BinariesDirectory)/C29642_results.zip'
+    PathtoPublish: '$(Build.BinariesDirectory)/${{ testcase }}_results.zip'
     ArtifactName: 'test-automation'
