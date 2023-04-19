@@ -1,0 +1,53 @@
+pool:
+  name: cyt-vs2019-eastus
+
+parameters:
+- name: testcase
+  displayName: Test Case ID
+  type: string
+  default: ''
+- name: env
+  displayName: Environment
+  type: string
+  values:
+    - 'test'
+    - 'staging'
+    - 'production'
+
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Files: To Build Binaries Directory'
+  inputs:
+    TargetFolder: '$(Build.BinariesDirectory)'
+    CleanTargetFolder: true
+
+- task: DeleteFiles@1
+  displayName: 'Delete files from $(Build.BinariesDirectory)'
+  inputs:
+    SourceFolder: '$(Build.BinariesDirectory)'
+    Contents: README.md
+    RemoveDotFiles: true
+
+- script: |
+   cd $(Build.BinariesDirectory)\
+   dir
+   python -m pip install -r requirements.txt
+   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="${{ parameters.env }}"
+   
+   echo "FETCH LOG FILE - DISPLAY CONTENT"
+   cd $(Build.BinariesDirectory)\logs\
+   type testlog.log
+  displayName: 'Command Line Script'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Results'
+  inputs:
+    testResultsFormat: NUnit
+    searchFolder: '$(Build.BinariesDirectory)'
+    testRunTitle: 'Py Result'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: test-automation'
+  inputs:
+    PathtoPublish: '$(Build.BinariesDirectory)/${{ parameters.testcase }}_results.zip'
+    ArtifactName: 'test-automation'
