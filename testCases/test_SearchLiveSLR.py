@@ -14,7 +14,7 @@ from utilities.logScreenshot import cLogScreenshot
 
 
 @pytest.mark.usefixtures("init_driver")
-class Test_SLR_Custom_Report:
+class Test_Search_LiveSLR:
     # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
@@ -279,7 +279,8 @@ class Test_SLR_Custom_Report:
         slrreport = SLRReport(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology Import Tool - Validate presence of Endpoint Details in LiveSLR -> Select Category(ies) to View section"
+        request.node._title = "Non-Oncology Import Tool - Validate presence of Endpoint Details in LiveSLR -> Select " \
+                              "Category(ies) to View section "
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -291,6 +292,41 @@ class Test_SLR_Custom_Report:
         for index, i in enumerate(pop_list):
             try:
                 slrreport.validate_presence_of_ep_details_in_liveslr_page(i, filepath, env)
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+
+    @pytest.mark.C35127
+    @pytest.mark.C35150
+    def test_nononcology_validate_uniquestudies_liveslr_page(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology Import Tool - Validate presence of Unique Studies for Project Level and " \
+                              "SLR Type Level in Search LiveSLR page "
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononcology_liveslr_data")
+
+        pop_list = ['scenario1']
+
+        for index, i in enumerate(pop_list):
+            try:
+                slrreport.validate_presence_of_uniquestudies_in_liveslr_page(i, filepath, env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
                                              pass_=False, log=True, screenshot=True)

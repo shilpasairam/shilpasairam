@@ -653,12 +653,14 @@ class ManagePopulationsPage(Base):
                     result.append(m.text)
                 
                 if result[0] == f'{pop_locs[0][1]}' and result[3] == f'{pop_locs[1][1]}':
-                    self.LogScreenshot.fLogScreenshot(message=f"Population data is present in table. Population detais are: {result}",
+                    self.LogScreenshot.fLogScreenshot(message=f"Population data is present in table. Population "
+                                                              f"detais are: {result}",
                                                       pass_=True, log=True, screenshot=True)
                     population = f"{result[0]}"
                     return population, template_name
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Population data is not present in table. Population detais are: {result}",
+                    self.LogScreenshot.fLogScreenshot(message=f"Population data is not present in table. Population "
+                                                              f"detais are: {result}",
                                                       pass_=False, log=True, screenshot=True)                    
                     raise Exception("Population data is not added")
             self.clear("search_button", env)
@@ -857,7 +859,8 @@ class ManagePopulationsPage(Base):
                 result.append(m.text)
             
             if result[0] == f'{pop_locs[0][1]}' and result[3] == f'{pop_locs[1][1]}':
-                self.LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology Population data is present in table. Edited population details are: {result}",
+                self.LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology Population data is present in table. "
+                                                          f"Edited population details are: {result}",
                                                   pass_=True, log=True, screenshot=True)
                 population = f"{result[0]}"
                 return population
@@ -994,7 +997,7 @@ class ManagePopulationsPage(Base):
 
         # Read required population and endpoint details
         testdata = self.exbase.get_triple_col_data(filepath, locatorname, 'Sheet1', 'population_name',
-                                                   'indication_type', 'endpoints')
+                                                   'indication_type', 'endpoints', nafilter=False)
 
         for i in testdata:
             col_name = []
