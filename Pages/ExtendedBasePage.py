@@ -93,8 +93,8 @@ class ExtendedBase(Base):
         return result
 
     # Reading 3 columns data at once using locatorname and column names
-    def get_triple_col_data(self, filepath, locatorname, sheet, col1, col2, col3):
-        df = pd.read_excel(filepath, sheet_name=sheet, na_filter=False)
+    def get_triple_col_data(self, filepath, locatorname, sheet, col1, col2, col3, nafilter=True):
+        df = pd.read_excel(filepath, sheet_name=sheet, na_filter=nafilter)
         data1 = df.loc[df['Name'] == locatorname][col1].dropna().to_list()
         data2 = df.loc[df['Name'] == locatorname][col2].dropna().to_list()
         data3 = df.loc[df['Name'] == locatorname][col3].dropna().to_list()

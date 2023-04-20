@@ -1578,8 +1578,8 @@ class SLRReport(Base):
         self.go_to_page("SLR_Homepage", env)
 
     def validate_presence_of_ep_details_in_liveslr_page(self, locatorname, filepath, env):
-        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is started***",
-                                     pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is "
+                                                  f"started***", pass_=True, log=True, screenshot=False)
 
         # Read expected categoris from data sheet
         expected_cats = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Expected_Categories')       
@@ -1596,7 +1596,8 @@ class SLRReport(Base):
         template_data = openpyxl.load_workbook(f'{extraction_file}')
         template_sheet = template_data['Extraction sheet upload']
 
-        ep_abbr_from_extraction_file = [template_sheet['AO2'].value, template_sheet['BM2'].value, template_sheet['CR2'].value]
+        ep_abbr_from_extraction_file = [template_sheet['AO2'].value, template_sheet['BM2'].value,
+                                        template_sheet['CR2'].value]
 
         self.refreshpage()
         self.presence_of_admin_page_option("importpublications_button", env)
@@ -1611,30 +1612,144 @@ class SLRReport(Base):
 
         for j in ep_abbr_from_extraction_file:
             if j in actual_cats:
-                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is matching with details present under Select Category(ies) to View section in UI",
-                                                pass_=True, log=True, screenshot=True)
+                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is matching with details present under "
+                                                          f"Select Category(ies) to View section in UI",
+                                                  pass_=True, log=True, screenshot=True)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is not matching with details present under Select Category(ies) to View section in UI",
-                                                pass_=False, log=True, screenshot=True)
-                raise Exception(f"Endpoint '{j}' is not matching with details present under Select Category(ies) to View section in UI")
+                self.LogScreenshot.fLogScreenshot(message=f"Endpoint '{j}' is not matching with details present under "
+                                                          f"Select Category(ies) to View section in UI",
+                                                  pass_=False, log=True, screenshot=True)
+                raise Exception(f"Endpoint '{j}' is not matching with details present under Select Category(ies) to "
+                                f"View section in UI")
         
         cats_comparison = self.exbase.list_comparison_between_reports_data(expected_cats, actual_cats)
 
         if len(cats_comparison) == 0:
-            self.LogScreenshot.fLogScreenshot(message=f"Endpoint details are present in 'Select Category(ies) to View' as expected with other filters",
-                                                pass_=True, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Endpoint details are present in 'Select Category(ies) to "
+                                                      f"View' as expected with other filters",
+                                              pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Endpoint Details. Mismatch values are arranged in "
-                                                        f"following order -> Expected Error Message, "
-                                                        f"Actual Error Message. {cats_comparison}",
-                                                pass_=False, log=True, screenshot=True)
+            self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Endpoint Details. Mismatch values are "
+                                                      f"arranged in following order -> Expected Error Message, "
+                                                      f"Actual Error Message. {cats_comparison}",
+                                              pass_=False, log=True, screenshot=True)
             raise Exception(f"Mismatch found in Endpont Details.")
 
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
         self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is completed***",
-                                     pass_=True, log=True, screenshot=False)        
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details in LiveSLR page is "
+                                                  f"completed***", pass_=True, log=True, screenshot=False)
+
+    def validate_presence_of_uniquestudies_in_liveslr_page(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Unique Studies for Project Level and "
+                                                  f"SLR Type Level in LiveSLR page is started***",
+                                          pass_=True, log=True, screenshot=False)
+
+        # Read population data values
+        pop_list = self.exbase.get_triple_col_data(filepath, locatorname, 'Sheet1', 'Population',
+                                                   'Population_Radio_button', 'Population_stdyno')
+        # Read slrtype data values
+        slrtype = self.exbase.get_triple_col_data(filepath, locatorname, 'Sheet1', 'slrtype', 'slrtype_Radio_button',
+                                                  'slrtype_stdyno')
+
+        # Read extraction file path
+        extraction_file = self.exbase.get_template_file_details(filepath, locatorname, 'Files_to_upload')
+
+        extraction_file_data = pd.read_excel(f'{extraction_file}', sheet_name='Extraction sheet upload', skiprows=4)
+
+        self.refreshpage()
+        self.presence_of_admin_page_option("importpublications_button", env)
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.upload_file_with_success(locatorname, filepath, env)
+
+        self.go_to_page("SLR_Homepage", env)       
+
+        for i in pop_list:
+            pop_slrstdy_no = self.get_text(i[2], env)
+            self.select_data(i[0], i[1], env)            
+            for index, j in enumerate(slrtype):
+                slr_slrstdy_no = self.get_text(j[2], env)
+                self.select_data(j[0], j[1], env)               
+        
+                # As there is extra data in row number 6, 7, 8 so we are filtering it out based on all the SLR types
+                # to get the total Study count at the project level
+                filtered_extraction_file_data = extraction_file_data.query('`SLR Type`.str.startswith("Clinical") | '
+                                                                           '`SLR Type`.str.startswith("Quality of '
+                                                                           'Life") | `SLR Type`.str.startswith('
+                                                                           '"Economic") | `SLR Type`.str.startswith('
+                                                                           '"Real-world Evidence").values')
+                # With the help of above filtered data, we are getting Unique Study count based on Project level
+                project_level_stdy_cnt = filtered_extraction_file_data["LiveSLR Study ID"]
+                project_level_stdy_cnt_final = []
+                # Removing the duplicates
+                [project_level_stdy_cnt_final.append(x) for x in list(flatten(project_level_stdy_cnt))
+                 if x not in project_level_stdy_cnt_final]
+                
+                # Get Unique Study ID based on SLR Type
+                col_val = extraction_file_data[extraction_file_data["SLR Type"] == j[0]]
+                slr_level_stdy_cnt = col_val["LiveSLR Study ID"]
+                slr_level_stdy_cnt = [item for item in slr_level_stdy_cnt if str(item) != 'nan']
+                slr_level_stdy_cnt_final = []
+                # Removing the duplicates
+                [slr_level_stdy_cnt_final.append(x) for x in list(flatten(slr_level_stdy_cnt))
+                 if x not in slr_level_stdy_cnt_final]
+
+                # Comparison for Unique Study Number
+                if int(pop_slrstdy_no) == len(project_level_stdy_cnt_final):
+                    self.LogScreenshot.fLogScreenshot(message=f"For '{i[0]}' Project -> Study Number is matching with "
+                                                              f"the total number of unique records uploaded from the "
+                                                              f"extraction file. Count for '{i[0]}' Project is '"
+                                                              f"{len(project_level_stdy_cnt_final)}'",
+                                                      pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"For '{i[0]}' Project -> Study Number is not matching "
+                                                              f"with the total number of unique records uploaded from "
+                                                              f"the extraction file. For '{i[0]}' Project -> Count "
+                                                              f"displayed in UI is '"
+                                                              f"{len(project_level_stdy_cnt_final)}' and Number of "
+                                                              f"Unique records uploaded for '{i[0]}' Project is '"
+                                                              f"{pop_slrstdy_no}'",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"For '{i[0]}' Project -> Study Number is not matching with the total number of "
+                                    f"unique records uploaded from the extraction file")
+
+                if int(slr_slrstdy_no) == len(slr_level_stdy_cnt_final):
+                    self.LogScreenshot.fLogScreenshot(message=f"For '{j[0]}' SLR Type -> Study Number is matching "
+                                                              f"with the total number of unique records uploaded from "
+                                                              f"the extraction file. Count for '{j[0]}' SLR Type is "
+                                                              f"'{len(slr_level_stdy_cnt_final)}'",
+                                                      pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"For '{j[0]}' SLR Type -> Study Number is not matching "
+                                                              f"with the total number of unique records uploaded from "
+                                                              f"the extraction file. For '{j[0]}' SLR Type -> Count "
+                                                              f"displayed in UI is '{len(slr_level_stdy_cnt_final)}' "
+                                                              f"and Number of Unique records uploaded for '{j[0]}' "
+                                                              f"SLR Type is '{slr_slrstdy_no}'",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"For '{j[0]}' SLR Type -> Study Number is not matching with the total number of "
+                                    f"unique records uploaded from the extraction file")
+
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+
+        self.go_to_page("SLR_Homepage", env)
+        for x in pop_list: 
+            # Check absence of Project after deleting the extraction file
+            if not self.isvisible(x[0], env, x[0]):
+                self.LogScreenshot.fLogScreenshot(message=f"Project '{x[0]}' is not visible in Search LiveSLR page as "
+                                                          f"expected after deleting the extraction file.",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Project '{x[0]}' is visible in Search LiveSLR page after "
+                                                          f"deleting the extraction file.",
+                                                  pass_=False, log=True, screenshot=False)
+                raise Exception(f"Project '{x[0]}' is visible in Search LiveSLR page")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Unique Studies for Project Level and "
+                                                  f"SLR Type Level in LiveSLR page is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
