@@ -169,7 +169,7 @@ class ImportPublicationPage(Base):
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Error during Extraction File Deletion")
 
-                # Fetching total rows count before deleting a file from top of the table
+                # Fetching total rows count after deleting a file from top of the table
                 table_rows_after = self.select_elements(tablerows, env)
                 self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: '
                                                           f'{len(table_rows_after)}',
@@ -177,12 +177,12 @@ class ImportPublicationPage(Base):
 
                 try:
                     if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
-                        self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
+                        self.LogScreenshot.fLogScreenshot(message=f"Record count is decremented after deleting the extraction file.",
                                                           pass_=True, log=True, screenshot=False)
                 except Exception:
-                    self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not decremented after deleting the extraction file.",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception("Error in deleting the imported file")
+                    raise Exception(f"Record count is not decremented after deleting the extraction file.")
             else:
                 raise Exception("No file uploaded to perform delete operation")
 
@@ -349,6 +349,8 @@ class ImportPublicationPage(Base):
                                                   pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the extraction file.",
+                                                          pass_=True, log=True, screenshot=False)
                     result = []
                     td1 = self.select_elements('upload_table_row_1', env)
                     for m in td1:
@@ -360,6 +362,10 @@ class ImportPublicationPage(Base):
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         raise Exception("Wrong file is uploaded")
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not incremented after uploading the extraction file.",
+                                                          pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Record count is not incremented after uploading the extraction file.")
 
                 # Validating the upload status icon
                 time.sleep(10)
