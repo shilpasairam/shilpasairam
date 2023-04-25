@@ -418,6 +418,12 @@ class ImportPublicationPage(Base):
                                                               f"upload extraction file for existing population with "
                                                               f"same update as expected.",
                                                       pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"*****Hence Performing the delete operation for the "
+                                                              f"successfully uploaded record and trying to re-upload "
+                                                              f"the extraction for the same population.*****",
+                                                      pass_=True, log=True, screenshot=False)
+                    self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+                    self.upload_file_with_success(locatorname, filepath, env)
                 else:
                     self.jsclick("upload_button", env)
                     time.sleep(2)

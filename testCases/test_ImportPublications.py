@@ -239,8 +239,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate No duplicate uploads have been made for the same update in the same Oncology " \
-                              "population "
+        request.node._title = "Oncology Import Tool - Validate No duplicate uploads have been made for the same " \
+                              "update in the same Oncology population "
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
