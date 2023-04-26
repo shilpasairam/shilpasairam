@@ -169,7 +169,7 @@ class ImportPublicationPage(Base):
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Error during Extraction File Deletion")
 
-                # Fetching total rows count before deleting a file from top of the table
+                # Fetching total rows count after deleting a file from top of the table
                 table_rows_after = self.select_elements(tablerows, env)
                 self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: '
                                                           f'{len(table_rows_after)}',
@@ -177,12 +177,12 @@ class ImportPublicationPage(Base):
 
                 try:
                     if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
-                        self.LogScreenshot.fLogScreenshot(message=f'Record deletion is successful',
+                        self.LogScreenshot.fLogScreenshot(message=f"Record count is decremented after deleting the extraction file.",
                                                           pass_=True, log=True, screenshot=False)
                 except Exception:
-                    self.LogScreenshot.fLogScreenshot(message=f'Record deletion is not successful',
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not decremented after deleting the extraction file.",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception("Error in deleting the imported file")
+                    raise Exception(f"Record count is not decremented after deleting the extraction file.")
             else:
                 raise Exception("No file uploaded to perform delete operation")
 
@@ -349,6 +349,8 @@ class ImportPublicationPage(Base):
                                                   pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the extraction file.",
+                                                          pass_=True, log=True, screenshot=False)
                     result = []
                     td1 = self.select_elements('upload_table_row_1', env)
                     for m in td1:
@@ -360,6 +362,10 @@ class ImportPublicationPage(Base):
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         raise Exception("Wrong file is uploaded")
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not incremented after uploading the extraction file.",
+                                                          pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Record count is not incremented after uploading the extraction file.")
 
                 # Validating the upload status icon
                 time.sleep(10)
@@ -377,3 +383,67 @@ class ImportPublicationPage(Base):
                 time.sleep(5)
             except Exception:
                 raise Exception("Error while uploading")
+
+    def upload_file_for_same_population(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
+                                                  f"is started***", pass_=True, log=True, screenshot=False)
+        expected_err_msg = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'error_msg')
+        
+        # Read population details from data sheet
+        pop_data = self.get_file_details_to_upload(filepath, locatorname)
+
+        try:
+            for i in pop_data:
+                ele = self.select_element("select_update_dropdown", env)
+                time.sleep(2)
+                select = Select(ele)
+                select.select_by_visible_text(i[0])
+
+                time.sleep(1)
+                actual_status_text = self.get_status_text("file_status_popup_text", env)                                                    
+
+                if actual_status_text == expected_err_msg[0]:
+                    self.LogScreenshot.fLogScreenshot(message=f"User is not allowed to upload extraction file for "
+                                                              f"existing population with same update.",
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
+                                                              f"Extraction File for existing Population : {i[0]}. "
+                                                              f"Actual status message is {actual_status_text} and "
+                                                              f"Expected status message is {expected_err_msg[0]}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception("Unable to find status message while uploading Extraction File for existing "
+                                    "Population with same update")
+                
+                jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
+                self.jsclick_hide(jscmd)
+                self.input_text("add_file", i[1], env)
+            
+                if not self.isenabled("upload_button", env):
+                    self.LogScreenshot.fLogScreenshot(message=f"Upload file button is not clickable while trying to "
+                                                              f"upload extraction file for existing population with "
+                                                              f"same update as expected.",
+                                                      pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"*****Hence Performing the delete operation for the "
+                                                              f"successfully uploaded record and trying to re-upload "
+                                                              f"the extraction for the same population.*****",
+                                                      pass_=True, log=True, screenshot=False)
+                    self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+                    self.upload_file_with_success(locatorname, filepath, env)
+                else:
+                    self.jsclick("upload_button", env)
+                    time.sleep(2)
+                    actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
+                    self.LogScreenshot.fLogScreenshot(message=f"Upload file button is clickable. File is uploaded "
+                                                              f"with success toaster message "
+                                                              f"'{actual_upload_status_text}'",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Upload file button is clickable for the Population which has already update "
+                                    f"which is not expected")
+                self.refreshpage()
+                time.sleep(5)
+        except Exception:
+            raise Exception("Error while uploading")
+        
+        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
+                                                  f"is completed***", pass_=True, log=True, screenshot=False)

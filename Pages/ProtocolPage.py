@@ -243,10 +243,12 @@ class ProtocolPage(Base):
                 pop_ele = self.select_element("picos_pop_dropdown", env)
                 select = Select(pop_ele)
                 select.select_by_visible_text(pop_data[0])
+                time.sleep(1)
 
                 stdy_ele = self.select_element("picos_study_type_dropdown", env)
                 select = Select(stdy_ele)
                 select.select_by_visible_text(j)
+                time.sleep(1)
 
                 actual_row_headers = []
                 actual_row_eles = self.select_elements('row_header_values', env)
@@ -348,10 +350,12 @@ class ProtocolPage(Base):
                 pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
                 select = Select(pop_ele)
                 select.select_by_visible_text(pop_data[0])
+                time.sleep(1)
 
                 stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
                 select = Select(stdy_ele)
                 select.select_by_visible_text(j[0])
+                time.sleep(1)
 
                 self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
                 # Renaming the filename because there is an issue in downloading filenames with same name multiple
@@ -427,12 +431,14 @@ class ProtocolPage(Base):
                 pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
                 select = Select(pop_ele)
                 select.select_by_visible_text(pop_data[0])
+                time.sleep(1)
 
                 stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
                 select = Select(stdy_ele)
                 select.select_by_visible_text(j[0])
                 self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
                                                   pass_=True, log=True, screenshot=True)
+                time.sleep(1)
 
                 self.click("searchstrategy_date", env)
                 self.select_calendar_date(day_val)
