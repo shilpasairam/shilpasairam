@@ -39,7 +39,7 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Upload Extraction Template with Success Icon"
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Success Icon"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -82,7 +82,7 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Upload Extraction Template with Column Header Mismatch"
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Column Header Mismatch"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Header Mismatch "
                                              f"validation is started***", pass_=True, log=True, screenshot=False)
@@ -120,7 +120,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Upload Extraction Template with Letters in Publication Identifier column"
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Letters in " \
+                              "Publication Identifier column "
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with letters in Publication Identifier "
                                              f"validation is started***", pass_=True, log=True, screenshot=False)
@@ -158,7 +159,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Upload Extraction Template with Empty value in Publication Identifier column"
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Empty value in " \
+                              "Publication Identifier column "
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Empty value in Publication "
                                              f"Identifier validation is started***",
@@ -198,8 +200,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Upload Extraction Template with Duplicate value in Interventions(per arm) " \
-                              "column "
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Duplicate value in " \
+                              "Interventions(per arm) column "
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions("
                                              f"per arm) validation is started***",
