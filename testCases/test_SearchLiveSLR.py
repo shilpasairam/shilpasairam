@@ -265,16 +265,12 @@ class Test_Search_LiveSLR:
     def test_nononcology_validate_ep_details_liveslr_page(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Creating object of ExtendedBase class
         exbase = ExtendedBase(self.driver, extra)                
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
-        # Creating object of ImportPublicationPage class
-        imppubpage = ImportPublicationPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
 
@@ -287,9 +283,9 @@ class Test_Search_LiveSLR:
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_liveslr_data")
 
-        pop_list = ['scenario1']
+        scenarios = ['scenario1']
 
-        for index, i in enumerate(pop_list):
+        for i in scenarios:
             try:
                 slrreport.validate_presence_of_ep_details_in_liveslr_page(i, filepath, env)
             except Exception:
@@ -302,8 +298,6 @@ class Test_Search_LiveSLR:
     def test_nononcology_validate_uniquestudies_liveslr_page(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Creating object of ExtendedBase class
         exbase = ExtendedBase(self.driver, extra)                
         # Instantiate the logScreenshot class
@@ -322,11 +316,43 @@ class Test_Search_LiveSLR:
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_liveslr_data")
 
-        pop_list = ['scenario1']
+        scenarios = ['scenario1']
 
-        for index, i in enumerate(pop_list):
+        for i in scenarios:
             try:
                 slrreport.validate_presence_of_uniquestudies_in_liveslr_page(i, filepath, env)
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+
+    @pytest.mark.C38487
+    def test_nononcology_validate_uniquestudies_reporting_outcomes(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology Import Tool - Validate presence of Endpoint Details with Unique Studies " \
+                              "count in LiveSLR -> Select Studies Reporting Outcome(s) section"
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "livehta_886_data")
+
+        scenarios = ['scenario1', 'scenario2'] 
+
+        for i in scenarios:
+            try:
+                slrreport.validate_uniquestudies_reporting_outcomes(i, filepath, env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
                                              pass_=False, log=True, screenshot=True)
