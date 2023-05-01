@@ -4,6 +4,8 @@ import time
 import pytest
 
 from Pages.Base import Base
+from Pages.ExtendedBasePage import ExtendedBase
+from Pages.ImportPublicationsPage import ImportPublicationPage
 from Pages.LoginPage import LoginPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
 from Pages.ExcludedStudies_liveSLR import ExcludedStudies_liveSLR
@@ -153,7 +155,6 @@ class Test_PRISMA_Elements:
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.go_to_page("SLR_Homepage", env)
 
         scenarios = ['scenario1', 'scenario2', 'scenario3', 'scenario4']
 
@@ -163,7 +164,7 @@ class Test_PRISMA_Elements:
                 slr_type = exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
-                slrreport.test_prisma_ele_comparison_between_Excel_and_UI(pop_data, slr_type, add_criteria,
+                slrreport.test_prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria, 'Updated PRISMA',
                                                                           self.prisma_path, env)
             except Exception:
                 raise Exception("Unable to select element")
@@ -282,5 +283,47 @@ class Test_PRISMA_Elements:
 
                 slrreport.test_publication_identifier_count_in_updated_prisma_tab(pop_data, slr_type,
                                                                                   add_criteria, self.prisma_path, env)
+            except Exception:
+                raise Exception("Unable to select element")
+
+    @pytest.mark.C39058
+    def test_nononcology_prisma_ele_comparison_between_Excel_and_UI(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+        # Creating object of ExcludedStudies_liveSLR class
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology - Validate PRISMA elements comparison between Complete Excel, UI and Expected Count"
+
+        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel, UI and Expected Count for Non-Oncology Population*****",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        filepath = exbase.get_testdata_filepath(basefile, "livehta_2301_data")
+
+        scenarios = ['scenario1']
+
+        for i in scenarios:
+            try:
+                pop_data = exstdy_liveslr.get_population_data(filepath, i)
+                slr_type = exstdy_liveslr.get_slrtype_data(filepath, i)
+                add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, i)
+
+                slrreport.test_prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria, 'Updated PRISMAs',
+                                                                          filepath, env)
             except Exception:
                 raise Exception("Unable to select element")

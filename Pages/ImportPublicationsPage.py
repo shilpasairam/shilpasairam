@@ -153,7 +153,7 @@ class ImportPublicationPage(Base):
                 self.click("delete_file", env)
                 time.sleep(2)
                 self.click("delete_file_popup", env)
-                time.sleep(2)
+                time.sleep(4)
 
                 # actual_delete_status_text = self.get_text(msg_popup, env, UnivWaitFor=30)
                 actual_delete_status_text = self.get_status_text(msg_popup, env)

@@ -866,19 +866,25 @@ class SLRReport(Base):
                             f"'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' "
                             f"table count is {word}")
 
-    def test_prisma_ele_comparison_between_Excel_and_UI(self, pop_data, slr_type, add_criteria, filepath, env):
+    def test_prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet, filepath, env):
+
+        # Read expected categoris from data sheet
+        expected_prisma_count = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'ExpectedPrismaCount')
+
+        # Converting list values from float to int
+        expected_prisma_count = [int(x) for x in expected_prisma_count]
+        self.LogScreenshot.fLogScreenshot(message=f"Expected PRISMA Count is : {expected_prisma_count}",
+                                          pass_=True, log=True, screenshot=False)         
 
         # Go to live slr page
-        # self.go_to_page("SLR_Homepage", env)
+        self.go_to_page("SLR_Homepage", env)
         # self.click("liveslr_reset_filter", env)
         self.refreshpage()
         time.sleep(2)
         self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
         self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
+        for k in add_criteria:
+            self.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")        
 
         self.scroll("New_total_selected", env)
         locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
@@ -896,46 +902,28 @@ class SLRReport(Base):
                                                   f"Variable Count : {ui_add_critera_values[5]}, Total Selected "
                                                   f"Count : {ui_add_critera_values[6]}",
                                           pass_=True, log=True, screenshot=True)
-        # original_slr_count = self.get_text("Original_SLR_Count")
-        # sub_pop_count = self.get_text("Sub_Pop_Count")
-        # lot_count = self.get_text("Line_of_Therapy_Count")
-        # intervention_count = self.get_text("Intervention_Count")
-        # stdy_dsgn_count = self.get_text("Study_Design_Count")
-        # rptd_var_count = self.get_text("Reported_Var_Count")
-        # total_sel_count = self.get_text("New_total_selected")
-
-        # self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {original_slr_count}, "
-        #                                           f"Sub Pop Count : {sub_pop_count}, LOT Count : {lot_count}, "
-        #                                           f"Intervention Count : {intervention_count}, Study Design "
-        #                                           f"Count : {stdy_dsgn_count}, Reported Variable Count : "
-        #                                           f"{rptd_var_count}, Total Selected Count : {total_sel_count}",
-        #                                   pass_=True, log=True, screenshot=True)
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
-        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
+        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=11)
         excel_studies_col = excel['Unique studies']
         # Removing NAN values
         excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
         # Converting list values from float to int
         excel_studies_col = [int(x) for x in excel_studies_col]
 
-        if excel_studies_col == ui_add_critera_values:
-            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is "
-                                                      f"same as 'Updated PRISMA table' in UI",
+        prisma_count_comparison = self.list_comparison_between_reports_data(expected_prisma_count, excel_studies_col, ui_add_critera_values)
+
+        if len(prisma_count_comparison) == 0:
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' and 'Updated PRISMA table' Count in UI is matching with Expected PRISMA Count.",
                                               pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is "
-                                                      f"not matching with 'Updated PRISMA table' in UI. Excel Report "
-                                                      f"values are {excel_studies_col} and UI values are "
-                                                      f"{ui_add_critera_values}",
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' and 'Updated PRISMA table' Count in UI is "
+                                                      f"not matching with Expected PRISMA Count. Mismatch values are arranged in following order -> Expected count, Excel count, UI count. {prisma_count_comparison}",
                                               pass_=False, log=True, screenshot=False)
-            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' is not matching with "
-                            f"'Updated PRISMA table' in UI")
+            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' and 'Updated PRISMA table' Count in UI is not matching with "
+                            f"Expected PRISMA Count")
 
     def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type,
                                                                                   add_criteria, filepath, env):
