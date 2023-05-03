@@ -387,61 +387,63 @@ class ImportPublicationPage(Base):
     def upload_file_for_same_population(self, locatorname, filepath, env):
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
                                                   f"is started***", pass_=True, log=True, screenshot=False)
-        expected_err_msg = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'error_msg')
+        # expected_err_msg = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'error_msg')
         
-        # Read population details from data sheet
-        pop_data = self.get_file_details_to_upload(filepath, locatorname)
+        # # Read population details from data sheet
+        # pop_data = self.get_file_details_to_upload(filepath, locatorname)
 
         try:
-            for i in pop_data:
-                ele = self.select_element("select_update_dropdown", env)
-                time.sleep(2)
-                select = Select(ele)
-                select.select_by_visible_text(i[0])
+            self.upload_file_with_errors(locatorname, filepath, env)
+            self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+            # for i in pop_data:
+            #     ele = self.select_element("select_update_dropdown", env)
+            #     time.sleep(2)
+            #     select = Select(ele)
+            #     select.select_by_visible_text(i[0])
 
-                time.sleep(1)
-                actual_status_text = self.get_status_text("file_status_popup_text", env)                                                    
+            #     time.sleep(1)
+            #     actual_status_text = self.get_status_text("file_status_popup_text", env)                                                    
 
-                if actual_status_text == expected_err_msg[0]:
-                    self.LogScreenshot.fLogScreenshot(message=f"User is not allowed to upload extraction file for "
-                                                              f"existing population with same update.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                              f"Extraction File for existing Population : {i[0]}. "
-                                                              f"Actual status message is {actual_status_text} and "
-                                                              f"Expected status message is {expected_err_msg[0]}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception("Unable to find status message while uploading Extraction File for existing "
-                                    "Population with same update")
+            #     if actual_status_text == expected_err_msg[0]:
+            #         self.LogScreenshot.fLogScreenshot(message=f"User is not allowed to upload extraction file for "
+            #                                                   f"existing population with same update.",
+            #                                           pass_=True, log=True, screenshot=True)
+            #     else:
+            #         self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
+            #                                                   f"Extraction File for existing Population : {i[0]}. "
+            #                                                   f"Actual status message is {actual_status_text} and "
+            #                                                   f"Expected status message is {expected_err_msg[0]}",
+            #                                           pass_=False, log=True, screenshot=True)
+            #         raise Exception("Unable to find status message while uploading Extraction File for existing "
+            #                         "Population with same update")
                 
-                jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
-                self.jsclick_hide(jscmd)
-                self.input_text("add_file", i[1], env)
+            #     jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
+            #     self.jsclick_hide(jscmd)
+            #     self.input_text("add_file", i[1], env)
             
-                if not self.isenabled("upload_button", env):
-                    self.LogScreenshot.fLogScreenshot(message=f"Upload file button is not clickable while trying to "
-                                                              f"upload extraction file for existing population with "
-                                                              f"same update as expected.",
-                                                      pass_=True, log=True, screenshot=True)
-                    self.LogScreenshot.fLogScreenshot(message=f"*****Hence Performing the delete operation for the "
-                                                              f"successfully uploaded record and trying to re-upload "
-                                                              f"the extraction for the same population.*****",
-                                                      pass_=True, log=True, screenshot=False)
-                    self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
-                    self.upload_file_with_success(locatorname, filepath, env)
-                else:
-                    self.jsclick("upload_button", env)
-                    time.sleep(2)
-                    actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
-                    self.LogScreenshot.fLogScreenshot(message=f"Upload file button is clickable. File is uploaded "
-                                                              f"with success toaster message "
-                                                              f"'{actual_upload_status_text}'",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Upload file button is clickable for the Population which has already update "
-                                    f"which is not expected")
-                self.refreshpage()
-                time.sleep(5)
+            #     if not self.isenabled("upload_button", env):
+            #         self.LogScreenshot.fLogScreenshot(message=f"Upload file button is not clickable while trying to "
+            #                                                   f"upload extraction file for existing population with "
+            #                                                   f"same update as expected.",
+            #                                           pass_=True, log=True, screenshot=True)
+            #         self.LogScreenshot.fLogScreenshot(message=f"*****Hence Performing the delete operation for the "
+            #                                                   f"successfully uploaded record and trying to re-upload "
+            #                                                   f"the extraction for the same population.*****",
+            #                                           pass_=True, log=True, screenshot=False)
+            #         self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+            #         self.upload_file_with_success(locatorname, filepath, env)
+            #     else:
+            #         self.jsclick("upload_button", env)
+            #         time.sleep(2)
+            #         actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
+            #         self.LogScreenshot.fLogScreenshot(message=f"Upload file button is clickable. File is uploaded "
+            #                                                   f"with success toaster message "
+            #                                                   f"'{actual_upload_status_text}'",
+            #                                           pass_=False, log=True, screenshot=True)
+            #         raise Exception(f"Upload file button is clickable for the Population which has already update "
+            #                         f"which is not expected")
+            #     self.refreshpage()
+            #     time.sleep(5)
         except Exception:
             raise Exception("Error while uploading")
         
