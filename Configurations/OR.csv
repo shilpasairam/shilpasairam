@@ -106,6 +106,7 @@ SelectIntervention,intervention_section6,XPATH,//*[@id='collapse05']//div//div[6
 SelectIntervention,intervention_section6_checkbox,XPATH,//*[@id='collapse05']//div//div[6]//div//label//input,
 ReportedVariable,reported_variable_section,XPATH,//strong[text()='Select Studies Reporting Outcome(s)'],//strong[text()='Select Reported Variables']
 ReportedVariable,reported_variable_selectall,XPATH,//*[@id='collapse07']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allReportedVariables']/following::span[1],
+ReportedVariable,reported_variable_section_values,XPATH,//div[@id='collapse07']/div/div[2]/div/div/label,
 ReportedVariable,reported_variable_selectall_checkbox,XPATH,//*[@id='collapse07']//div//div[1]//div//div//label//input,
 ReportedVariable,reported_variable_section1,XPATH,//*[@id='collapse07']//div//div[2]//div[1]//div//label//input[@type='checkbox' and @name='selectedReportedVariables']/following::span[1],
 ReportedVariable,reported_variable_section1_checkbox,XPATH,//*[@id='collapse07']//div//div[2]//div[1]//div//label//input,

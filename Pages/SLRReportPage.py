@@ -1739,6 +1739,103 @@ class SLRReport(Base):
                                                   f"SLR Type Level in LiveSLR page is completed***",
                                           pass_=True, log=True, screenshot=False)
 
+    def validate_uniquestudies_reporting_outcomes(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details with Unique Studies "
+                                                  f"count in LiveSLR -> Select Studies Reporting Outcome(s) section "
+                                                  f"is started***", pass_=True, log=True, screenshot=False)
+
+        # Read population data values
+        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        # Read slrtype data values
+        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
+
+        # Read extraction file path
+        extraction_file = self.exbase.get_template_file_details(filepath, locatorname, 'Files_to_upload')
+
+        extraction_file_data = pd.read_excel(f'{extraction_file}', sheet_name='Extraction sheet upload', skiprows=3)
+        # As there is extra data in row number 6, 7, 8 so we are filtering it out based on all the SLR types
+        # to get the total Study count at the project level
+        df = extraction_file_data.query('`A-1`.str.startswith("Clinical") | '
+                                        '`A-1`.str.startswith("Quality of Life") | '
+                                        '`A-1`.str.startswith("Economic") | '
+                                        '`A-1`.str.startswith("Real-world Evidence").values')
+
+        self.go_to_page("SLR_Homepage", env)
+        self.refreshpage()
+        self.presence_of_admin_page_option("importpublications_button", env)
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.upload_file_with_success(locatorname, filepath, env)
+
+        self.go_to_page("SLR_Homepage", env)
+        # self.select_data(pop_list[0][0], pop_list[0][1], env)
+        # self.select_data(slrtype[0][0], slrtype[0][1], env)
+        for i in pop_list:
+            self.select_data(i[0], i[1], env)
+            for index, j in enumerate(slrtype):
+                self.select_data(j[0], j[1], env)
+
+                self.scroll("reported_variable_section", env)
+                self.LogScreenshot.fLogScreenshot(message=f"Values under 'Select Studies Reporting Outcome(s)' "
+                                                          f"section : ", pass_=True, log=True, screenshot=True)
+
+                col_id = {'AUT1': ['QA-1', 'QA-2', 'QA-3', 'QB-2', 'QB-6'],
+                          'AUT2': ['RC-3', 'RC-4', 'RD-2', 'RD-6'],
+                          'AUT3': ['ST-1', 'ST-6', 'ST-10'],
+                          'Safety': ['E-3', 'E-4', 'E-5']
+                          }
+
+                actual_reported_var = [i.text for i in self.select_elements('reported_variable_section_values', env)]
+                actual_reported_var_res = []
+                for xy in actual_reported_var:
+                    actual_reported_var_res.append(xy.splitlines())
+
+                # Manipulating the col_id dictionary value based on the items displayed in UI.
+                res_dict = {}
+                for n in actual_reported_var_res:
+                    if n[0] in col_id:
+                        res_dict[n[0]] = col_id.get(n[0])
+
+                # Above manipulation helps in applying filter for Extraction file to get the unique study count
+                index = 0
+                for k, v in res_dict.items():
+                    res1 = []
+                    for item in v:
+                        col_val = df[df[item] != "NR"]
+                        col_val_res = col_val["A-2"]
+                        # Removing the duplicates
+                        [res1.append(x) for x in list(flatten(col_val_res)) if x not in res1]
+
+                    # Comparison for Unique Study Number
+                    if int(actual_reported_var_res[index][1]) == len(res1):
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{i[0]}' Project -> Unique Study Number from "
+                                                                  f"'Select Studies Reporting Outcome(s)' section is "
+                                                                  f"matching with the total number of unique records "
+                                                                  f"uploaded from the extraction file. "
+                                                                  f"Count for '{k}' Endpoint is : "
+                                                                  f"'{actual_reported_var_res[index][1]}'",
+                                                          pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{i[0]}' Project -> Unique Study Number from "
+                                                                  f"'Select Studies Reporting Outcome(s)' section is "
+                                                                  f"matching with the total number of unique records "
+                                                                  f"uploaded from the extraction file. For '{i[0]}' "
+                                                                  f"Project -> Count for '{k}' Endpoint displayed in "
+                                                                  f"UI is '{actual_reported_var_res[index][1]}' and "
+                                                                  f"Number of Unique records uploaded for "
+                                                                  f"'{i[0]}' Project is '{len(res1)}'",
+                                                          pass_=False, log=True, screenshot=True)
+                        raise Exception(f"For '{i[0]}' Project -> Unique Study Number from 'Select Studies Reporting "
+                                        f"Outcome(s)' section is not matching with the total number of unique "
+                                        f"records uploaded from the extraction file")
+                    index += 1
+        
+        self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+        self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details with Unique Studies "
+                                                  f"count in LiveSLR -> Select Studies Reporting Outcome(s) section "
+                                                  f"is completed***", pass_=True, log=True, screenshot=False)
+
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
