@@ -327,6 +327,7 @@ class Test_Search_LiveSLR:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38487
+    @pytest.mark.C38489
     def test_nononcology_validate_uniquestudies_reporting_outcomes(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
@@ -340,8 +341,8 @@ class Test_Search_LiveSLR:
         slrreport = SLRReport(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology Import Tool - Validate presence of Endpoint Details with Unique Studies " \
-                              "count in LiveSLR -> Select Studies Reporting Outcome(s) section"
+        request.node._title = "Non-Oncology - Verify Endpoints(EPs) present under Select Studies reporting " \
+                              "Outcome(s) with all 3 EPs and with NR"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
