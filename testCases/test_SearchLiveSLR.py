@@ -22,10 +22,10 @@ class Test_Search_LiveSLR:
     testdata_723 = ReadConfig.getTestdata("livehta_723_data")
     testdata_931 = ReadConfig.getTestdata("livehta_931_data")
 
-    @pytest.mark.smoketest
-    def test_e2e_smoketest(self, extra, env, request, caseid):
+    @pytest.mark.C40493
+    def test_SLRreports_Download(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
-        filepath = ReadConfig.getslrtestdata(env)        
+        filepath = ReadConfig.getTestdata("smoketest_data")
         # Instantiate the Base class
         base = Base(self.driver, extra)         
         # Creating object of loginpage class
@@ -42,7 +42,8 @@ class Test_Search_LiveSLR:
         rpt_data, rpt_data_chkbox = liveslrpage.get_reported_variables(filepath)
 
         request.node._tcid = caseid
-        request.node._title = "Smoke Test -> Validate Search LIVESLR Page Navigation and download the reports"
+        request.node._title = "Smoke Test -> Validate Search LIVESLR Page Navigation, download the reports and " \
+                              "verify the downloaded filename"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -56,23 +57,14 @@ class Test_Search_LiveSLR:
                         slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
 
                     slrreport.generate_download_report("excel_report", env)
-                    # time.sleep(5)
-                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     excel_filename = slrreport.get_and_validate_filename(filepath)
 
                     slrreport.generate_download_report("word_report", env)
-                    # time.sleep(5)
-                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     word_filename = slrreport.get_and_validate_filename(filepath)
 
                     slrreport.preview_result("preview_results", env)
                     slrreport.table_display_check("Table", env)
                     slrreport.generate_download_report("Export_as_excel", env)
-                    # time.sleep(5)
-                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     webexcel_filename = slrreport.get_and_validate_filename(filepath)
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
