@@ -790,7 +790,7 @@ class UtilityOutcome(Base):
 
         self.refreshpage()
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
-        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1], env)
+        self.exbase.upload_file(extraction_file, env)
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
@@ -922,7 +922,7 @@ class UtilityOutcome(Base):
         self.refreshpage()
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        self.exbase.delete_file(extraction_file[0][2], env)
+        self.exbase.delete_file(extraction_file, "file_status_popup_text", "upload_table_rows", env)
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)

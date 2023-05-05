@@ -290,16 +290,12 @@ class Test_PRISMA_Elements:
     def test_nononcology_prisma_ele_comparison_between_Excel_and_UI(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Creating object of ExtendedBase class
         exbase = ExtendedBase(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
-        # Creating object of ImportPublicationPage class
-        imppubpage = ImportPublicationPage(self.driver, extra)
         # Creating object of ExcludedStudies_liveSLR class
         exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
         # Instantiate the logScreenshot class
@@ -315,7 +311,7 @@ class Test_PRISMA_Elements:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         filepath = exbase.get_testdata_filepath(basefile, "livehta_2301_data")
 
-        scenarios = ['scenario1']
+        scenarios = ['scenario1', 'scenario2']
 
         for i in scenarios:
             try:
