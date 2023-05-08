@@ -51,7 +51,7 @@ class Test_ImportPublicationPage:
 
         pop_list = ['pop1']
 
-        for index, i in enumerate(pop_list):
+        for i in pop_list:
             try:
                 imppubpage.upload_file_with_success(i, filepath, env)
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
@@ -187,7 +187,7 @@ class Test_ImportPublicationPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C28986
-    def test_upload_extraction_template_with_duplicate_value_in_FA18_column(self, extra, env, request, caseid):
+    def test_upload_extraction_template_with_duplicate_value_in_FA19_column(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
@@ -226,7 +226,8 @@ class Test_ImportPublicationPage:
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Duplicate value in Interventions("
                                              f"per arm) validation is completed***",
                                      pass_=True, log=True, screenshot=False)
-
+    '''
+    Commenting this TC because of LIVEHTA-1904 implementation
     @pytest.mark.C37454
     def test_upload_extraction_template_for_same_update(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
@@ -260,6 +261,7 @@ class Test_ImportPublicationPage:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+    '''
 
     @pytest.mark.C38840
     def test_nononcology_upload_and_del_extraction_template_success(self, extra, env, request, caseid):
@@ -291,7 +293,7 @@ class Test_ImportPublicationPage:
 
         pop_list = ['pop1']
 
-        for index, i in enumerate(pop_list):
+        for i in pop_list:
             try:
                 imppubpage.upload_file_with_success(i, filepath, env)
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
@@ -334,7 +336,7 @@ class Test_ImportPublicationPage:
 
         pop_list = ['pop2']
 
-        for index, i in enumerate(pop_list):
+        for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
@@ -377,7 +379,7 @@ class Test_ImportPublicationPage:
 
         pop_list = ['pop3']
 
-        for index, i in enumerate(pop_list):
+        for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
@@ -420,7 +422,7 @@ class Test_ImportPublicationPage:
 
         pop_list = ['pop4']
 
-        for index, i in enumerate(pop_list):
+        for i in pop_list:
             try:
                 imppubpage.upload_file_with_errors(i, filepath, env)
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
@@ -461,9 +463,9 @@ class Test_ImportPublicationPage:
         base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        pop_list = ['pop1']
+        pop_list = ['pop5']
 
-        for index, i in enumerate(pop_list):
+        for i in pop_list:
             try:
                 imppubpage.upload_file_with_success(i, filepath, env)
                 imppubpage.upload_file_for_same_population(i, filepath, env)

@@ -866,19 +866,25 @@ class SLRReport(Base):
                             f"'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' "
                             f"table count is {word}")
 
-    def test_prisma_ele_comparison_between_Excel_and_UI(self, pop_data, slr_type, add_criteria, filepath, env):
+    def test_prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet,
+                                                        filepath, env):
+
+        # Read expected categoris from data sheet
+        expected_prisma_count = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
+                                                                    'ExpectedPrismaCount')
+
+        # Converting list values from float to int
+        expected_prisma_count = [int(x) for x in expected_prisma_count]      
 
         # Go to live slr page
-        # self.go_to_page("SLR_Homepage", env)
+        self.go_to_page("SLR_Homepage", env)
         # self.click("liveslr_reset_filter", env)
         self.refreshpage()
         time.sleep(2)
         self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
         self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env, f"{add_criteria[0][2]}")
-        self.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env, f"{add_criteria[1][2]}")
-        self.select_sub_section(f"{add_criteria[2][0]}", f"{add_criteria[2][1]}", env, f"{add_criteria[2][2]}")
-        self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
+        for k in add_criteria:
+            self.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")        
 
         self.scroll("New_total_selected", env)
         locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
@@ -888,54 +894,51 @@ class SLRReport(Base):
             ui_add_critera_values.append(self.get_text(i, env))
         # Converting list values from str to int
         ui_add_critera_values = [int(x) for x in ui_add_critera_values]
-        
-        self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {ui_add_critera_values[0]}, Sub Pop Count : "
+
+        self.LogScreenshot.fLogScreenshot(message=f"Expected PRISMA Count Values are: "
+                                                  f"Original SLR Count : {expected_prisma_count[0]}, Sub Pop Count : "
+                                                  f"{expected_prisma_count[1]}, LOT Count : {expected_prisma_count[2]},"
+                                                  f" Intervention Count : {expected_prisma_count[3]}, "
+                                                  f"Study Design Count : {expected_prisma_count[4]}, Reported "
+                                                  f"Variable Count : {expected_prisma_count[5]}, Total Selected "
+                                                  f"Count : {expected_prisma_count[6]}",
+                                          pass_=True, log=True, screenshot=False)
+
+        self.LogScreenshot.fLogScreenshot(message=f"Actual PRISMA Count Values are: "
+                                                  f"Original SLR Count : {ui_add_critera_values[0]}, Sub Pop Count : "
                                                   f"{ui_add_critera_values[1]}, LOT Count : {ui_add_critera_values[2]},"
                                                   f" Intervention Count : {ui_add_critera_values[3]}, "
                                                   f"Study Design Count : {ui_add_critera_values[4]}, Reported "
                                                   f"Variable Count : {ui_add_critera_values[5]}, Total Selected "
                                                   f"Count : {ui_add_critera_values[6]}",
                                           pass_=True, log=True, screenshot=True)
-        # original_slr_count = self.get_text("Original_SLR_Count")
-        # sub_pop_count = self.get_text("Sub_Pop_Count")
-        # lot_count = self.get_text("Line_of_Therapy_Count")
-        # intervention_count = self.get_text("Intervention_Count")
-        # stdy_dsgn_count = self.get_text("Study_Design_Count")
-        # rptd_var_count = self.get_text("Reported_Var_Count")
-        # total_sel_count = self.get_text("New_total_selected")
-
-        # self.LogScreenshot.fLogScreenshot(message=f"Original SLR Count : {original_slr_count}, "
-        #                                           f"Sub Pop Count : {sub_pop_count}, LOT Count : {lot_count}, "
-        #                                           f"Intervention Count : {intervention_count}, Study Design "
-        #                                           f"Count : {stdy_dsgn_count}, Reported Variable Count : "
-        #                                           f"{rptd_var_count}, Total Selected Count : {total_sel_count}",
-        #                                   pass_=True, log=True, screenshot=True)
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
-        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C', skiprows=11)
+        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=11)
         excel_studies_col = excel['Unique studies']
         # Removing NAN values
         excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
         # Converting list values from float to int
         excel_studies_col = [int(x) for x in excel_studies_col]
 
-        if excel_studies_col == ui_add_critera_values:
-            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is "
-                                                      f"same as 'Updated PRISMA table' in UI",
-                                              pass_=True, log=True, screenshot=False)
+        prisma_count_comparison = self.list_comparison_between_reports_data(expected_prisma_count, excel_studies_col,
+                                                                            ui_add_critera_values)
+
+        if len(prisma_count_comparison) == 0:
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' and "
+                                                      f"'Updated PRISMA table' Count in UI is matching with Expected "
+                                                      f"PRISMA Count.", pass_=True, log=True, screenshot=False)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' is "
-                                                      f"not matching with 'Updated PRISMA table' in UI. Excel Report "
-                                                      f"values are {excel_studies_col} and UI values are "
-                                                      f"{ui_add_critera_values}",
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' and "
+                                                      f"'Updated PRISMA table' Count in UI is not matching with "
+                                                      f"Expected PRISMA Count. Mismatch values are arranged in "
+                                                      f"following order -> Expected count, Excel count, UI count. "
+                                                      f"{prisma_count_comparison}",
                                               pass_=False, log=True, screenshot=False)
-            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' is not matching with "
-                            f"'Updated PRISMA table' in UI")
+            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' and 'Updated PRISMA table' "
+                            f"Count in UI is not matching with Expected PRISMA Count")
 
     def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type,
                                                                                   add_criteria, filepath, env):
@@ -1409,10 +1412,7 @@ class SLRReport(Base):
     def validate_population_col_in_wordreport(self, filepath, locatorname, env):
         self.LogScreenshot.fLogScreenshot(message=f"Validate contents of Population/Sub-group column in Word Report",
                                           pass_=True, log=True, screenshot=False)
-        source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)
-
-        # Read population details from data sheet
-        extraction_file = self.exbase.get_file_details_to_upload(filepath, locatorname)       
+        source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)     
 
         # Read population data values
         pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
@@ -1421,7 +1421,7 @@ class SLRReport(Base):
 
         self.refreshpage()
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
-        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1], env) 
+        self.imppubpage.upload_file_with_success(locatorname, filepath, env)
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
@@ -1429,9 +1429,6 @@ class SLRReport(Base):
         self.select_data(slrtype[0][0], f"{slrtype[0][1]}", env)
         
         self.generate_download_report("word_report", env)
-        # time.sleep(5)
-        # word_filename = self.getFilenameAndValidate(180)
-        # word_filename = self.get_latest_filename(UnivWaitFor=180)
         word_filename = self.get_and_validate_filename(filepath)
 
         table_count = 5  
@@ -1492,7 +1489,7 @@ class SLRReport(Base):
             self.refreshpage()
             self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-            self.exbase.delete_file(extraction_file[0][2], env)
+            self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
 
             # Go to live slr page
             self.go_to_page("SLR_Homepage", env)
@@ -1503,10 +1500,7 @@ class SLRReport(Base):
     def validate_control_chars_in_wordreport(self, filepath, locatorname, env):
         self.LogScreenshot.fLogScreenshot(message=f"Validate the accessibility of downloaded reports when extraction "
                                                   f"file contains control characters",
-                                          pass_=True, log=True, screenshot=False)
-
-        # Read population details from data sheet
-        extraction_file = self.exbase.get_file_details_to_upload(filepath, locatorname)       
+                                          pass_=True, log=True, screenshot=False)    
 
         # Read population data values
         pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
@@ -1515,7 +1509,7 @@ class SLRReport(Base):
 
         self.refreshpage()
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
-        self.exbase.upload_file(extraction_file[0][0], extraction_file[0][1], env) 
+        self.imppubpage.upload_file_with_success(locatorname, filepath, env)
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)
@@ -1526,23 +1520,14 @@ class SLRReport(Base):
                     self.select_data(j[0], j[1], env)
 
                     self.generate_download_report("excel_report", env)
-                    # time.sleep(5)
-                    # excel_filename = self.getFilenameAndValidate(180)
-                    # excel_filename = self.get_latest_filename(UnivWaitFor=180)
                     excel_filename = self.get_and_validate_filename(filepath)
 
                     self.generate_download_report("word_report", env)
-                    # time.sleep(5)
-                    # word_filename = self.getFilenameAndValidate(180)
-                    # word_filename = self.get_latest_filename(UnivWaitFor=180)
                     word_filename = self.get_and_validate_filename(filepath)
 
                     self.preview_result("preview_results", env)
                     self.table_display_check("Table", env)
                     self.generate_download_report("Export_as_excel", env)
-                    # time.sleep(5)
-                    # webexcel_filename = self.getFilenameAndValidate(180)
-                    # webexcel_filename = self.get_latest_filename(UnivWaitFor=180)
                     webexcel_filename = self.get_and_validate_filename(filepath)
                     self.back_to_report_page("Back_to_search_page", env)
 
@@ -1572,7 +1557,7 @@ class SLRReport(Base):
         self.refreshpage()
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        self.exbase.delete_file(extraction_file[0][2], env)
+        self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
 
         # Go to live slr page
         self.go_to_page("SLR_Homepage", env)

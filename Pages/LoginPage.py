@@ -43,8 +43,8 @@ class LoginPage(Base):
 
             # submit password
             self.click("login_button", env, UnivWaitFor=3)
-            self.LogScreenshot.fLogScreenshot(message='Submit Credentials',
-                                              pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message='Portal Home Page',
+                                              pass_=True, log=True, screenshot=True)
             
             self.jsclick(launch_btn, env, UnivWaitFor=5)
             self.driver.switch_to.window(self.driver.window_handles[1])
@@ -83,8 +83,9 @@ class LoginPage(Base):
 
             # submit password
             self.click("login_button", env, UnivWaitFor=3)
-            self.LogScreenshot.fLogScreenshot(message='Submit Credentials',
-                                              pass_=True, log=True, screenshot=False)
+            time.sleep(3)
+            self.LogScreenshot.fLogScreenshot(message='LiveSLR Dashboard',
+                                              pass_=True, log=True, screenshot=True)
         except Exception:
             pass
         # check whether the login page opened or not
