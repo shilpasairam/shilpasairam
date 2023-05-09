@@ -1814,10 +1814,11 @@ class SLRReport(Base):
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"For '{i[0]}' Project -> Unique Study Number from "
                                                                   f"'Select Studies Reporting Outcome(s)' section is "
-                                                                  f"matching with the total number of unique records "
-                                                                  f"uploaded from the extraction file. For '{i[0]}' "
-                                                                  f"Project -> Count for '{k}' Endpoint displayed in "
-                                                                  f"UI is '{actual_reported_var_res[index][1]}' and "
+                                                                  f"not matching with the total number of unique "
+                                                                  f"records uploaded from the extraction file. For "
+                                                                  f"'{i[0]}' Project -> Count for '{k}' Endpoint "
+                                                                  f"displayed in UI is "
+                                                                  f"'{actual_reported_var_res[index][1]}' and "
                                                                   f"Number of Unique records uploaded for "
                                                                   f"'{i[0]}' Project is '{len(res1)}'",
                                                           pass_=False, log=True, screenshot=True)
