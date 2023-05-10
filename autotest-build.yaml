@@ -10,9 +10,7 @@ parameters:
 - name: environments
   displayName: Environment
   type: object
-  default: 
-  - test
-  - staging
+  default: [test,staging]
 
 steps:
 
