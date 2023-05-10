@@ -10,10 +10,6 @@ parameters:
   displayName: Environment
   type: object
   default: [test,staging]
-  values:
-    - 'test'
-    - 'staging'
-    - 'production'
 
 steps:
 - ${{ each env in parameters.environment }}:
