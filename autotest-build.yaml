@@ -9,7 +9,7 @@ parameters:
 
 - name: environments
   displayName: Environment
-  type: string
+  type: object
   default: 
   - test
   - staging
