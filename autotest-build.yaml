@@ -30,7 +30,7 @@ steps:
    cd $(Build.BinariesDirectory)\
    dir
    python -m pip install -r requirements.txt
-   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ environment }}
+   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ parameters.environment }}
    
    echo "FETCH LOG FILE - DISPLAY CONTENT"
    cd $(Build.BinariesDirectory)\logs\
