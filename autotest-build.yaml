@@ -6,13 +6,16 @@ parameters:
   displayName: Test Case ID
   type: string
   default: 'C40493'
+
 - name: environments
   displayName: Environment
   type: object
-  default: [test,staging]
+  default: 
+  - test
+  - staging
 
 steps:
-- ${{ each environment in parameters.environments }}:
+- ${{ each env in parameters.environments }}:
 - task: CopyFiles@2
   displayName: 'Copy Files: To Build Binaries Directory'
   inputs:
@@ -30,7 +33,7 @@ steps:
    cd $(Build.BinariesDirectory)\
    dir
    python -m pip install -r requirements.txt
-   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ parameters.environment }}
+   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ env }}
    
    echo "FETCH LOG FILE - DISPLAY CONTENT"
    cd $(Build.BinariesDirectory)\logs\
