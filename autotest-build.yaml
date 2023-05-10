@@ -15,7 +15,6 @@ parameters:
   - staging
 
 steps:
-- ${{ each env in parameters.environments }}:
 - task: CopyFiles@2
   displayName: 'Copy Files: To Build Binaries Directory'
   inputs:
@@ -29,6 +28,7 @@ steps:
     Contents: README.md
     RemoveDotFiles: true
 
+- ${{ each env in parameters.environments }}:
 - script: |
    cd $(Build.BinariesDirectory)\
    dir
