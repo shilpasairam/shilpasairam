@@ -13,7 +13,7 @@ parameters:
   default: [test,staging]
 
 steps:
-
+- ${{ each env in parameters.environments }}:
 - script: |
    cd $(Build.BinariesDirectory)\
    dir
