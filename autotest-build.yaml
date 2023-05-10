@@ -8,8 +8,12 @@ parameters:
   default: ''
 - name: environment
   displayName: Environment
-  type: string
+  type: object
   default: [test,staging]
+  values:
+    - 'test'
+    - 'staging'
+    - 'production'
 
 steps:
 - ${{ each env in parameters.environment }}:
