@@ -5,7 +5,7 @@ parameters:
 - name: testcase
   displayName: Test Case ID
   type: string
-  default: ''
+  default: 'C40493'
 - name: environment
   displayName: Environment
   type: object
