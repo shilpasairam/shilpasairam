@@ -9,6 +9,8 @@ import platform
 import socket
 import psutil
 import datetime
+import glob
+from pyhtml2pdf import converter
 from pathlib import Path
 from utilities.readProperties import ReadConfig
 from selenium.webdriver.chrome.service import Service
@@ -170,6 +172,12 @@ def pytest_html_results_table_row(report, cells):
 
 @pytest.hookimpl(trylast=True)
 def pytest_sessionfinish(session, exitstatus):
+
+    # Converting the HTML report file to PDF format
+    filename = Path(glob.glob('Reports//*.html')[0]).stem
+    path = os.path.abspath(f'Reports//{filename}.html')
+    converter.convert(f'file:///{path}?collapsed=Skipped', f"{filename}.pdf")
+
     dir_list = ['ActualOutputs', 'Logs', 'Reports']
     zip_name = f"{session.config.getoption('-m')}_results.zip"
 
