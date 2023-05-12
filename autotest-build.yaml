@@ -4,7 +4,7 @@ pool:
 parameters:
 - name: env
   displayName: Environment
-  type: string
+  type: object
   default: [test,staging]
 
 - name: testcase
