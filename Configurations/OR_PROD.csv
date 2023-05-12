@@ -1,4 +1,7 @@
 Module,Object,Type,Path,
+CYTEL,cookie_accept_btn,ID,hs-eu-confirmation-button,
+CYTEL,login_dropdown,XPATH,//a[text()='Login'],
+CYTEL,livehta_portal,XPATH,//a[text()='LiveHTA'],
 PSEPortal,username_textbox,ID,Email,
 PSEPortal,password_textbox,ID,Password,
 PSEPortal,login_button,CSS_SELECTOR,.btn.btn-block.btn-primary.mt-3.mb-3,
