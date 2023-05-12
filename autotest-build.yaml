@@ -5,6 +5,7 @@ parameters:
 - name: env
   displayName: Environment
   type: string
+  default: 'test'
   values:
     - test
     - staging
