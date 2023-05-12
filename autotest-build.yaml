@@ -1,11 +1,11 @@
 schedules:
 - cron: "0 8 * * *"
-  displayName: Every Month build
+  displayName: Every Day 8:00 am
   branches:
     include:
     - master
 - cron: "0 18 * * *"
-  displayName: Every Month build
+  displayName: Every Day 6:00 pm
   branches:
     include:
     - master
