@@ -5,7 +5,7 @@ parameters:
 - name: env
   displayName: Environment
   type: object
-  default: 'test'
+  default: [test]
 
 - name: testcase
   displayName: Test Case ID
