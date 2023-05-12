@@ -30,11 +30,11 @@ steps:
     inputs:
       testResultsFormat: NUnit
       searchFolder: '$(System.DefaultWorkingDirectory)'
-      testRunTitle: 'Py Result'
+      testRunTitle: 'Py Result ${{ environment }}'
   
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: test-automation'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.testcase }}_${{ environment }}_results.zip'
+      PathtoPublish: '$(System.DefaultWorkingDirectory)/${{ parameters.testcase }}_${{ environment }}_results.zip'
       ArtifactName: 'test-automation'
   
