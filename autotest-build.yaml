@@ -5,8 +5,8 @@ parameters:
 - name: env
   displayName: Environment
   type: object
-  default: [test]
   values:
+    - test
     - staging
     - production
 
