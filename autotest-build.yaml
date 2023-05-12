@@ -5,7 +5,9 @@ parameters:
 - name: env
   displayName: Environment
   type: object
-  default: [test,staging]
+  default:
+  - test
+  - staging
 
 - name: testcase
   displayName: Test Case ID
@@ -37,7 +39,7 @@ steps:
      echo "FETCH LOG FILE - DISPLAY CONTENT"
      cd $(Build.BinariesDirectory)\logs\
      type testlog.log
-    displayName: 'Command Line Script'
+    displayName: '${{ environment }}'
   
   - task: PublishTestResults@2
     displayName: 'Publish Results'
@@ -49,6 +51,6 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: test-automation'
     inputs:
-      PathtoPublish: '$(Build.BinariesDirectory)/${{ parameters.testcase }}_results.zip'
+      PathtoPublish: '$(Build.BinariesDirectory)/${{ parameters.testcase }}_${{ environment }}_results.zip'
       ArtifactName: 'test-automation'
   
