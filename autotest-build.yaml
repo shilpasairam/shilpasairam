@@ -2,23 +2,37 @@ pool:
   name: cyt-vs2019-eastus
 
 parameters:
+- name: env
+  displayName: Environment
+  type: string
+  default: [test,staging]
+
 - name: testcase
   displayName: Test Case ID
   type: string
-  default: 'C40493'
+  default: ''
 
-- name: environments
-  displayName: Environment
-  type: object
-  default: [test,staging]
 
 steps:
-- ${{ each env in parameters.environments }}:
+- ${{ each environment in parameters.env }}:
+- task: CopyFiles@2
+  displayName: 'Copy Files: To Build Binaries Directory'
+  inputs:
+    TargetFolder: '$(Build.BinariesDirectory)'
+    CleanTargetFolder: true
+
+- task: DeleteFiles@1
+  displayName: 'Delete files from $(Build.BinariesDirectory)'
+  inputs:
+    SourceFolder: '$(Build.BinariesDirectory)'
+    Contents: README.md
+    RemoveDotFiles: true
+
 - script: |
    cd $(Build.BinariesDirectory)\
    dir
    python -m pip install -r requirements.txt
-   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="${{ env }}"
+   python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env="${{ environment }}"
    
    echo "FETCH LOG FILE - DISPLAY CONTENT"
    cd $(Build.BinariesDirectory)\logs\
