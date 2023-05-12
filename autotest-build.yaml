@@ -5,9 +5,10 @@ parameters:
 - name: env
   displayName: Environment
   type: object
-  default:
-  - test
-  - staging
+  default: 'test'
+  values:
+    - staging
+    - production
 
 - name: testcase
   displayName: Test Case ID
