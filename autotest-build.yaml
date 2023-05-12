@@ -8,7 +8,7 @@ schedules:
   displayName: Every Day 6:00 pm
   branches:
     include:
-    - master
+    - LIVEHTA-2775-pipeline-updates
 
 pool:
   name: cyt-vs2019-eastus
