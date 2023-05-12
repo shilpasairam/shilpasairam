@@ -14,12 +14,9 @@ parameters:
   type: string
   default: 'C40493'
 
-
 steps:
 - ${{ each environment in parameters.env }}:
   - script: |
-     cd $(Build.BinariesDirectory)\
-     dir
      python -m pip install -r requirements.txt
      python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ environment }}
      
@@ -32,12 +29,12 @@ steps:
     displayName: 'Publish Results'
     inputs:
       testResultsFormat: NUnit
-      searchFolder: '$(Build.BinariesDirectory)'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
       testRunTitle: 'Py Result'
   
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: test-automation'
     inputs:
-      PathtoPublish: '$(Build.BinariesDirectory)/${{ parameters.testcase }}_${{ environment }}_results.zip'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.testcase }}_${{ environment }}_results.zip'
       ArtifactName: 'test-automation'
   
