@@ -64,6 +64,18 @@ class ReadConfig:
             OR = config.get('commonInfo', 'OR_prodconfig')
         return OR
 
+    # Get test data file path for Application Access Check
+    @staticmethod
+    def getappaccesstestdata(env):
+        # env = config.get('commonInfo', 'environment')
+        if env == 'test':
+            populationdata = config.get('commonInfo', 'app_access_data')
+        elif env == 'staging':
+            populationdata = config.get('commonInfo', 'app_access_data')
+        elif env == 'production':
+            populationdata = config.get('commonInfo', 'app_access_data_prod')
+        return populationdata
+
     # @staticmethod
     # def getEnvironmenttype():
     #     environmenttype = config.get('commonInfo', 'environmenttype')
