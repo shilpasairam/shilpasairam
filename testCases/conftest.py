@@ -171,7 +171,7 @@ def pytest_html_results_table_row(report, cells):
 @pytest.hookimpl(trylast=True)
 def pytest_sessionfinish(session, exitstatus):
     dir_list = ['ActualOutputs', 'Logs', 'Reports']
-    zip_name = f"{session.config.getoption('-m')}_results.zip"
+    zip_name = f"{session.config.getoption('-m')}_{str(session.config.getoption('--env')).upper()}_ENV_results.zip"
 
     zip_file = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
     for dir in dir_list:
