@@ -18,23 +18,23 @@ parameters:
 steps:
   - script: |
      python -m pip install -r requirements.txt
-     python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ env }}
+     python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ parameters.env }}
      
      echo "FETCH LOG FILE - DISPLAY CONTENT"
      cd $(Build.BinariesDirectory)\logs\
      type testlog.log
-    displayName: '${{ env }}_script'
+    displayName: '${{ parameters.env }}_script'
   
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: NUnit
       searchFolder: '$(System.DefaultWorkingDirectory)'
-      testRunTitle: 'Py Result ${{ env }}'
+      testRunTitle: 'Py Result ${{ parameters.env }}'
   
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
-      PathtoPublish: '$(System.DefaultWorkingDirectory)/${{ parameters.testcase }}_${{ env }}_results.zip'
+      PathtoPublish: '$(System.DefaultWorkingDirectory)/${{ parameters.testcase }}_${{ parameters.env }}_results.zip'
       ArtifactName: 'test-automation'
   
