@@ -17,19 +17,6 @@ parameters:
 
 steps:
 - ${{ each environment in parameters.env }}:
-  - task: CopyFiles@2
-    displayName: 'Copy Files: To Build Binaries Directory'
-    inputs:
-      TargetFolder: '$(Build.BinariesDirectory)'
-      CleanTargetFolder: true
-  
-  - task: DeleteFiles@1
-    displayName: 'Delete files from $(Build.BinariesDirectory)'
-    inputs:
-      SourceFolder: '$(Build.BinariesDirectory)'
-      Contents: README.md
-      RemoveDotFiles: true
-  
   - script: |
      cd $(Build.BinariesDirectory)\
      dir
