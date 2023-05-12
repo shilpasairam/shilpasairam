@@ -16,25 +16,24 @@ parameters:
   default: 'C40493'
 
 steps:
-- ${{ each environment in parameters.env }}:
   - script: |
      python -m pip install -r requirements.txt
-     python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ environment }}
+     python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ env }}
      
      echo "FETCH LOG FILE - DISPLAY CONTENT"
      cd $(Build.BinariesDirectory)\logs\
      type testlog.log
-    displayName: '${{ environment }}'
+    displayName: '${{ environment }}_script'
   
   - task: PublishTestResults@2
-    displayName: 'Publish Results'
+    displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: NUnit
       searchFolder: '$(System.DefaultWorkingDirectory)'
       testRunTitle: 'Py Result ${{ environment }}'
   
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: test-automation'
+    displayName: 'Publish Artifact'
     inputs:
       PathtoPublish: '$(System.DefaultWorkingDirectory)/${{ parameters.testcase }}_${{ environment }}_results.zip'
       ArtifactName: 'test-automation'
