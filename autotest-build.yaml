@@ -6,9 +6,6 @@ parameters:
   displayName: Environment
   type: object
   default: 'test'
-  values:
-    - staging
-    - production
 
 - name: testcase
   displayName: Test Case ID
