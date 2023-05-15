@@ -37,7 +37,7 @@ steps:
     displayName: 'Copy Files ArtifactStagingDirectory'
     inputs:
       Contents: |
-        $(System.DefaultWorkingDirectory)\${{ parameters.testcase }}_${{ parameters.env }}_results.zip
+        $(System.DefaultWorkingDirectory)\*.zip
         $(System.DefaultWorkingDirectory)\*.pdf
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
   
