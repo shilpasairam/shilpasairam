@@ -36,6 +36,6 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
-      PathtoPublish: '$(System.DefaultWorkingDirectory)/${{ parameters.testcase }}_${{ parameters.env }}_results.zip,$(System.DefaultWorkingDirectory)/*.pdf'
+      PathtoPublish: '$(System.DefaultWorkingDirectory)/${{ parameters.testcase }}_${{ parameters.env }}_results.zip,*.pdf'
       ArtifactName: 'test-automation'
   
