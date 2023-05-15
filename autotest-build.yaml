@@ -37,7 +37,9 @@ steps:
     displayName: 'move desired artifacts'
     inputs:
       sourceFolder: $(Build.BinariesDirectory)/
-      contents: '**/?(*.zip|*.pdf)'
+      contents: |
+       !**\*.zip
+       !**\*.pdf
       targetFolder: '$(Build.ArtifactStagingDirectory)/'
   
   - task: PublishBuildArtifacts@1
