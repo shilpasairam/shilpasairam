@@ -38,7 +38,7 @@ steps:
     inputs:
       Contents: |
         $(System.DefaultWorkingDirectory)\${{ parameters.testcase }}_${{ parameters.env }}_results.zip
-        $(System.DefaultWorkingDirectory)\${{ parameters.testcase }}_report_.pdf
+        $(System.DefaultWorkingDirectory)\${{ parameters.testcase }}_report.pdf
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
   
   - task: PublishBuildArtifacts@1
