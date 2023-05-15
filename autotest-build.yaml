@@ -32,9 +32,16 @@ steps:
       testResultsFormat: NUnit
       searchFolder: '$(System.DefaultWorkingDirectory)'
       testRunTitle: 'Py Result ${{ parameters.env }}'
+
+  - task: CopyFiles@2
+    displayName: 'move desired artifacts'
+    inputs:
+      sourceFolder: $(Build.BinariesDirectory)/
+      contents: '**/?(*.zip|*.pdf)'
+      targetFolder: '$(Build.ArtifactStagingDirectory)/'
   
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
-      PathtoPublish: '$(Build.BinariesDirectory)\*.pdf'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/'
       ArtifactName: 'test-automation'
