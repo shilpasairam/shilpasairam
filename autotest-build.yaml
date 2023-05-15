@@ -34,11 +34,11 @@ steps:
       testRunTitle: 'Py Result ${{ parameters.env }}'
 
   - task: CopyFiles@2
-    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+    displayName: 'Copy Files ArtifactStagingDirectory'
     inputs:
       Contents: |
-        $(Build.BinariesDirectory)\${{ parameters.testcase }}_${{ parameters.env }}_results.zip
-        $(Build.BinariesDirectory)\*.pdf
+        $(System.DefaultWorkingDirectory)\${{ parameters.testcase }}_${{ parameters.env }}_results.zip
+        $(System.DefaultWorkingDirectory)\*.pdf
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
   
   - task: PublishBuildArtifacts@1
