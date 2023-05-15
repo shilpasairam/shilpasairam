@@ -103,7 +103,15 @@ def pytest_sessionstart(session):
     if os.path.exists(f'ActualOutputs'):
         for root, dirs, files in os.walk(f'ActualOutputs'):
             for file in files:
-                os.remove(os.path.join(root, file))    
+                os.remove(os.path.join(root, file))
+                
+    # Removing the .zip and .pdf files before the test runs
+    for dirpath, dirnames, filenames in os.walk(os.curdir):
+        for file in filenames:
+            if fnmatch(file, '*.zip'):
+                os.remove(os.path.join(dirpath, file))
+            if fnmatch(file, '*.pdf'):
+                os.remove(os.path.join(dirpath, file))
 
 
 # @pytest.hookimpl(tryfirst=True)
