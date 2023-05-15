@@ -34,13 +34,12 @@ steps:
       testRunTitle: 'Py Result ${{ parameters.env }}'
 
   - task: CopyFiles@2
-    displayName: 'move desired artifacts'
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
     inputs:
-      sourceFolder: $(Build.BinariesDirectory)/
-      contents: |
-       !**\*.zip
-       !**\*.pdf
-      targetFolder: '$(Build.ArtifactStagingDirectory)/'
+      Contents: |
+        $(System.DefaultWorkingDirectory)\*.zip
+        $(System.DefaultWorkingDirectory)\*.pdf
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
   
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
