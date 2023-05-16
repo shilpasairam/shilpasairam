@@ -166,8 +166,9 @@ class UtilityOutcome(Base):
                                               pass_=True, log=True, screenshot=False)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Expected column names are not present in Complete Excel "
-                                                      f"Report. Source Excel Column names are : {source_col_val},\n "
-                                                      f"Complete Excel Column names are : {compex_col_val}",
+                                                      f"Report. Expected Excel Excel Column names are : "
+                                                      f"{source_col_val},\n Complete Excel Column names are : "
+                                                      f"{compex_col_val}",
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Expected column names are not present in Complete Excel Report")
     
@@ -193,17 +194,18 @@ class UtilityOutcome(Base):
             actual_col = [item for item in actual_col if str(item) != 'nan']
 
             if len(source_col) == len(actual_col):
-                self.LogScreenshot.fLogScreenshot(message=f"Row count in column '{col}' are matching between Source "
-                                                          f"Utility File and Complete Excel Report. "
-                                                          f"Source Utility File Elements Length {len(source_col)},\n "
+                self.LogScreenshot.fLogScreenshot(message=f"Row count in column '{col}' are matching between Expected "
+                                                          f"Excel Utility File and Complete Excel Report. Expected "
+                                                          f"Excel Utility File Elements Length {len(source_col)},\n "
                                                           f"Complete Excel Elements Length {len(actual_col)}",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Row count in column '{col}' are not matching. "
-                                                          f"Source Utility File Elements Length {len(source_col)},\n "
+                self.LogScreenshot.fLogScreenshot(message=f"Row count in column '{col}' are not matching. Expected "
+                                                          f"Excel Utility File Elements Length {len(source_col)},\n "
                                                           f"Complete Excel Elements Length {len(actual_col)}",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception("Row Counts are not matching between Source Utility File and Complete Excel report")
+                raise Exception("Row Counts are not matching between Expected Excel Utility File and Complete "
+                                "Excel report")
     
     def qol_presenceof_utilitysummary_into_wordreport(self, word_filename, util_filepath):
         source_template = self.get_util_source_template(util_filepath, 'NewImportLogic')
@@ -227,7 +229,7 @@ class UtilityOutcome(Base):
                                               pass_=True, log=True, screenshot=False)
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Expected column names are not present in Word Report."
-                                                      f"Source Excel Column names are : {source_col_val},\n "
+                                                      f"Expected Excel Column names are : {source_col_val},\n "
                                                       f"Word Report Column names are : {word_col_val}",
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Expected column names are not present in Word Report")
@@ -257,21 +259,21 @@ class UtilityOutcome(Base):
 
                 if len(source) == len(word):
                     self.LogScreenshot.fLogScreenshot(message=f"Row count in Column '{col_name}' are matching between "
-                                                              f"Source Utility File and Word Report.\n"
-                                                              f"Source Utility File Elements Length: {len(source)},\n "
-                                                              f"Word Elements Length: {len(word)}\n",
+                                                              f"Expected Excel Utility File and Word Report.\n"
+                                                              f"Expected Excel Utility File Elements Length: "
+                                                              f"{len(source)},\n Word Elements Length: {len(word)}\n",
                                                       pass_=True, log=True, screenshot=False)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Row count in Column '{col_name}' are not matching "
-                                                              f"between Source Utility File and Word Report.\n"
-                                                              f"Source Utility File Elements Length: {len(source)},\n "
-                                                              f"Word Elements Length: {len(word)}\n",
+                                                              f"between Expected Excel Utility File and Word Report.\n"
+                                                              f"Expected Excel Utility File Elements Length: "
+                                                              f"{len(source)},\n Word Elements Length: {len(word)}\n",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception("Row Counts are not matching between Source Utility File and Word Report.")
+                    raise Exception("Row Counts are not matching between Expected Excel Utility File and Word Report.")
                 count += 1
             else:
-                raise Exception(f"Column name '{col_name}' is not matching between Source Utility File and Word "
-                                f"Report.")
+                raise Exception(f"Column name '{col_name}' is not matching between Expected Excel Utility File and "
+                                f"Word Report.")
         
     def qol_verify_excelreport_utility_summary_sorting_order(self, excel_filename, util_filepath):
         self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility "
@@ -317,9 +319,9 @@ class UtilityOutcome(Base):
         actual_col_len = [item for item in actual_col_len if str(item) != 'nan']
 
         if len(source_col_len) == len(actual_col_len):
-            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and "
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel and "
                                                       f"Complete Excel Report. "
-                                                      f"Source Elements Length: {len(source_col_len)}\n "
+                                                      f"Expected Excel Elements Length: {len(source_col_len)}\n "
                                                       f"Excel Elements Length: {len(actual_col_len)}\n",
                                               pass_=True, log=True, screenshot=False)
         
@@ -335,21 +337,22 @@ class UtilityOutcome(Base):
 
                 if len(comparison_result) == 0:
                     self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between "
-                                                              f"Source Template and Complete Excel Report",
+                                                              f"Expected Excel and Complete Excel Report",
                                                       pass_=True, log=True, screenshot=False)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                               f"Duplicate values are arranged in following order -> "
-                                                              f"Source File, Complete Excel. {comparison_result}",
+                                                              f"Expected Excel File, Complete Excel. "
+                                                              f"{comparison_result}",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+                    raise Exception("Contents are not matching between Expected Excel and Complete Excel report")
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and "
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel and "
                                                       f"Complete Excel Report. "
-                                                      f"Source Template Elements Length: {len(source_col_len)}\n "
+                                                      f"Expected Excel Elements Length: {len(source_col_len)}\n "
                                                       f"Excel Elements Length: {len(actual_col_len)}\n",
                                               pass_=False, log=True, screenshot=False)
-            raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
+            raise Exception(f"Elements length is not matching between Expected Excel and Complete Excel Report.")
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Validation of Table data and Sorting order in Utility "
                                                   f"Summary sheet Completed*****",
@@ -407,9 +410,9 @@ class UtilityOutcome(Base):
         word_len.pop(0)
 
         if len(source_len) == len(word_len):
-            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel and "
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel and "
                                                       f"Complete Word Report. "
-                                                      f"Source Excel Elements Length: {len(source_len)}\n "
+                                                      f"Expected Excel Elements Length: {len(source_len)}\n "
                                                       f"Word Elements Length: {len(word_len)}\n",
                                               pass_=True, log=True, screenshot=False)
         
@@ -431,23 +434,23 @@ class UtilityOutcome(Base):
 
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are matching "
-                                                                  f"between Source Excel and Word Reports.",
+                                                                  f"between Expected Excel and Word Reports.",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not matching "
-                                                                  f"between Source Excel and Word Reports.\n"
+                                                                  f"between Expected Excel and Word Reports.\n"
                                                                   f"Duplicate values are arranged in following "
-                                                                  f"order -> Source Excel and Word Report. "
+                                                                  f"order -> Expected Excel and Word Report. "
                                                                   f"{comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Elements are not matching between Source Excel and Word Reports")
+                        raise Exception("Elements are not matching between Expected Excel and Word Reports")
                     count += 1
                 else:
-                    raise Exception("Column names are not matching between Source Excel and Word Reports")
+                    raise Exception("Column names are not matching between Expected Excel and Word Reports")
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel and "
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel and "
                                                       f"Complete Word Report. "
-                                                      f"Source Excel Elements Length: {len(source_len)}\n "
+                                                      f"Expected Excel Elements Length: {len(source_len)}\n "
                                                       f"Word Elements Length: {len(word_len)}\n",
                                               pass_=False, log=True, screenshot=False)
 
@@ -485,9 +488,9 @@ class UtilityOutcome(Base):
                                                       f"'Study Identifier' are in sorted order",
                                               pass_=True, log=True, screenshot=False)
             if len(sourcefile_col1) == len(actualexcel_col1) == len(actualwebexcel_col1):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col1)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col1)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col1)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col1)}\n",
                                                   pass_=True, log=True, screenshot=False)
@@ -506,25 +509,25 @@ class UtilityOutcome(Base):
 
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching "
-                                                                  f"between Source Template, WebExcel and "
+                                                                  f"between Expected Excel, WebExcel and "
                                                                   f"Complete Excel Report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                                   f"Duplicate values are arranged in following "
-                                                                  f"order -> Source File, WebExcel, Complete Excel. "
+                                                                  f"order -> Expected Excel, WebExcel, Complete Excel. "
                                                                   f"{comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Contents are not matching between Source template, WebExcel and Complete "
+                        raise Exception("Contents are not matching between Expected Excel, WebExcel and Complete "
                                         "Excel report")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col1)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col1)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col1)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col1)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
+                raise Exception(f"Elements length is not matching between Expected Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         else:
             raise Exception("From 'QOL Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
@@ -544,9 +547,9 @@ class UtilityOutcome(Base):
         actualexcel_col = [item for item in actualexcel_col if str(item) != 'nan']
 
         if len(sourcefile_col) == len(actualexcel_col):
-            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and "
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel and "
                                                       f"Complete Excel Report. "
-                                                      f"Source Elements Length: {len(sourcefile_col)}\n "
+                                                      f"Expected Excel Length: {len(sourcefile_col)}\n "
                                                       f"Excel Elements Length: {len(actualexcel_col)}\n",
                                               pass_=True, log=True, screenshot=False)
 
@@ -561,21 +564,21 @@ class UtilityOutcome(Base):
 
                 if len(comparison_result) == 0:
                     self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between "
-                                                              f"Source Template and Complete Excel Report",
+                                                              f"Expected Excel and Complete Excel Report",
                                                       pass_=True, log=True, screenshot=False)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                               f"Duplicate values are arranged in following order -> "
-                                                              f"Source File, Complete Excel. {comparison_result}",
+                                                              f"Expected Excel, Complete Excel. {comparison_result}",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception("Contents are not matching between Source template and Complete Excel report")
+                    raise Exception("Contents are not matching between Expected Excel and Complete Excel report")
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template and "
+            self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel and "
                                                       f"Complete Excel Report. "
-                                                      f"Source Template Elements Length: {len(sourcefile_col)}\n "
+                                                      f"Expected Excel Elements Length: {len(sourcefile_col)}\n "
                                                       f"Excel Elements Length: {len(actualexcel_col)}\n",
                                               pass_=False, log=True, screenshot=False)
-            raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
+            raise Exception(f"Elements length is not matching between Expected Excel and Complete Excel Report.")
         
         # Word report content comparison for Utility Table
         self.LogScreenshot.fLogScreenshot(message=f"*****Word Report Utility Table Comparison*****",
@@ -595,7 +598,7 @@ class UtilityOutcome(Base):
                                                   pass_=True, log=True, screenshot=False)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Expected column names are not present in Word Report."
-                                                          f"Source Excel Column names are : {source_col_val},\n "
+                                                          f"Expected Excel Column names are : {source_col_val},\n "
                                                           f"Word Report Column names are : {word_col_val}",
                                                   pass_=False, log=True, screenshot=False)
                 raise Exception("Expected column names are not present in Word Report")
@@ -612,9 +615,9 @@ class UtilityOutcome(Base):
             word_len.pop(0)
 
             if len(source_len) == len(compex_len) == len(word_len):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Complete Excel and Complete Word Report. "
-                                                          f"Source Excel Elements Length: {len(source_len)}\n "
+                                                          f"Expected Excel Elements Length: {len(source_len)}\n "
                                                           f"Excel Elements Length: {len(compex_len)}\n "
                                                           f"Word Elements Length: {len(word_len)}\n",
                                                   pass_=True, log=True, screenshot=False)
@@ -639,31 +642,31 @@ class UtilityOutcome(Base):
 
                         if len(comparison_result) == 0:
                             self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are "
-                                                                      f"matching between Source Excel, Complete "
+                                                                      f"matching between Expected Excel, Complete "
                                                                       f"Excel and Word Reports.\n",
                                                               pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are not "
-                                                                      f"matching between Source Excel, Complete "
+                                                                      f"matching between Expected Excel, Complete "
                                                                       f"Excel and Word Reports.\n"
                                                                       f"Duplicate values are arranged in following "
-                                                                      f"order -> Source Excel, Complete Excel and "
+                                                                      f"order -> Expected Excel, Complete Excel and "
                                                                       f"Word Report. {comparison_result}",
                                                               pass_=False, log=True, screenshot=False)
-                            raise Exception("Elements are not matching between Source Excel, Complete Excel and "
+                            raise Exception("Elements are not matching between Expected Excel, Complete Excel and "
                                             "Word Reports")
                         count += 1
                     else:
-                        raise Exception("Column names are not matching between Source Excel, Complete Excel and "
+                        raise Exception("Column names are not matching between Expected Excel, Complete Excel and "
                                         "Word Reports")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Complete Excel and Complete Word Report. "
-                                                          f"Source Excel Elements Length: {len(source_len)}\n "
+                                                          f"Expected Excel Elements Length: {len(source_len)}\n "
                                                           f"Excel Elements Length: {len(compex_len)}\n "
                                                           f"Word Elements Length: {len(word_len)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Complete Excel and "
+                raise Exception(f"Elements length is not matching between Expected Excel, Complete Excel and "
                                 f"Complete Word Report.")
         except Exception:
             raise Exception("Error in Word report content validation")
@@ -726,9 +729,9 @@ class UtilityOutcome(Base):
                                               pass_=True, log=True, screenshot=False)
             
             if len(sourcefile_col1) == len(actualexcel_col1) == len(actualwebexcel_col1):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col1)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col1)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col1)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col1)}\n",
                                                   pass_=True, log=True, screenshot=False)
@@ -748,25 +751,25 @@ class UtilityOutcome(Base):
 
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching "
-                                                                  f"between Source Template, WebExcel and "
+                                                                  f"between Expected Excel, WebExcel and "
                                                                   f"Complete Excel Report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                                   f"Duplicate values are arranged in following "
-                                                                  f"order -> Source File, WebExcel, "
+                                                                  f"order -> Expected Excel, WebExcel, "
                                                                   f"Complete Excel. {comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Contents are not matching between Source template, WebExcel and "
+                        raise Exception("Contents are not matching between Expected Excel, WebExcel and "
                                         "Complete Excel report")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col1)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col1)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col1)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col1)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
+                raise Exception(f"Elements length is not matching between Expected Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         else:
             raise Exception("From 'QOL Report' sheet, contents in column 'Study Identifier' are not in Sorted order")
@@ -873,9 +876,9 @@ class UtilityOutcome(Base):
             actual_col_len = [item for item in actual_col_len if str(item) != 'nan']
 
             if len(source_col_len) == len(actual_col_len):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Template and "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel and "
                                                           f"Complete Excel Report. "
-                                                          f"Source Elements Length: {len(source_col_len)}\n "
+                                                          f"Expected Excel Elements Length: {len(source_col_len)}\n "
                                                           f"Excel Elements Length: {len(actual_col_len)}\n",
                                                   pass_=True, log=True, screenshot=False)
             
@@ -891,22 +894,22 @@ class UtilityOutcome(Base):
 
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between "
-                                                                  f"Source Template and Complete Excel Report",
+                                                                  f"Expected Excel and Complete Excel Report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                                   f"Duplicate values are arranged in following "
-                                                                  f"order -> Source File, Complete Excel. "
+                                                                  f"order -> Expected Excel, Complete Excel. "
                                                                   f"{comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Contents are not matching between Source template and Complete Excel report")
+                        raise Exception("Contents are not matching between Expected Excel and Complete Excel report")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Template "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel "
                                                           f"and Complete Excel Report. "
-                                                          f"Source Template Elements Length: {len(source_col_len)}\n "
+                                                          f"Expected Excel Elements Length: {len(source_col_len)}\n "
                                                           f"Excel Elements Length: {len(actual_col_len)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Template and Complete Excel Report.")
+                raise Exception(f"Elements length is not matching between Expected Excel and Complete Excel Report.")
 
             self.LogScreenshot.fLogScreenshot(message=f"*****Utility Summary Sheet Content Comparison Completed*****",
                                               pass_=True, log=True, screenshot=False)
@@ -959,9 +962,9 @@ class UtilityOutcome(Base):
                                               pass_=True, log=True, screenshot=False)
 
             if len(sourcefile_col) == len(actualexcel_col) == len(actualwebexcel_col):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col)}\n",
                                                   pass_=True, log=True, screenshot=False)
@@ -981,32 +984,32 @@ class UtilityOutcome(Base):
 
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching between "
-                                                                  f"Source Template, WebExcel and "
+                                                                  f"Expected Excel, WebExcel and "
                                                                   f"Complete Excel Report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                                   f"Duplicate values are arranged in following "
-                                                                  f"order -> Source File, WebExcel, "
+                                                                  f"order -> Expected Excel, WebExcel, "
                                                                   f"Complete Excel. {comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Contents are not matching between Source template, WebExcel and "
+                        raise Exception("Contents are not matching between Expected Excel, WebExcel and "
                                         "Complete Excel report")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
+                raise Exception(f"Elements length is not matching between Expected Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         else:
             raise Exception("From 'CEA CUA Report' sheet, contents in column 'Study Identifier' "
                             "are not in Sorted order")
         
-        # Word report content comparison with Source template
-        self.LogScreenshot.fLogScreenshot(message=f"*****ECON Word Report Comparison with Source template*****",
+        # Word report content comparison with Expected Excel
+        self.LogScreenshot.fLogScreenshot(message=f"*****ECON Word Report Comparison with Expected Excel*****",
                                           pass_=True, log=True, screenshot=False)
         # Index of Table number 6 is : 5. Starting point for word table content comparison
         table_count = 5
@@ -1030,9 +1033,9 @@ class UtilityOutcome(Base):
             word_len.pop(0)
 
             if len(source_len) == len(webex_len) == len(compex_len) == len(word_len):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Web_Excel, Complete Excel and Complete Word Report. "
-                                                          f"Source Excel Elements Length: {len(source_len)}\n"
+                                                          f"Expected Excel Elements Length: {len(source_len)}\n"
                                                           f"WebExcel Elements Length: {len(webex_len)}\n "
                                                           f"Excel Elements Length: {len(compex_len)}\n "
                                                           f"Word Elements Length: {len(word_len)}\n",
@@ -1067,32 +1070,33 @@ class UtilityOutcome(Base):
 
                             if len(comparison_result) == 0:
                                 self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are "
-                                                                          f"matching between Source Excel, Complete "
+                                                                          f"matching between Expected Excel, Complete "
                                                                           f"Excel, Web-Excel and Word Reports.\n",
                                                                   pass_=True, log=True, screenshot=False)
                             else:
                                 self.LogScreenshot.fLogScreenshot(message=f"Contents in Column '{col_name}' are "
-                                                                          f"matching between Source Excel, Complete "
+                                                                          f"matching between Expected Excel, Complete "
                                                                           f"Excel, Web-Excel and Word Reports.\n"
                                                                           f"Duplicate values are arranged in following "
-                                                                          f"order -> Source Excel, WebExcel, Complete "
-                                                                          f"Excel and Word Report. {comparison_result}",
+                                                                          f"order -> Expected Excel, WebExcel, "
+                                                                          f"Complete Excel and Word Report. "
+                                                                          f"{comparison_result}",
                                                                   pass_=False, log=True, screenshot=False)
-                                raise Exception("Elements are not matching between Source Excel, Webexcel, "
+                                raise Exception("Elements are not matching between Expected Excel, Webexcel, "
                                                 "Complete Excel and Word Reports")
                             count += 1
                         else:
-                            raise Exception("Column names are not matching between Source Excel, Complete Excel, "
+                            raise Exception("Column names are not matching between Expected Excel, Complete Excel, "
                                             "WebExcel and Word Reports")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Web_Excel, Complete Excel and Complete Word Report. "
-                                                          f"Source Excel Elements Length: {len(webex_len)}\n"
+                                                          f"Expected Excel Elements Length: {len(webex_len)}\n"
                                                           f"WebExcel Elements Length: {len(webex_len)}\n "
                                                           f"Excel Elements Length: {len(compex_len)}\n "
                                                           f"Word Elements Length: {len(word_len)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel, Complete Excel "
+                raise Exception(f"Elements length is not matching between Expected Excel, Web_Excel, Complete Excel "
                                 f"and Complete Word Report.")
         except Exception:
             raise Exception("Error in Word report content validation")
@@ -1132,9 +1136,9 @@ class UtilityOutcome(Base):
                                               pass_=True, log=True, screenshot=False)
 
             if len(sourcefile_col1) == len(actualexcel_col1) == len(actualwebexcel_col1):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col1)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col1)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col1)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col1)}\n",
                                                   pass_=True, log=True, screenshot=False)
@@ -1153,30 +1157,30 @@ class UtilityOutcome(Base):
 
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are matching "
-                                                                  f"between Source Template, WebExcel and "
+                                                                  f"between Expected Excel, WebExcel and "
                                                                   f"Complete Excel Report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Contents in column '{col}' are not matching. "
                                                                   f"Duplicate values are arranged in following "
-                                                                  f"order -> Source File,  WebExcel, "
+                                                                  f"order -> Expected Excel,  WebExcel, "
                                                                   f"Complete Excel. {comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Contents are not matching between Source template, WebExcel and "
+                        raise Exception("Contents are not matching between Expected Excel, WebExcel and "
                                         "Complete Excel report")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(sourcefile_col1)}\n "
+                                                          f"Expected Excel Elements Length: {len(sourcefile_col1)}\n "
                                                           f"WebExcel Elements Length: {len(actualwebexcel_col1)}\n "
                                                           f"Excel Elements Length: {len(actualexcel_col1)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
+                raise Exception(f"Elements length is not matching between Expected Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         else:
             self.LogScreenshot.fLogScreenshot(message=f"Contents in column 'Study Identifier' are not in sorted order. "
-                                                      f"Values are Sourcefile: {sourcefile_col1}, "
-                                                      f"SortedSourcefile: {sorted(sourcefile_col1)}, "
+                                                      f"Values are Expected Excel: {sourcefile_col1}, "
+                                                      f"SortedExpectedExcelfile: {sorted(sourcefile_col1)}, "
                                                       f"ActualExcel: {actualexcel_col1}, "
                                                       f"SortedActualExcel: {sorted(actualexcel_col1)}, "
                                                       f"ActualWebExcel: {actualwebexcel_col1}, "

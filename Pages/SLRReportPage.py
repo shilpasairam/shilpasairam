@@ -384,13 +384,13 @@ class SLRReport(Base):
                 break
     
     def excel_content_validation(self, filepath, index, webexcel_filename, excel_filename, first_col):
-        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and downloaded WebExcel "
-                                                  f"and Complete Excel Reports",
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Expected Excel File and downloaded "
+                                                  f"WebExcel and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
         
         source_template = self.get_source_template(filepath, 'ExpectedSourceTemplateFile_Excel')
 
-        self.LogScreenshot.fLogScreenshot(message=f"Source Filename is: {Path(f'{source_template[0]}').stem}, "
+        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel Filename is: {Path(f'{source_template[0]}').stem}, "
                                                   f"Downloaded FileNames are: {webexcel_filename} "
                                                   f"and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
@@ -423,7 +423,7 @@ class SLRReport(Base):
         # Actual excel content validation step starts here
         source_data = openpyxl.load_workbook(f'{source_template[0]}')
 
-        self.LogScreenshot.fLogScreenshot(message=f"Source file Sheetnames are: {source_data.sheetnames}",
+        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel file Sheetnames are: {source_data.sheetnames}",
                                           pass_=True, log=True, screenshot=False)
         
         expected_data = pd.read_excel(f'{source_template[0]}', sheet_name=source_data.sheetnames[index])
@@ -443,9 +443,9 @@ class SLRReport(Base):
             compex_len = [item for item in compex_len if str(item) != 'nan']
 
             if len(source_len) == len(webex_len) == len(compex_len):
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(source_len)}\n "
+                                                          f"Expected Excel Elements Length: {len(source_len)}\n "
                                                           f"WebExcel Elements Length: {len(webex_len)}\n "
                                                           f"Excel Elements Length: {len(compex_len)}\n",
                                                   pass_=True, log=True, screenshot=False)
@@ -465,31 +465,32 @@ class SLRReport(Base):
                     if len(comparison_result) == 0:
                         self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, "
                                                                   f"Values in Column '{col}' are matching between "
-                                                                  f"Source, WebExcel and Complete Excel Report.\n",
+                                                                  f"Expected Excel, WebExcel and Complete Excel "
+                                                                  f"Report.\n",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"From '{source_data.sheetnames[index]}' Report, "
                                                                   f"Values in Column '{col}' are not matching between "
-                                                                  f"Source, WebExcel and Complete Excel Report.\n"
-                                                                  f"Mismatch values are arranged in following "
-                                                                  f"order -> Source File, WebExcel, Complete Excel. "
-                                                                  f"{comparison_result}",
+                                                                  f"Expected Excel, WebExcel and Complete Excel "
+                                                                  f"Report. Mismatch values are arranged in following "
+                                                                  f"order -> Expected Excel File, WebExcel, Complete "
+                                                                  f"Excel. {comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
                         raise Exception("Elements are not matching between Webexcel and Complete Excel")
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel, "
+                self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel, "
                                                           f"Web_Excel and Complete Excel Report. "
-                                                          f"Source Elements Length: {len(source_len)}\n "
+                                                          f"Expected Excel Elements Length: {len(source_len)}\n "
                                                           f"WebExcel Elements Length: {len(webex_len)}\n "
                                                           f"Excel Elements Length: {len(compex_len)}\n",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Elements length is not matching between Source Excel, Web_Excel and "
+                raise Exception(f"Elements length is not matching between Expected Excel, Web_Excel and "
                                 f"Complete Excel Report.")
         except Exception:
             raise Exception("Error in Excel sheet content validation")
 
     def word_content_validation(self, filepath, slr_type_index, word_filename):
-        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and "
+        self.LogScreenshot.fLogScreenshot(message=f"Content validation between Expected Excel File and "
                                                   f"Complete Word Report",
                                           pass_=True, log=True, screenshot=False)
 
@@ -503,7 +504,7 @@ class SLRReport(Base):
         # Index of Table number 6 is : 5. Starting point for word table content comparison
         table_count = 5
 
-        self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {source_excel.sheetnames}",
+        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel file Sheetnames are: {source_excel.sheetnames}",
                                           pass_=True, log=True, screenshot=False)
         for sheet in source_excel.sheetnames:
             src_data = pd.read_excel(f'{source_template[slr_type_index]}', sheet_name=sheet)
@@ -523,8 +524,8 @@ class SLRReport(Base):
                 word_len.pop(0)
 
                 if len(src_data_len) == len(word_len):
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Source Excel and "
-                                                              f"Complete Word Report. Source Excel Elements Length: "
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is matching between Expected Excel and "
+                                                              f"Complete Word Report. Expected Excel Elements Length: "
                                                               f"{len(src_data_len)}\n Word Elements Length: "
                                                               f"{len(word_len)}\n",
                                                       pass_=True, log=True, screenshot=False)
@@ -559,30 +560,30 @@ class SLRReport(Base):
                             if len(comparison_result) == 0:
                                 self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
                                                                           f"Column '{col_name}' are matching "
-                                                                          f"between Source Excel and Word Report.\n",
+                                                                          f"between Expected Excel and Word Report.\n",
                                                                   pass_=True, log=True, screenshot=False)
                             else:
                                 self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Values in "
                                                                           f"Column '{col_name}' are not matching "
-                                                                          f"between Source Excel and Word Report.\n "
+                                                                          f"between Expected Excel and Word Report.\n "
                                                                           f"Mismatch values are arranged in "
                                                                           f"following order -> Word, Complete Excel "
                                                                           f"and WebExcel Report. {comparison_result}",
                                                                   pass_=False, log=True, screenshot=False)
-                                raise Exception("Elements are not matching between Source Excel "
+                                raise Exception("Elements are not matching between Expected Excel "
                                                 "and Word Reports")
                             count += 1
                         else:
-                            raise Exception("Column names are not matching between Source Excel "
+                            raise Exception("Column names are not matching between Expected Excel "
                                             "and Word Reports")
                     table_count += 1
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Source Excel "
-                                                              f"and Complete Word Report. Source Excel Elements "
+                    self.LogScreenshot.fLogScreenshot(message=f"Elements length is not matching between Expected Excel "
+                                                              f"and Complete Word Report. Expected Excel Elements "
                                                               f"Length: {len(src_data_len)}\n Word Elements "
                                                               f"Length: {len(word_len)}\n",
                                                       pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Elements length is not matching between Source Excel and "
+                    raise Exception(f"Elements length is not matching between Expected Excel and "
                                     f"Complete Word Report.")
             except Exception:
                 raise Exception("Error in Word report content validation")
@@ -1478,13 +1479,13 @@ class SLRReport(Base):
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Content from Table 2-2 is not matching with "
                                                                   f"expected test data. Mismatch values are "
-                                                                  f"arranged in following order -> Source Excel and "
+                                                                  f"arranged in following order -> Expected Excel and "
                                                                   f"Word Report. {comparison_result}",
                                                           pass_=False, log=True, screenshot=False)
-                        raise Exception("Elements are not matching between Source data and Word Report")
+                        raise Exception("Elements are not matching between Expected Excel data and Word Report")
                     count += 1
                 else:
-                    raise Exception("Column names are not matching between Source data and "
+                    raise Exception("Column names are not matching between Expected Excel data and "
                                     "Word Report")
             self.refreshpage()
             self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
