@@ -383,7 +383,7 @@ class SLRReport(Base):
             if time.time() > endTime:
                 break
     
-    def excel_content_validation(self, filepath, index, webexcel_filename, excel_filename):
+    def excel_content_validation(self, filepath, index, webexcel_filename, excel_filename, first_col):
         self.LogScreenshot.fLogScreenshot(message=f"Content validation between Source File and downloaded WebExcel "
                                                   f"and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
@@ -412,7 +412,7 @@ class SLRReport(Base):
             
             # Check the presence of column names at row 4
             df = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=i, skiprows=3)
-            if 'Study Identifier' in df.columns.values:
+            if first_col in df.columns.values:
                 self.LogScreenshot.fLogScreenshot(message=f"Column names are present at row 4.",
                                                   pass_=True, log=True, screenshot=False)
             else:
@@ -434,9 +434,9 @@ class SLRReport(Base):
 
         try:
             # Check the length of 1st column from the report to make sure number of rows are as expected
-            source_len = expected_data["Study Identifier"]
-            webex_len = webexcel["Study Identifier"]
-            compex_len = excel["Study Identifier"]
+            source_len = expected_data[first_col]
+            webex_len = webexcel[first_col]
+            compex_len = excel[first_col]
 
             source_len = [item for item in source_len if str(item) != 'nan']
             webex_len = [item for item in webex_len if str(item) != 'nan']
