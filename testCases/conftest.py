@@ -9,6 +9,7 @@ import platform
 import socket
 import psutil
 import datetime
+import xml.dom.minidom
 import glob
 from pyhtml2pdf import converter
 from pathlib import Path
@@ -177,6 +178,66 @@ def pytest_sessionfinish(session, exitstatus):
     filename = Path(glob.glob('Reports//*.html')[0]).stem
     path = os.path.abspath(f'Reports//{filename}.html')
     converter.convert(f'file:///{path}?collapsed=Skipped', f"{filename}.pdf")
+
+    # Modifying the xml file for testrail result upload
+    doc = xml.dom.minidom.parse(f'Reports/junit-results.xml')
+
+    for tc in doc.getElementsByTagName('testcase'):
+
+        properties = doc.createElement('properties')
+        tc.appendChild(properties)
+
+        # Adding the properties tag to attach the evidences
+        property1 = doc.createElement('property')
+        property1.setAttribute('name', 'testrail_attachment')
+        property1.setAttribute('value', f"{filename}.pdf")
+        properties.appendChild(property1)
+
+        # Adding the properties tag to add the comment
+        property2 = doc.createElement('property')
+        property2.setAttribute('name', 'testrail_result_comment')
+        property2.setAttribute('value', "Pytest Automated Test Results")
+        properties.appendChild(property2)
+
+        # When Testcase is failed then an extra properties tag will be added to upload the exception details to
+        # know in which step exactly the test case if failed.
+        index = 1
+        for child in tc.childNodes:
+            if child.nodeName == 'failure':
+                for xy in doc.getElementsByTagName('failure'):
+                    if xy.attributes['message'].value != "**Test is Failed**":
+                        text = xy.childNodes[0].nodeValue
+                        dirpath = os.getcwd()
+                        isExist = os.path.exists(dirpath)
+                        if isExist:
+                            filepath = Path(os.getcwd() + f"\\exception_file_{index}.txt")
+                            filepath.touch(exist_ok=True)
+                        elif not isExist:
+                            os.makedirs(dirpath)
+                            filepath = Path(os.getcwd() + f"\\exception_file_{index}.txt")
+                            filepath.touch(exist_ok=True)
+
+                        file = open(f'exception_file_{index}.txt', 'w')
+                        file.write(text)
+                        file.close()
+
+                        property2 = doc.createElement('property')
+                        property2.setAttribute('name', 'testrail_attachment')
+                        property2.setAttribute('value', f'exception_file_{index}.txt')
+                        properties.appendChild(property2)
+
+                        xy.attributes['message'].value = "**Test is Failed**"
+                        xy.childNodes[0].nodeValue = f"Actual results does not meet with Expected results. Hence " \
+                                                     f"the test case is failed. Please find the attached exception " \
+                                                     f"results 'exception_file_{index}.txt' file for more information."
+                        break
+                    index += 1
+
+    xml_str = doc.toprettyxml(indent="\t")
+    save_path_file = f"Reports/junit-results.xml"
+
+    with open(save_path_file, "w") as f:
+        f.write(xml_str)
 
     dir_list = ['ActualOutputs', 'Logs', 'Reports']
     zip_name = f"{session.config.getoption('-m')}_{str(session.config.getoption('--env')).upper()}_ENV_results.zip"
