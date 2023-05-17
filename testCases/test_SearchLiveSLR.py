@@ -355,6 +355,7 @@ class Test_Search_LiveSLR:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C39301
+    @pytest.mark.C39314
     def test_nononcology_slrreport_comparison(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
