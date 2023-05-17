@@ -86,8 +86,9 @@ class ImportPublicationPage(Base):
                                                   pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the extraction file.",
-                                                          pass_=True, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the "
+                                                              f"extraction file.",
+                                                      pass_=True, log=True, screenshot=False)
                     result = []
                     td1 = self.select_elements('upload_table_row_1', env)
                     for m in td1:
@@ -100,8 +101,9 @@ class ImportPublicationPage(Base):
                     else:
                         raise Exception("Wrong file is uploaded")
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not incremented after uploading the extraction file.",
-                                                          pass_=False, log=True, screenshot=False)
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not incremented after uploading the "
+                                                              f"extraction file.",
+                                                      pass_=False, log=True, screenshot=False)
                     raise Exception(f"Record count is not incremented after uploading the extraction file.")
 
                 # Validating the upload status icon
@@ -290,14 +292,19 @@ class ImportPublicationPage(Base):
 
                 try:
                     if len(table_rows_before) > len(table_rows_after) != len(table_rows_before):
-                        self.LogScreenshot.fLogScreenshot(message=f"Record count is decremented after deleting the extraction file.",
+                        self.LogScreenshot.fLogScreenshot(message=f"Record count is decremented after deleting the "
+                                                                  f"extraction file.",
                                                           pass_=True, log=True, screenshot=False)
                 except Exception:
-                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not decremented after deleting the extraction file.",
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not decremented after deleting the "
+                                                              f"extraction file.",
                                                       pass_=False, log=True, screenshot=False)
                     raise Exception(f"Record count is not decremented after deleting the extraction file.")
             else:
-                raise Exception("No file uploaded to perform delete operation")
+                self.LogScreenshot.fLogScreenshot(message=f"Unable to find the uploaded Filename '{i[2]}' in first "
+                                                          f"row of the table. Hence aborting the delete operation.",
+                                                  pass_=False, log=True, screenshot=True)                
+                raise Exception(f"Unable to find the uploaded Filename '{i[2]}' in first row of the table.")
 
     def upload_file_for_same_population(self, locatorname, filepath, env):
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
