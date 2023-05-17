@@ -383,12 +383,10 @@ class SLRReport(Base):
             if time.time() > endTime:
                 break
     
-    def excel_content_validation(self, filepath, index, webexcel_filename, excel_filename, first_col):
+    def excel_content_validation(self, source_template, index, webexcel_filename, excel_filename, first_col):
         self.LogScreenshot.fLogScreenshot(message=f"Content validation between Expected Excel File and downloaded "
                                                   f"WebExcel and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
-        
-        source_template = self.get_source_template(filepath, 'ExpectedSourceTemplateFile_Excel')
 
         self.LogScreenshot.fLogScreenshot(message=f"Expected Excel Filename is: {Path(f'{source_template[0]}').stem}, "
                                                   f"Downloaded FileNames are: {webexcel_filename} "

@@ -3,6 +3,7 @@ import time
 
 import pytest
 from Pages.Base import Base
+from Pages.ExcludedStudies_liveSLR import ExcludedStudies_liveSLR
 from Pages.ExtendedBasePage import ExtendedBase
 from Pages.ImportPublicationsPage import ImportPublicationPage
 
@@ -91,6 +92,8 @@ class Test_Search_LiveSLR:
         slrtype = liveslrpage.get_slrtype_data(filepath)
         # Read reportedvariables data values
         rpt_data, rpt_data_chkbox = liveslrpage.get_reported_variables(filepath)
+        # Read Expected Excel file
+        source_template = slrreport.get_source_template(filepath, 'ExpectedSourceTemplateFile_Excel')
 
         request.node._tcid = caseid
         request.node._title = "Validate Downloaded Reports content comparison from Search LIVESLR page"
@@ -129,7 +132,7 @@ class Test_Search_LiveSLR:
 
                     slrreport.check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
 
-                    slrreport.excel_content_validation(filepath, index, webexcel_filename, excel_filename, "Study Identifier")
+                    slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "Study Identifier")
 
                     slrreport.word_content_validation(filepath, index, word_filename)
             except Exception:
@@ -365,6 +368,8 @@ class Test_Search_LiveSLR:
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
         slrreport = SLRReport(self.driver, extra)
+        # Creating object of ExcludedStudies_liveSLR class
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)        
 
         request.node._tcid = caseid
         request.node._title = "Non-Oncology - Validate Downloaded Reports content comparison from Search LIVESLR page"
@@ -374,7 +379,7 @@ class Test_Search_LiveSLR:
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_liveslr_report_data")
 
-        scenarios = ['scenario1']
+        scenarios = ['scenario1', 'scenario2']
 
         for scenario in scenarios:
             try:
@@ -382,14 +387,17 @@ class Test_Search_LiveSLR:
                 pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
                 # Read slrtype data values
                 slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
+                add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, scenario)
+                source_template = exbase.get_source_template(filepath, 'Sheet1', scenario)
 
                 base.go_to_page("SLR_Homepage", env)
                 for i in pop_list:
                         slrreport.select_data(i[0], i[1], env)
                         for index, j in enumerate(slrtype):
-                            slrreport.select_data(j[0], j[1], env)
-                            # if j[0] == "Clinical":
-                            #     slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
+                            slrreport.select_data(j[0], j[1], env)                          
+                            if len(add_criteria) != 0:
+                                for k in add_criteria:
+                                    slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
 
                             slrreport.generate_download_report("excel_report", env)
                             excel_filename = slrreport.get_and_validate_filename(filepath)
@@ -403,7 +411,7 @@ class Test_Search_LiveSLR:
                             webexcel_filename = slrreport.get_and_validate_filename(filepath)
                             slrreport.back_to_report_page("Back_to_search_page", env)
 
-                            slrreport.excel_content_validation(filepath, index, webexcel_filename, excel_filename, "LiveSLR Study ID")
+                            slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "LiveSLR Study ID")
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
