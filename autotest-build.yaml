@@ -19,7 +19,7 @@ parameters:
 steps:
   - script: |
      python -m pip install -r requirements.txt
-     python -m pytest -v -m ${{ parameters.testcase }} --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\ --env=${{ parameters.env }}
+     python -m pytest -v -m ${{ parameters.testcase }} --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\ --env=${{ parameters.env }}
      
      echo "FETCH LOG FILE - DISPLAY CONTENT"
      cd $(Build.BinariesDirectory)\logs\
