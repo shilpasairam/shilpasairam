@@ -30,6 +30,7 @@ steps:
     displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: NUnit
+      testResultsFiles: '**/nunit-*.xml'
       searchFolder: '$(System.DefaultWorkingDirectory)'
       testRunTitle: 'Py Result ${{ parameters.env }}'
 
