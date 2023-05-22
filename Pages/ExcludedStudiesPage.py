@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from pathlib import Path
 import time
 import openpyxl
@@ -18,8 +19,8 @@ from selenium.webdriver.support.ui import Select
 
 
 class ExcludedStudiesPage(Base):
-
     """Constructor of the ExcludedStudies Page class"""
+
     def __init__(self, driver, extra):
         # initializing the driver from base class
         super().__init__(driver, extra)
@@ -39,11 +40,7 @@ class ExcludedStudiesPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    # def go_to_excludedstudies(self, locator, env):
-    #     self.click(locator, env, UnivWaitFor=10)
-    #     time.sleep(5)
-
-    # Reading slr study type and Excluded study files data for Excluded Studies Page -> upload feature validation
+    # Reading slr study type and Excluded study files data for Excluded Publications Page -> upload feature validation
     def get_study_file_details(self, filepath, locatorname):
         df = pd.read_excel(filepath)
         study_type = df.loc[df['Name'] == locatorname]['Study_Types'].dropna().to_list()
@@ -52,7 +49,7 @@ class ExcludedStudiesPage(Base):
         result = [[study_type[i], os.getcwd() + qa_file[i], filenames[i]] for i in range(0, len(study_type))]
         return result
 
-    # Reading slr study type and Excluded study files data for Excluded Studies Page -> override feature validation
+    # Reading slr study type and Excluded study files data for Excluded Publications Page -> override feature validation
     def get_study_file_details_override(self, filepath, locatorname):
         df = pd.read_excel(filepath)
         study_type = df.loc[df['Name'] == locatorname]['Study_Types'].dropna().to_list()
@@ -61,7 +58,7 @@ class ExcludedStudiesPage(Base):
         result = [(study_type[i], os.getcwd() + qa_file[i], filenames[i]) for i in range(0, len(study_type))]
         return result
 
-    # Reading Population data for Excluded Studies Page
+    # Reading Population data for Excluded Publications Page
     def get_pop_data(self, filepath, locatorname):
         df = pd.read_excel(filepath)
         pop = df.loc[df['Name'] == locatorname]['population_name'].dropna().to_list()
@@ -78,15 +75,15 @@ class ExcludedStudiesPage(Base):
         result = [[study_type[i], study_file[i], study_filename[i]] for i in range(0, len(study_type))]
         return result
 
-    # Check the presence of Manage Excluded Studies option in Admin page
+    # Check the presence of Manage Excluded Publications option in Admin page
     def presence_of_elements(self, locator, env):
         self.scroll(locator, env)
         self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
                                                         self.locatorpath(locator, env))))
-        self.LogScreenshot.fLogScreenshot(message=f'Manage Excluded Studies option is present in Admin page.',
+        self.LogScreenshot.fLogScreenshot(message=f'Manage Excluded Publications option is present in Admin page.',
                                           pass_=True, log=True, screenshot=True)
 
-    # Check Manage Excluded Studies page elements are accessible or not
+    # Check Manage Excluded Publications page elements are accessible or not
     def access_excludedstudy_page_elements(self, locatorname, filepath, env):
         # Read study types and file paths to upload
         stdy_data = self.get_study_file_details(filepath, locatorname)
@@ -118,6 +115,12 @@ class ExcludedStudiesPage(Base):
                 update_ele = self.select_element("ex_stdy_update_dropdown", env)
                 select3 = Select(update_ele)
                 select3.select_by_index(1)
+                time.sleep(1)
+
+                '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+                cmd = "document.getElementsByTagName('style')[8].textContent='.file-input[_ngcontent-pqw-c118]" \
+                      "{display:visible}'"
+                self.jsclick_hide(cmd)
                 time.sleep(1)
 
                 self.input_text("ex_stdy_file_upload", j[1], env)
@@ -168,25 +171,32 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
 
+                    '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+                    cmd = "document.getElementsByTagName('style')[8].textContent='.file-input[_ngcontent-pqw-c118]" \
+                          "{display:visible}'"
+                    self.jsclick_hide(cmd)
+                    time.sleep(1)
+
                     self.input_text("ex_stdy_file_upload", j[1], env)
                     expected_table_values.append(j[2])
                     time.sleep(2)
 
                     self.click("ex_stdy_upload_button", env)
                     time.sleep(4)
-                    actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    # actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    actual_upload_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(1)
 
                     if actual_upload_status_text == expected_upload_status_text:
-                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File upload is success for '
+                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Publications File upload is success for '
                                                                   f'Population : {i[0]} -> SLR Type : {j[0]}.',
                                                           pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading '
-                                                                  f'Excluded Studies File for Population : {i[0]} -> '
-                                                                  f'SLR Type: {j[0]}.',
+                                                                  f'Excluded Publications File for Population : '
+                                                                  f'{i[0]} -> SLR Type: {j[0]}.',
                                                           pass_=False, log=True, screenshot=True)
-                        raise Exception("Unable to find status message during Excluded Studies file uploading")
+                        raise Exception("Unable to find status message during Excluded Publications file uploading")
 
                     # Add the firstname to expected values list
                     expected_table_values.append(firstname)
@@ -221,7 +231,7 @@ class ExcludedStudiesPage(Base):
                             raise Exception(f'Mismatch is found in table data. Expected values are : '
                                             f'{expected_table_values} and Actual values are : {actual_table_values}')
         except Exception:
-            raise Exception("Unable to upload the Excluded Studies data")
+            raise Exception("Unable to upload the Excluded Publications data")
 
     def update_multiple_excluded_study_data(self, locatorname, filepath, env):
         expected_upload_status_text = 'File(s) uploaded successfully'
@@ -259,16 +269,26 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
 
+                    '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+                    cmd = "document.getElementsByTagName('style')[8].textContent='.file-input[_ngcontent-pqw-c118]" \
+                          "{display:visible}'"
+                    self.jsclick_hide(cmd)
+                    time.sleep(1)
+
                     self.input_text("ex_stdy_file_upload", j[1], env)
                     expected_table_values.append(j[2])
                     time.sleep(2)
 
                     self.click("ex_stdy_upload_button", env)
                     time.sleep(3)
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"Confirmation popup while updating the existing Excluded Publications File.",
+                        pass_=True, log=True, screenshot=True)
                     self.jsclick("ex_stdy_popup_ok", env, message="Expected : popup reminder. Actual : popup is "
                                                                   "not shown")
                     time.sleep(3)
-                    actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    # actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    actual_upload_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(1)
 
                     if actual_upload_status_text == expected_upload_status_text:
@@ -279,10 +299,11 @@ class ExcludedStudiesPage(Base):
                     else:
                         self.LogScreenshot.fLogScreenshot(
                             message=f'For Population : {i[0]} -> SLR Type : {j[0]}, Unable to find status message '
-                                    f'while updating the existing Excluded Studies File.',
+                                    f'while updating the existing Excluded Publications File.',
                             pass_=False, log=True, screenshot=True)
-                        raise Exception("Unable to find status message while Updating the existing Excluded Studies "
-                                        "file")
+                        raise Exception(
+                            "Unable to find status message while Updating the existing Excluded Publications "
+                            "file")
 
                     # Add the firstname to expected values list
                     expected_table_values.append(firstname)
@@ -318,10 +339,10 @@ class ExcludedStudiesPage(Base):
                                 f'Mismatch is found in table data. Expected values are : {expected_table_values} '
                                 f'and Actual values are : {actual_table_values}')
         except Exception:
-            raise Exception("Unable to update the existing Excluded Studies data")
+            raise Exception("Unable to update the existing Excluded Publications data")
 
     def del_multiple_excluded_study_data(self, locatorname, filepath, env):
-        expected_delete_status_text = 'Excluded studies deleted successfully'
+        expected_delete_status_text = 'Excluded publications file deleted successfully'
 
         # Read study types and file paths to upload
         stdy_data = self.get_study_file_details_override(filepath, locatorname)
@@ -354,24 +375,28 @@ class ExcludedStudiesPage(Base):
 
                     self.click("ex_stdy_delete", env)
                     time.sleep(2)
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"Confirmation popup while deleting the Excluded Publications File.",
+                        pass_=True, log=True, screenshot=True)
                     self.click("ex_stdy_popup_ok", env)
                     time.sleep(2)
 
-                    actual_delete_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    # actual_delete_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    actual_delete_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
                     # time.sleep(2)
 
                     if actual_delete_status_text == expected_delete_status_text:
-                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File Deletion is success.',
+                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Publications File Deletion is success.',
                                                           pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Unable to find status message while deleting Excluded Studies File.',
+                            message=f'Unable to find status message while deleting Excluded Publications File.',
                             pass_=False, log=True, screenshot=True)
-                        raise Exception("Error in Excluded Studies File Deletion")
+                        raise Exception("Error in Excluded Publications File Deletion")
         except Exception:
-            raise Exception("Unable to delete the existing Excluded Studies File")
+            raise Exception("Unable to delete the existing Excluded Publications File")
 
-    def compare_excludedstudy_file_with_report(self, filepath, locatorname, env):
+    def compare_excludedstudy_file_with_report(self, filepath, locatorname, env, prj_name):
         expected_upload_status_text = 'File(s) uploaded successfully'
         # Read the username
         username = self.get_text("get_user_name", env, UnivWaitFor=10)
@@ -408,30 +433,32 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(select3.first_selected_option.text)
                     time.sleep(1)
 
+                    '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+                    cmd = "document.getElementsByTagName('style')[8].textContent='.file-input[_ngcontent-pqw-c118]" \
+                          "{display:visible}'"
+                    self.jsclick_hide(cmd)
+                    time.sleep(1)
+
                     self.input_text("ex_stdy_file_upload", i[1], env)
                     expected_table_values.append(i[2])
                     time.sleep(2)
 
                     self.click("ex_stdy_upload_button", env)
                     time.sleep(2)
-
-                    if self.isdisplayed("ex_stdy_status_text", env):
-                        actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=30)
-                    else:
-                        time.sleep(2)
-                        actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=30)
+                    actual_upload_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    # time.sleep(1)
 
                     if actual_upload_status_text == expected_upload_status_text:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Excluded Studies File upload is success for Population : {pop_val[0]} -> '
+                            message=f'Excluded Publications File upload is success for Population : {pop_val[0]} -> '
                                     f'SLR Type : {i[0]}.',
                             pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Unable to find status message while uploading Excluded Studies File for '
+                            message=f'Unable to find status message while uploading Excluded Publications File for '
                                     f'Population : {pop_val[0]} -> SLR Type: {i[0]}.',
                             pass_=False, log=True, screenshot=True)
-                        raise Exception("Unable to find status message during Excluded Studies file uploading")
+                        raise Exception("Unable to find status message during Excluded Publications file uploading")
 
                     # Add the firstname to expected values list
                     expected_table_values.append(firstname)
@@ -478,45 +505,49 @@ class ExcludedStudiesPage(Base):
                     # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
-                    update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
-                                                                                                    2].translate(
-                        {ord('/'): None})[:4]
+                    if prj_name == "Oncology":
+                        date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + \
+                                   expected_table_values[2].translate({ord('/'): None})[:4]
+                        excluded_sheet_name = f"Excluded studies {date_val}"
+                    else:
+                        date_val = datetime.strptime(expected_table_values[2], '%m/%d/%Y').date()
+                        excluded_sheet_name = f"Excluded Pubs-{date_val}"
 
                     excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-                    if f'Excluded studies {update_date_val}' in excel_data.sheetnames:
+                    if f'{excluded_sheet_name}' in excel_data.sheetnames:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f"'Excluded studies {update_date_val}' sheet is present in complete excel report",
+                            message=f"'{excluded_sheet_name}' sheet is present in complete excel report",
                             pass_=True, log=True, screenshot=False)
 
-                        excel_sheet = excel_data[f'Excluded studies {update_date_val}']
+                        excel_sheet = excel_data[f'{excluded_sheet_name}']
                         if excel_sheet['A1'].value == 'Back To Toc':
                             self.LogScreenshot.fLogScreenshot(
-                                message=f"'Back To Toc' option is present in 'Excluded studies {update_date_val}' "
+                                message=f"'Back To Toc' option is present in '{excluded_sheet_name}' "
                                         f"sheet",
                                 pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(
-                                message=f"'Back To Toc' option is not present in 'Excluded studies {update_date_val}' "
+                                message=f"'Back To Toc' option is not present in '{excluded_sheet_name}' "
                                         f"sheet",
                                 pass_=False, log=True, screenshot=False)
                             raise Exception(
-                                f"'Back To Toc' option is not present in 'Excluded studies {update_date_val}' sheet")
+                                f"'Back To Toc' option is not present in '{excluded_sheet_name}' sheet")
 
                         toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                         col_data = list(toc_sheet.iloc[:, 1])
-                        if f'Excluded studies {update_date_val}' in col_data:
-                            self.LogScreenshot.fLogScreenshot(message=f'Excluded studies is present in TOC sheet.',
-                                                              pass_=True, log=True, screenshot=False)
+                        if f'{excluded_sheet_name}' in col_data:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'{excluded_sheet_name}' is present in TOC sheet.",
+                                pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(
-                                message=f'Excluded studies is not present in TOC sheet. Available Data from TOC sheet: '
-                                        f'{col_data}',
-                                pass_=False, log=True, screenshot=False)
-                            raise Exception("'Excluded studies' is not present in TOC sheet.")
+                                message=f"'{excluded_sheet_name}' is not present in TOC sheet. Available Data from "
+                                        f"TOC sheet: '{col_data}'", pass_=False, log=True, screenshot=False)
+                            raise Exception(f"'{excluded_sheet_name}' is not present in TOC sheet.")
 
                         studyfile = pd.read_excel(i[1])
                         excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}',
-                                                  sheet_name=f'Excluded studies {update_date_val}')
+                                                  sheet_name=f'{excluded_sheet_name}')
 
                         # Removing the 'Back To Toc' column to compare the exact data with uploaded file
                         excelfile = excelfile.iloc[:, 1:]
@@ -531,12 +562,15 @@ class ExcludedStudiesPage(Base):
                                 f"File contents between Study File '{Path(f'{i[1]}').stem}' and Complete Excel Report "
                                 f"'{Path(f'ActualOutputs//{excel_filename}').stem}' are not matching")
                     else:
-                        raise Exception("'Excluded studies' sheet is not present in complete excel report")
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"'{excluded_sheet_name}' sheet is not present in complete excel report",
+                            pass_=False, log=True, screenshot=False)
+                        raise Exception(f"'{excluded_sheet_name}' sheet is not present in complete excel report")
         except Exception:
             raise Exception("Error in report comparision between Excluded study file and Complete Excel report")
 
-    def del_after_studyfile_comparison(self, filepath, locatorname, env):
-        expected_delete_status_text = 'Excluded studies deleted successfully'
+    def del_after_studyfile_comparison(self, filepath, locatorname, env, prj_name):
+        expected_delete_status_text = 'Excluded publications file deleted successfully'
 
         # Read study types and file paths to upload
         stdy_data = self.get_study_file_details(filepath, locatorname)
@@ -574,24 +608,24 @@ class ExcludedStudiesPage(Base):
 
                     self.click("ex_stdy_delete", env)
                     time.sleep(2)
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"Confirmation popup while deleting the Excluded Publications File.",
+                        pass_=True, log=True, screenshot=True)
                     self.click("ex_stdy_popup_ok", env)
                     time.sleep(2)
 
-                    if self.isdisplayed("get_status_text", env):
-                        actual_delete_status_text = self.get_text("get_status_text", env, UnivWaitFor=30)
-                    else:
-                        time.sleep(2)
-                        actual_delete_status_text = self.get_text("get_status_text", env, UnivWaitFor=30)                    
+                    actual_delete_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
+                    # time.sleep(2)                   
 
                     if actual_delete_status_text == expected_delete_status_text:
-                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Studies File Deletion is success.',
+                        self.LogScreenshot.fLogScreenshot(message=f'Excluded Publications File Deletion is success.',
                                                           pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Error while deleting Excluded Studies File. Error Message is '
+                            message=f'Error while deleting Excluded Publications File. Error Message is '
                                     f'{actual_delete_status_text}',
                             pass_=False, log=True, screenshot=True)
-                        raise Exception("Error in Excluded Studies File Deletion")
+                        raise Exception("Error in Excluded Publications File Deletion")
 
                     # Go to live slr page
                     self.go_to_page("SLR_Homepage", env)
@@ -603,33 +637,37 @@ class ExcludedStudiesPage(Base):
                     # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
-                    update_date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + expected_table_values[
-                                                                                                    2].translate(
-                        {ord('/'): None})[:4]
+                    if prj_name == "Oncology":
+                        date_val = expected_table_values[2].translate({ord('/'): None})[-4:] + \
+                                   expected_table_values[2].translate({ord('/'): None})[:4]
+                        excluded_sheet_name = f"Excluded studies {date_val}"
+                    else:
+                        date_val = datetime.strptime(expected_table_values[2], '%m/%d/%Y').date()
+                        excluded_sheet_name = f"Excluded Pubs-{date_val}"
 
                     excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-                    if f'Excluded studies {update_date_val}' not in excel_data.sheetnames:
+                    if f'{excluded_sheet_name}' not in excel_data.sheetnames:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f"'Excluded studies' sheet is not present in complete excel report as expected",
+                            message=f"'{excluded_sheet_name}' sheet is not present in complete excel report as expected",
                             pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f"'Excluded studies' sheet is present in complete excel report which is not "
+                            message=f"'{excluded_sheet_name}' sheet is present in complete excel report which is not "
                                     f"expected", pass_=False, log=True, screenshot=False)
                         raise Exception(
-                            "'Excluded studies' sheet is present in complete excel report which is not expected")
+                            f"'{excluded_sheet_name}' sheet is present in complete excel report which is not expected")
 
                     toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                     col_data = list(toc_sheet.iloc[:, 1])
-                    if f'Excluded studies {update_date_val}' not in col_data:
+                    if f'{excluded_sheet_name}' not in col_data:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Excluded studies is not present in TOC sheet as expected.',
+                            message=f'{excluded_sheet_name} is not present in TOC sheet as expected.',
                             pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(
-                            message=f'Excluded studies is present in TOC sheet which is not expected. '
+                            message=f'{excluded_sheet_name} is present in TOC sheet which is not expected. '
                                     f'Available Data from TOC sheet: {col_data}',
                             pass_=False, log=True, screenshot=False)
-                        raise Exception("'Excluded studies' is present in TOC sheet.")
+                        raise Exception(f"'{excluded_sheet_name}' is present in TOC sheet.")
         except Exception:
-            raise Exception("Unable to delete the existing Excluded Studies File")
+            raise Exception("Unable to delete the existing Excluded Publications File")

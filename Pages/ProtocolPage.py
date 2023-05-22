@@ -227,6 +227,79 @@ class ProtocolPage(Base):
         except Exception:
             raise Exception("Unable to delete PRISMA image")
 
+    def override_prisma_details(self, locatorname, filepath, index, env):
+        expected_excel_upload_status_text = "There is an existing PRISMA Excel file for this population. Please delete the existing file before uploading a new one"
+
+        expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. Please delete the existing file before uploading a new one"
+
+        # Read population details from data sheet
+        pop_name = self.get_prisma_pop_data(filepath, locatorname)
+
+        # Read the Data required to upload for study types
+        stdy_data = self.get_prisma_data_details(filepath, locatorname)
+
+        self.refreshpage()
+        
+        try:
+            pop_ele = self.select_element("prisma_pop_dropdown", env)
+            select = Select(pop_ele)
+            select.select_by_visible_text(pop_name[0])
+
+            # Read the PRISMA file path required to upload
+            prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
+
+            self.input_text("prisma_excel_file", prisma_excel, env, UnivWaitFor=10)
+            self.click("prisma_excel_upload_btn", env)
+            time.sleep(2)
+            
+            actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
+
+            if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Excel file for Population : '{pop_name[0]}'",
+                                                  pass_=True, log=True, screenshot=True)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
+                                                          f"PRISMA Excel File. Actual status message is "
+                                                          f"{actual_excel_upload_status_text} and Expected status "
+                                                          f"message is {expected_excel_upload_status_text}",
+                                                  pass_=False, log=True, screenshot=True)
+                raise Exception("Unable to find status message while uploading PRISMA Excel File.")
+
+            for i in stdy_data:
+                stdy_ele = self.select_element("prisma_study_type_dropdown", env)
+                select = Select(stdy_ele)
+                select.select_by_visible_text(i[0])
+                time.sleep(2)
+
+                self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
+                time.sleep(1)
+                self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
+                time.sleep(1)
+                self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
+                time.sleep(1)
+                self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
+                time.sleep(1)
+                self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
+                time.sleep(1)
+
+                self.click("prisma_image_save_btn", env)
+                time.sleep(2)
+
+                actual_image_upload_status_text = self.get_status_text("prisma_image_status_text", env)
+
+                if actual_image_upload_status_text == expected_image_upload_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Image file for Population : '{pop_name[0]}' -> SLR Type : '{i[0]}'",
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
+                                                              f"PRISMA Image File. Actual status message is "
+                                                              f"{actual_image_upload_status_text} and Expected "
+                                                              f"status message is {expected_image_upload_status_text}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception("Unable to find status message while uploading PRISMA Image File.")
+        except Exception:
+            raise Exception("Unable to upload PRISMA Excel file")
+
     def add_picos_details(self, locatorname, filepath, env):
         expected_status_text = "Saved successfully"
 

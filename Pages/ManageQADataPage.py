@@ -374,7 +374,8 @@ class ManageQADataPage(Base):
 
                 self.click("upload_save_button", env)
                 time.sleep(3)
-                actual_upload_status_text = self.get_text("get_status_text", env, UnivWaitFor=10)
+                # actual_upload_status_text = self.get_text("get_status_text", env, UnivWaitFor=10)
+                actual_upload_status_text = self.get_status_text("get_status_text", env, UnivWaitFor=10)
                 # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
