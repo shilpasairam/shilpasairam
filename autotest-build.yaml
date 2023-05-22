@@ -32,7 +32,7 @@ steps:
       testResultsFormat: NUnit
       testResultsFiles: '**/nunit-*.xml'
       searchFolder: '$(System.DefaultWorkingDirectory)'
-      testRunTitle: 'Py Result -${{ parameters.env }} - environment'
+      testRunTitle: 'Py Result - ${{ parameters.env }} - environment'
 
   - task: CopyFiles@2
     displayName: 'Copy Files ArtifactStagingDirectory'
