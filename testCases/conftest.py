@@ -104,7 +104,7 @@ def pytest_sessionstart(session):
     if os.path.exists(f'ActualOutputs'):
         for root, dirs, files in os.walk(f'ActualOutputs'):
             for file in files:
-                os.remove(os.path.join(root, file))    
+                os.remove(os.path.join(root, file))
 
 
 # @pytest.hookimpl(tryfirst=True)
