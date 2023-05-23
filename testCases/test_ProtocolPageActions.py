@@ -309,7 +309,7 @@ class Test_ProtocolPage:
         LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology population is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C37882
+    @pytest.mark.C39793
     def test_nononcology_picos_page(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
