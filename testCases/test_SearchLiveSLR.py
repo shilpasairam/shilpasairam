@@ -356,6 +356,7 @@ class Test_Search_LiveSLR:
 
     @pytest.mark.C39301
     @pytest.mark.C39314
+    @pytest.mark.C39312
     def test_nononcology_slrreport_comparison(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")

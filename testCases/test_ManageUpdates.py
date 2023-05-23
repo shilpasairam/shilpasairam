@@ -71,6 +71,8 @@ class Test_ManageUpdatesPage:
         LogScreenshot.fLogScreenshot(message=f"***Addtion of Population Manageupdates validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
+    '''
+    Commenting this method due to LIVEHTA-2618 implementation
     @pytest.mark.C38951
     def test_edit_updates(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)        
@@ -117,7 +119,8 @@ class Test_ManageUpdatesPage:
 
         LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***",
                                      pass_=True, log=True, screenshot=False)
-
+    '''
+    
     @pytest.mark.C38951
     def test_delete_updates(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
@@ -144,7 +147,7 @@ class Test_ManageUpdatesPage:
         base.presence_of_admin_page_option("manageupdates_button", env)
         base.go_to_page("manageupdates_button", env)
 
-        for i in self.edited_updates_data:
+        for i in self.added_updates_data:
             try:
                 mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup",
                                                           "manage_update_table_rows", env)
@@ -175,7 +178,8 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Addition of Manage Update for selected Non-Oncology population"
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion of Non-Oncology Population Manageupdates validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of Non-Oncology Population Manageupdates validation is "
+                                             f"started***",
                                      pass_=True, log=True, screenshot=False)
 
         today = date.today()
@@ -196,7 +200,8 @@ class Test_ManageUpdatesPage:
                 manage_update_data = mngupdpage.add_multiple_updates(i, filepath, "add_update_btn", day_val,
                                                                      "manage_update_table_rows", dateval, env)
                 self.non_onco_added_updates_data.append(manage_update_data)
-                LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology population udpate is {self.non_onco_added_updates_data}",
+                LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology population udpate is "
+                                                     f"{self.non_onco_added_updates_data}",
                                              pass_=True, log=True, screenshot=False)
 
             except Exception:
@@ -204,9 +209,12 @@ class Test_ManageUpdatesPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion of Non-Oncology Population Manageupdates validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of Non-Oncology Population Manageupdates validation is "
+                                             f"completed***",
                                      pass_=True, log=True, screenshot=False)
 
+    '''
+    Commenting this method due to LIVEHTA-2618 implementation
     @pytest.mark.C38950
     def test_nononcology_edit_updates(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)        
@@ -243,7 +251,8 @@ class Test_ManageUpdatesPage:
                 manage_update_data = mngupdpage.edit_multiple_updates(i, "edit_updates", day_val,
                                                                       dateval, "Non-oncology", env)
                 self.non_onco_edited_updates_data.append(manage_update_data)
-                LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology population udpate is {self.non_onco_edited_updates_data}",
+                LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology population udpate is "
+                                                     f"{self.non_onco_edited_updates_data}",
                                              pass_=True, log=True, screenshot=False)
 
             except Exception:
@@ -251,9 +260,11 @@ class Test_ManageUpdatesPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology Population Manageupdates validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Edit Non-Oncology Population Manageupdates validation is "
+                                             f"completed***",
                                      pass_=True, log=True, screenshot=False)
-
+    '''
+    
     @pytest.mark.C38950
     def test_nononcology_delete_updates(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
@@ -269,7 +280,8 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Deletion of existing Manage Update data for selected Non-Oncology population"
 
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of Non-Oncology Population Manageupdates validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of Non-Oncology Population Manageupdates validation is "
+                                             f"started***",
                                      pass_=True, log=True, screenshot=False)
 
         # today = date.today()
@@ -280,7 +292,7 @@ class Test_ManageUpdatesPage:
         base.presence_of_admin_page_option("manageupdates_button", env)
         base.go_to_page("manageupdates_button", env)
 
-        for i in self.non_onco_edited_updates_data:
+        for i in self.non_onco_added_updates_data:
             try:
                 mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup",
                                                           "manage_update_table_rows", env)

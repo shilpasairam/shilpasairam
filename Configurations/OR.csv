@@ -205,7 +205,7 @@ ManagePopulations,add_population_btn,XPATH,"//button[@class=""btn btn-primary""]
 ManagePopulations,pop_name,XPATH,"//input[@name=""name"" and @type='text']",
 ManagePopulations,company_identifier,XPATH,"//input[@name=""uci"" and @type='text']",
 ManagePopulations,pop_description,XPATH,"//input[@name=""description"" and @type='text']",
-ManagePopulations,template_file_upload,XPATH,//input[@placeholder='Choose extraction template file' and @type='text'],"//input[@name=""ExtractionTemplate"" and @type='file']"
+ManagePopulations,template_file_upload,XPATH,//input[@type='file' and @class='file-input'],"//input[@name=""ExtractionTemplate"" and @type='file']"
 ManagePopulations,submit_button,XPATH,"//button[@class=""btn btn-primary"" and @type=""submit""]",
 ManagePopulations,population_status_popup_text,XPATH,//div[@role='alertdialog'],
 ManagePopulations,table_entries_dropdown,XPATH,//select[@name='DataTables_Table_0_length'],
@@ -335,7 +335,7 @@ ExcludedStudies,excluded_studies_link,LINK_TEXT,Manage Excluded Publications,
 ExcludedStudies,ex_stdy_pop_dropdown,XPATH,//select[@name='populationId'],
 ExcludedStudies,ex_stdy_stdytype_dropdown,XPATH,//select[@name='selectedStudyType'],
 ExcludedStudies,ex_stdy_update_dropdown,XPATH,//select[@name='updateId'],
-ExcludedStudies,ex_stdy_file_upload,XPATH,//input[@name='filesToUpload' and @type='file'],
+ExcludedStudies,ex_stdy_file_upload,XPATH,//input[@type='file' and @class='file-input'],//input[@name='filesToUpload' and @type='file']
 ExcludedStudies,ex_stdy_upload_button,XPATH,//button[@name='upload' and @type='submit'],
 ExcludedStudies,ex_stdy_status_text,XPATH,//div[@role='alertdialog'],
 ExcludedStudies,ex_stdy_popup_ok,XPATH,//div[@class='modal-content']//div[3]//button[1],
