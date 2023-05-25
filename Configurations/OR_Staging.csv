@@ -178,7 +178,7 @@ LiveNMA,print_screen,XPATH,//a[text()='Print Screen'],,
 ImportPublications,importpublications_button,LINK_TEXT,Import publications,,
 ImportPublications,extraction_download_btn,LINK_TEXT,Download extraction sheet,,
 ImportPublications,extraction_upload_btn,LINK_TEXT,Upload extraction sheet,,
-ImportPublications,select_update_dropdown,XPATH,//select[@name='update'],//select[@name='updateId'],
+ImportPublications,select_update_dropdown,XPATH,//select[@name='population'],//select[@name='updateId'],//select[@name='update']
 ImportPublications,add_file,XPATH,//div[@class='uploadfilecontainer']//input[@type='file'],,
 ImportPublications,upload_button,XPATH,//button[@class='btn btn-primary'],,
 ImportPublications,file_status_popup_text,XPATH,//div[@role='alertdialog'],,
