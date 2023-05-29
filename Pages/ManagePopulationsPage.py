@@ -206,6 +206,12 @@ class ManagePopulationsPage(Base):
         for j in new_pop_data:
             self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
+        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+        cmd = "document.getElementsByTagName('style')[7].textContent='.file-input[_ngcontent-yaf-c116]" \
+              "{display:visible}'"
+        self.jsclick_hide(cmd)
+        time.sleep(1)
+
         self.input_text("template_file_upload", upload_file_path, env)
         self.click("submit_button", env)
         time.sleep(2)
@@ -274,6 +280,12 @@ class ManagePopulationsPage(Base):
         for j in edit_pop_data:
             self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
+        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+        cmd = "document.getElementsByTagName('style')[8].textContent='.file-input[_ngcontent-pqw-c118]" \
+              "{display:visible}'"
+        self.jsclick_hide(cmd)
+        time.sleep(1)
+        
         self.input_text("template_file_upload", upload_file_path, env)
         self.click("submit_button", env)
         time.sleep(2)
