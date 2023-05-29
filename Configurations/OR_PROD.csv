@@ -36,6 +36,8 @@ Population,Pfizer - MM RRMM,XPATH,//input[@type='radio' and @name='populationFil
 Population,Pfizer - MM RRMM_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=10],,
 Population,Takeda - MM Maintenance,XPATH,//input[@type='radio' and @name='populationFilters' and @value=22]/following::span[1],,
 Population,Takeda - MM Maintenance_radio_button,XPATH,//input[@type='radio' and @name='populationFilters' and @value=22],,
+Population,LIVEHTA Automation - Test_NonOncology_Automation_3,XPATH,"//div[contains(text(), 'Test_NonOncology_Automation_3')]//input[@type='radio' and @name='populationFilters' and @value=12]/following::span[1]",,
+Population,LIVEHTA Automation - Test_NonOncology_Automation_3_radio_button,XPATH,"//div[contains(text(), 'Test_NonOncology_Automation_3')]//input[@type='radio' and @name='populationFilters' and @value=12]",,
 SLRType,slrtype_first_option_text,XPATH,//label[text()='Clinical '],,
 SLRType,Clinical,XPATH,//label//input[@type='radio' and @name='slrType' and @value=1]/following::span[1],,
 SLRType,Clinical_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=1],,
