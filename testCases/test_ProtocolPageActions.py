@@ -206,7 +206,7 @@ class Test_ProtocolPage:
 
         for i in pop_val:
             try:
-                srchpage.add_valid_search_strategy_details(i, filepath, env)
+                srchpage.add_valid_search_strategy_details(i, filepath, env, "Oncology")
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",
@@ -430,7 +430,7 @@ class Test_ProtocolPage:
 
         for i in pop_val:
             try:
-                srchpage.add_valid_search_strategy_details(i, filepath, env)
+                srchpage.add_valid_search_strategy_details(i, filepath, env, "Non-Oncology")
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",

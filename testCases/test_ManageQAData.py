@@ -182,6 +182,7 @@ class Test_ManageQADataPage:
     @pytest.mark.C30247
     @pytest.mark.C27301
     @pytest.mark.C27306
+    @pytest.mark.C31117
     def test_qafile_compare_with_excelreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getmanageqadatapath(env)

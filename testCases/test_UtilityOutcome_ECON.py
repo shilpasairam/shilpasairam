@@ -135,6 +135,7 @@ class Test_UtilityOutcome_ECON:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C26907
+    @pytest.mark.C31109
     def test_econ_presenceof_newlyadded_utilitycolumn_names(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_ECON_data(env)        
