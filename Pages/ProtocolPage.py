@@ -401,7 +401,7 @@ class ProtocolPage(Base):
         except Exception:
             raise Exception("Unable to add PICOS data")
 
-    def add_valid_search_strategy_details(self, locatorname, filepath, env):
+    def add_valid_search_strategy_details(self, locatorname, filepath, env, project):
         expected_excel_upload_status_text = "Search strategy updated successfully"
 
         today = date.today()
@@ -434,7 +434,7 @@ class ProtocolPage(Base):
                 # Renaming the filename because there is an issue in downloading filenames with same name multiple
                 # times in headless mode. So as an alternative renaming the file after downloading in each iteration
                 self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
-                                 f"{j[0]}_search-strategy-template.xlsx")
+                                 f"{j[0]}_search-strategy-template_{project}.xlsx")
                 downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
                 if downloaded_template_name == j[3]:
                     self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is "

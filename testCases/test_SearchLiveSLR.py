@@ -26,7 +26,7 @@ class Test_Search_LiveSLR:
     @pytest.mark.C40493
     def test_SLRreports_Download(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
-        filepath = ReadConfig.getTestdata("smoketest_data")
+        filepath = ReadConfig.getsmoketestdata(env)
         # Instantiate the Base class
         base = Base(self.driver, extra)         
         # Creating object of loginpage class

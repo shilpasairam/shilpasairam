@@ -76,6 +76,17 @@ class ReadConfig:
             populationdata = config.get('commonInfo', 'app_access_data_prod')
         return populationdata
 
+    # Get test data file path for Smoke Test
+    @staticmethod
+    def getsmoketestdata(env):
+        if env == 'test':
+            testdata = config.get('commonInfo', 'smoketest_data')
+        elif env == 'staging':
+            testdata = config.get('commonInfo', 'smoketest_data')
+        elif env == 'production':
+            testdata = config.get('commonInfo', 'smoketest_data_prod')
+        return testdata
+
     # @staticmethod
     # def getEnvironmenttype():
     #     environmenttype = config.get('commonInfo', 'environmenttype')

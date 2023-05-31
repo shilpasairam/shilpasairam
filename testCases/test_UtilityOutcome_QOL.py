@@ -21,6 +21,7 @@ class Test_UtilityOutcome_QOL:
     # util_filepath = ReadConfig.getutilityoutcome_QOL_data()
 
     @pytest.mark.C26937
+    @pytest.mark.C31110
     def test_qol_presenceof_utilitysummary_into_excelreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env) 
@@ -69,6 +70,7 @@ class Test_UtilityOutcome_QOL:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C26956
+    @pytest.mark.C31110
     def test_qol_verify_source_to_target_row_counts_in_excelreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)        
@@ -118,6 +120,7 @@ class Test_UtilityOutcome_QOL:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C27567
+    @pytest.mark.C31114
     def test_qol_presenceof_utilitysummary_into_wordreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)        
@@ -166,6 +169,7 @@ class Test_UtilityOutcome_QOL:
                 raise Exception("Unable to select element")
     
     @pytest.mark.C27569
+    @pytest.mark.C31114
     def test_qol_verify_source_to_target_row_counts_in_wordreport(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)         
@@ -215,6 +219,7 @@ class Test_UtilityOutcome_QOL:
                 raise Exception("Unable to select element")
     
     @pytest.mark.C26938
+    @pytest.mark.C31110
     def test_qol_verify_excelreport_utility_summary_sorting_order(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)        
@@ -260,6 +265,7 @@ class Test_UtilityOutcome_QOL:
                 raise Exception("Unable to select element")
     
     @pytest.mark.C27568
+    @pytest.mark.C31114
     def test_qol_verify_wordreport_utility_table_sorting_order(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)        
@@ -448,6 +454,7 @@ class Test_UtilityOutcome_QOL:
                 raise Exception("Unable to select element")
 
     @pytest.mark.C26906
+    @pytest.mark.C31109
     def test_qol_presenceof_newlyadded_utilitycolumn_names(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         util_filepath = ReadConfig.getutilityoutcome_QOL_data(env)        
