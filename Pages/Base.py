@@ -17,6 +17,7 @@ from selenium.common import NoSuchElementException, ElementNotVisibleException, 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import Select
 
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig, config
@@ -183,6 +184,18 @@ class Base:
         return self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))\
             .text
 
+    # Read the elements text using locatorname
+    @fWaitFor
+    def get_texts(self, locator, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and return the text
+        """
+        res = []
+        eles = self.select_elements(locator, env)
+        for i in eles:
+            res.append(i.text)
+        return res
+
     # Read the upload or deletion status popup text using locatorname
     @fWaitFor
     def get_status_text(self, locator, env, UnivWaitFor=0):
@@ -212,6 +225,16 @@ class Base:
                                                                                                            env))
         return elements
 
+    # Select the value from dropdown using VisibleText
+    @fWaitFor
+    def selectbyvisibletext(self, locator, text, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and clear the text
+        """
+        pop_ele = self.select_element(locator, env)
+        select = Select(pop_ele)
+        select.select_by_visible_text(text)   
+    
     # JavaScript click a web element using locatorname
     @fWaitFor
     def jsclick(self, locator, env, message="", UnivWaitFor=0):

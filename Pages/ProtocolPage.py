@@ -2,6 +2,7 @@ from datetime import date, timedelta
 import os
 import time
 import pandas as pd
+import numpy as np
 from selenium.webdriver.support.wait import WebDriverWait
 
 from pathlib import Path
@@ -228,9 +229,11 @@ class ProtocolPage(Base):
             raise Exception("Unable to delete PRISMA image")
 
     def override_prisma_details(self, locatorname, filepath, index, env):
-        expected_excel_upload_status_text = "There is an existing PRISMA Excel file for this population. Please delete the existing file before uploading a new one"
+        expected_excel_upload_status_text = "There is an existing PRISMA Excel file for this population. Please " \
+                                            "delete the existing file before uploading a new one "
 
-        expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. Please delete the existing file before uploading a new one"
+        expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. Please " \
+                                            "delete the existing file before uploading a new one "
 
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
@@ -255,8 +258,8 @@ class ProtocolPage(Base):
             actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
 
             if actual_excel_upload_status_text == expected_excel_upload_status_text:
-                self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Excel file for Population : '{pop_name[0]}'",
-                                                  pass_=True, log=True, screenshot=True)
+                self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Excel file for Population : "
+                                                          f"'{pop_name[0]}'", pass_=True, log=True, screenshot=True)
             else:
                 self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
                                                           f"PRISMA Excel File. Actual status message is "
@@ -288,7 +291,8 @@ class ProtocolPage(Base):
                 actual_image_upload_status_text = self.get_status_text("prisma_image_status_text", env)
 
                 if actual_image_upload_status_text == expected_image_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Image file for Population : '{pop_name[0]}' -> SLR Type : '{i[0]}'",
+                    self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Image file for Population "
+                                                              f": '{pop_name[0]}' -> SLR Type : '{i[0]}'",
                                                       pass_=True, log=True, screenshot=True)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
@@ -400,6 +404,144 @@ class ProtocolPage(Base):
                 time.sleep(2)
         except Exception:
             raise Exception("Unable to add PICOS data")
+
+    def validate_view_picos(self, locatorname, filepath, env):
+        expected_status_text = "Saved successfully"
+
+        # Read population data values
+        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        # Read slrtype data values
+        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
+
+        expected_row_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Row_headers')
+        expected_col_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Col_headers')
+        data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data')
+
+        for i in pop_list:
+            for index, j in enumerate(slrtype):
+                self.base.presence_of_admin_page_option("protocol_link", env)
+                self.base.go_to_nested_page("protocol_link", "picos", env)
+
+                self.base.selectbyvisibletext("picos_pop_dropdown", i[0], env)
+                time.sleep(1)
+
+                if j[0] == 'Quality of Life':
+                    j[0] = 'Quality of life'
+                self.base.selectbyvisibletext("picos_study_type_dropdown", j[0], env)
+                time.sleep(1)
+
+                actual_row_headers = self.get_texts("row_header_values", env)
+
+                actual_col_headers = self.get_texts("col_header_values", env)
+                # Removing the empty column name
+                actual_col_headers.pop(0)
+
+                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers,
+                                                                                            actual_row_headers)
+
+                if len(row_header_comparison) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for"
+                                                              f" Population -> {i[0]}, Study Type -> {j[0]}.",
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for "
+                                                              f"Population -> {i[0]}, Study Type -> {j[0]}. "
+                                                              f"Mismatch values are arranged in following order -> "
+                                                              f"Expected row headers, Actual row headers. "
+                                                              f"{row_header_comparison}",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
+                                    f"Study Type -> {j[0]}.")
+
+                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers,
+                                                                                            actual_col_headers)
+
+                if len(col_header_comparison) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for "
+                                                              f"Population -> {i[0]}, Study Type -> {j[0]}.",
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for "
+                                                              f"Population -> {i[0]}, Study Type -> {j[0]}. "
+                                                              f"Mismatch values are arranged in following order -> "
+                                                              f"Expected col headers, Actual col headers. "
+                                                              f"{col_header_comparison}",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
+                                    f"Study Type -> {j[0]}.")
+
+                # Enter values in PICOS page
+                picos_data = []
+                data_eles = self.select_elements('row_data', env)
+                idx = 0
+                for locator in data_eles:
+                    if idx > 2:
+                        idx = 0
+                    locator.clear()
+                    locator.send_keys(f"{data[idx]}")
+                    picos_data.append(data[idx].split('\n'))
+                    idx += 1
+                
+                # This will give one single list with all the picos data added
+                protocol_picos_data = list(np.concatenate(picos_data))
+
+                self.scrollback('picos_page_heading', env)
+                self.jsclick("picos_save_btn", env)
+                time.sleep(1)
+
+                actual_status_text = self.get_status_text("prisma_excel_status_text", env)
+
+                if actual_status_text == expected_status_text:
+                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> "
+                                                              f"{i[0]}, Study Type -> {j[0]}.",
+                                                      pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(message=f"Added PICOS Data for '{i[0]}' is : "
+                                                              f"{protocol_picos_data}",
+                                                      pass_=True, log=True, screenshot=False)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding PICOS data "
+                                                              f"for Population -> {i[0]}, Study Type -> {j[0]}. "
+                                                              f"Actual status message is {actual_status_text} and "
+                                                              f"Expected status message is {expected_status_text}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
+                                    f"{i[0]}, Study Type -> {j[0]}.")                
+                self.refreshpage()
+                time.sleep(2)                
+
+                self.base.go_to_page("SLR_Homepage", env)
+                self.slrreport.select_data(i[0], i[1], env)
+
+                if j[0] == 'Quality of life':
+                    j[0] = 'Quality of Life'
+                self.slrreport.select_data(j[0], j[1], env)
+
+                self.click("view_picos_button", env)
+                time.sleep(1)
+
+                view_picos_data = self.get_texts("view_picos_data", env)
+
+                picos_data_comparison = self.slrreport.list_comparison_between_reports_data(protocol_picos_data,
+                                                                                            view_picos_data)
+
+                if len(picos_data_comparison) == 0:
+                    self.LogScreenshot.fLogScreenshot(message=f"PICOS data under Search LiveSLR -> View PICOS section "
+                                                              f"is matching with PICOS data under Protocol -> PICOS "
+                                                              f"and Inc-Exc criteria page for Population -> {i[0]}, "
+                                                              f"Study Type -> {j[0]}.",
+                                                      pass_=True, log=True, screenshot=True)
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS data under Search LiveSLR -> "
+                                                              f"View PICOS section with PICOS data under Protocol -> "
+                                                              f"PICOS and Inc-Exc criteria page for Population -> "
+                                                              f"{i[0]}, Study Type -> {j[0]}. Mismatch values are "
+                                                              f"arranged in following order -> Protocol PICOS Data, "
+                                                              f"View PICOS Data. {col_header_comparison}",
+                                                      pass_=False, log=True, screenshot=True)
+                    raise Exception(f"Mismatch found in PICOS data under Search LiveSLR -> View PICOS section with "
+                                    f"PICOS data under Protocol -> PICOS and Inc-Exc criteria page for Population -> "
+                                    f"{i[0]}, Study Type -> {j[0]}.")
+                self.refreshpage()
 
     def add_valid_search_strategy_details(self, locatorname, filepath, env, project):
         expected_excel_upload_status_text = "Search strategy updated successfully"
