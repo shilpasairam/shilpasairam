@@ -164,8 +164,9 @@ class Test_PRISMA_Elements:
                 slr_type = exstdy_liveslr.get_slrtype_data(self.prisma_path, i)
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(self.prisma_path, i)
 
-                slrreport.test_prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria, 'Updated PRISMA',
-                                                                          self.prisma_path, env)
+                slrreport.prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria,
+                                                                     'Updated PRISMA', self.prisma_path, env,
+                                                                     'Oncology')
             except Exception:
                 raise Exception("Unable to select element")
 
@@ -319,7 +320,7 @@ class Test_PRISMA_Elements:
                 slr_type = exstdy_liveslr.get_slrtype_data(filepath, i)
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, i)
 
-                slrreport.test_prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria, 'Updated PRISMAs',
-                                                                          filepath, env)
+                slrreport.prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria,
+                                                                     'Updated PRISMAs', filepath, env, 'Non-Oncology')
             except Exception:
                 raise Exception("Unable to select element")
