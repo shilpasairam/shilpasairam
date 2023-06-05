@@ -1125,8 +1125,8 @@ class SLRReport(Base):
                             f"'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' "
                             f"table count is {word}")
 
-    def test_prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet,
-                                                        filepath, env):
+    def prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet,
+                                                        filepath, env, prj_name):
 
         # Read expected categoris from data sheet
         expected_prisma_count = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
@@ -1175,7 +1175,11 @@ class SLRReport(Base):
         self.generate_download_report("excel_report", env)
         excel_filename = self.get_and_validate_filename(filepath)
 
-        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=11)
+        '''This condition is writted due to LIVEHTA-2473 implementation for Non-Oncology projects'''
+        if prj_name == "Oncology":
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=11)
+        else:
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=12)
         excel_studies_col = excel['Unique studies']
         # Removing NAN values
         excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
