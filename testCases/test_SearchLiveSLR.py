@@ -108,7 +108,7 @@ class Test_Search_LiveSLR:
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
 
-        scenarios = ['scenario3']
+        scenarios = ['scenario2']
 
         for scenario in scenarios:
             try:
