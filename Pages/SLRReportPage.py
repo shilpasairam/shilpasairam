@@ -15,6 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver import ActionChains
 from pandas.core.common import flatten
 
 from Pages.Base import Base, fWaitFor
@@ -675,8 +676,8 @@ class SLRReport(Base):
                 raise Exception("Error in Word report content validation")
 
     def check_sorting_order_in_excel_report(self, webexcel_filename, excel_filename):
-        self.LogScreenshot.fLogScreenshot(message=f"Check the sorting order in Complete Excel and Web_Excel reports",
-                                          pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"Check the sorting order in Complete Excel and Standard Excel "
+                                                  f"reports", pass_=True, log=True, screenshot=False)
         self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
    
@@ -699,35 +700,41 @@ class SLRReport(Base):
             webex_identifier = webexcel["Study Identifier"]
             webex_identifier = [item for item in webex_identifier if str(item) != 'nan']
 
-            webex_shortreference = webexcel["Short Reference"]
-            webex_shortreference = [item for item in webex_shortreference if str(item) != 'nan']
+            # webex_shortreference = webexcel["Short Reference"]
+            # webex_shortreference = [item for item in webex_shortreference if str(item) != 'nan']
 
             compex_identifier = compexcel["Study Identifier"]
             compex_identifier = [item for item in compex_identifier if str(item) != 'nan']
 
-            compex_shortreference = compexcel["Short Reference"]
-            compex_shortreference = [item for item in compex_shortreference if str(item) != 'nan']
+            # compex_shortreference = compexcel["Short Reference"]
+            # compex_shortreference = [item for item in compex_shortreference if str(item) != 'nan']
 
             # Finding duplicate values
             compex_dup_identifier = self.get_duplicates_from_list(compex_identifier)
-            compex_dup_shortref = self.get_duplicates_from_list(compex_shortreference)
+            # compex_dup_shortref = self.get_duplicates_from_list(compex_shortreference)
 
             webex_dup_identifier = self.get_duplicates_from_list(webex_identifier)
-            webex_dup_shortref = self.get_duplicates_from_list(webex_shortreference)
+            # webex_dup_shortref = self.get_duplicates_from_list(webex_shortreference)
 
             if webex_identifier == sorted(webex_identifier) and compex_identifier == sorted(compex_identifier):
-                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column Study "
-                                                          f"Identifier are in sorted order",
+                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column 'Study "
+                                                          f"Identifier' are in sorted order",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column Study "
-                                                          f"Identifier are not in sorted order",
+                self.LogScreenshot.fLogScreenshot(message=f"From Sheet '{sheet}', Contents in column 'Study "
+                                                          f"Identifier' are not in sorted order",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"From Sheet '{sheet}', Contents in column Study Identifier are not in sorted order")
+                raise Exception(f"From Sheet '{sheet}', Contents in column 'Study Identifier' are not in sorted order")
             
+            '''Complete Excel Report'''
             # When Study Identifier contains duplicate values then corresponding value in Short Reference
             # column should be in sorted order
             if len(compex_dup_identifier) != 0:
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"From Complete Excel Report -> '{sheet}' sheet, Duplicate extractions found in "
+                            f"'Study Identifier' column, Hence checking the order of corresponding elements in "
+                            f"'Short Reference' column. Duplicate Extractions are: '{compex_dup_identifier}'.",
+                    pass_=True, log=True, screenshot=False)
                 for m in compex_dup_identifier:
                     col_val = compexcel[compexcel["Study Identifier"] == m]
                     col_val_res = col_val["Short Reference"]
@@ -735,75 +742,328 @@ class SLRReport(Base):
                     if col_val_res == sorted(col_val_res):
                         self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
                                                                   f"contents in column 'Short Reference' are in "
-                                                                  f"sorted order in complete excel report",
+                                                                  f"sorted order in Complete Excel report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
                                                                   f"contents in column 'Short Reference' are not "
-                                                                  f"in sorted order in complete excel report",
+                                                                  f"in sorted order in Complete Excel report",
                                                           pass_=True, log=True, screenshot=False)
                         raise Exception(f"For '{m}' in Study Identifier, corresponding contents in column "
-                                        f"'Short Reference' are not in sorted order in complete excel report")
+                                        f"'Short Reference' are not in sorted order in Complete Excel report")
                 
-                # When Short Reference contains duplicate values then corresponding value in Publication Type
-                # column should be in sorted order
-                if len(compex_dup_shortref) != 0:
-                    for n in compex_dup_shortref:
-                        col_val = compexcel[compexcel["Short Reference"] == n]
-                        col_val_res = col_val["Publication Type"]
-                        col_val_res = [item for item in col_val_res if str(item) != 'nan']
-                        if col_val_res == sorted(col_val_res):
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
-                                                                      f"contents in column 'Publication Type' are in "
-                                                                      f"sorted order in complete excel report",
-                                                              pass_=True, log=True, screenshot=False)
-                        else:
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
-                                                                      f"contents in column 'Publication Type' are not "
-                                                                      f"in sorted order in complete excel report",
-                                                              pass_=True, log=True, screenshot=False)
-                            raise Exception(f"For '{n}' in Short Reference, corresponding contents in column "
-                                            f"'Publication Type' are not in sorted order in complete excel report")
+                    compex_dup_shortref = self.get_duplicates_from_list(col_val_res)
+                    # When Short Reference contains duplicate values then corresponding value in Publication Type
+                    # column should be in sorted order
+                    if len(compex_dup_shortref) != 0:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"From Complete Excel Report -> '{sheet}' sheet -> For '{m}' in 'Study "
+                                    f"Identifier', Duplicate extractions found in 'Short Reference' column, "
+                                    f"Hence checking the order of corresponding elements in 'Publication Type' "
+                                    f"column. Duplicate Extractions are: '{compex_dup_shortref}'",
+                            pass_=True, log=True, screenshot=False)
+                        for n in compex_dup_shortref:
+                            first_col_val = compexcel[compexcel["Study Identifier"] == m]
+                            col_val = first_col_val[first_col_val["Short Reference"] == n]
+                            col_val_res = col_val["Publication Type"]
+                            col_val_res = [item for item in col_val_res if str(item) != 'nan']
+                            if col_val_res == sorted(col_val_res):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'Study Identifier' -> '{n}' in Short Reference, "
+                                            f"corresponding contents in column 'Publication Type' are in sorted "
+                                            f"order in Complete Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'Study Identifier' -> '{n}' in Short Reference, "
+                                            f"corresponding contents in column 'Publication Type' are not in "
+                                            f"sorted order in Complete Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                                raise Exception(f"For '{m}' in 'Study Identifier' -> '{n}' in Short Reference, "
+                                                f"corresponding contents in column 'Publication Type' are not in "
+                                                f"sorted order in Complete Excel report")
 
+            '''Standard Excel Report'''
             # When Study Identifier contains duplicate values then corresponding value in Short Reference column
             # should be in sorted order
             if len(webex_dup_identifier) != 0:
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"From Standard Excel Report -> '{sheet}' sheet, Duplicate extractions found in "
+                            f"'Study Identifier' column, Hence checking the order of corresponding elements in "
+                            f"'Short Reference' column. Duplicate Extractions are: '{webex_dup_identifier}'.",
+                    pass_=True, log=True, screenshot=False)
                 for m in webex_dup_identifier:
                     col_val = webexcel[webexcel["Study Identifier"] == m]
                     col_val_res = col_val["Short Reference"]
                     col_val_res = [item for item in col_val_res if str(item) != 'nan']
                     if col_val_res == sorted(col_val_res):
-                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in 'Study Identifier', corresponding "
                                                                   f"contents in column 'Short Reference' are in "
-                                                                  f"sorted order in Web_excel report",
+                                                                  f"sorted order in Standard Excel report",
                                                           pass_=True, log=True, screenshot=False)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in Study Identifier, corresponding "
+                        self.LogScreenshot.fLogScreenshot(message=f"For '{m}' in 'Study Identifier', corresponding "
                                                                   f"contents in column 'Short Reference' are not in "
-                                                                  f"sorted order in Web_excel report",
+                                                                  f"sorted order in Standard Excel report",
                                                           pass_=True, log=True, screenshot=False)
-                        raise Exception(f"For '{m}' in Study Identifier, corresponding contents in column "
-                                        f"'Short Reference' are not in sorted order in Web_excel report")
+                        raise Exception(f"For '{m}' in 'Study Identifier', corresponding contents in column "
+                                        f"'Short Reference' are not in sorted order in Standard Excel report")
                 
-                # When Short Reference contains duplicate values then corresponding value in Publication Type
-                # column should be in sorted order
-                if len(webex_dup_shortref) != 0:
-                    for n in webex_dup_shortref:
-                        col_val = webexcel[webexcel["Short Reference"] == n]
-                        col_val_res = col_val["Publication Type"]
-                        col_val_res = [item for item in col_val_res if str(item) != 'nan']
-                        if col_val_res == sorted(col_val_res):
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
-                                                                      f"contents in column 'Publication Type' are in "
-                                                                      f"sorted order in Web_excel report",
-                                                              pass_=True, log=True, screenshot=False)
+                    webex_dup_shortref = self.get_duplicates_from_list(col_val_res)
+                    # When Short Reference contains duplicate values then corresponding value in Publication Type
+                    # column should be in sorted order
+                    if len(webex_dup_shortref) != 0:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"From Standard Excel Report -> '{sheet}' sheet -> For '{m}' in 'Study "
+                                    f"Identifier', Duplicate extractions found in 'Short Reference' column, "
+                                    f"Hence checking the order of corresponding elements in 'Publication Type' "
+                                    f"column. Duplicate Extractions are: '{webex_dup_shortref}'",
+                            pass_=True, log=True, screenshot=False)
+                        for n in webex_dup_shortref:
+                            first_col_val = webexcel[webexcel["Study Identifier"] == m]
+                            col_val = first_col_val[first_col_val["Short Reference"] == n]
+                            col_val_res = col_val["Publication Type"]
+                            col_val_res = [item for item in col_val_res if str(item) != 'nan']
+                            if col_val_res == sorted(col_val_res):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'Study Identifier' -> '{n}' in 'Short Reference', "
+                                            f"corresponding contents in column 'Publication Type' are in sorted "
+                                            f"order in Standard Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'Study Identifier' -> '{n}' in 'Short Reference', "
+                                            f"corresponding contents in column 'Publication Type' are not in "
+                                            f"sorted order in Standard Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                                raise Exception(f"For '{m}' in 'Study Identifier' -> '{n}' in 'Short Reference', "
+                                                f"corresponding contents in column 'Publication Type' are not in "
+                                                f"sorted order in Standard Excel report")
+
+    def non_oncology_check_sorting_order_in_excel_report(self, webexcel_filename, excel_filename):
+        self.LogScreenshot.fLogScreenshot(message=f"Non-Oncology - Check the sorting order in Complete Excel and "
+                                                  f"Standard Excel reports", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
+                                          pass_=True, log=True, screenshot=False)
+   
+        sheet_names = []
+
+        webexcel_data = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
+        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+
+        for i in webexcel_data.sheetnames:
+            if i in excel_data.sheetnames:
+                sheet_names.append(i)
+
+        self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {sheet_names}",
+                                          pass_=True, log=True, screenshot=False)
+        for sheet in sheet_names:
+            webexcel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=sheet, skiprows=3)
+            compexcel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, skiprows=3)
+
+            # Check sorting order from downloaded excel report
+            webex_study_id = webexcel["LiveSLR Study ID"]
+            webex_study_id = [item for item in webex_study_id if str(item) != 'nan']
+
+            compex_study_id = compexcel["LiveSLR Study ID"]
+            compex_study_id = [item for item in compex_study_id if str(item) != 'nan']
+
+            # Finding duplicate values
+            compex_dup_study_id = self.get_duplicates_from_list(compex_study_id)
+
+            webex_dup_study_id = self.get_duplicates_from_list(webex_study_id)
+
+            if webex_study_id == sorted(webex_study_id) and compex_study_id == sorted(compex_study_id):
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"From Sheet '{sheet}', Contents in column 'LiveSLR Study ID' are in sorted order",
+                    pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"From Sheet '{sheet}', Contents in column 'LiveSLR Study ID' are not in sorted order",
+                    pass_=False, log=True, screenshot=False)
+                raise Exception(f"From Sheet '{sheet}', Contents in column 'LiveSLR Study ID' are not in sorted order")
+            
+            '''Complete Excel Report'''
+            # When LiveSLR Study ID contains duplicate values then corresponding value in Analysis Type
+            # column should be in sorted order
+            if len(compex_dup_study_id) != 0:
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"From Complete Excel Report -> '{sheet}' sheet, Duplicate extractions found in "
+                            f"'LiveSLR Study ID' column, Hence checking the order of corresponding elements in "
+                            f"'Analysis Type' column. Duplicate Extractions are: '{compex_dup_study_id}'.",
+                    pass_=True, log=True, screenshot=False)
+                for m in compex_dup_study_id:
+                    col_val = compexcel[compexcel["LiveSLR Study ID"] == m]
+                    col_val_res = col_val["Analysis Type"]
+                    col_val_res = [item for item in col_val_res if str(item) != 'nan']
+
+                    col_val_res_final = []
+                    # Removing duplicates to get the proper length of duplicate values from Analysis Type column
+                    [col_val_res_final.append(x) for x in list(flatten(col_val_res)) if x not in col_val_res_final]
+
+                    if len(col_val_res_final) > 2:
+                        if any(["Overall", "Subgroup", "Pooled"] == col_val_res_final[i:i + 3] for i in
+                               range(len(col_val_res_final) - 1)):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are in sorted order in Complete Excel report",
+                                pass_=True, log=True, screenshot=False)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"For '{n}' in Short Reference, corresponding "
-                                                                      f"contents in column 'Publication Type' are not "
-                                                                      f"in sorted order in Web_excel report",
-                                                              pass_=True, log=True, screenshot=False)
-                            raise Exception(f"For '{n}' in Short Reference, corresponding contents in column "
-                                            f"'Publication Type' are not in sorted order in Web_excel report")
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are not in sorted order in Complete Excel report",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                            f"'Analysis Type' are not in sorted order in Complete Excel report")
+                    elif len(col_val_res_final) > 1:
+                        if any(["Overall", "Subgroup"] == col_val_res_final[i:i + 2] for i in
+                               range(len(col_val_res_final) - 1)):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are in sorted order in Complete Excel report",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are not in sorted order in Complete Excel report",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                            f"'Analysis Type' are not in sorted order in Complete Excel report")
+                    else:
+                        if col_val_res == sorted(col_val_res):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are in sorted order in Complete Excel report",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are not in sorted order in Complete Excel report",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                            f"'Analysis Type' are not in sorted order in Complete Excel report")                       
+                
+                    compex_dup_analysistype = self.get_duplicates_from_list(col_val_res)
+                    # When Analysis Type contains duplicate values then corresponding value in Update date (yyyy-mm-dd)
+                    # column should be in sorted order
+                    if len(compex_dup_analysistype) != 0:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"From Complete Excel Report -> '{sheet}' sheet -> For '{m}' in 'LiveSLR "
+                                    f"Study ID', Duplicate extractions found in 'Analysis Type' column, Hence "
+                                    f"checking the order of corresponding elements in 'Update date (yyyy-mm-dd)' "
+                                    f"column. Duplicate Extractions are: '{compex_dup_analysistype}'",
+                            pass_=True, log=True, screenshot=False)
+                        for n in compex_dup_analysistype:
+                            first_col_val = compexcel[compexcel["LiveSLR Study ID"] == m]
+                            col_val = first_col_val[first_col_val["Analysis Type"] == n]
+                            col_val_res = col_val["Update date (yyyy-mm-dd)"]
+                            col_val_res = [item for item in col_val_res if str(item) != 'nan']
+                            if col_val_res == sorted(col_val_res):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
+                                            f"corresponding contents in column 'Update date (yyyy-mm-dd)' are in "
+                                            f"sorted order in Complete Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
+                                            f"corresponding contents in column 'Update date (yyyy-mm-dd)' are not "
+                                            f"in sorted order in Complete Excel "
+                                            f"report", pass_=True, log=True, screenshot=False)
+                                raise Exception(f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
+                                                f"corresponding contents in column 'Update date (yyyy-mm-dd)' are "
+                                                f"not in sorted order in Complete Excel report")
+
+            '''Standard Excel Report'''
+            # When LiveSLR Study ID contains duplicate values then corresponding value in Analysis Type
+            # column should be in sorted order
+            if len(webex_dup_study_id) != 0:
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"From Standard Excel Report -> '{sheet}' sheet, Duplicate extractions found in "
+                            f"'LiveSLR Study ID' column, Hence checking the order of corresponding elements in "
+                            f"'Analysis Type' column. Duplicate Extractions are: '{webex_dup_study_id}'.",
+                    pass_=True, log=True, screenshot=False)
+                for m in webex_dup_study_id:
+                    col_val = webexcel[webexcel["LiveSLR Study ID"] == m]
+                    col_val_res = col_val["Analysis Type"]
+                    col_val_res = [item for item in col_val_res if str(item) != 'nan']
+
+                    col_val_res_final = []
+                    # Removing duplicates to get the proper length of duplicate values from Analysis Type column
+                    [col_val_res_final.append(x) for x in list(flatten(col_val_res)) if x not in col_val_res_final]
+
+                    if len(col_val_res_final) > 2:
+                        if any(["Overall", "Subgroup", "Pooled"] == col_val_res_final[i:i + 3] for i in
+                               range(len(col_val_res_final) - 1)):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are in sorted order in Standard Excel report",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are not in sorted order in Standard Excel report",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                            f"'Analysis Type' are not in sorted order in Standard Excel report")
+                    elif len(col_val_res_final) > 1:
+                        if any(["Overall", "Subgroup"] == col_val_res_final[i:i + 2] for i in
+                               range(len(col_val_res_final) - 1)):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are in sorted order in Standard Excel report",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are not in sorted order in Standard Excel report",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                            f"'Analysis Type' are not in sorted order in Standard Excel report")
+                    else:
+                        if col_val_res == sorted(col_val_res):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are in sorted order in Standard Excel report",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                        f"'Analysis Type' are not in sorted order in Standard Excel report",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"For '{m}' in 'LiveSLR Study ID', corresponding contents in column "
+                                            f"'Analysis Type' are not in sorted order in Standard Excel report")                       
+                
+                    webex_dup_analysistype = self.get_duplicates_from_list(col_val_res)
+                    # When Analysis Type contains duplicate values then corresponding value in Update date (yyyy-mm-dd)
+                    # column should be in sorted order
+                    if len(webex_dup_analysistype) != 0:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"From Standard Excel Report -> '{sheet}' sheet -> For '{m}' in 'LiveSLR "
+                                    f"Study ID', Duplicate extractions found in 'Analysis Type' column, Hence "
+                                    f"checking the order of corresponding elements in 'Update date (yyyy-mm-dd)' "
+                                    f"column. Duplicate Extractions are: '{webex_dup_analysistype}'",
+                            pass_=True, log=True, screenshot=False)
+                        for n in webex_dup_analysistype:
+                            first_col_val = webexcel[webexcel["LiveSLR Study ID"] == m]
+                            col_val = first_col_val[first_col_val["Analysis Type"] == n]
+                            col_val_res = col_val["Update date (yyyy-mm-dd)"]
+                            col_val_res = [item for item in col_val_res if str(item) != 'nan']
+                            if col_val_res == sorted(col_val_res):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
+                                            f"corresponding contents in column 'Update date (yyyy-mm-dd)' are in "
+                                            f"sorted order in Standard Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
+                                            f"corresponding contents in column 'Update date (yyyy-mm-dd)' are not "
+                                            f"in sorted order in Standard Excel report",
+                                    pass_=True, log=True, screenshot=False)
+                                raise Exception(f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
+                                                f"corresponding contents in column 'Update date (yyyy-mm-dd)' are "
+                                                f"not in sorted order in Standard Excel report")
 
     def test_prisma_ele_comparison_between_Excel_and_Word_Report(self, pop_data, slr_type, add_criteria, filepath, env):
 
@@ -865,8 +1125,8 @@ class SLRReport(Base):
                             f"'Updated Prisma' tab count is {excel_studies_col} and Word Report 'Updated Prisma' "
                             f"table count is {word}")
 
-    def test_prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet,
-                                                        filepath, env):
+    def prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet,
+                                                        filepath, env, prj_name):
 
         # Read expected categoris from data sheet
         expected_prisma_count = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
@@ -915,7 +1175,11 @@ class SLRReport(Base):
         self.generate_download_report("excel_report", env)
         excel_filename = self.get_and_validate_filename(filepath)
 
-        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=11)
+        '''This condition is writted due to LIVEHTA-2473 implementation for Non-Oncology projects'''
+        if prj_name == "Oncology":
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=11)
+        else:
+            excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=12)
         excel_studies_col = excel['Unique studies']
         # Removing NAN values
         excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
@@ -1836,6 +2100,43 @@ class SLRReport(Base):
         self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Endpoint Details with Unique Studies "
                                                   f"count in LiveSLR -> Select Studies Reporting Outcome(s) section "
                                                   f"is completed***", pass_=True, log=True, screenshot=False)
+
+    def validate_liveslrpage_tooltip(self, locatorname, filepath, env):
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Tooltip information in Search "
+                                                  f"LiveSLR Page is started***",
+                                          pass_=True, log=True, screenshot=False)
+
+        expected_tool_tip = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'ToolTip_Info')
+
+        actual_tool_tip = []
+        tool_tip_locators = {'Select SLR Project': 'slr_pop_tooltip',
+                             'Select Type of SLR': 'slr_type_tooltip',
+                             'Select Category(ies) to View': 'cat_view_tooltip',
+                             'Select Studies Reporting Outcome(s)': 'reporting_outcome_tooltip'}
+        
+        for k, v in tool_tip_locators.items():
+            ele = self.select_element(v, env)
+            actions = ActionChains(self.driver)
+            actions.move_to_element(ele).perform()
+            self.LogScreenshot.fLogScreenshot(message=f"Tool Tip Description for '{k}' is: ",
+                                              pass_=True, log=True, screenshot=True)
+            actual_tool_tip.append(ele.get_attribute('tooltip'))
+
+        comparison_result = self.list_comparison_between_reports_data(expected_tool_tip, actual_tool_tip)
+
+        if len(comparison_result) == 0:
+            self.LogScreenshot.fLogScreenshot(message=f"Tool Tip Description is matching with Expected messages.",
+                                              pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Tool Tip Description is not matching with Expected messages. "
+                                                      f"Mismatch values are arranged in following order -> "
+                                                      f"Expected Message and Actual Message. {comparison_result}",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception("Tool Tip Description is not matching with Expected messages.")
+
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Tooltip information in Search "
+                                                  f"LiveSLR Page is completed***",
+                                          pass_=True, log=True, screenshot=False)
 
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
