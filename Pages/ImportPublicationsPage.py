@@ -46,10 +46,11 @@ class ImportPublicationPage(Base):
         pop_data = self.get_file_details_to_upload(filepath, locatorname)
 
         for i in pop_data:
-            ele = self.select_element("select_update_dropdown", env)
-            time.sleep(2)
-            select = Select(ele)
-            select.select_by_visible_text(i[0])
+            # ele = self.select_element("select_update_dropdown", env)
+            # time.sleep(2)
+            # select = Select(ele)
+            # select.select_by_visible_text(i[0])
+            selected_update_val = self.base.selectbyvisibletext("select_update_dropdown", i[0], env)
 
             # Fetching total rows count before uploading a new file
             table_rows_before = self.select_elements("upload_table_rows", env)
@@ -89,10 +90,11 @@ class ImportPublicationPage(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the "
                                                               f"extraction file.",
                                                       pass_=True, log=True, screenshot=False)
-                    result = []
-                    td1 = self.select_elements('upload_table_row_1', env)
-                    for m in td1:
-                        result.append(m.text)
+                    # result = []
+                    # td1 = self.select_elements('upload_table_row_1', env)
+                    # for m in td1:
+                    #     result.append(m.text)
+                    result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
                         self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being '
@@ -138,10 +140,11 @@ class ImportPublicationPage(Base):
         expected_err_msg = [[col1_data[i], col2_data[i]] for i in range(0, len(col1_data))]        
 
         for i in pop_data:
-            ele = self.select_element("select_update_dropdown", env)
-            time.sleep(2)
-            select = Select(ele)
-            select.select_by_visible_text(i[0])
+            # ele = self.select_element("select_update_dropdown", env)
+            # time.sleep(2)
+            # select = Select(ele)
+            # select.select_by_visible_text(i[0])
+            selected_update_val = self.base.selectbyvisibletext("select_update_dropdown", i[0], env)
 
             # Fetching total rows count before uploading a new file
             table_rows_before = self.select_elements("upload_table_rows", env)
@@ -178,10 +181,11 @@ class ImportPublicationPage(Base):
                                                   pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    result = []
-                    td1 = self.select_elements('upload_table_row_1', env)
-                    for m in td1:
-                        result.append(m.text)
+                    # result = []
+                    # td1 = self.select_elements('upload_table_row_1', env)
+                    # for m in td1:
+                    #     result.append(m.text)
+                    result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
                         self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is '
@@ -197,17 +201,19 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                     self.click("view_action", env, UnivWaitFor=10)
                     time.sleep(2)
-                    td1 = self.select_elements('error_data_table_col1', env)
-                    error_data_col1 = []
-                    for k in td1:
-                        error_data_col1.append(k.text)
+                    # td1 = self.select_elements('error_data_table_col1', env)
+                    # error_data_col1 = []
+                    # for k in td1:
+                    #     error_data_col1.append(k.text)
+                    error_data_col1 = self.get_texts('error_data_table_col1', env)
                     # Converting list values from string to int
                     error_data_col1 = [int(x) for x in error_data_col1]
 
-                    td2 = self.select_elements('error_data_table_col2', env)
-                    error_data_col2 = []
-                    for v in td2:
-                        error_data_col2.append(v.text)
+                    # td2 = self.select_elements('error_data_table_col2', env)
+                    # error_data_col2 = []
+                    # for v in td2:
+                    #     error_data_col2.append(v.text)
+                    error_data_col2 = self.get_texts('error_data_table_col2', env)
                     
                     actual_err_msg = [[error_data_col1[i], error_data_col2[i]] for i in range(0, len(error_data_col1))]
 
@@ -254,10 +260,11 @@ class ImportPublicationPage(Base):
         time.sleep(5)
 
         for i in pop_data:
-            result = []
-            td1 = self.select_elements('upload_table_row_1', env)
-            for m in td1:
-                result.append(m.text)
+            # result = []
+            # td1 = self.select_elements('upload_table_row_1', env)
+            # for m in td1:
+            #     result.append(m.text)
+            result = self.get_texts('upload_table_row_1', env)
             
             # Check the uploaded filename before deleting the record
             if i[2] in result:

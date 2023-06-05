@@ -96,25 +96,28 @@ class ExcludedStudiesPage(Base):
                 self.click("ex_stdy_pop_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Population dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
-                pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                select1 = Select(pop_ele)
-                select1.select_by_visible_text(i[0])
+                # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                # select1 = Select(pop_ele)
+                # select1.select_by_visible_text(i[0])
+                selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", i[0], env)
                 time.sleep(1)
 
                 self.click("ex_stdy_stdytype_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"SLR Type dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
-                stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
-                select2 = Select(stdy_ele)
-                select2.select_by_visible_text(j[0])
+                # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
+                # select2 = Select(stdy_ele)
+                # select2.select_by_visible_text(j[0])
+                selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", j[0], env)
                 time.sleep(1)
 
                 self.click("ex_stdy_update_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Updated dropdown is accessible. Listed elements are:",
                                                   pass_=True, log=True, screenshot=True)
-                update_ele = self.select_element("ex_stdy_update_dropdown", env)
-                select3 = Select(update_ele)
-                select3.select_by_index(1)
+                # update_ele = self.select_element("ex_stdy_update_dropdown", env)
+                # select3 = Select(update_ele)
+                # select3.select_by_index(1)
+                selected_update_val = self.base.selectbyindex("ex_stdy_update_dropdown", 1, env)
                 time.sleep(1)
 
                 '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
@@ -151,24 +154,27 @@ class ExcludedStudiesPage(Base):
                 for j in stdy_data:
                     expected_table_values = []
                     time.sleep(2)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    select1.select_by_visible_text(i[0])
-                    expected_table_values.append(select1.first_selected_option.text)
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # select1.select_by_visible_text(i[0])
+                    selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", i[0], env)
+                    expected_table_values.append(selected_pop_val)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(j[0])
-                    expected_table_values.append(select2.first_selected_option.text)
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(j[0])
+                    selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", j[0], env)
+                    expected_table_values.append(selected_slr_val)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
-                    select3 = Select(update_ele)
-                    time.sleep(1)
-                    select3.select_by_index(1)
-                    expected_table_values.append(select3.first_selected_option.text)
+                    # update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
+                    # select3 = Select(update_ele)
+                    # time.sleep(1)
+                    # select3.select_by_index(1)
+                    selected_update_val = self.base.selectbyindex("ex_stdy_update_dropdown", 1, env)
+                    expected_table_values.append(selected_update_val)
                     time.sleep(1)
 
                     '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
@@ -202,22 +208,25 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(firstname)
 
                     # Read table data for specific population and slr study type
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    time.sleep(1)
-                    select1.select_by_visible_text(i[0])
-                    time.sleep(1)
-
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(j[0])
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # time.sleep(1)
+                    # select1.select_by_visible_text(i[0])
+                    selected_pop_val1 = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", i[0], env)
                     time.sleep(1)
 
-                    actual_table_values = []
-                    td1 = self.select_elements('ex_stdy_table_data_row_1', env)
-                    for m in td1:
-                        actual_table_values.append(m.text)
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(j[0])
+                    selected_slr_val1 = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", j[0], env)
+                    time.sleep(1)
+
+                    # actual_table_values = []
+                    # td1 = self.select_elements('ex_stdy_table_data_row_1', env)
+                    # for m in td1:
+                    #     actual_table_values.append(m.text)
+                    actual_table_values = self.get_texts('ex_stdy_table_data_row_1', env)
 
                     for n in expected_table_values:
                         if n in actual_table_values:
@@ -249,24 +258,27 @@ class ExcludedStudiesPage(Base):
                 for j in stdy_data:
                     expected_table_values = []
                     time.sleep(2)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    select1.select_by_visible_text(i[0])
-                    expected_table_values.append(select1.first_selected_option.text)
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # select1.select_by_visible_text(i[0])
+                    selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", i[0], env)
+                    expected_table_values.append(selected_pop_val)                    
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(j[0])
-                    expected_table_values.append(select2.first_selected_option.text)
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(j[0])
+                    selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", j[0], env)
+                    expected_table_values.append(selected_slr_val)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
-                    select3 = Select(update_ele)
-                    time.sleep(1)
-                    select3.select_by_index(1)
-                    expected_table_values.append(select3.first_selected_option.text)
+                    # update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
+                    # select3 = Select(update_ele)
+                    # time.sleep(1)
+                    # select3.select_by_index(1)
+                    selected_update_val = self.base.selectbyindex("ex_stdy_update_dropdown", 1, env)
+                    expected_table_values.append(selected_update_val)
                     time.sleep(1)
 
                     '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
@@ -309,22 +321,25 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(firstname)
 
                     # Read table data for specific population and slr study type
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    time.sleep(1)
-                    select1.select_by_visible_text(i[0])
-                    time.sleep(1)
-
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(j[0])
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # time.sleep(1)
+                    # select1.select_by_visible_text(i[0])
+                    selected_pop_val1 = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", i[0], env)
                     time.sleep(1)
 
-                    actual_table_values = []
-                    td1 = self.select_elements('ex_stdy_table_data_row_1', env)
-                    for m in td1:
-                        actual_table_values.append(m.text)
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(j[0])
+                    selected_slr_val1 = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", j[0], env)
+                    time.sleep(1)
+
+                    # actual_table_values = []
+                    # td1 = self.select_elements('ex_stdy_table_data_row_1', env)
+                    # for m in td1:
+                    #     actual_table_values.append(m.text)
+                    actual_table_values = self.get_texts('ex_stdy_table_data_row_1', env)
 
                     for n in expected_table_values:
                         if n in actual_table_values:
@@ -353,21 +368,24 @@ class ExcludedStudiesPage(Base):
             for i in new_pop_data:
                 for j in stdy_data:
                     time.sleep(2)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    select1.select_by_visible_text(i[0])
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # select1.select_by_visible_text(i[0])
+                    selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", i[0], env)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(j[0])
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(j[0])
+                    selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", j[0], env)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
-                    select3 = Select(update_ele)
-                    time.sleep(1)
-                    select3.select_by_index(1)
+                    # update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
+                    # select3 = Select(update_ele)
+                    # time.sleep(1)
+                    # select3.select_by_index(1)
+                    selected_update_val = self.base.selectbyindex("ex_stdy_update_dropdown", 1, env)
                     time.sleep(1)
 
                     self.LogScreenshot.fLogScreenshot(message=f'Data selected for deletion is : ',
@@ -413,24 +431,27 @@ class ExcludedStudiesPage(Base):
                     expected_table_values = []
                     self.go_to_page("excluded_studies_link", env)
                     time.sleep(2)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    select1.select_by_visible_text(pop_val[0])
-                    expected_table_values.append(select1.first_selected_option.text)
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # select1.select_by_visible_text(pop_val[0])
+                    selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", pop_val[0], env)
+                    expected_table_values.append(selected_pop_val)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(i[0])
-                    expected_table_values.append(select2.first_selected_option.text)
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(i[0])
+                    selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", i[0], env)
+                    expected_table_values.append(selected_slr_val)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
-                    select3 = Select(update_ele)
-                    time.sleep(1)
-                    select3.select_by_index(1)
-                    expected_table_values.append(select3.first_selected_option.text)
+                    # update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
+                    # select3 = Select(update_ele)
+                    # time.sleep(1)
+                    # select3.select_by_index(1)
+                    selected_update_val = self.base.selectbyindex("ex_stdy_update_dropdown", 1, env)
+                    expected_table_values.append(selected_update_val)
                     time.sleep(1)
 
                     '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
@@ -464,23 +485,26 @@ class ExcludedStudiesPage(Base):
                     expected_table_values.append(firstname)
 
                     # Read table data for specific population and slr study type
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    time.sleep(1)
-                    select1.select_by_visible_text(pop_val[0])
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # time.sleep(1)
+                    # select1.select_by_visible_text(pop_val[0])
+                    selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", pop_val[0], env)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(i[0])
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(i[0])
+                    selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", i[0], env)
                     time.sleep(2)
 
-                    actual_table_values = []
-                    td1 = self.select_elements('ex_stdy_table_data_row_1', env)
-                    time.sleep(1)
-                    for m in td1:
-                        actual_table_values.append(m.text)
+                    # actual_table_values = []
+                    # td1 = self.select_elements('ex_stdy_table_data_row_1', env)
+                    # time.sleep(1)
+                    # for m in td1:
+                    #     actual_table_values.append(m.text)
+                    actual_table_values = self.get_texts('ex_stdy_table_data_row_1', env)
 
                     for n in expected_table_values:
                         if n in actual_table_values:
@@ -583,24 +607,27 @@ class ExcludedStudiesPage(Base):
                     expected_table_values = []
                     self.go_to_page("excluded_studies_link", env)
                     time.sleep(2)
-                    pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
-                    select1 = Select(pop_ele)
-                    select1.select_by_visible_text(pop_val[0])
-                    expected_table_values.append(select1.first_selected_option.text)
+                    # pop_ele = self.select_element("ex_stdy_pop_dropdown", env)
+                    # select1 = Select(pop_ele)
+                    # select1.select_by_visible_text(pop_val[0])
+                    selected_pop_val = self.base.selectbyvisibletext("ex_stdy_pop_dropdown", pop_val[0], env)
+                    expected_table_values.append(selected_pop_val)
                     time.sleep(1)
 
-                    stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
-                    select2 = Select(stdy_ele)
-                    time.sleep(1)
-                    select2.select_by_visible_text(i[0])
-                    expected_table_values.append(select2.first_selected_option.text)
+                    # stdy_ele = self.select_element("ex_stdy_stdytype_dropdown", env, UnivWaitFor=10)
+                    # select2 = Select(stdy_ele)
+                    # time.sleep(1)
+                    # select2.select_by_visible_text(i[0])
+                    selected_slr_val = self.base.selectbyvisibletext("ex_stdy_stdytype_dropdown", i[0], env)
+                    expected_table_values.append(selected_slr_val)
                     time.sleep(1)
 
-                    update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
-                    select3 = Select(update_ele)
-                    time.sleep(1)
-                    select3.select_by_index(1)
-                    expected_table_values.append(select3.first_selected_option.text)
+                    # update_ele = self.select_element("ex_stdy_update_dropdown", env, UnivWaitFor=10)
+                    # select3 = Select(update_ele)
+                    # time.sleep(1)
+                    # select3.select_by_index(1)
+                    selected_update_val = self.base.selectbyindex("ex_stdy_update_dropdown", 1, env)
+                    expected_table_values.append(selected_update_val)
                     time.sleep(1)
 
                     self.LogScreenshot.fLogScreenshot(message=f'Data selected for deletion is : ',
@@ -632,9 +659,6 @@ class ExcludedStudiesPage(Base):
                     self.slrreport.select_data(f"{pop_val[0]}", f"{pop_val[0]}_radio_button", env)
                     self.slrreport.select_data(i[0], f"{i[0]}_radio_button", env)
                     self.slrreport.generate_download_report("excel_report", env)
-                    # time.sleep(5)
-                    # excel_filename = self.slrreport.getFilenameAndValidate(180)
-                    # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
                     if prj_name == "Oncology":

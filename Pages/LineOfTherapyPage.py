@@ -59,10 +59,11 @@ class LineofTherapyPage(Base):
         # Divide the total entries value with the number of records displayed in a page and round off the result to
         # next nearest integer value
         page_counter = math.ceil(total_entries/10)
-        lot_optns_text = []
-        options = self.select_elements(table_rows_data, env)
-        for k in options:
-            lot_optns_text.append(k.text)
+        # lot_optns_text = []
+        # options = self.select_elements(table_rows_data, env)
+        # for k in options:
+        #     lot_optns_text.append(k.text)
+        lot_optns_text = self.get_texts(table_rows_data, env)
         
         # Iterate over the remaining pages and append the row data
         for i in range(1, page_counter):
@@ -159,11 +160,12 @@ class LineofTherapyPage(Base):
         try:
             if table_rows_after > table_rows_before != table_rows_after:
                 self.refreshpage()
-                result = []
+                # result = []
                 self.input_text("managelot_search_box", f"{lot_name[0]}", env)
-                td1 = self.select_elements('managelot_table_row_1', env)
-                for n in td1:
-                    result.append(n.text)
+                # td1 = self.select_elements('managelot_table_row_1', env)
+                # for n in td1:
+                #     result.append(n.text)
+                result = self.get_texts('managelot_table_row_1', env)
                 
                 if result[0] == lot_name[0]:
                     self.LogScreenshot.fLogScreenshot(message=f'Added Line of Therapy data is present in table',
@@ -212,11 +214,12 @@ class LineofTherapyPage(Base):
 
         try:
             self.refreshpage()
-            result = []
+            # result = []
             self.input_text("managelot_search_box", f"{lot_name[0]}_Update", env)
-            td1 = self.select_elements('manage_update_table_row_1', env)
-            for n in td1:
-                result.append(n.text)
+            # td1 = self.select_elements('manage_update_table_row_1', env)
+            # for n in td1:
+            #     result.append(n.text)
+            result = self.get_texts('manage_update_table_row_1', env)
             
             if result[0] == f"{lot_name[0]}_Update":
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Line of Therapy data is present in table',

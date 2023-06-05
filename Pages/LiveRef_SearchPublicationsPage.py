@@ -138,10 +138,11 @@ class SearchPublicationsPage(Base):
             publications_count = self.get_text("publications_count", env)
 
             excel_filename = self.validate_liveref_reportname(env)
-            table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_col1", env)
-            for x in table_col_eles:
-                table_col_data.append(x.text)
+            # table_col_data = []
+            # table_col_eles = self.select_elements("liveref_web_table_col1", env)
+            # for x in table_col_eles:
+            #     table_col_data.append(x.text)
+            table_col_data = self.get_texts("liveref_web_table_col1", env)
             # removing empty strings from list    
             web_table_data = list(filter(None, table_col_data))
 
@@ -219,10 +220,11 @@ class SearchPublicationsPage(Base):
         time.sleep(1)
         if self.isselected(auth_locator_checkbox, env):
             excel_filename = self.validate_liveref_reportname(env)
-            table_col_names = []
-            table_col_eles = self.select_elements("liveref_web_table_col_names", env)
-            for i in table_col_eles:
-                table_col_names.append(i.text)
+            # table_col_names = []
+            # table_col_eles = self.select_elements("liveref_web_table_col_names", env)
+            # for i in table_col_eles:
+            #     table_col_names.append(i.text)
+            table_col_names = self.get_texts("liveref_web_table_col_names", env)
             
             # Checking the presence of column name in Web Table
             if 'Authors And Affiliations'.upper() in table_col_names:
@@ -259,10 +261,11 @@ class SearchPublicationsPage(Base):
         time.sleep(1)
         if self.isselected(auth_locator_checkbox, env):
             excel_filename = self.validate_liveref_reportname(env)
-            table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_auth_col", env)
-            for i in table_col_eles:
-                table_col_data.append(i.text)
+            # table_col_data = []
+            # table_col_eles = self.select_elements("liveref_web_table_auth_col", env)
+            # for i in table_col_eles:
+            #     table_col_data.append(i.text)
+            table_col_data = self.get_texts("liveref_web_table_auth_col", env)
             # removing empty strings from list    
             final_table_data = list(filter(None, table_col_data))
 
@@ -299,10 +302,11 @@ class SearchPublicationsPage(Base):
         time.sleep(1)
         if self.isselected(auth_locator_checkbox, env):
             excel_filename = self.validate_liveref_reportname(env)
-            table_col_data = []
-            table_col_eles = self.select_elements("liveref_web_table_auth_col", env)
-            for i in table_col_eles:
-                table_col_data.append(i.text)
+            # table_col_data = []
+            # table_col_eles = self.select_elements("liveref_web_table_auth_col", env)
+            # for i in table_col_eles:
+            #     table_col_data.append(i.text)
+            table_col_data = self.get_texts("liveref_web_table_auth_col", env)
             # removing empty strings from list    
             final_table_data = list(filter(None, table_col_data))
 

@@ -1218,10 +1218,11 @@ class UtilityOutcome(Base):
 
     def check_column_names_in_previewresults(self, expected_dict, env):
 
-        result = []
-        tc1 = self.select_elements("web_table_column_names", env)
-        for m in tc1:
-            result.append(m.text)
+        # result = []
+        # tc1 = self.select_elements("web_table_column_names", env)
+        # for m in tc1:
+        #     result.append(m.text)
+        result = self.get_texts("web_table_column_names", env)
 
         for k, v in expected_dict.items():
             if v in result:

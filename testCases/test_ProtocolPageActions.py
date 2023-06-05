@@ -441,7 +441,7 @@ class Test_ProtocolPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C40886
-    def test_picos_page(self, extra, env, request, caseid):
+    def test_liveslr_view_picos(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getpicosdata(env)
         # Instantiate the Base class
@@ -454,9 +454,9 @@ class Test_ProtocolPage:
         picospage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate PICOS functionality under Protocol -> PICOS Page"
+        request.node._title = "Validate View PICOS functionality under Search LiveSLR Page for Oncology Population"
 
-        LogScreenshot.fLogScreenshot(message=f"***PICOS page validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -469,9 +469,9 @@ class Test_ProtocolPage:
                 picospage.validate_view_picos(i, filepath, env)                
                 
             except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing PICOS page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing View PICOS page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing PICOS page")
         
-        LogScreenshot.fLogScreenshot(message=f"***PICOS page validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is completed***",
                                      pass_=True, log=True, screenshot=False)

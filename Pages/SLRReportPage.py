@@ -1146,9 +1146,10 @@ class SLRReport(Base):
                  ['prismas', 'prisma_pop_dropdown', 'prisma_study_type_dropdown']]
         for i in pages:
             self.click(i[0], env)
-            pop_ele = self.select_element(i[1], env)
-            select1 = Select(pop_ele)
-            select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+            # pop_ele = self.select_element(i[1], env)
+            # select1 = Select(pop_ele)
+            # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+            selected_pop_val = self.base.selectbyvisibletext(i[1], "NewImportLogic_1 - Test_Automation_1", env)
 
             stdy_ele = self.select_element(i[2], env)
             select2 = Select(stdy_ele)
@@ -1170,9 +1171,10 @@ class SLRReport(Base):
 
         self.click("manage_qa_data_button", env)
         time.sleep(1)
-        pop_ele = self.select_element("select_pop_dropdown", env)
-        select1 = Select(pop_ele)
-        select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+        # pop_ele = self.select_element("select_pop_dropdown", env)
+        # select1 = Select(pop_ele)
+        # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+        selected_pop_val = self.base.selectbyvisibletext("select_pop_dropdown", "NewImportLogic_1 - Test_Automation_1", env)
 
         stdy_ele = self.select_element("select_stdy_type_dropdown", env)
         select2 = Select(stdy_ele)
@@ -1592,7 +1594,8 @@ class SLRReport(Base):
         self.select_data(pop_list[0][0], pop_list[0][1], env)
         self.select_data(slrtype[0][0], slrtype[0][1], env)
         
-        actual_cats = [i.text for i in self.select_elements('cat_view_eles', env)]      
+        # actual_cats = [i.text for i in self.select_elements('cat_view_eles', env)]
+        actual_cats = self.get_texts('cat_view_eles', env)      
 
         for j in ep_abbr_from_extraction_file:
             if j in actual_cats:
@@ -1780,7 +1783,8 @@ class SLRReport(Base):
                           'Safety': ['E-3', 'E-4', 'E-5']
                           }
 
-                actual_reported_var = [i.text for i in self.select_elements('reported_variable_section_values', env)]
+                # actual_reported_var = [i.text for i in self.select_elements('reported_variable_section_values', env)]
+                actual_reported_var = self.get_texts('reported_variable_section_values', env)
                 actual_reported_var_res = []
                 for xy in actual_reported_var:
                     actual_reported_var_res.append(xy.splitlines())

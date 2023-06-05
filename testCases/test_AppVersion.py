@@ -63,10 +63,11 @@ class Test_AppVersion:
         appver.app_version_check("LiveRef", "about_live_ref", "about_live_ref_text", "about_live_ref_close", env)
 
         # Checking the absence of Glossary option
-        res_list = []
-        eles = base.select_elements("glossary_nav_bar", env, UnivWaitFor=3)
-        for ele in eles:
-            res_list.append(ele.text)
+        # res_list = []
+        # eles = base.select_elements("glossary_nav_bar", env, UnivWaitFor=3)
+        # for ele in eles:
+        #     res_list.append(ele.text)
+        res_list = base.get_texts("glossary_nav_bar", env, UnivWaitFor=3)
         
         if not search("Glossary", res_list[0]):
             LogScreenshot.fLogScreenshot(message=f"Glossary link is not present as expected",

@@ -94,9 +94,10 @@ class ManageSourceDataPage(Base):
         # Read filepaths to upload
         logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template')
 
-        ele = self.select_element("sel_table_entries_dropdown", env)
-        select = Select(ele)
-        select.select_by_visible_text("All")
+        # ele = self.select_element("sel_table_entries_dropdown", env)
+        # select = Select(ele)
+        # select.select_by_visible_text("All")
+        selected_entry = self.base.selectbyvisibletext("sel_table_entries_dropdown", "All", env)
 
         # Fetching total rows count before adding a new manage source data
         table_rows_before = self.select_elements(tablerows, env)
@@ -128,9 +129,10 @@ class ManageSourceDataPage(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception(f"Error while adding Manage Source of Data")
         
-        ele = self.select_element("sel_table_entries_dropdown", env)
-        select = Select(ele)
-        select.select_by_visible_text("All")
+        # ele = self.select_element("sel_table_entries_dropdown", env)
+        # select = Select(ele)
+        # select.select_by_visible_text("All")
+        selected_entry1 = self.base.selectbyvisibletext("sel_table_entries_dropdown", "All", env)
 
         # Fetching total rows count after adding a new manage source data
         table_rows_after = self.select_elements(tablerows, env)
@@ -140,13 +142,12 @@ class ManageSourceDataPage(Base):
 
         try:
             if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                result = []
+                # result = []
                 self.input_text("sourcedata_search_box", f'{source_value[1]}_{date.today().year}', env)
-                # self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new manage source of data : ',
-                #                     pass_=True, log=True, screenshot=True)
-                td1 = self.select_elements('sourcedata_table_row_1', env)
-                for m in td1:
-                    result.append(m.text)
+                # td1 = self.select_elements('sourcedata_table_row_1', env)
+                # for m in td1:
+                #     result.append(m.text)
+                result = self.get_texts('sourcedata_table_row_1', env)
                 
                 if result[2] == f'{source_value[1]}_{date.today().year}':
                     self.LogScreenshot.fLogScreenshot(message=f'Newly added Manage Source data is present in table',
@@ -201,13 +202,12 @@ class ManageSourceDataPage(Base):
             raise Exception(f"Error while updating Manage Source of Data")
 
         try:
-            result = []
+            # result = []
             self.input_text("sourcedata_search_box", f'{edit_source_value[1]}_{date.today().year}', env)
-            # self.LogScreenshot.fLogScreenshot(message=f'Table data after updating manage source of data : ',
-            #                         pass_=True, log=True, screenshot=True)
-            td1 = self.select_elements('sourcedata_table_row_1', env)
-            for m in td1:
-                result.append(m.text)
+            # td1 = self.select_elements('sourcedata_table_row_1', env)
+            # for m in td1:
+            #     result.append(m.text)
+            result = self.get_texts('sourcedata_table_row_1', env)
             
             if result[2] == f'{edit_source_value[1]}_{date.today().year}':
                 self.LogScreenshot.fLogScreenshot(message=f'Updated Manage Source data is present in table',
@@ -223,9 +223,10 @@ class ManageSourceDataPage(Base):
 
     def delete_managesourcedata(self, src_code, tablerows, env):
         expected_status_text = "Source successfully deleted"
-        ele = self.select_element("sel_table_entries_dropdown", env)
-        select = Select(ele)
-        select.select_by_visible_text("All")
+        # ele = self.select_element("sel_table_entries_dropdown", env)
+        # select = Select(ele)
+        # select.select_by_visible_text("All")
+        selected_entry = self.base.selectbyvisibletext("sel_table_entries_dropdown", "All", env)
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_before = self.select_elements(tablerows, env)
@@ -254,9 +255,10 @@ class ManageSourceDataPage(Base):
                                               pass_=False, log=True, screenshot=True)
             raise Exception(f"Unable to find status message while deleting the Manage source data")
 
-        ele = self.select_element("sel_table_entries_dropdown", env)
-        select = Select(ele)
-        select.select_by_visible_text("All")
+        # ele = self.select_element("sel_table_entries_dropdown", env)
+        # select = Select(ele)
+        # select.select_by_visible_text("All")
+        selected_entry2 = self.base.selectbyvisibletext("sel_table_entries_dropdown", "All", env)
 
         # Fetching total rows count before deleting a file from top of the table
         table_rows_after = self.select_elements(tablerows, env)

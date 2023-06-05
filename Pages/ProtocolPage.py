@@ -73,9 +73,10 @@ class ProtocolPage(Base):
         # self.refreshpage()
         # time.sleep(3)
         try:
-            pop_ele = self.select_element("prisma_pop_dropdown", env)
-            select = Select(pop_ele)
-            select.select_by_visible_text(pop_name[0])
+            # pop_ele = self.select_element("prisma_pop_dropdown", env)
+            # select = Select(pop_ele)
+            # select.select_by_visible_text(pop_name[0])
+            selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
 
             # Read the PRISMA file path required to upload
             prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
@@ -109,9 +110,10 @@ class ProtocolPage(Base):
         # self.refreshpage()
         # time.sleep(3)
         try:
-            pop_ele = self.select_element("prisma_pop_dropdown", env)
-            select = Select(pop_ele)
-            select.select_by_visible_text(pop_name[0])
+            # pop_ele = self.select_element("prisma_pop_dropdown", env)
+            # select = Select(pop_ele)
+            # select.select_by_visible_text(pop_name[0])
+            selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
 
             self.del_prisma_image(locatorname, filepath, "prisma_image_delete_btn", "prisma_image_delete_popup", env)
             time.sleep(2)
@@ -147,9 +149,10 @@ class ProtocolPage(Base):
 
         try:
             for i in stdy_data:
-                stdy_ele = self.select_element("prisma_study_type_dropdown", env)
-                select = Select(stdy_ele)
-                select.select_by_visible_text(i[0])
+                # stdy_ele = self.select_element("prisma_study_type_dropdown", env)
+                # select = Select(stdy_ele)
+                # select.select_by_visible_text(i[0])
+                selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
                 self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
@@ -195,14 +198,16 @@ class ProtocolPage(Base):
             for i in stdy_data:
                 self.refreshpage()
                 time.sleep(3)
-                pop_ele = self.select_element("prisma_pop_dropdown", env)
-                select = Select(pop_ele)
-                select.select_by_visible_text(pop_name[0])
+                # pop_ele = self.select_element("prisma_pop_dropdown", env)
+                # select = Select(pop_ele)
+                # select.select_by_visible_text(pop_name[0])
+                selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
                 time.sleep(1)
 
-                stdy_ele = self.select_element("prisma_study_type_dropdown", env)
-                select = Select(stdy_ele)
-                select.select_by_visible_text(i[0])
+                # stdy_ele = self.select_element("prisma_study_type_dropdown", env)
+                # select = Select(stdy_ele)
+                # select.select_by_visible_text(i[0])
+                selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(1)
 
                 self.click(del_locator, env)
@@ -244,9 +249,10 @@ class ProtocolPage(Base):
         self.refreshpage()
         
         try:
-            pop_ele = self.select_element("prisma_pop_dropdown", env)
-            select = Select(pop_ele)
-            select.select_by_visible_text(pop_name[0])
+            # pop_ele = self.select_element("prisma_pop_dropdown", env)
+            # select = Select(pop_ele)
+            # select.select_by_visible_text(pop_name[0])
+            selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
 
             # Read the PRISMA file path required to upload
             prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
@@ -269,9 +275,10 @@ class ProtocolPage(Base):
                 raise Exception("Unable to find status message while uploading PRISMA Excel File.")
 
             for i in stdy_data:
-                stdy_ele = self.select_element("prisma_study_type_dropdown", env)
-                select = Select(stdy_ele)
-                select.select_by_visible_text(i[0])
+                # stdy_ele = self.select_element("prisma_study_type_dropdown", env)
+                # select = Select(stdy_ele)
+                # select.select_by_visible_text(i[0])
+                selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
                 self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
@@ -317,25 +324,21 @@ class ProtocolPage(Base):
         time.sleep(2)
         try:
             for j in stdy_data:
-                pop_ele = self.select_element("picos_pop_dropdown", env)
-                select = Select(pop_ele)
-                select.select_by_visible_text(pop_data[0])
+                # pop_ele = self.select_element("picos_pop_dropdown", env)
+                # select = Select(pop_ele)
+                # select.select_by_visible_text(pop_data[0])
+                selected_pop_val = self.base.selectbyvisibletext("picos_pop_dropdown", pop_data[0], env)
                 time.sleep(1)
 
-                stdy_ele = self.select_element("picos_study_type_dropdown", env)
-                select = Select(stdy_ele)
-                select.select_by_visible_text(j)
+                # stdy_ele = self.select_element("picos_study_type_dropdown", env)
+                # select = Select(stdy_ele)
+                # select.select_by_visible_text(j)
+                selected_slr_val = self.base.selectbyvisibletext("picos_study_type_dropdown", j, env)
                 time.sleep(1)
 
-                actual_row_headers = []
-                actual_row_eles = self.select_elements('row_header_values', env)
-                for k in actual_row_eles:
-                    actual_row_headers.append(k.text)
+                actual_row_headers = self.get_texts("row_header_values", env)
 
-                actual_col_headers = []
-                actual_col_eles = self.select_elements('col_header_values', env)
-                for v in actual_col_eles:
-                    actual_col_headers.append(v.text)
+                actual_col_headers = self.get_texts("col_header_values", env)
                 # Removing the empty column name
                 actual_col_headers.pop(0)
 
@@ -422,12 +425,12 @@ class ProtocolPage(Base):
                 self.base.presence_of_admin_page_option("protocol_link", env)
                 self.base.go_to_nested_page("protocol_link", "picos", env)
 
-                self.base.selectbyvisibletext("picos_pop_dropdown", i[0], env)
+                selected_pop_val = self.base.selectbyvisibletext("picos_pop_dropdown", i[0], env)
                 time.sleep(1)
 
                 if j[0] == 'Quality of Life':
                     j[0] = 'Quality of life'
-                self.base.selectbyvisibletext("picos_study_type_dropdown", j[0], env)
+                selected_slr_val = self.base.selectbyvisibletext("picos_study_type_dropdown", j[0], env)
                 time.sleep(1)
 
                 actual_row_headers = self.get_texts("row_header_values", env)
@@ -562,14 +565,16 @@ class ProtocolPage(Base):
         time.sleep(2)
         try:
             for j in stdy_data:
-                pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
-                select = Select(pop_ele)
-                select.select_by_visible_text(pop_data[0])
+                # pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
+                # select = Select(pop_ele)
+                # select.select_by_visible_text(pop_data[0])
+                selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", pop_data[0], env)
                 time.sleep(1)
 
-                stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
-                select = Select(stdy_ele)
-                select.select_by_visible_text(j[0])
+                # stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
+                # select = Select(stdy_ele)
+                # select.select_by_visible_text(j[0])
+                selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown", j[0], env)
                 time.sleep(1)
 
                 self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
@@ -643,14 +648,16 @@ class ProtocolPage(Base):
         time.sleep(2)
         try:
             for j in stdy_data:
-                pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
-                select = Select(pop_ele)
-                select.select_by_visible_text(pop_data[0])
+                # pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
+                # select = Select(pop_ele)
+                # select.select_by_visible_text(pop_data[0])
+                selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", pop_data[0], env)
                 time.sleep(1)
 
-                stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
-                select = Select(stdy_ele)
-                select.select_by_visible_text(j[0])
+                # stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
+                # select = Select(stdy_ele)
+                # select.select_by_visible_text(j[0])
+                selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown", j[0], env)
                 self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
                                                   pass_=True, log=True, screenshot=True)
                 time.sleep(1)

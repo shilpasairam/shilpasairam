@@ -192,8 +192,7 @@ class Base:
         """
         res = []
         eles = self.select_elements(locator, env)
-        for i in eles:
-            res.append(i.text)
+        res = [i.text for i in eles]
         return res
 
     # Read the upload or deletion status popup text using locatorname
@@ -229,11 +228,25 @@ class Base:
     @fWaitFor
     def selectbyvisibletext(self, locator, text, env, UnivWaitFor=0):
         """
-        Given locator, identify the locator type and path from the OR file and clear the text
+        Given locator, identify the locator type and path from the OR file and select the dropdown value
         """
-        pop_ele = self.select_element(locator, env)
-        select = Select(pop_ele)
-        select.select_by_visible_text(text)   
+        ele = self.select_element(locator, env)
+        select = Select(ele)
+        time.sleep(1)
+        select.select_by_visible_text(text)
+        return select.first_selected_option.text
+
+    # Select the value from dropdown using Index
+    @fWaitFor
+    def selectbyindex(self, locator, index, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and select the dropdown value
+        """
+        ele = self.select_element(locator, env)
+        select = Select(ele)
+        time.sleep(1)
+        select.select_by_index(index)
+        return select.first_selected_option.text
     
     # JavaScript click a web element using locatorname
     @fWaitFor
