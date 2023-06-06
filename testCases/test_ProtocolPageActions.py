@@ -440,8 +440,8 @@ class Test_ProtocolPage:
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C40886
-    def test_liveslr_view_picos(self, extra, env, request, caseid):
+    @pytest.mark.C41136
+    def test_liveslr_Oncology_view_picos(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getpicosdata(env)
         # Instantiate the Base class
@@ -466,12 +466,52 @@ class Test_ProtocolPage:
 
         for i in pop_val:
             try:
-                picospage.validate_view_picos(i, filepath, env)                
+                picospage.validate_view_picos_oncology(i, filepath, env)
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing View PICOS page",
                                              pass_=False, log=True, screenshot=True)
-                raise Exception("Error in accessing PICOS page")
+                raise Exception("Error in accessing View PICOS page")
+        
+        LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C41136
+    def test_liveslr_NonOncology_view_picos(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)         
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        picospage = ProtocolPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate View PICOS functionality under Search LiveSLR Page for Non-Oncology Population"
+
+        LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononcology_picos")
+
+        pop_val = ['pop1']
+
+        for i in pop_val:
+            try:
+                picospage.validate_view_picos_nononcology(i, filepath, env)
+                
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing View PICOS page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing View PICOS page")
         
         LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is completed***",
                                      pass_=True, log=True, screenshot=False)
