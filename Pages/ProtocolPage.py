@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import os
 import time
 import pandas as pd
@@ -832,5 +832,132 @@ class ProtocolPage(Base):
                 
                 self.refreshpage()
                 time.sleep(2)
+        except Exception:
+            raise Exception("Unable to add Search strategy data")
+
+    def validate_view_search_strategy(self, locatorname, filepath, env, prjname):
+        expected_excel_upload_status_text = "Search strategy updated successfully"
+
+        today = date.today()
+        # Manipulating the date values when day point to month end
+        if today.day in [30, 31]:
+            day_val = (today - timedelta(10)).strftime("%d")
+        else:
+            day_val = today.day        
+
+        # Read population details from data sheet
+        pop_data = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
+        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types',
+                                                   'slrtype_Radio_button', 'Files_to_upload', 'db_search_val')
+
+        time.sleep(2)
+        try:
+            for i in pop_data:
+                for j in stdy_data:
+                    self.base.presence_of_admin_page_option("protocol_link", env)
+                    self.base.go_to_nested_page("protocol_link", "searchstrategy", env)
+
+                    selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", i[0], env)
+                    time.sleep(1)
+
+                    selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown", j[0], env)
+                    time.sleep(1)
+
+                    self.click("searchstrategy_date", env)
+                    self.select_calendar_date(day_val)
+
+                    self.input_text("searchstrategy_dbsearch", j[3], env)
+
+                    jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
+                    self.jsclick_hide(jscmd)
+                    self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[2], env)
+
+                    self.jsclick("searchstrategy_upload_btn", env)
+                    time.sleep(2)
+
+                    actual_excel_upload_status_text = self.get_status_text("searchstrategy_status_text", env)
+                    # time.sleep(2)
+
+                    if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Addition of Search strategy data is success for Population -> {i[0]}, "
+                                    f"Study Type -> {j[0]}.", pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Unable to find status message while adding Search strategy data for "
+                                    f"Population -> {i[0]}, Study Type -> {j[0]}. Actual message is "
+                                    f"{actual_excel_upload_status_text} and Expected message is "
+                                    f"{expected_excel_upload_status_text}", pass_=False, log=True, screenshot=True)
+                        raise Exception(f"Unable to find status message while adding Search strategy data for "
+                                        f"Population -> {i[0]}, Study Type -> {j[0]}.")
+                    
+                    uploaded_filename = self.export_web_table(
+                        "table table-bordered table-striped table-sm search-terms",
+                        f"uploadedsearchstrategydata_{j[0]}_{prjname}")
+
+                    self.refreshpage()
+                    time.sleep(2)
+
+                    self.base.go_to_page("SLR_Homepage", env)
+                    self.slrreport.select_data(i[0], i[1], env)
+
+                    temp = j[0]
+                    if j[0] == 'Clinical-Interventional' or j[0] == 'Clinical-RWE':
+                        j[0] = 'Clinical'
+                    if j[0] == 'Quality of life':
+                        j[0] = 'Quality of Life'
+                    self.slrreport.select_data(j[0], j[1], env)
+
+                    self.click("view_searchstrategy_button", env)
+                    time.sleep(1)
+
+                    if temp == 'Clinical-Interventional':
+                        self.click("view_search_clinical_intervention_tab", env)                   
+                    if temp == 'Clinical-RWE':
+                        self.click("view_search_clinical_rwe_tab", env)
+
+                    if temp == 'Clinical-Interventional' or temp == 'Clinical-RWE':
+                        j[0] = temp
+                        view_date_val = self.get_text("view_search_date_active_tab_data", env)
+                        database_search_val = self.get_text("view_search_database_active_tab_data", env)
+                    else:
+                        view_date_val = self.get_text("view_search_date", env)
+                        database_search_val = self.get_text("view_search_database", env)
+
+                    view_strategy_filename = self.export_web_table(
+                        "table table-bordered table-striped table-sm search-term",
+                        f"viewsearchstrategydata_{j[0]}_{prjname}")
+
+                    searchstrategy_data = pd.read_excel(
+                        f'ActualOutputs//web_table_exports//{uploaded_filename}', usecols='B:D')
+                    view_searchstrategy_data = pd.read_excel(
+                        f'ActualOutputs//web_table_exports//{view_strategy_filename}', usecols='B:D')
+
+                    view_searchstrategy_data.rename(columns={'Unnamed: 0': 'Line'}, inplace=True)
+
+                    if searchstrategy_data.equals(view_searchstrategy_data) and j[3] == database_search_val:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"File contents between Uploaded Search Strategy File "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').stem}' and "
+                                    f"View Search Strategy Data "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').stem}' "
+                                    f"are matching", pass_=True, log=True, screenshot=True)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Strategy DB value : {j[3]} and View DB value : {database_search_val}",
+                            pass_=False, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"File contents between Uploaded Search Strategy File "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').stem}' and "
+                                    f"View Search Strategy Data "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').stem}' "
+                                    f"are not matching", pass_=False, log=True, screenshot=True)
+                        raise Exception(f"File contents between Uploaded Search Strategy File "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').stem}' "
+                                        f"and View Search Strategy Data "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').stem}' "
+                                        f"are not matching")
+                    
+                    self.refreshpage()
         except Exception:
             raise Exception("Unable to add Search strategy data")

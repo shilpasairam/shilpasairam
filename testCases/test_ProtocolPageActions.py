@@ -235,7 +235,8 @@ class Test_ProtocolPage:
         request.node._tcid = caseid
         request.node._title = "Non-Oncology : Validate Uploading PRISMA details under Protocol -> PRISMA Page"
 
-        LogScreenshot.fLogScreenshot(message=f"***Protocol -> PRISMAs page functionality validation for Non-Oncology population is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Protocol -> PRISMAs page functionality validation for "
+                                             f"Non-Oncology population is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -261,7 +262,8 @@ class Test_ProtocolPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing PRISMA page")
         
-        LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation for Non-Oncology population is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation for Non-Oncology "
+                                             f"population is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C37883
@@ -283,7 +285,8 @@ class Test_ProtocolPage:
         request.node._tcid = caseid
         request.node._title = "Non-Oncology : Validate Deleting PRISMA details under Protocol -> PRISMA Page"
 
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology population is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology "
+                                             f"population is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -306,7 +309,8 @@ class Test_ProtocolPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing PRISMA page")
         
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology population is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology "
+                                             f"population is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C39793
@@ -368,11 +372,11 @@ class Test_ProtocolPage:
         srchpage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology : Validate SearchStrategy functionality with invalid data under Protocol -> Search " \
-                              "Strategy Page"
+        request.node._title = "Non-Oncology : Validate SearchStrategy functionality with invalid data under " \
+                              "Protocol -> Search Strategy Page"
 
-        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population is started***",
-                                     pass_=True, log=True, screenshot=False)
+        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population "
+                                             f"is started***", pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -393,7 +397,8 @@ class Test_ProtocolPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing Search Strategy page")
         
-        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population is "
+                                             f"completed***",
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38046
@@ -412,10 +417,11 @@ class Test_ProtocolPage:
         srchpage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology : Validate SearchStrategy functionality with valid data under Protocol -> Search " \
-                              "Strategy Page"
+        request.node._title = "Non-Oncology : Validate SearchStrategy functionality with valid data under " \
+                              "Protocol -> Search Strategy Page"
 
-        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population "
+                                             f"is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -437,15 +443,14 @@ class Test_ProtocolPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing Search Strategy page")
         
-        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population "
+                                             f"is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C41136
     def test_liveslr_Oncology_view_picos(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getpicosdata(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)        
         # Instantiate the logScreenshot class
         LogScreenshot = cLogScreenshot(self.driver, extra)
         # Creating object of loginpage class
@@ -480,8 +485,6 @@ class Test_ProtocolPage:
     def test_liveslr_NonOncology_view_picos(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
         # Creating object of ExtendedBase class
         exbase = ExtendedBase(self.driver, extra)         
         # Instantiate the logScreenshot class
@@ -514,4 +517,78 @@ class Test_ProtocolPage:
                 raise Exception("Error in accessing View PICOS page")
         
         LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C41136
+    def test_liveslr_Oncology_view_searchstrategy(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        filepath = ReadConfig.getsearchstrategydata(env)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        picospage = ProtocolPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate View Search Strategy functionality under Search LiveSLR Page for " \
+                              "Oncology Population"
+
+        LogScreenshot.fLogScreenshot(message=f"***View Search Strategy validation is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        pop_val = ['pop1']
+
+        for i in pop_val:
+            try:
+                picospage.validate_view_search_strategy(i, filepath, env, 'Oncology')
+                
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing View Search Strategy page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing View Search Strategy page")
+        
+        LogScreenshot.fLogScreenshot(message=f"***View Search Strategy validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C41136
+    def test_liveslr_NonOncology_view_searchstrategy(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        picospage = ProtocolPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Validate View Search Strategy functionality under Search LiveSLR Page for " \
+                              "Non-Oncology Population"
+
+        LogScreenshot.fLogScreenshot(message=f"***View Search Strategy validation is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononcology_searchstrategy")
+
+        pop_val = ['pop2']
+
+        for i in pop_val:
+            try:
+                picospage.validate_view_search_strategy(i, filepath, env, 'Non-Oncology')
+                
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing View Search Strategy page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing View Search Strategy page")
+        
+        LogScreenshot.fLogScreenshot(message=f"***View Search Strategy validation is completed***",
                                      pass_=True, log=True, screenshot=False)

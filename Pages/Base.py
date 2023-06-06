@@ -384,3 +384,14 @@ class Base:
     def sort_nested_list(self, List, index, UnivWaitFor=0):
         List.sort(key=lambda l: l[index])
         return List
+
+    # function to export an webtable to excel file
+    @fWaitFor
+    def export_web_table(self, locator, filename, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and select the element
+        """
+        tables = pd.read_html(self.driver.page_source, attrs={'class': locator})
+        table = tables[0]
+        table.to_excel(f"ActualOutputs/web_table_exports/{filename}.xlsx", na_rep='NA')
+        return f"{filename}.xlsx"
