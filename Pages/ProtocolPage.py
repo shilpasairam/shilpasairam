@@ -36,11 +36,6 @@ class ProtocolPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    # def go_to_prisma(self, locator, button):
-    #     self.click(locator, UnivWaitFor=10)
-    #     self.jsclick(button)
-    #     time.sleep(5)
-
     # Reading Population data for PRISMAs Page
     def get_prisma_pop_data(self, filepath, locatorname):
         df = pd.read_excel(filepath)
@@ -234,12 +229,12 @@ class ProtocolPage(Base):
             raise Exception("Unable to delete PRISMA image")
 
     def override_prisma_details(self, locatorname, filepath, index, env):
-        expected_excel_upload_status_text = "There is an existing PRISMA Excel file for this population. Please " \
-                                            "delete the existing file before uploading a new one "
+        expected_excel_upload_status_text = "There is an existing PRISMA Excel file for this population. " \
+                                            "Please delete the existing file before uploading a new one"
 
-        expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. Please " \
-                                            "delete the existing file before uploading a new one "
-
+        expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. " \
+                                            "Please delete the existing file before uploading a new one"
+        
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
 
