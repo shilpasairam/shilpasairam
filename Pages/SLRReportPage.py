@@ -1145,9 +1145,15 @@ class SLRReport(Base):
         for k in add_criteria:
             self.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")        
 
-        self.scroll("New_total_selected", env)
-        locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
-                    'Study_Design_Count', 'Reported_Var_Count', 'New_total_selected']
+        '''This condition is written as locators is changed after LIVEHTA-2473 implementation'''
+        if prj_name == "Oncology":
+            self.scroll("New_total_selected_Onco", env)
+            locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
+                        'Study_Design_Count', 'Reported_Var_Count_Onco', 'New_total_selected_Onco']
+        elif prj_name == "Non-Oncology":
+            self.scroll("New_total_selected_nononco", env)
+            locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
+                        'Study_Design_Count', 'Reported_Var_Count_nononco', 'New_total_selected_nononco']            
         ui_add_critera_values = []
         for i in locators:
             ui_add_critera_values.append(self.get_text(i, env))
