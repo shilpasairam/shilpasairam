@@ -1852,8 +1852,8 @@ class SLRReport(Base):
         template_data = openpyxl.load_workbook(f'{extraction_file}')
         template_sheet = template_data['Extraction sheet upload']
 
-        ep_abbr_from_extraction_file = [template_sheet['AO2'].value, template_sheet['BM2'].value,
-                                        template_sheet['CR2'].value]
+        ep_abbr_from_extraction_file = [template_sheet['AQ2'].value, template_sheet['BO2'].value,
+                                        template_sheet['CT2'].value]
 
         self.refreshpage()
         self.presence_of_admin_page_option("importpublications_button", env)
