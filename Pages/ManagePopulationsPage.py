@@ -800,7 +800,7 @@ class ManagePopulationsPage(Base):
         template_sheet = template_data['Extraction sheet upload']
 
         # Validate Endpoint name and Endpoint abbreviation details
-        if template_sheet['AN2'].value == ep1_locs[0][1] and template_sheet['AO2'].value == ep1_locs[1][1]:
+        if template_sheet['AP2'].value == ep1_locs[0][1] and template_sheet['AQ2'].value == ep1_locs[1][1]:
             self.LogScreenshot.fLogScreenshot(message=f"Endpoint 1 details is present in Extraction template. "
                                                       f"Endpoint 1 Name: {template_sheet['AN2'].value} and "
                                                       f"Endpoint 1 Abbreviation: {template_sheet['AO2'].value}",
@@ -816,7 +816,7 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Mismatch found in Extraction template -> Endpoint 1 details. Kindly recheck and "
                             f"try again.")
 
-        if template_sheet['BL2'].value == ep2_locs[0][1] and template_sheet['BM2'].value == ep2_locs[1][1]:
+        if template_sheet['BN2'].value == ep2_locs[0][1] and template_sheet['BO2'].value == ep2_locs[1][1]:
             self.LogScreenshot.fLogScreenshot(message=f"Endpoint 2 details is present in Extraction template. "
                                                       f"Endpoint 2 Name: {template_sheet['BL2'].value} and Endpoint 2 "
                                                       f"Abbreviation: {template_sheet['BM2'].value}",
@@ -832,7 +832,7 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Mismatch found in Extraction template -> Endpoint 2 details. Kindly recheck and "
                             f"try again.")
 
-        if template_sheet['CQ2'].value == ep3_locs[0][1] and template_sheet['CR2'].value == ep3_locs[1][1]:
+        if template_sheet['CS2'].value == ep3_locs[0][1] and template_sheet['CT2'].value == ep3_locs[1][1]:
             self.LogScreenshot.fLogScreenshot(message=f"Endpoint 3 details is present in Extraction template. "
                                                       f"Endpoint 3 Name: {template_sheet['CQ2'].value} and "
                                                       f"Endpoint 3 Abbreviation: {template_sheet['CR2'].value}",
@@ -849,8 +849,8 @@ class ManagePopulationsPage(Base):
                             f"try again.")
 
         # Validate Endpoint Type details
-        if template_sheet['AY3'].value == "Endpoint Result-Categorical Variable-Within Arm" and \
-                template_sheet['BD3'].value == "Endpoint Result-Categorical Variable-Between Arm":
+        if template_sheet['BA3'].value == "Endpoint Result-Categorical Variable-Within Arm" and \
+                template_sheet['BF3'].value == "Endpoint Result-Categorical Variable-Between Arm":
             self.LogScreenshot.fLogScreenshot(message=f"Endpoint 1 Type details is present in Extraction template. "
                                                       f"Endpoint 1 Type Details: '{template_sheet['AY3'].value}' and "
                                                       f"'{template_sheet['BD3'].value}'",
@@ -866,8 +866,8 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Mismatch found in Extraction template -> Endpoint 1 Type details. Kindly recheck and "
                             f"try again.")
 
-        if template_sheet['BW3'].value == "Endpoint Result-Continuous Variable-Within Arm" and \
-                template_sheet['CI3'].value == "Endpoint Result-Continuous Variable-Between Arm":
+        if template_sheet['BY3'].value == "Endpoint Result-Continuous Variable-Within Arm" and \
+                template_sheet['CK3'].value == "Endpoint Result-Continuous Variable-Between Arm":
             self.LogScreenshot.fLogScreenshot(message=f"Endpoint 2 Type details is present in Extraction template. "
                                                       f"Endpoint 2 Type Details: '{template_sheet['BW3'].value}' and "
                                                       f"'{template_sheet['CI3'].value}'",
@@ -883,7 +883,7 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Mismatch found in Extraction template -> Endpoint 2 Type details. Kindly recheck and "
                             f"try again.")
 
-        if template_sheet['DB3'].value == "Endpoint Result-Time-to-event Variable":
+        if template_sheet['DD3'].value == "Endpoint Result-Time-to-event Variable":
             self.LogScreenshot.fLogScreenshot(message=f"Endpoint 3 Type details is present in Extraction template. "
                                                       f"Endpoint 3 Type Details: '{template_sheet['DB3'].value}'",
                                               pass_=True, log=True, screenshot=False)
@@ -1051,16 +1051,16 @@ class ManagePopulationsPage(Base):
         a_patient_char_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload',
                                             usecols="Y:AJ")
         a_clinical_study_char_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload',
-                                                   usecols="AK:AM")
-        a_ep1_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="AN:BK")
-        a_ep2_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="BL:CP")
-        a_ep3_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="CQ:DM")
+                                                   usecols="AK:AO")
+        a_ep1_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="AP:BM")
+        a_ep2_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="BN:CR")
+        a_ep3_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload', usecols="CS:DO")
         a_other_clinical_eps = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload',
-                                             usecols="DN:DO")
+                                             usecols="DP:DQ")
         a_clinical_safety_cols = pd.read_excel(master_file_path, skiprows=3, sheet_name='Extraction sheet upload',
-                                               usecols="DP:DV")
+                                               usecols="DR:DX")
         a_clinical_safety_maping = pd.read_excel(master_file_path, skiprows=4, sheet_name='Extraction sheet upload',
-                                                 usecols="DP:DV")
+                                                 usecols="DR:DX")
 
         # Compare the Expected and Actual Column IDs
         res1 = self.exbase.list_comparison_between_reports_data(e_stdy_char_cols, a_stdy_char_cols.columns.values)
