@@ -949,9 +949,9 @@ class ProtocolPage(Base):
                     if searchstrategy_data.equals(view_searchstrategy_data) and j[3] == database_search_val:
                         self.LogScreenshot.fLogScreenshot(
                             message=f"File contents between Uploaded Search Strategy File "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').stem}' and "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').name}' and "
                                     f"View Search Strategy Data "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').stem}' "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').name}' "
                                     f"are matching", pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(
@@ -959,14 +959,14 @@ class ProtocolPage(Base):
                             pass_=False, log=True, screenshot=True)
                         self.LogScreenshot.fLogScreenshot(
                             message=f"File contents between Uploaded Search Strategy File "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').stem}' and "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').name}' and "
                                     f"View Search Strategy Data "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').stem}' "
+                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').name}' "
                                     f"are not matching", pass_=False, log=True, screenshot=True)
                         raise Exception(f"File contents between Uploaded Search Strategy File "
-                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').stem}' "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').name}' "
                                         f"and View Search Strategy Data "
-                                        f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').stem}' "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').name}' "
                                         f"are not matching")
                     
                     self.refreshpage()

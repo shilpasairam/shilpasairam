@@ -389,7 +389,7 @@ class SLRReport(Base):
                                                   f"WebExcel and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
 
-        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel Filename is: {Path(f'{source_template[0]}').stem}, "
+        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel Filename is: {Path(f'{source_template[0]}').name}, "
                                                   f"Downloaded FileNames are: {webexcel_filename} "
                                                   f"and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
