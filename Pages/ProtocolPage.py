@@ -140,7 +140,8 @@ class ProtocolPage(Base):
         expected_image_upload_status_text = "PRISMA successfully updated"
 
         # Read the Data required to upload for study types
-        stdy_data = self.get_prisma_data_details(filepath, locatorname)
+        stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
+        prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators', 'stdy_type_values')
 
         try:
             for i in stdy_data:
@@ -150,17 +151,20 @@ class ProtocolPage(Base):
                 selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
-                self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
-                time.sleep(1)
+                # self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
+                # time.sleep(1)
+                for j in prisma_numbers:
+                    self.input_text(j[0], j[1]+index, env, UnivWaitFor=5)
 
+                self.input_text("prisma_image", os.getcwd()+i[1], env, UnivWaitFor=5)
                 self.click("prisma_image_save_btn", env)
                 time.sleep(2)
                 
@@ -187,7 +191,9 @@ class ProtocolPage(Base):
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
 
-        stdy_data = self.get_prisma_data_details(filepath, locatorname)
+        # stdy_data = self.get_prisma_data_details(filepath, locatorname)
+
+        stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
 
         try:
             for i in stdy_data:
@@ -239,7 +245,9 @@ class ProtocolPage(Base):
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
 
         # Read the Data required to upload for study types
-        stdy_data = self.get_prisma_data_details(filepath, locatorname)
+        # stdy_data = self.get_prisma_data_details(filepath, locatorname)
+        stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
+        prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators', 'stdy_type_values')
 
         self.refreshpage()
         
@@ -276,17 +284,20 @@ class ProtocolPage(Base):
                 selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
-                self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
-                time.sleep(1)
-                self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
-                time.sleep(1)
+                # self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
+                # time.sleep(1)
+                # self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
+                # time.sleep(1)
+                for j in prisma_numbers:
+                    self.input_text(j[0], j[1]+index, env, UnivWaitFor=5)
 
+                self.input_text("prisma_image", os.getcwd()+i[1], env, UnivWaitFor=5)
                 self.click("prisma_image_save_btn", env)
                 time.sleep(2)
 
