@@ -83,6 +83,7 @@ class ManageQADataPage(Base):
 		# Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -143,6 +144,7 @@ class ManageQADataPage(Base):
 		# Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -212,6 +214,7 @@ class ManageQADataPage(Base):
 		# Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -279,6 +282,7 @@ class ManageQADataPage(Base):
 		# Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -346,6 +350,7 @@ class ManageQADataPage(Base):
 		# Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -409,6 +414,7 @@ class ManageQADataPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
         
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -555,17 +561,17 @@ class ManageQADataPage(Base):
                             
                             if qafile.equals(excelfile):
                                 self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
-                                                                        f"'{Path(f'{i[1]}').name}' and Complete Excel Report "
+                                                                        f"'{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
                                                                         f"'{Path(f'ActualOutputs//{excel_filename}').name}' "
                                                                         f"are matching",
                                                                 pass_=True, log=True, screenshot=False)
                             else:
                                 self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
-                                                                        f"'{Path({i[1]}).name}' and Complete Excel Report "
+                                                                        f"'{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
                                                                         f"'{Path(f'ActualOutputs//{excel_filename}').name}' "
                                                                         f"are not matching",
                                                                 pass_=False, log=True, screenshot=False)
-                                raise Exception(f"File contents between QA File '{Path({i[1]}).name}' "
+                                raise Exception(f"File contents between QA File '{Path(f'{(os.getcwd()+stdyfile[0])}').name}' "
                                                 f"and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
                                                 f"are not matching")
                         else:
@@ -584,6 +590,7 @@ class ManageQADataPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:

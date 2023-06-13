@@ -93,7 +93,7 @@ SLRType,Quality of Life_stdyno,XPATH,//div[@id='collapse02']/div/div/div/div/div
 SLRType,Real-world Evidence,XPATH,//label//input[@type='radio' and @name='slrType' and @value=4]/following::span[1],
 SLRType,Real-world Evidence_radio_button,XPATH,//input[@type='radio' and @name='slrType' and @value=4],
 SLRType,Real-world Evidence_stdyno,XPATH,//div[@id='collapse02']/div/div/div/div/div/label//input[@type='radio' and @name='slrType' and @value=4]/following::div[1]/p,
-SubPopulation,sub_pop_section,XPATH,//strong[text()='Select Sub-populations'],
+SubPopulation,sub_pop_section,XPATH,//strong[text()='Select Population filter 1'],//strong[text()='Select Sub-populations']
 SubPopulation,sub_pop_section_selectall,XPATH,//*[@id='collapse04']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allSubPopulations']/following::span[1],
 SubPopulation,sub_pop_section_selectall_checkbox,XPATH,//*[@id='collapse04']//div//div[1]//div//div//label//input,
 SubPopulation,sub_pop_section1,XPATH,//*[@id='collapse04']//div//div[2]//div[1]//div//label//input[@type='checkbox' and @name='subPopulations']/following::span[1],
@@ -102,7 +102,7 @@ SubPopulation,sub_pop_section2,XPATH,//*[@id='collapse04']//div//div[2]//div[2]/
 SubPopulation,sub_pop_section2_checkbox,XPATH,//*[@id='collapse04']//div//div[2]//div[2]//div//label//input,
 SubPopulation,sub_pop_section3,XPATH,//*[@id='collapse04']//div//div[2]//div[3]//div//label//input[@type='checkbox' and @name='subPopulations']/following::span[1],
 SubPopulation,sub_pop_section3_checkbox,XPATH,//*[@id='collapse04']//div//div[2]//div[3]//div//label//input,
-LineOfTherapy,lot_section,XPATH,//strong[text()='Select Line of Therapy'],
+LineOfTherapy,lot_section,XPATH,//strong[text()='Select Population filter 2'],//strong[text()='Select Line of Therapy']
 LineOfTherapy,lot_section_selectall,XPATH,//*[@id='collapse05']//div//div[1]//div//div//label//input[@type='checkbox' and @name='allLineOfTherapies']/following::span[1],
 LineOfTherapy,lot_section_selectall_checkbox,XPATH,//*[@id='collapse05']//div//div[1]//div//div//label//input,
 LineOfTherapy,lot_section1,XPATH,//*[@id='collapse05']//div//div[2]//div[1]//div//label//input[@type='checkbox' and @name='lineOfTherapies']/following::span[1],
@@ -174,8 +174,8 @@ PrismaCount,Reported_Var_Count_nononco,XPATH,"//dl[@class=""multiple-table""]/dd
 PrismaCount,New_total_selected_nononco,XPATH,"//dl[@class=""multiple-table""]/dd[8]",
 SelectedArea,selected_area_population,XPATH,//div[@class='search-selection population-selected w-100']/strong,
 SelectedArea,selected_area_slrtype,XPATH,//div[@class='search-selection population-selected w-100']/span,
-AdditionalUserCriteriaSelected,study_design_value,XPATH,"//div[contains(text(), 'Study Design')]//span[@class='search-selection ng-star-inserted']",
-AdditionalUserCriteriaSelected,reported_variable_value,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection ng-star-inserted']",
+AdditionalUserCriteriaSelected,study_design_value,XPATH,"//div[contains(text(), 'Study Design')]//span[@class='search-selection']","//div[contains(text(), 'Study Design')]//span[@class='search-selection ng-star-inserted']"
+AdditionalUserCriteriaSelected,reported_variable_value,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection']","//div[contains(text(), 'Reported Variables')]//span[@class='search-selection ng-star-inserted']"
 LiveNMA,launch_live_nma,XPATH,//button[@type='button' and text()='Launch LiveNMA'],
 LiveNMA,live_nma_data_table,XPATH,//tbody[@class='scrollbar'],
 LiveNMA,live_nma_data_table_rows,XPATH,//table[@class='table table-bordered data-table-content ']/tbody/tr,

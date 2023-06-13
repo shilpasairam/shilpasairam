@@ -97,6 +97,7 @@ class ExcludedStudiesPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         for i in pop_data:
@@ -165,6 +166,7 @@ class ExcludedStudiesPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -211,7 +213,7 @@ class ExcludedStudiesPage(Base):
                         time.sleep(2)
 
                         self.click("ex_stdy_upload_button", env)
-                        time.sleep(4)
+                        time.sleep(2)
                         actual_upload_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
 
                         if actual_upload_status_text == expected_upload_status_text:
@@ -263,6 +265,7 @@ class ExcludedStudiesPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -309,13 +312,13 @@ class ExcludedStudiesPage(Base):
                         time.sleep(2)
 
                         self.click("ex_stdy_upload_button", env)
-                        time.sleep(3)
+                        time.sleep(2)
                         self.LogScreenshot.fLogScreenshot(
                             message=f"Confirmation popup while updating the existing Excluded Publications File.",
                             pass_=True, log=True, screenshot=True)
                         self.jsclick("ex_stdy_popup_ok", env, message="Expected : popup reminder. Actual : popup is "
                                                                     "not shown")
-                        time.sleep(3)
+                        time.sleep(2)
                         # actual_upload_status_text = self.get_text("ex_stdy_status_text", env, UnivWaitFor=10)
                         actual_upload_status_text = self.get_status_text("ex_stdy_status_text", env, UnivWaitFor=10)
                         # time.sleep(1)
@@ -370,6 +373,7 @@ class ExcludedStudiesPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -444,6 +448,7 @@ class ExcludedStudiesPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
@@ -547,7 +552,7 @@ class ExcludedStudiesPage(Base):
                     #     excluded_sheet_name = f"Excluded Pubs-{date_val}"
 
                     excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-                    if ['Clinical -Interventional', 'Clinical -RWE'] == stdytype:
+                    if ['Clinical-Interventional', 'Clinical-RWE'] == stdytype:
                         expected_sheet_names = ['Excluded Pubs-Intervtnl', 'Excluded Pubs-RWE']
                         for index, sheet in enumerate(expected_sheet_names):
                             if sheet in excel_data.sheetnames:
@@ -643,12 +648,12 @@ class ExcludedStudiesPage(Base):
 
                             if studyfile.equals(excelfile):
                                 self.LogScreenshot.fLogScreenshot(
-                                    message=f"File contents between QA File '{Path(f'{(os.getcwd()+stdyfile[index])}').name}' and Complete Excel "
+                                    message=f"File contents between QA File '{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel "
                                             f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are matching",
                                     pass_=True, log=True, screenshot=False)
                             else:
                                 raise Exception(
-                                    f"File contents between Study File '{Path(f'{(os.getcwd()+stdyfile[index])}').name}' and Complete Excel Report "
+                                    f"File contents between Study File '{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
                                     f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching")
                         else:
                             self.LogScreenshot.fLogScreenshot(
@@ -668,6 +673,7 @@ class ExcludedStudiesPage(Base):
         # Removing duplicates to get the proper length of SLR Type data
         stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
 
         try:
