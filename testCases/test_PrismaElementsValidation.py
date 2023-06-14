@@ -67,8 +67,8 @@ class Test_PRISMA_Elements:
                     slrreport.validate_additional_criteria_val(filepath, "study_design_value",
                                                                "reported_variable_value", env)
 
-                    base.scroll("New_total_selected", env)
-                    prism = base.get_text("New_total_selected", env)
+                    base.scroll("New_total_selected_Onco", env)
+                    prism = base.get_text("New_total_selected_Onco", env)
                     
                     slrreport.generate_download_report("excel_report", env)
                     # time.sleep(5)

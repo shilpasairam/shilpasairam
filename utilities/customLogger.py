@@ -24,7 +24,7 @@ class LogGen:
             os.makedirs(screenshot_dirpath)
         
         # Create ActualOutputs folder to save the snapshots
-        output_dirpath = os.getcwd()+'\\ActualOutputs'
+        output_dirpath = os.getcwd()+'\\ActualOutputs\\web_table_exports'
         isExist = os.path.exists(output_dirpath)
         if not isExist:
             os.makedirs(output_dirpath)

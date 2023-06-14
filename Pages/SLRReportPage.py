@@ -389,7 +389,7 @@ class SLRReport(Base):
                                                   f"WebExcel and Complete Excel Reports",
                                           pass_=True, log=True, screenshot=False)
 
-        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel Filename is: {Path(f'{source_template[0]}').stem}, "
+        self.LogScreenshot.fLogScreenshot(message=f"Expected Excel Filename is: {Path(f'{source_template[0]}').name}, "
                                                   f"Downloaded FileNames are: {webexcel_filename} "
                                                   f"and \n{excel_filename}",
                                           pass_=True, log=True, screenshot=False)
@@ -1145,9 +1145,15 @@ class SLRReport(Base):
         for k in add_criteria:
             self.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")        
 
-        self.scroll("New_total_selected", env)
-        locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
-                    'Study_Design_Count', 'Reported_Var_Count', 'New_total_selected']
+        '''This condition is written as locators is changed after LIVEHTA-2473 implementation'''
+        if prj_name == "Oncology":
+            self.scroll("New_total_selected_Onco", env)
+            locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
+                        'Study_Design_Count', 'Reported_Var_Count_Onco', 'New_total_selected_Onco']
+        elif prj_name == "Non-Oncology":
+            self.scroll("New_total_selected_nononco", env)
+            locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
+                        'Study_Design_Count', 'Reported_Var_Count_nononco', 'New_total_selected_nononco']            
         ui_add_critera_values = []
         for i in locators:
             ui_add_critera_values.append(self.get_text(i, env))
@@ -1410,9 +1416,10 @@ class SLRReport(Base):
                  ['prismas', 'prisma_pop_dropdown', 'prisma_study_type_dropdown']]
         for i in pages:
             self.click(i[0], env)
-            pop_ele = self.select_element(i[1], env)
-            select1 = Select(pop_ele)
-            select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+            # pop_ele = self.select_element(i[1], env)
+            # select1 = Select(pop_ele)
+            # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+            selected_pop_val = self.base.selectbyvisibletext(i[1], "NewImportLogic_1 - Test_Automation_1", env)
 
             stdy_ele = self.select_element(i[2], env)
             select2 = Select(stdy_ele)
@@ -1434,9 +1441,10 @@ class SLRReport(Base):
 
         self.click("manage_qa_data_button", env)
         time.sleep(1)
-        pop_ele = self.select_element("select_pop_dropdown", env)
-        select1 = Select(pop_ele)
-        select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+        # pop_ele = self.select_element("select_pop_dropdown", env)
+        # select1 = Select(pop_ele)
+        # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
+        selected_pop_val = self.base.selectbyvisibletext("select_pop_dropdown", "NewImportLogic_1 - Test_Automation_1", env)
 
         stdy_ele = self.select_element("select_stdy_type_dropdown", env)
         select2 = Select(stdy_ele)
@@ -1844,8 +1852,8 @@ class SLRReport(Base):
         template_data = openpyxl.load_workbook(f'{extraction_file}')
         template_sheet = template_data['Extraction sheet upload']
 
-        ep_abbr_from_extraction_file = [template_sheet['AO2'].value, template_sheet['BM2'].value,
-                                        template_sheet['CR2'].value]
+        ep_abbr_from_extraction_file = [template_sheet['AQ2'].value, template_sheet['BO2'].value,
+                                        template_sheet['CT2'].value]
 
         self.refreshpage()
         self.presence_of_admin_page_option("importpublications_button", env)
@@ -1856,7 +1864,8 @@ class SLRReport(Base):
         self.select_data(pop_list[0][0], pop_list[0][1], env)
         self.select_data(slrtype[0][0], slrtype[0][1], env)
         
-        actual_cats = [i.text for i in self.select_elements('cat_view_eles', env)]      
+        # actual_cats = [i.text for i in self.select_elements('cat_view_eles', env)]
+        actual_cats = self.get_texts('cat_view_eles', env)      
 
         for j in ep_abbr_from_extraction_file:
             if j in actual_cats:
@@ -2044,7 +2053,8 @@ class SLRReport(Base):
                           'Safety': ['E-3', 'E-4', 'E-5']
                           }
 
-                actual_reported_var = [i.text for i in self.select_elements('reported_variable_section_values', env)]
+                # actual_reported_var = [i.text for i in self.select_elements('reported_variable_section_values', env)]
+                actual_reported_var = self.get_texts('reported_variable_section_values', env)
                 actual_reported_var_res = []
                 for xy in actual_reported_var:
                     actual_reported_var_res.append(xy.splitlines())

@@ -190,8 +190,8 @@ class LiveNMA(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"'Network Section' is displayed",
                                               pass_=True, log=True, screenshot=True)
                     
-                    panel_ele = self.select_elements("network_panel_txt", env)
-                    panel_txt = [m.text for m in panel_ele]
+                    # panel_ele = self.select_elements("network_panel_txt", env)
+                    panel_txt = self.get_texts("network_panel_txt", env)
                     self.LogScreenshot.fLogScreenshot(message=f"Panel text from Network section is '{panel_txt}'",
                                               pass_=True, log=True, screenshot=True)
 
