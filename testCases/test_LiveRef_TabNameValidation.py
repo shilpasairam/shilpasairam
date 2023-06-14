@@ -77,10 +77,11 @@ class Test_TabNames:
         loginPage.complete_portal_login(self.username, self.password, "launch_liveref", "Cytel LiveRef", baseURL, env)
 
         try:
-            admin_eles = base.select_elements("liveref_admin_panel_list", env)
-            admin_eles_text = []
-            for i in admin_eles:
-                admin_eles_text.append(i.text)
+            # admin_eles = base.select_elements("liveref_admin_panel_list", env)
+            # admin_eles_text = []
+            # for i in admin_eles:
+            #     admin_eles_text.append(i.text)
+            admin_eles_text = base.get_texts("liveref_admin_panel_list", env)
             if len(admin_eles_text) == len(set(admin_eles_text)):
                 LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
                                                   pass_=True, log=True, screenshot=True)

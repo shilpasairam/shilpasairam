@@ -71,7 +71,7 @@ class Test_ExcludedStudiesPage:
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.presence_of_admin_page_option("excluded_studies_link", env)
         # Go to ExcludedStudies Page
-        base.go_to_page("excluded_studies_link", env)
+        # base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
@@ -111,7 +111,7 @@ class Test_ExcludedStudiesPage:
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.presence_of_admin_page_option("excluded_studies_link", env)
         # Go to ExcludedStudies Page
-        base.go_to_page("excluded_studies_link", env)
+        # base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
@@ -151,7 +151,7 @@ class Test_ExcludedStudiesPage:
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.presence_of_admin_page_option("excluded_studies_link", env)
-        base.go_to_page("excluded_studies_link", env)
+        # base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
@@ -233,7 +233,7 @@ class Test_ExcludedStudiesPage:
 
         base.presence_of_admin_page_option("excluded_studies_link", env)
         # Go to ExcludedStudies Page
-        base.go_to_page("excluded_studies_link", env)
+        # base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 
@@ -280,7 +280,7 @@ class Test_ExcludedStudiesPage:
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_manageexcludedpub")
         
         base.presence_of_admin_page_option("excluded_studies_link", env)
-        base.go_to_page("excluded_studies_link", env)
+        # base.go_to_page("excluded_studies_link", env)
 
         pop_list = ['pop1']
 

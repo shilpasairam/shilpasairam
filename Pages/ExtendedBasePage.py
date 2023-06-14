@@ -222,10 +222,11 @@ class ExtendedBase(Base):
         # pop_data = self.get_extraction_file_to_upload(filepath, 'prodfix', locatorname)
 
         for i in pop_data:
-            ele = self.select_element("select_update_dropdown", env)
-            time.sleep(2)
-            select = Select(ele)
-            select.select_by_visible_text(i[0])
+            # ele = self.select_element("select_update_dropdown", env)
+            # time.sleep(2)
+            # select = Select(ele)
+            # select.select_by_visible_text(i[0])
+            selected_update_val = self.base.selectbyvisibletext("select_update_dropdown", i[0], env)
 
             # Fetching total rows count before uploading a new file
             table_rows_before = self.select_elements("upload_table_rows", env)
@@ -265,10 +266,11 @@ class ExtendedBase(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the "
                                                               f"extraction file.",
                                                       pass_=True, log=True, screenshot=False)
-                    result = []
-                    td1 = self.select_elements('upload_table_row_1', env)
-                    for m in td1:
-                        result.append(m.text)
+                    # result = []
+                    # td1 = self.select_elements('upload_table_row_1', env)
+                    # for m in td1:
+                    #     result.append(m.text)
+                    result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
                         self.LogScreenshot.fLogScreenshot(message=f'Correct file with expected filename is being '
@@ -311,10 +313,11 @@ class ExtendedBase(Base):
         time.sleep(5)
 
         for i in pop_data:
-            result = []
-            td1 = self.select_elements('upload_table_row_1', env)
-            for m in td1:
-                result.append(m.text)
+            # result = []
+            # td1 = self.select_elements('upload_table_row_1', env)
+            # for m in td1:
+            #     result.append(m.text)
+            result = self.get_texts('upload_table_row_1', env)
             
             # Check the uploaded filename before deleting the record
             if i[2] in result:

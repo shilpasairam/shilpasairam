@@ -17,6 +17,7 @@ from selenium.common import NoSuchElementException, ElementNotVisibleException, 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import Select
 
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig, config
@@ -183,6 +184,17 @@ class Base:
         return self.driver.find_element(getattr(By, self.locatortype(locator, env)), self.locatorpath(locator, env))\
             .text
 
+    # Read the elements text using locatorname
+    @fWaitFor
+    def get_texts(self, locator, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and return the text
+        """
+        res = []
+        eles = self.select_elements(locator, env)
+        res = [i.text for i in eles]
+        return res
+
     # Read the upload or deletion status popup text using locatorname
     @fWaitFor
     def get_status_text(self, locator, env, UnivWaitFor=0):
@@ -212,6 +224,30 @@ class Base:
                                                                                                            env))
         return elements
 
+    # Select the value from dropdown using VisibleText
+    @fWaitFor
+    def selectbyvisibletext(self, locator, text, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and select the dropdown value
+        """
+        ele = self.select_element(locator, env)
+        select = Select(ele)
+        time.sleep(1)
+        select.select_by_visible_text(text)
+        return select.first_selected_option.text
+
+    # Select the value from dropdown using Index
+    @fWaitFor
+    def selectbyindex(self, locator, index, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and select the dropdown value
+        """
+        ele = self.select_element(locator, env)
+        select = Select(ele)
+        time.sleep(1)
+        select.select_by_index(index)
+        return select.first_selected_option.text
+    
     # JavaScript click a web element using locatorname
     @fWaitFor
     def jsclick(self, locator, env, message="", UnivWaitFor=0):
@@ -348,3 +384,14 @@ class Base:
     def sort_nested_list(self, List, index, UnivWaitFor=0):
         List.sort(key=lambda l: l[index])
         return List
+
+    # function to export an webtable to excel file
+    @fWaitFor
+    def export_web_table(self, locator, filename, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and select the element
+        """
+        tables = pd.read_html(self.driver.page_source, attrs={'class': locator})
+        table = tables[0]
+        table.to_excel(f"ActualOutputs/web_table_exports/{filename}.xlsx", na_rep='NA')
+        return f"{filename}.xlsx"

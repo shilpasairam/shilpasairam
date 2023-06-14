@@ -39,9 +39,9 @@ class Test_LineofTherapyPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Addition of Line Of Therapy"
+        request.node._title = "Validate Addition of Population filter 2"
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of New Population filter 2 validation is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -55,18 +55,18 @@ class Test_LineofTherapyPage:
                 base.go_to_page("managelot_button", env)
                 manage_lot_data = lotpage.add_multiple_lot(i, "add_lot_btn", "managelot_table_rows", filepath, env)
                 self.added_lot_data.append(manage_lot_data)
-                LogScreenshot.fLogScreenshot(message=f"Added Line of Therapy is {self.added_lot_data}",
+                LogScreenshot.fLogScreenshot(message=f"Added Population filter 2 is {self.added_lot_data}",
                                              pass_=True, log=True, screenshot=False)
                 base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
                 imppubpage.upload_file_with_success(i, filepath, env)
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
 
             except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Population filter 2 page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion of New Line of Therapy validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion of New Population filter 2 validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C34623
@@ -83,9 +83,9 @@ class Test_LineofTherapyPage:
         lotpage = LineofTherapyPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Editing the Line Of Therapy data"
+        request.node._title = "Validate Editing the Population filter 2 data"
 
-        LogScreenshot.fLogScreenshot(message=f"***Edit Line of Therapy validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Edit Population filter 2 validation is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -101,15 +101,15 @@ class Test_LineofTherapyPage:
             try:
                 manage_lot_data = lotpage.edit_multiple_lot(i[0], i[1], "managelot_edit", filepath, env)
                 self.edited_lot_data.append(manage_lot_data)
-                LogScreenshot.fLogScreenshot(message=f"Edited Line of Therapy is {self.edited_lot_data}",
+                LogScreenshot.fLogScreenshot(message=f"Edited Population filter 2 is {self.edited_lot_data}",
                                              pass_=True, log=True, screenshot=False)
 
             except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Population filter 2 page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Edit Line of Therapy validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Edit Population filter 2 validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C34623
@@ -128,9 +128,9 @@ class Test_LineofTherapyPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Deletion of Line Of Therapy"
+        request.node._title = "Validate Deletion of Population filter 2"
 
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of New Line of Therapy validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of New Population filter 2 validation is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -151,10 +151,9 @@ class Test_LineofTherapyPage:
                 imppubpage.delete_file(i[0], filepath, "file_status_popup_text", "upload_table_rows", env)
 
             except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Line of Therapy page",
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Population filter 2 page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of New Line of Therapy validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Deletion of New Population filter 2 validation is completed***",
                                      pass_=True, log=True, screenshot=False)
-                                          
