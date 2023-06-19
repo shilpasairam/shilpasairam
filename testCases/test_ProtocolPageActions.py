@@ -519,7 +519,7 @@ class Test_ProtocolPage:
         LogScreenshot.fLogScreenshot(message=f"***View PICOS validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C41136
+    @pytest.mark.C40680
     def test_liveslr_Oncology_view_searchstrategy(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getsearchstrategydata(env)
@@ -554,7 +554,7 @@ class Test_ProtocolPage:
         LogScreenshot.fLogScreenshot(message=f"***View Search Strategy validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C41136
+    @pytest.mark.C40680
     def test_liveslr_NonOncology_view_searchstrategy(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
