@@ -69,3 +69,7 @@ python -m pytest -v -s --html=Reports\AppAccessCheck_report.html --self-containe
 
 # To run the whole regression suite
 python -m pytest -v --html=Reports\complete_suite_report.html --self-contained-html  .\testCases
+
+
+# To run the testrail result update command related to trcli
+trcli -y --config testrail_config.yaml --username "enter user name" --key "enter auth token" parse_junit --title "enter test run title" --run-id "enter test run id" -f "enter xml result report path"
