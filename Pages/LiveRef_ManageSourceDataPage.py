@@ -14,6 +14,8 @@ from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 
 class ManageSourceDataPage(Base):
@@ -55,11 +57,15 @@ class ManageSourceDataPage(Base):
         expected_error_msg = "A problem occurred while uploading the file. The columns DateTime_Location, " \
                              "Author_LastName, Main_Message, Study Type/GVD Chapter, Study_Sub_Type/GVD Section, " \
                              "Reported_Data_Variables, Scales, Main_Results are not valid for this template"
+        
+        self.refreshpage()
+        time.sleep(2)
+
         # Read manage source details from data sheet
         source_data, source_value = self.get_details(locatorname, filepath, 'Add_source_field', 'Add_source_value')
 
         # Read filepaths to upload
-        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template')
+        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template_invalid')
 
         self.click("add_sourcedata_btn", env, UnivWaitFor=10)
         time.sleep(1)
@@ -86,13 +92,18 @@ class ManageSourceDataPage(Base):
                                                       f"{actual_err_text}", pass_=False, log=True, screenshot=True)
             raise Exception(f"Different Error Message has occurred.")
 
+        self.click("source_close_button", env)
+
     def add_valid_managesourcedata(self, locatorname, filepath, tablerows, env):
         expected_msg = "Record added successfully"
+        # self.refreshpage()
+        # time.sleep(2)
+
         # Read manage source details from data sheet
         source_data, source_value = self.get_details(locatorname, filepath, 'Add_source_field', 'Add_source_value')
 
         # Read filepaths to upload
-        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template')
+        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template_valid')
 
         # ele = self.select_element("sel_table_entries_dropdown", env)
         # select = Select(ele)
@@ -171,7 +182,7 @@ class ManageSourceDataPage(Base):
                                                                'Edit_source_value')
 
         # Read filepaths to upload
-        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template')
+        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template_valid')
 
         self.input_text("sourcedata_search_box", f'{src_code}', env)
         self.LogScreenshot.fLogScreenshot(message=f'Selected record details for updation : ',
@@ -223,6 +234,9 @@ class ManageSourceDataPage(Base):
 
     def delete_managesourcedata(self, src_code, tablerows, env):
         expected_status_text = "Source successfully deleted"
+        self.refreshpage()
+        time.sleep(2)
+
         # ele = self.select_element("sel_table_entries_dropdown", env)
         # select = Select(ele)
         # select.select_by_visible_text("All")

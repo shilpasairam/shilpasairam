@@ -100,6 +100,8 @@ class LineofTherapyPage(Base):
     def add_multiple_lot(self, locatorname, add_lot_button, table_rows, filepath, env):
         expected_add_status_text = "Population filter 2 added successfully"
 
+        self.go_to_page("managelot_button", env)
+
         # Read LoT name details from data sheet
         lot_name = self.get_lot_name(filepath, locatorname, "LOT_name")
 
@@ -181,7 +183,8 @@ class LineofTherapyPage(Base):
     def edit_multiple_lot(self, locatorname, current_data, edit_upd_button, filepath, env):
         expected_update_status_text = "Population filter 2 updated successfully"
         self.refreshpage()
-        time.sleep(5)
+        time.sleep(2)
+        self.go_to_page("managelot_button", env)
 
         # Read LoT name details from data sheet
         lot_name = self.get_lot_name(filepath, locatorname, "LOT_name")
@@ -235,6 +238,7 @@ class LineofTherapyPage(Base):
         expected_del_status_text = "Population filter 2 deleted successfully"
         self.refreshpage()
         time.sleep(2)
+        self.go_to_page("managelot_button", env)
 
         # Fetching total rows count before deleting a LoT
         table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",

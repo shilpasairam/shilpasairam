@@ -143,8 +143,6 @@ class Test_Search_LiveSLR:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-    @pytest.mark.C26790
-    @pytest.mark.C26859
     @pytest.mark.C26860
     def test_reports_comparison(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
@@ -360,7 +358,7 @@ class Test_Search_LiveSLR:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C35127
-    @pytest.mark.C35150
+    # @pytest.mark.C35150
     def test_nononcology_validate_uniquestudies_liveslr_page(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
@@ -393,7 +391,7 @@ class Test_Search_LiveSLR:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38487
-    @pytest.mark.C38489
+    # @pytest.mark.C38489
     def test_nononcology_validate_uniquestudies_reporting_outcomes(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
@@ -425,8 +423,6 @@ class Test_Search_LiveSLR:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-    @pytest.mark.C39301
-    @pytest.mark.C39314
     @pytest.mark.C39312
     def test_nononcology_slrreport_comparison(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
@@ -550,6 +546,37 @@ class Test_Search_LiveSLR:
 
                             slrreport.non_oncology_check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
                 
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+
+    @pytest.mark.C40194
+    def test_nononcology_validate_study_design_section(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology - Verify presence of Design values under Select Study Design section"
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononco_studydesign_section_validation")
+
+        scenarios = ['scenario1', 'scenario2']
+
+        for i in scenarios:
+            try:
+                slrreport.validate_study_design_section(i, filepath, env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
                                              pass_=False, log=True, screenshot=True)

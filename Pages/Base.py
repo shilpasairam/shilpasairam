@@ -195,6 +195,17 @@ class Base:
         res = [i.text for i in eles]
         return res
 
+    # Read the Attribute value using locatorname
+    @fWaitFor
+    def get_attribute_val(self, locator, tag_name, env, UnivWaitFor=0):
+        """
+        Given locator, identify the locator type and path from the OR file and return the text
+        """
+        res = []
+        eles = self.select_elements(locator, env)
+        res = [i.get_attribute(tag_name) for i in eles]
+        return res
+
     # Read the upload or deletion status popup text using locatorname
     @fWaitFor
     def get_status_text(self, locator, env, UnivWaitFor=0):
@@ -335,8 +346,6 @@ class Base:
             return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
                                             self.locatorpath(locator, env)).is_displayed()
         except NoSuchElementException:
-            self.LogScreenshot.fLogScreenshot(message=f"{locator} is not present",
-                                              pass_=False, log=True, screenshot=False)
             return False                                              
 
     # Check whether a web element is displayed or not using locatorname
@@ -348,8 +357,6 @@ class Base:
             return self.driver.find_element(getattr(By, self.locatortype(locator, env)),
                                             self.locatorpath(locator, env)).is_displayed()
         except NoSuchElementException:
-            self.LogScreenshot.fLogScreenshot(message=f"{locator_name} is not present.",
-                                              pass_=True, log=True, screenshot=False)
             return False    
     
     # Check whether a web element is enabled or not using locatorname

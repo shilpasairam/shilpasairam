@@ -20,7 +20,7 @@ class Test_SearchPublications_DownloadedFilename:
     TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C29730
-    @pytest.mark.C29826
+    # @pytest.mark.C29826
     def test_validate_downloaded_filename(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveRefAppURL(env)
         # Creating object of loginpage class

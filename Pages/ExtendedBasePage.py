@@ -216,6 +216,14 @@ class ExtendedBase(Base):
         result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]
         return result
     
+    def get_additional_criteria_data(self, filepath, locatorname):
+        df = pd.read_excel(filepath)
+        criteria = df.loc[df['Name'] == locatorname]['AddtionalParam'].dropna().to_list()
+        criteria_btn = df.loc[df['Name'] == locatorname]['AddtionalParam_button'].dropna().to_list()
+        section_name = df.loc[df['Name'] == locatorname]['sectionname'].dropna().to_list()
+        result = [[criteria[i], criteria_btn[i], section_name[i]] for i in range(0, len(criteria))]
+        return result
+    
     def upload_file(self, pop_data, env):
         expected_upload_status_text = "File(s) uploaded successfully"
         # Read population details from data sheet

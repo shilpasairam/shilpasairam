@@ -40,7 +40,7 @@ class Test_AppVersion:
         loginPage.logout("liveslr_logout_button", env)
 
     @pytest.mark.C29577
-    @pytest.mark.C29826
+    # @pytest.mark.C29826
     def test_liveref_app_version(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         # Instantiate the Base class
@@ -63,17 +63,27 @@ class Test_AppVersion:
         appver.app_version_check("LiveRef", "about_live_ref", "about_live_ref_text", "about_live_ref_close", env)
 
         # Checking the absence of Glossary option
-        # res_list = []
-        # eles = base.select_elements("glossary_nav_bar", env, UnivWaitFor=3)
-        # for ele in eles:
-        #     res_list.append(ele.text)
         res_list = base.get_texts("glossary_nav_bar", env, UnivWaitFor=3)
         
         if not search("Glossary", res_list[0]):
             LogScreenshot.fLogScreenshot(message=f"Glossary link is not present as expected",
                                          pass_=True, log=True, screenshot=True)
         else:
-            raise Exception(f"Glossary link is present as expected")
+            LogScreenshot.fLogScreenshot(message=f"Glossary link is present which is not expected",
+                                         pass_=False, log=True, screenshot=True)
+            raise Exception(f"Glossary link is present which is not expected")
+
+        # Checking the duplicate navigation links on the left panel
+        admin_eles_text = base.get_texts("liveref_admin_panel_list", env)
+        
+        if len(admin_eles_text) == len(set(admin_eles_text)):
+            LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
+                                                pass_=True, log=True, screenshot=True)
+        else:
+            LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. "
+                                                        f"Values are : {admin_eles_text}",
+                                                pass_=False, log=True, screenshot=True)
+            raise Exception(f"Found duplicate navigation links on the left panel.")    
 
         # Logging out from the application
         loginPage.logout("liveref_logout_button", env)

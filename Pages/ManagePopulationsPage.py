@@ -159,6 +159,9 @@ class ManagePopulationsPage(Base):
                                           pass_=True, log=True, screenshot=False)
         expected_status_text = "Population updated successfully"
 
+        self.refreshpage()
+        time.sleep(2)
+
         self.input_text("search_button", f'{pop_name}', env)
         self.click(edit_locator, env, UnivWaitFor=10)
         # Read the file name and path required to upload
@@ -171,7 +174,7 @@ class ManagePopulationsPage(Base):
             self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
         '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
-        cmd = "document.getElementsByTagName('style')[8].textContent='.file-input[_ngcontent-pqw-c118]" \
+        cmd = "document.getElementsByTagName('style')[7].textContent='.file-input[_ngcontent-slh-c124]" \
               "{display:visible}'"
         self.jsclick_hide(cmd)
         time.sleep(1)
@@ -223,6 +226,9 @@ class ManagePopulationsPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f"***Deletion of Population validation is started***",
                                           pass_=True, log=True, screenshot=False)
         expected_status_text = "Population deleted successfully"
+
+        self.refreshpage()
+        time.sleep(2)
         
         # Fetching total rows count before deleting a new population
         table_rows_before = self.get_table_length("manage_pop_table_rows_info", "manage_pop_table_next_btn",
@@ -368,7 +374,7 @@ class ManagePopulationsPage(Base):
                                           pass_=True, log=True, screenshot=True)
 
         # Check presence of Add Endpoint button after adding 3 endpoint details
-        if not self.isvisible("add_ep_btn", env, "Add Endpoint button"):
+        if not self.isdisplayed("add_ep_btn", env):
             self.LogScreenshot.fLogScreenshot(message='Add Endpoint button is absent after adding 3 Endpoints',
                                               pass_=True, log=True, screenshot=True)
         else:
