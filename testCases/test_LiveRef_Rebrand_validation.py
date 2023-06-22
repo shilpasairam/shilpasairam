@@ -16,7 +16,7 @@ class Test_LiveRef_Rebrand:
     TestData = ReadConfig.getTestdata("liveref_searchpublications_data")
 
     @pytest.mark.C27354
-    @pytest.mark.C29826
+    # @pytest.mark.C29826
     def test_validate_liveref_rebrand(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveRefAppURL(env)
         # Creating object of loginpage class

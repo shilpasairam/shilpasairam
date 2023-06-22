@@ -22,11 +22,7 @@ class Test_ImportPublicationPage:
     # filepath = ReadConfig.getimportpublicationsdata()
 
     @pytest.mark.C30246
-    @pytest.mark.C27544
-    @pytest.mark.C27546
-    @pytest.mark.C27381
-    @pytest.mark.C28987
-    def test_upload_and_del_extraction_template_success(self, extra, env, request, caseid):
+    def test_upload_extraction_template_validdata(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getimportpublicationsdata(env)
         # Instantiate the Base class
@@ -63,11 +59,6 @@ class Test_ImportPublicationPage:
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C30246
-    @pytest.mark.C27544
-    @pytest.mark.C27546
-    @pytest.mark.C27381
-    @pytest.mark.C28987
     @pytest.mark.C27547
     def test_upload_extraction_template_with_header_mismatch(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)

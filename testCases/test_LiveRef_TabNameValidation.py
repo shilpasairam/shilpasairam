@@ -19,7 +19,7 @@ class Test_TabNames:
     password = ReadConfig.getPassword()
 
     @pytest.mark.C29584
-    @pytest.mark.C29826
+    # @pytest.mark.C29826
     def test_tabname_changes(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class
@@ -59,7 +59,7 @@ class Test_TabNames:
         # Logging out from the application
         loginPage.logout("liveref_logout_button", env)
 
-    @pytest.mark.C29826
+    # @pytest.mark.C29826
     def test_liveref_validate_duplicate_entries_in_admin_panel(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         # Creating object of loginpage class

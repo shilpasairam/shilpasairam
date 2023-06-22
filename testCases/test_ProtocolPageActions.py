@@ -21,7 +21,7 @@ class Test_ProtocolPage:
     # filepath = ReadConfig.getprismadata()
 
     @pytest.mark.C30243
-    def test_upload_prisma_details(self, extra, env, request, caseid):
+    def test_oncology_prisma_details(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getprismadata(env)
         # Instantiate the Base class
@@ -34,9 +34,9 @@ class Test_ProtocolPage:
         prismapage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Uploading PRISMA details under Protocol -> PRISMA Page"
+        request.node._title = "Validate PRISMA functionalities details under Protocol -> PRISMA Page for Oncology Population"
 
-        LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload and Deletion of PRISMA details validation is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -53,52 +53,55 @@ class Test_ProtocolPage:
                 prismapage.upload_prisma_image(i, filepath, index+1, env)
 
                 prismapage.override_prisma_details(i, filepath, index+1, env)
+
+                prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup",
+                                                 filepath, env)
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing PRISMA page")
         
-        LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload and Deletion of PRISMA details validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C30243
-    def test_del_prisma_details(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
-        filepath = ReadConfig.getprismadata(env)        
-        # Instantiate the Base class
-        base = Base(self.driver, extra)        
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ImportPublicationPage class
-        prismapage = ProtocolPage(self.driver, extra)
+    # @pytest.mark.C30243
+    # def test_del_prisma_details(self, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getLiveSLRAppURL(env)
+    #     filepath = ReadConfig.getprismadata(env)        
+    #     # Instantiate the Base class
+    #     base = Base(self.driver, extra)        
+    #     # Instantiate the logScreenshot class
+    #     LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of ImportPublicationPage class
+    #     prismapage = ProtocolPage(self.driver, extra)
 
-        request.node._tcid = caseid
-        request.node._title = "Validate Deleting PRISMA details under Protocol -> PRISMA Page"
+    #     request.node._tcid = caseid
+    #     request.node._title = "Validate Deleting PRISMA details under Protocol -> PRISMA Page"
 
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***",
-                                     pass_=True, log=True, screenshot=False)
+    #     LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is started***",
+    #                                  pass_=True, log=True, screenshot=False)
         
-        loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("protocol_link", env)
-        base.go_to_nested_page("protocol_link", "prismas", env)
+    #     loginPage.driver.get(baseURL)
+    #     loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+    #     base.presence_of_admin_page_option("protocol_link", env)
+    #     base.go_to_nested_page("protocol_link", "prismas", env)
 
-        pop_val = ['pop1']
+    #     pop_val = ['pop1']
 
-        for i in pop_val:
-            try:
-                prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup",
-                                                 filepath, env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Error in accessing PRISMA page")
+    #     for i in pop_val:
+    #         try:
+    #             prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup",
+    #                                              filepath, env)
+    #         except Exception:
+    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
+    #                                          pass_=False, log=True, screenshot=True)
+    #             raise Exception("Error in accessing PRISMA page")
 
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is completed***",
-                                     pass_=True, log=True, screenshot=False)
+    #     LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation is completed***",
+    #                                  pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C37920
     def test_picos_page(self, extra, env, request, caseid):
@@ -139,7 +142,7 @@ class Test_ProtocolPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C37921
-    def test_add_invalid_search_strategy_details(self, extra, env, request, caseid):
+    def test_search_strategy_page_oncology(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getsearchstrategydata(env)
         # Instantiate the Base class
@@ -152,8 +155,8 @@ class Test_ProtocolPage:
         srchpage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate SearchStrategy functionality with invalid data under Protocol -> Search " \
-                              "Strategy Page"
+        request.node._title = "Validate SearchStrategy functionality under Protocol -> Search " \
+                              "Strategy Page for Oncology Population"
 
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -168,44 +171,6 @@ class Test_ProtocolPage:
         for i in pop_val:
             try:
                 srchpage.add_invalid_search_strategy_details(i, filepath, env)
-                
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Error in accessing Search Strategy page")
-        
-        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is completed***",
-                                     pass_=True, log=True, screenshot=False)
-
-    @pytest.mark.C37921
-    def test_add_valid_search_strategy_details(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
-        filepath = ReadConfig.getsearchstrategydata(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)        
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ImportPublicationPage class
-        srchpage = ProtocolPage(self.driver, extra)
-
-        request.node._tcid = caseid
-        request.node._title = "Validate SearchStrategy functionality with valid data under Protocol -> Search " \
-                              "Strategy Page"
-
-        LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
-                                     pass_=True, log=True, screenshot=False)
-        
-        loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("protocol_link", env)
-        base.go_to_nested_page("protocol_link", "searchstrategy", env)
-
-        pop_val = ['pop1']
-
-        for i in pop_val:
-            try:
                 srchpage.add_valid_search_strategy_details(i, filepath, env, "Oncology")
                 
             except Exception:
@@ -215,6 +180,45 @@ class Test_ProtocolPage:
         
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is completed***",
                                      pass_=True, log=True, screenshot=False)
+
+    # @pytest.mark.C37921
+    # def test_add_valid_search_strategy_details(self, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getLiveSLRAppURL(env)
+    #     filepath = ReadConfig.getsearchstrategydata(env)
+    #     # Instantiate the Base class
+    #     base = Base(self.driver, extra)        
+    #     # Instantiate the logScreenshot class
+    #     LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of ImportPublicationPage class
+    #     srchpage = ProtocolPage(self.driver, extra)
+
+    #     request.node._tcid = caseid
+    #     request.node._title = "Validate SearchStrategy functionality with valid data under Protocol -> Search " \
+    #                           "Strategy Page"
+
+    #     LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
+    #                                  pass_=True, log=True, screenshot=False)
+        
+    #     loginPage.driver.get(baseURL)
+    #     loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+    #     base.presence_of_admin_page_option("protocol_link", env)
+    #     base.go_to_nested_page("protocol_link", "searchstrategy", env)
+
+    #     pop_val = ['pop1']
+
+    #     for i in pop_val:
+    #         try:
+    #             srchpage.add_valid_search_strategy_details(i, filepath, env, "Oncology")
+                
+    #         except Exception:
+    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",
+    #                                          pass_=False, log=True, screenshot=True)
+    #             raise Exception("Error in accessing Search Strategy page")
+        
+    #     LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is completed***",
+    #                                  pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C37883
     @pytest.mark.C38341

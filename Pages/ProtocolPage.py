@@ -102,8 +102,8 @@ class ProtocolPage(Base):
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
         
-        # self.refreshpage()
-        # time.sleep(3)
+        self.refreshpage()
+        time.sleep(3)
         try:
             # pop_ele = self.select_element("prisma_pop_dropdown", env)
             # select = Select(pop_ele)
@@ -712,6 +712,7 @@ class ProtocolPage(Base):
                                                    'db_search_val', 'Template_name')
         template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
 
+        self.refreshpage()
         time.sleep(2)
         try:
             for j in stdy_data:

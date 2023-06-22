@@ -1,7 +1,5 @@
 from re import search
-from signal import raise_signal
 import time
-from turtle import isvisible
 
 import pytest
 import pandas as pd
@@ -110,7 +108,7 @@ class AppVersion(Base):
 
         if search("admin", credentials[0][0]):
             self.driver.switch_to.window(self.driver.window_handles[0])
-            if self.isvisible("admin_option_dropdown", env, "Admin Dropdown"):
+            if self.isdisplayed("admin_option_dropdown", env):
                 self.click("admin_option_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message='Admin option dropdown is present in LIVEHTA portal '
                                                           'for Admin user.', pass_=True, log=True, screenshot=True)
@@ -120,7 +118,7 @@ class AppVersion(Base):
                 raise Exception('Admin option dropdown is missing in LIVEHTA portal for Admin user.') 
             
             self.driver.switch_to.window(self.driver.window_handles[1])  
-            if self.isvisible("liveslr_admin_section_text", env, "Admin Section"):
+            if self.isdisplayed("liveslr_admin_section_text", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin section is present in LiveSLR homepage for '
                                                           'Admin user.', pass_=True, log=True, screenshot=True)
             else:
@@ -129,7 +127,7 @@ class AppVersion(Base):
                 raise Exception('Admin section is missing in LiveSLR homepage for Admin user.')
 
             self.go_to_page("SLR_Homepage", env)
-            if self.isvisible(pop_data[0][0], env, "Population"):
+            if self.isdisplayed(pop_data[0][0], env):
                 self.exbase.select_data(pop_data[0][0], pop_data[0][0], env)
                 self.exbase.select_data(slrtype_data[0][0], slrtype_data[0][0], env)
                 self.LogScreenshot.fLogScreenshot(message='Population and SLR Type is present and able to access '
@@ -159,7 +157,7 @@ class AppVersion(Base):
 
         elif search("staff", credentials[0][0]):
             self.driver.switch_to.window(self.driver.window_handles[0])
-            if not self.isvisible("admin_option_dropdown", env, "Admin Dropdown"):
+            if not self.isdisplayed("admin_option_dropdown", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin option dropdown is absent in LIVEHTA portal for '
                                                           'Staff user.', pass_=True, log=True, screenshot=True)
             else:
@@ -168,7 +166,7 @@ class AppVersion(Base):
                 raise Exception('Admin option dropdown is present in LIVEHTA portal for Staff user.') 
             
             self.driver.switch_to.window(self.driver.window_handles[1])  
-            if not self.isvisible("liveslr_admin_section_text", env, "Admin Section"):
+            if not self.isdisplayed("liveslr_admin_section_text", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin section is absent in LiveSLR homepage for '
                                                           'Staff user.', pass_=True, log=True, screenshot=True)
             else:
@@ -177,7 +175,7 @@ class AppVersion(Base):
                 raise Exception('Admin section is present in LiveSLR homepage for Staff user.') 
 
             self.go_to_page("SLR_Homepage", env)
-            if self.isvisible(pop_data[0][0], env, "Population"):
+            if self.isdisplayed(pop_data[0][0], env):
                 self.exbase.select_data(pop_data[0][0], pop_data[0][0], env)
                 self.exbase.select_data(slrtype_data[0][0], slrtype_data[0][0], env)
                 self.LogScreenshot.fLogScreenshot(message=f"Population and SLR Type is present and able to access in "
@@ -208,7 +206,7 @@ class AppVersion(Base):
         
         elif search("client", credentials[0][0]):
             self.driver.switch_to.window(self.driver.window_handles[0])
-            if not self.isvisible("admin_option_dropdown", env, "Admin Dropdown"):
+            if not self.isdisplayed("admin_option_dropdown", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin option dropdown is absent in LIVEHTA portal for '
                                                           'Client user.', pass_=True, log=True, screenshot=True)
             else:
@@ -217,7 +215,7 @@ class AppVersion(Base):
                 raise Exception('Admin option dropdown is present in LIVEHTA portal for Client user.') 
             
             self.driver.switch_to.window(self.driver.window_handles[1])  
-            if not self.isvisible("liveslr_admin_section_text", env, "Admin Section"):
+            if not self.isdisplayed("liveslr_admin_section_text", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin section is absent in LiveSLR homepage for '
                                                           'Client user.', pass_=True, log=True, screenshot=True)
             else:
@@ -226,7 +224,7 @@ class AppVersion(Base):
                 raise Exception('Admin section is present in LiveSLR homepage for Client user.')
 
             self.go_to_page("SLR_Homepage", env)
-            if not self.isvisible(pop_data[0][0], env, pop_data[0][0]):
+            if not self.isdisplayed(pop_data[0][0], env):
                 self.LogScreenshot.fLogScreenshot(message=f"In LiveSLR -> Client user do not have access for "
                                                           f"given Population: '{pop_data[0][0]}' as expected.",
                                                   pass_=True, log=True, screenshot=True)
@@ -237,7 +235,7 @@ class AppVersion(Base):
                 raise Exception("In LiveSLR -> Client user have access for given Population.")
 
             self.presence_of_element(pop_data[1][0], env)
-            if self.isvisible(pop_data[1][0], env, pop_data[1][0]):
+            if self.isdisplayed(pop_data[1][0], env):
                 self.exbase.select_data(pop_data[1][0], pop_data[1][1], env)
                 self.exbase.select_data(slrtype_data[0][0], slrtype_data[0][0], env)
                 self.LogScreenshot.fLogScreenshot(message=f"In LiveSLR -> Client user have access for given "
@@ -276,7 +274,7 @@ class AppVersion(Base):
 
         if search("admin", credentials[0][0]):
             self.driver.switch_to.window(self.driver.window_handles[0])
-            if self.isvisible("admin_option_dropdown", env, "Admin Dropdown"):
+            if self.isdisplayed("admin_option_dropdown", env):
                 self.click("admin_option_dropdown", env)
                 self.LogScreenshot.fLogScreenshot(message='Admin option dropdown is present in LIVEHTA portal '
                                                           'for Admin user.', pass_=True, log=True, screenshot=True)
@@ -286,7 +284,7 @@ class AppVersion(Base):
                 raise Exception('Admin option dropdown is missing in LIVEHTA portal for Admin user.') 
             
             self.driver.switch_to.window(self.driver.window_handles[1])  
-            if self.isvisible("liveref_admin_section_text", env, "Manage Selection"):
+            if self.isdisplayed("liveref_admin_section_text", env):
                 self.LogScreenshot.fLogScreenshot(message='Manage Selection option is present in LiveRef homepage '
                                                           'for Admin user.', pass_=True, log=True, screenshot=True)
             else:
@@ -294,7 +292,7 @@ class AppVersion(Base):
                                                           'for Admin user.', pass_=False, log=True, screenshot=False)
                 raise Exception('Manage Selection option is missing in LiveRef homepage for Admin user.')
 
-            if self.isvisible("liveref_importpublications_button", env, "Import Publications"):
+            if self.isdisplayed("liveref_importpublications_button", env):
                 self.LogScreenshot.fLogScreenshot(message='Import Publications option is present in LiveRef homepage '
                                                           'for Admin user.', pass_=True, log=True, screenshot=True)
             else:
@@ -302,7 +300,7 @@ class AppVersion(Base):
                                                           'for Admin user.', pass_=False, log=True, screenshot=False)
                 raise Exception('Import Publications option is missing in LiveRef homepage for Admin user.')
 
-            if self.isvisible("liveref_view_import_status_button", env, "View Import Status"):
+            if self.isdisplayed("liveref_view_import_status_button", env):
                 self.LogScreenshot.fLogScreenshot(message='View Import Status option is present in LiveRef homepage '
                                                           'for Admin user.', pass_=True, log=True, screenshot=True)
             else:
@@ -312,7 +310,7 @@ class AppVersion(Base):
 
             self.go_to_page("searchpublications_button", env)
             self.click("searchpublications_reset_filter", env)
-            if self.isvisible(ind_data[0][0], env, "Indication"):
+            if self.isdisplayed(ind_data[0][0], env):
                 self.srchpub.select_data(ind_data[0][0], ind_data[0][1], env)
                 self.srchpub.select_sub_section(pop_data[0][0], pop_data[0][1], env, scroll="population_section")
                 self.LogScreenshot.fLogScreenshot(message=f"Indication '{ind_data[0][0]}' is present and able to "
@@ -326,7 +324,7 @@ class AppVersion(Base):
 
         elif search("staff", credentials[0][0]):
             self.driver.switch_to.window(self.driver.window_handles[0])
-            if not self.isvisible("admin_option_dropdown", env, "Admin Dropdown"):
+            if not self.isdisplayed("admin_option_dropdown", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin option dropdown is absent in LIVEHTA portal for '
                                                           'Staff user.', pass_=True, log=True, screenshot=True)
             else:
@@ -335,7 +333,7 @@ class AppVersion(Base):
                 raise Exception('Admin option dropdown is present in LIVEHTA portal for Staff user.') 
             
             self.driver.switch_to.window(self.driver.window_handles[1])  
-            if not self.isvisible("liveref_admin_section_text", env, "Manage Selection"):
+            if not self.isdisplayed("liveref_admin_section_text", env):
                 self.LogScreenshot.fLogScreenshot(message='Manage Selection option is absent in LiveRef homepage for '
                                                           'Staff user.', pass_=True, log=True, screenshot=True)
             else:
@@ -343,7 +341,7 @@ class AppVersion(Base):
                                                           'Staff user.', pass_=False, log=True, screenshot=False)
                 raise Exception('Manage Selection option is present in LiveRef homepage for Staff user.')
 
-            if not self.isvisible("liveref_importpublications_button", env, "Import Publications"):
+            if not self.isdisplayed("liveref_importpublications_button", env):
                 self.LogScreenshot.fLogScreenshot(message='Import Publications option is absent in LiveRef homepage '
                                                           'for Staff user.', pass_=True, log=True, screenshot=True)
             else:
@@ -351,7 +349,7 @@ class AppVersion(Base):
                                                           'for Staff user.', pass_=False, log=True, screenshot=False)
                 raise Exception('Import Publications option is present in LiveRef homepage for Staff user.')
 
-            if not self.isvisible("liveref_view_import_status_button", env, "View Import Status"):
+            if not self.isdisplayed("liveref_view_import_status_button", env):
                 self.LogScreenshot.fLogScreenshot(message='View Import Status option is absent in LiveRef homepage '
                                                           'for Staff user.', pass_=True, log=True, screenshot=True)
             else:
@@ -361,7 +359,7 @@ class AppVersion(Base):
         
             self.go_to_page("searchpublications_button", env)
             self.click("searchpublications_reset_filter", env)
-            if self.isvisible(ind_data[0][0], env, "Indication"):
+            if self.isdisplayed(ind_data[0][0], env):
                 self.srchpub.select_data(ind_data[0][0], ind_data[0][1], env)
                 self.srchpub.select_sub_section(pop_data[0][0], pop_data[0][1], env, scroll="population_section")
                 self.LogScreenshot.fLogScreenshot(message=f"Indication '{ind_data[0][0]}' is present and able to "
@@ -375,7 +373,7 @@ class AppVersion(Base):
 
         elif search("client", credentials[0][0]):
             self.driver.switch_to.window(self.driver.window_handles[0])
-            if not self.isvisible("admin_option_dropdown", env, "Admin Dropdown"):
+            if not self.isdisplayed("admin_option_dropdown", env):
                 self.LogScreenshot.fLogScreenshot(message='Admin option dropdown is absent in LIVEHTA portal for '
                                                           'Client user.', pass_=True, log=True, screenshot=True)
             else:
@@ -384,7 +382,7 @@ class AppVersion(Base):
                 raise Exception('Admin option dropdown is present in LIVEHTA portal for Client user.') 
             
             self.driver.switch_to.window(self.driver.window_handles[1])  
-            if not self.isvisible("liveref_admin_section_text", env, "Manage Selection"):
+            if not self.isdisplayed("liveref_admin_section_text", env):
                 self.LogScreenshot.fLogScreenshot(message='Manage Selection option is absent in LiveRef homepage for '
                                                           'Client user.', pass_=True, log=True, screenshot=True)
             else:
@@ -392,7 +390,7 @@ class AppVersion(Base):
                                                           'Client user.', pass_=False, log=True, screenshot=False)
                 raise Exception('Manage Selection option is present in LiveRef homepage for Client user.') 
 
-            if not self.isvisible("liveref_importpublications_button", env, "Import Publications"):
+            if not self.isdisplayed("liveref_importpublications_button", env):
                 self.LogScreenshot.fLogScreenshot(message='Import Publications option is absent in LiveRef homepage '
                                                           'for Client user.', pass_=True, log=True, screenshot=True)
             else:
@@ -400,7 +398,7 @@ class AppVersion(Base):
                                                           'for Client user.', pass_=False, log=True, screenshot=False)
                 raise Exception('Import Publications option is present in LiveRef homepage for Client user.')
 
-            if not self.isvisible("liveref_view_import_status_button", env, "View Import Status"):
+            if not self.isdisplayed("liveref_view_import_status_button", env):
                 self.LogScreenshot.fLogScreenshot(message='View Import Status option is absent in LiveRef homepage '
                                                           'for Client user.', pass_=True, log=True, screenshot=True)
             else:
@@ -410,7 +408,7 @@ class AppVersion(Base):
         
             self.go_to_page("searchpublications_button", env)
             self.click("searchpublications_reset_filter", env)
-            if not self.isvisible(ind_data[0][0], env, "Indication"):
+            if not self.isdisplayed(ind_data[0][0], env):
                 self.LogScreenshot.fLogScreenshot(message=f"Indication '{ind_data[0][0]}' is not present in LiveRef "
                                                           f"homepage for Client user.",
                                                   pass_=True, log=True, screenshot=True)
@@ -421,7 +419,7 @@ class AppVersion(Base):
                 raise Exception(f"Indication '{ind_data[0][0]}' is present in LiveRef homepage for Client user.")
 
             self.click("searchpublications_reset_filter", env)
-            if self.isvisible(ind_data[1][0], env, "Indication"):
+            if self.isdisplayed(ind_data[1][0], env):
                 self.srchpub.select_data(ind_data[1][0], ind_data[1][1], env)
                 self.srchpub.select_sub_section(pop_data[1][0], pop_data[1][1], env, scroll="population_section")
                 self.LogScreenshot.fLogScreenshot(message=f"Indication '{ind_data[1][0]}' is present and able to "

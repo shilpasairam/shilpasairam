@@ -27,7 +27,7 @@ class Test_ManagePopultionsPage:
     non_onco_edited_population_val = []    
 
     @pytest.mark.C30244
-    def test_add_population(self, extra, env, request, caseid):
+    def test_oncology_manage_population(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         # Instantiate the Base class
         base = Base(self.driver, extra)         
@@ -39,7 +39,7 @@ class Test_ManagePopultionsPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Addition of New Oncology Population"
+        request.node._title = "Validate Manage Population page functionalities for New Oncology Population"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -48,85 +48,95 @@ class Test_ManagePopultionsPage:
 
         pop_list = ['pop1', 'pop2', 'pop3']
 
-        for i in pop_list:
+        for index, i in enumerate(pop_list):
             try:
                 added_pop = mngpoppage.add_multiple_population(i, "add_population_btn", self.filepath,
                                                                "manage_pop_table_rows", env)
 
-                self.onco_population_val.append(added_pop)
-                LogScreenshot.fLogScreenshot(message=f"Added populations are: {self.onco_population_val}",
+                # self.onco_population_val.append(added_pop)
+                LogScreenshot.fLogScreenshot(message=f"Added populations are: {added_pop}",
                                              pass_=True, log=True, screenshot=False)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
 
-    @pytest.mark.C30244
-    def test_edit_population(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getPortalURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)         
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ManagePopulationsPage class
-        mngpoppage = ManagePopulationsPage(self.driver, extra)
-
-        request.node._tcid = caseid
-        request.node._title = "Validate Editing the existing Oncology Population"
-        
-        loginPage.driver.get(baseURL)
-        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("managepopulations_button", env)
-        base.go_to_page("managepopulations_button", env)
-
-        pop_list = ['pop1', 'pop2', 'pop3']
-
-        result = [(pop_list[i], self.onco_population_val[i]) for i in range(0, len(pop_list))]
-
-        for i in result:
-            try:
-                edited_pop = mngpoppage.edit_multiple_population(i[0], i[1], "edit_population", self.filepath, env)
-
-                self.onco_edited_population_val.append(edited_pop)
-                LogScreenshot.fLogScreenshot(message=f"Edited populations are: {self.onco_edited_population_val}",
+                edited_pop = mngpoppage.edit_multiple_population(i, added_pop, "edit_population", self.filepath, env)
+                # self.onco_edited_population_val.append(edited_pop)
+                LogScreenshot.fLogScreenshot(message=f"Edited populations are: {edited_pop}",
                                              pass_=True, log=True, screenshot=False)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
 
-    @pytest.mark.C30244
-    def test_delete_population(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getPortalURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)         
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ManagePopulationsPage class
-        mngpoppage = ManagePopulationsPage(self.driver, extra)
-
-        request.node._tcid = caseid
-        request.node._title = "Validate Deletion of Existing Oncology Population"
-        
-        loginPage.driver.get(baseURL)
-        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("managepopulations_button", env)
-        base.go_to_page("managepopulations_button", env)
-
-        for i in self.onco_edited_population_val:
-            try:
-                mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_cancel",
+                mngpoppage.delete_multiple_population(edited_pop, "delete_population", "delete_population_popup_cancel",
                                                       "manage_pop_table_rows", env)
-                mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_ok",
+                mngpoppage.delete_multiple_population(edited_pop, "delete_population", "delete_population_popup_ok",
                                                       "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+
+    # @pytest.mark.C30244
+    # def test_edit_population(self, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getPortalURL(env)
+    #     # Instantiate the Base class
+    #     base = Base(self.driver, extra)         
+    #     # Instantiate the logScreenshot class
+    #     LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of ManagePopulationsPage class
+    #     mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+    #     request.node._tcid = caseid
+    #     request.node._title = "Validate Editing the existing Oncology Population"
+        
+    #     loginPage.driver.get(baseURL)
+    #     loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+    #     base.presence_of_admin_page_option("managepopulations_button", env)
+    #     base.go_to_page("managepopulations_button", env)
+
+    #     pop_list = ['pop1', 'pop2', 'pop3']
+
+    #     result = [(pop_list[i], self.onco_population_val[i]) for i in range(0, len(pop_list))]
+
+    #     for i in result:
+    #         try:
+    #             edited_pop = mngpoppage.edit_multiple_population(i[0], i[1], "edit_population", self.filepath, env)
+
+    #             self.onco_edited_population_val.append(edited_pop)
+    #             LogScreenshot.fLogScreenshot(message=f"Edited populations are: {self.onco_edited_population_val}",
+    #                                          pass_=True, log=True, screenshot=False)
+    #         except Exception:
+    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+    #                                          pass_=False, log=True, screenshot=True)
+    #             raise Exception("Element Not Found")
+
+    # @pytest.mark.C30244
+    # def test_delete_population(self, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getPortalURL(env)
+    #     # Instantiate the Base class
+    #     base = Base(self.driver, extra)         
+    #     # Instantiate the logScreenshot class
+    #     LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of ManagePopulationsPage class
+    #     mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+    #     request.node._tcid = caseid
+    #     request.node._title = "Validate Deletion of Existing Oncology Population"
+        
+    #     loginPage.driver.get(baseURL)
+    #     loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+    #     base.presence_of_admin_page_option("managepopulations_button", env)
+    #     base.go_to_page("managepopulations_button", env)
+
+    #     for i in self.onco_edited_population_val:
+    #         try:
+    #             mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_cancel",
+    #                                                   "manage_pop_table_rows", env)
+    #             mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_ok",
+    #                                                   "manage_pop_table_rows", env)
+    #         except Exception:
+    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+    #                                          pass_=False, log=True, screenshot=True)
+    #             raise Exception("Element Not Found")
 
     @pytest.mark.C38392
     def test_add_non_oncology_population_ui_validation(self, extra, env, request, caseid):
@@ -165,8 +175,8 @@ class Test_ManagePopultionsPage:
                 raise Exception("Element Not Found")
 
     @pytest.mark.C38391
-    def test_add_non_oncology_population(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
+    def test_non_oncology_manage_population(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
         base = Base(self.driver, extra)
@@ -180,10 +190,10 @@ class Test_ManagePopultionsPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate Addition of New Non-Oncology Population"
+        request.node._title = "Validate Manage Population page functionalities for New Non-Oncology Population"
         
         loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
         filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
         base.presence_of_admin_page_option("managepopulations_button", env)
@@ -195,92 +205,103 @@ class Test_ManagePopultionsPage:
             try:
                 added_pop, tempalte_name = mngpoppage.non_onocolgy_add_population(i, "add_population_btn", filepath,
                                                                                   "manage_pop_table_rows", env)
-                self.non_onco_population_val.append(added_pop)
+                # self.non_onco_population_val.append(added_pop)
                 LogScreenshot.fLogScreenshot(message=f"Added Non-Oncology populations are: "
-                                                     f"{self.non_onco_population_val}",
+                                                     f"{added_pop}",
                                              pass_=True, log=True, screenshot=False)
                 mngpoppage.non_onocolgy_add_duplicate_population(i, "add_population_btn", filepath,
                                                                     "manage_pop_table_rows", env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
 
-    @pytest.mark.C38391
-    def test_edit_non_oncology_population(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
-        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
-        # Creating object of ExtendedBase class
-        exbase = ExtendedBase(self.driver, extra)
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ManagePopulationsPage class
-        mngpoppage = ManagePopulationsPage(self.driver, extra)
+                edited_pop = mngpoppage.non_onocolgy_edit_population(i, added_pop, "edit_population", filepath, env)
 
-        request.node._tcid = caseid
-        request.node._title = "Validate Editing the existing Non-Oncology Population"        
-        
-        loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-
-        filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
-        base.presence_of_admin_page_option("managepopulations_button", env)
-        base.go_to_page("managepopulations_button", env)
-
-        pop_list = ['pop1']
-
-        result = [(pop_list[i], self.non_onco_population_val[i]) for i in range(0, len(pop_list))]
-
-        for i in result:
-            try:
-                edited_pop = mngpoppage.non_onocolgy_edit_population(i[0], i[1], "edit_population", filepath, env)
-
-                self.non_onco_edited_population_val.append(edited_pop)
+                # self.non_onco_edited_population_val.append(edited_pop)
                 LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology populations are: "
-                                                     f"{self.non_onco_edited_population_val}",
+                                                     f"{edited_pop}",
                                              pass_=True, log=True, screenshot=False)
+
+                mngpoppage.delete_multiple_population(edited_pop, "delete_population", "delete_population_popup_cancel",
+                                                      "manage_pop_table_rows", env)
+                mngpoppage.delete_multiple_population(edited_pop, "delete_population", "delete_population_popup_ok",
+                                                      "manage_pop_table_rows", env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-    @pytest.mark.C38391
-    def test_delete_non_oncology_population(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)        
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ManagePopulationsPage class
-        mngpoppage = ManagePopulationsPage(self.driver, extra)
+    # @pytest.mark.C38391
+    # def test_edit_non_oncology_population(self, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getPortalURL(env)
+    #     basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+    #     # Instantiate the Base class
+    #     base = Base(self.driver, extra)
+    #     # Creating object of ExtendedBase class
+    #     exbase = ExtendedBase(self.driver, extra)
+    #     # Instantiate the logScreenshot class
+    #     LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of ManagePopulationsPage class
+    #     mngpoppage = ManagePopulationsPage(self.driver, extra)
 
-        request.node._tcid = caseid
-        request.node._title = "Validate Deletion of Existing Non-Oncology Population"
+    #     request.node._tcid = caseid
+    #     request.node._title = "Validate Editing the existing Non-Oncology Population"        
         
-        loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.presence_of_admin_page_option("managepopulations_button", env)
-        base.go_to_page("managepopulations_button", env)
+    #     loginPage.driver.get(baseURL)
+    #     loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
 
-        for i in self.non_onco_edited_population_val:
-            try:
-                mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_cancel",
-                                                      "manage_pop_table_rows", env)
-                mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_ok",
-                                                      "manage_pop_table_rows", env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+    #     filepath = exbase.get_testdata_filepath(basefile, "nononcology_managepopulationdata")
+    #     base.presence_of_admin_page_option("managepopulations_button", env)
+    #     base.go_to_page("managepopulations_button", env)
+
+    #     pop_list = ['pop1']
+
+    #     result = [(pop_list[i], self.non_onco_population_val[i]) for i in range(0, len(pop_list))]
+
+    #     for i in result:
+    #         try:
+    #             edited_pop = mngpoppage.non_onocolgy_edit_population(i[0], i[1], "edit_population", filepath, env)
+
+    #             self.non_onco_edited_population_val.append(edited_pop)
+    #             LogScreenshot.fLogScreenshot(message=f"Edited Non-Oncology populations are: "
+    #                                                  f"{self.non_onco_edited_population_val}",
+    #                                          pass_=True, log=True, screenshot=False)
+    #         except Exception:
+    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+    #                                          pass_=False, log=True, screenshot=True)
+    #             raise Exception("Element Not Found")
+
+    # @pytest.mark.C38391
+    # def test_delete_non_oncology_population(self, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getPortalURL(env)
+    #     # Instantiate the Base class
+    #     base = Base(self.driver, extra)        
+    #     # Instantiate the logScreenshot class
+    #     LogScreenshot = cLogScreenshot(self.driver, extra)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)
+    #     # Creating object of ManagePopulationsPage class
+    #     mngpoppage = ManagePopulationsPage(self.driver, extra)
+
+    #     request.node._tcid = caseid
+    #     request.node._title = "Validate Deletion of Existing Non-Oncology Population"
+        
+    #     loginPage.driver.get(baseURL)
+    #     loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+    #     base.presence_of_admin_page_option("managepopulations_button", env)
+    #     base.go_to_page("managepopulations_button", env)
+
+    #     for i in self.non_onco_edited_population_val:
+    #         try:
+    #             mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_cancel",
+    #                                                   "manage_pop_table_rows", env)
+    #             mngpoppage.delete_multiple_population(i, "delete_population", "delete_population_popup_ok",
+    #                                                   "manage_pop_table_rows", env)
+    #         except Exception:
+    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Populations page",
+    #                                          pass_=False, log=True, screenshot=True)
+    #             raise Exception("Element Not Found")
 
     @pytest.mark.C38394
-    @pytest.mark.C38857
     def test_validate_non_oncology_population_col_IDs(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
