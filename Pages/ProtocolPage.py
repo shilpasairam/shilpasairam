@@ -3,6 +3,7 @@ import os
 import time
 import pandas as pd
 import numpy as np
+import openpyxl
 from selenium.webdriver.support.wait import WebDriverWait
 
 from pathlib import Path
@@ -141,7 +142,8 @@ class ProtocolPage(Base):
 
         # Read the Data required to upload for study types
         stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
-        prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators', 'stdy_type_values')
+        prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
+                                                         'stdy_type_values')
 
         try:
             for i in stdy_data:
@@ -247,7 +249,8 @@ class ProtocolPage(Base):
         # Read the Data required to upload for study types
         # stdy_data = self.get_prisma_data_details(filepath, locatorname)
         stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
-        prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators', 'stdy_type_values')
+        prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
+                                                         'stdy_type_values')
 
         self.refreshpage()
         
@@ -284,16 +287,6 @@ class ProtocolPage(Base):
                 selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
-                # self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
-                # time.sleep(1)
                 for j in prisma_numbers:
                     self.input_text(j[0], j[1]+index, env, UnivWaitFor=5)
 
@@ -317,386 +310,220 @@ class ProtocolPage(Base):
         except Exception:
             raise Exception("Unable to upload PRISMA Excel file")
 
-    def add_picos_details(self, locatorname, filepath, env):
+    def add_picos_details(self, locatorname, filepath, pop_data, stdy_data, env, project):
         expected_status_text = "Saved successfully"
 
-        # Read population details from data sheet
-        # pop_name = self.get_prisma_pop_data(filepath, locatorname)
-        pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
-        stdy_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Study_Types')
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
+        df = pd.read_excel(filepath)
         expected_row_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Row_headers')
         expected_col_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Col_headers')
 
-        time.sleep(2)
         try:
-            for j in stdy_data:
-                # pop_ele = self.select_element("picos_pop_dropdown", env)
-                # select = Select(pop_ele)
-                # select.select_by_visible_text(pop_data[0])
-                selected_pop_val = self.base.selectbyvisibletext("picos_pop_dropdown", pop_data[0], env)
-                time.sleep(1)
+            for i in pop_data:
+                for j in stdy_data:
+                    # Get StudyType and Files path to upload Managae QA Data
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
 
-                # stdy_ele = self.select_element("picos_study_type_dropdown", env)
-                # select = Select(stdy_ele)
-                # select.select_by_visible_text(j)
-                selected_slr_val = self.base.selectbyvisibletext("picos_study_type_dropdown", j, env)
-                time.sleep(1)
+                    protocol_picos_data = []
 
-                actual_row_headers = self.get_texts("row_header_values", env)
+                    for k in stdytype:
+                        if project == "Non-Oncology" and k == 'Clinical-Interventional':
+                            data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
+                                                                       'data_intervention')
+                        elif project == "Non-Oncology" and k == 'Clinical-RWE':
+                            data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data_rwe')
+                        else:
+                            data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data')
 
-                actual_col_headers = self.get_texts("col_header_values", env)
-                # Removing the empty column name
-                actual_col_headers.pop(0)
+                        selected_pop_val = self.base.selectbyvisibletext("picos_pop_dropdown", i[0], env)
+                        time.sleep(1)
 
-                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers,
-                                                                                            actual_row_headers)
+                        selected_slr_val = self.base.selectbyvisibletext("picos_study_type_dropdown", k, env)
+                        time.sleep(1)
 
-                if len(row_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for"
-                                                              f" Population -> {pop_data[0]}, Study Type -> {j}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for "
-                                                              f"Population -> {pop_data[0]}, Study Type -> {j}. "
-                                                              f"Mismatch values are arranged in following order -> "
-                                                              f"Expected row headers, Actual row headers. "
-                                                              f"{row_header_comparison}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, "
-                                    f"Study Type -> {j}.")
+                        actual_row_headers = self.get_texts("row_header_values", env)
 
-                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers,
-                                                                                            actual_col_headers)
+                        actual_col_headers = self.get_texts("col_header_values", env)
+                        # Removing the empty column name
+                        actual_col_headers.pop(0)
 
-                if len(col_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for "
-                                                              f"Population -> {pop_data[0]}, Study Type -> {j}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for "
-                                                              f"Population -> {pop_data[0]}, Study Type -> {j}. "
-                                                              f"Mismatch values are arranged in following order -> "
-                                                              f"Expected col headers, Actual col headers. "
-                                                              f"{col_header_comparison}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {pop_data[0]}, "
-                                    f"Study Type -> {j}.")
+                        row_header_comparison = self.slrreport.list_comparison_between_reports_data(
+                            expected_row_headers, actual_row_headers)
 
-                # Enter values in PICOS page
-                data_eles = self.select_elements('row_data', env)
-                for index, locator in enumerate(data_eles):
-                    # self.input_text(locator, f"Test_Automation_{index}", env)
-                    locator.clear()
-                    locator.send_keys(f"Test_Automation_{index}")
+                        if len(row_header_comparison) == 0:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PICOS page row headers are displayed as expected for Population -> {i[0]}, "
+                                        f"Study Type -> {k}.", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
+                                        f"Study Type -> {k}. Mismatch values are arranged in following order -> "
+                                        f"Expected row headers, Actual row headers. {row_header_comparison}",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
+                                            f"Study Type -> {k}.")
 
-                self.scrollback('picos_page_heading', env)
-                self.jsclick("picos_save_btn", env)
-                time.sleep(1)
-                # actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
-                actual_status_text = self.get_status_text("prisma_excel_status_text", env)
-                # time.sleep(2)
+                        col_header_comparison = self.slrreport.list_comparison_between_reports_data(
+                            expected_col_headers, actual_col_headers)
 
-                if actual_status_text == expected_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> "
-                                                              f"{pop_data[0]}, Study Type -> {j}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding PICOS data "
-                                                              f"for Population -> {pop_data[0]}, Study Type -> {j}. "
-                                                              f"Actual status message is {actual_status_text} and "
-                                                              f"Expected status message is {expected_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
-                                    f"{pop_data[0]}, Study Type -> {j}.")
-                
-                self.refreshpage()
-                time.sleep(2)
+                        if len(col_header_comparison) == 0:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PICOS page col headers are displayed as expected for Population -> {i[0]}, "
+                                        f"Study Type -> {k}.", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Mismatch found in PICOS page col headers for Population -> {i[0]}, "
+                                        f"Study Type -> {k}. Mismatch values are arranged in following order -> "
+                                        f"Expected col headers, Actual col headers. {col_header_comparison}",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
+                                            f"Study Type -> {k}.")
+
+                        # # Enter values in PICOS page
+                        # data_eles = self.select_elements('row_data', env)
+                        # for index, locator in enumerate(data_eles):
+                        #     locator.clear()
+                        #     locator.send_keys(f"Test_Automation_{index}")
+                        # Enter values in PICOS page
+                        picos_data = []
+                        data_eles = self.select_elements('row_data', env)
+                        idx = 0
+                        for locator in data_eles:
+                            if project == "Oncology":
+                                if idx > 2:
+                                    idx = 0
+                            else:
+                                if idx > 3:
+                                    idx = 0
+                            locator.clear()
+                            locator.send_keys(f"{data[idx]}")
+                            picos_data.append(data[idx].split('\n'))
+                            idx += 1
+                        
+                        # This will give one single list with all the picos data added
+                        added_picos_data = list(np.concatenate(picos_data))
+
+                        self.scrollback('picos_page_heading', env)
+                        self.jsclick("picos_save_btn", env)
+                        time.sleep(1)
+
+                        actual_status_text = self.get_status_text("prisma_excel_status_text", env)
+
+                        if actual_status_text == expected_status_text:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Addition of PICOS data is success for Population -> {i[0]}, "
+                                        f"Study Type -> {k}.",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while adding PICOS data for Population -> "
+                                        f"{i[0]}, Study Type -> {k}. Actual status message is {actual_status_text} "
+                                        f"and Expected status message is {expected_status_text}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
+                                            f"{i[0]}, Study Type -> {k}.")
+                        
+                        self.refreshpage()
+                        time.sleep(2)
+                        protocol_picos_data.append(added_picos_data)
+                    return protocol_picos_data
         except Exception:
             raise Exception("Unable to add PICOS data")
 
-    def validate_view_picos_oncology(self, locatorname, filepath, env):
-        expected_status_text = "Saved successfully"
+    def validate_view_picos(self, locatorname, filepath, pop_data, stdy_data, env, project):
+        try:
+            for i in pop_data:
+                for j in stdy_data:
+                    self.go_to_nested_page("protocol_link", "picos", env)
+                    pop = [[i[k]] for k in range(0, len(i))]
+                    stdy = [[j[k]] for k in range(0, len(j))]                    
+                    protocol_picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
 
-        # Read population data values
-        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
-        # Read slrtype data values
-        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
+                    self.base.go_to_page("SLR_Homepage", env)
+                    self.slrreport.select_data(i[0], i[1], env)
+                    self.slrreport.select_data(j[0], j[1], env)
 
-        expected_row_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Row_headers')
-        expected_col_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Col_headers')
-        data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data')
+                    self.click("view_picos_button", env)
+                    time.sleep(1)
 
-        for i in pop_list:
-            for index, j in enumerate(slrtype):
-                self.base.presence_of_admin_page_option("protocol_link", env)
-                self.base.go_to_nested_page("protocol_link", "picos", env)
+                    if project == "Non-Oncology" and self.isdisplayed("view_picos_clinical_intervention_tab", env):
+                        self.click("view_picos_clinical_intervention_tab", env)
+                        view_picos_data = self.get_texts("view_picos_active_tab_data", env)
+                        picos_data_comparison_intvn = self.slrreport.list_comparison_between_reports_data(
+                            protocol_picos_data[0], view_picos_data)
 
-                selected_pop_val = self.base.selectbyvisibletext("picos_pop_dropdown", i[0], env)
-                time.sleep(1)
+                        if len(picos_data_comparison_intvn) == 0:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-Interventional PICOS data under Search LiveSLR -> "
+                                        f"View PICOS section is matching with PICOS data under Protocol -> PICOS "
+                                        f"and Inc-Exc criteria page for Population -> {i[0]}, Study Type -> {j[0]}.",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-Interventional Mismatch found in PICOS data under "
+                                        f"Search LiveSLR -> View PICOS section with PICOS data under Protocol -> "
+                                        f"PICOS and Inc-Exc criteria page for Population -> {i[0]}, Study Type -> "
+                                        f"{j[0]}. Mismatch values are arranged in following order -> Protocol PICOS "
+                                        f"Data, View PICOS Data. {picos_data_comparison_intvn}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Non-Oncology Clinical-Interventional Mismatch found in PICOS data "
+                                            f"under Search LiveSLR -> View PICOS section with PICOS data under "
+                                            f"Protocol -> PICOS and Inc-Exc criteria page for Population -> "
+                                            f"{i[0]}, Study Type -> {j[0]}.")    
+                    if project == "Non-Oncology" and self.isdisplayed("view_picos_clinical_rwe_tab", env):
+                        self.click("view_picos_clinical_rwe_tab", env)
+                        view_picos_data = self.get_texts("view_picos_active_tab_data", env)
+                        picos_data_comparison_rwe = self.slrreport.list_comparison_between_reports_data(
+                            protocol_picos_data[1], view_picos_data)
 
-                if j[0] == 'Quality of Life':
-                    j[0] = 'Quality of life'
-                selected_slr_val = self.base.selectbyvisibletext("picos_study_type_dropdown", j[0], env)
-                time.sleep(1)
+                        if len(picos_data_comparison_rwe) == 0:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-RWE PICOS data under Search LiveSLR -> View PICOS "
+                                        f"section is matching with PICOS data under Protocol -> PICOS and Inc-Exc "
+                                        f"criteria page for Population -> {i[0]}, Study Type -> {j[0]}.",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-RWE Mismatch found in PICOS data under Search "
+                                        f"LiveSLR -> View PICOS section with PICOS data under Protocol -> PICOS "
+                                        f"and Inc-Exc criteria page for Population -> {i[0]}, Study Type -> {j[0]}. "
+                                        f"Mismatch values are arranged in following order -> Protocol PICOS Data, "
+                                        f"View PICOS Data. {picos_data_comparison_rwe}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Non-Oncology Clinical-RWE Mismatch found in PICOS data under Search "
+                                            f"LiveSLR -> View PICOS section with PICOS data under Protocol -> "
+                                            f"PICOS and Inc-Exc criteria page for Population -> "
+                                            f"{i[0]}, Study Type -> {j[0]}.")
+                    else:
+                        view_picos_data = self.get_texts("view_picos_data", env) 
+                        picos_data_comparison = self.slrreport.list_comparison_between_reports_data(
+                            protocol_picos_data[0], view_picos_data)
 
-                actual_row_headers = self.get_texts("row_header_values", env)
+                        if len(picos_data_comparison) == 0:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PICOS data under Search LiveSLR -> View PICOS section is matching with "
+                                        f"PICOS data under Protocol -> PICOS and Inc-Exc criteria page for "
+                                        f"Population -> {i[0]}, Study Type -> {j[0]}.",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Mismatch found in PICOS data under Search LiveSLR -> View PICOS section "
+                                        f"with PICOS data under Protocol -> PICOS and Inc-Exc criteria page for "
+                                        f"Population -> {i[0]}, Study Type -> {j[0]}. Mismatch values are arranged "
+                                        f"in following order -> Protocol PICOS Data, View PICOS Data. "
+                                        f"{picos_data_comparison}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Mismatch found in PICOS data under Search LiveSLR -> View PICOS "
+                                            f"section with PICOS data under Protocol -> PICOS and Inc-Exc criteria "
+                                            f"page for Population -> {i[0]}, Study Type -> {j[0]}.")
+                    self.refreshpage()
+        except Exception:   
+            raise Exception("Error in accessing View PICOS")
 
-                actual_col_headers = self.get_texts("col_header_values", env)
-                # Removing the empty column name
-                actual_col_headers.pop(0)
-
-                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers,
-                                                                                            actual_row_headers)
-
-                if len(row_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for"
-                                                              f" Population -> {i[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for "
-                                                              f"Population -> {i[0]}, Study Type -> {j[0]}. "
-                                                              f"Mismatch values are arranged in following order -> "
-                                                              f"Expected row headers, Actual row headers. "
-                                                              f"{row_header_comparison}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
-                                    f"Study Type -> {j[0]}.")
-
-                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers,
-                                                                                            actual_col_headers)
-
-                if len(col_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for "
-                                                              f"Population -> {i[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for "
-                                                              f"Population -> {i[0]}, Study Type -> {j[0]}. "
-                                                              f"Mismatch values are arranged in following order -> "
-                                                              f"Expected col headers, Actual col headers. "
-                                                              f"{col_header_comparison}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
-                                    f"Study Type -> {j[0]}.")
-
-                # Enter values in PICOS page
-                picos_data = []
-                data_eles = self.select_elements('row_data', env)
-                idx = 0
-                for locator in data_eles:
-                    if idx > 2:
-                        idx = 0
-                    locator.clear()
-                    locator.send_keys(f"{data[idx]}")
-                    picos_data.append(data[idx].split('\n'))
-                    idx += 1
-                
-                # This will give one single list with all the picos data added
-                protocol_picos_data = list(np.concatenate(picos_data))
-
-                self.scrollback('picos_page_heading', env)
-                self.jsclick("picos_save_btn", env)
-                time.sleep(1)
-
-                actual_status_text = self.get_status_text("prisma_excel_status_text", env)
-
-                if actual_status_text == expected_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> "
-                                                              f"{i[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding PICOS data "
-                                                              f"for Population -> {i[0]}, Study Type -> {j[0]}. "
-                                                              f"Actual status message is {actual_status_text} and "
-                                                              f"Expected status message is {expected_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
-                                    f"{i[0]}, Study Type -> {j[0]}.")                
-                self.refreshpage()
-                time.sleep(2)                
-
-                self.base.go_to_page("SLR_Homepage", env)
-                self.slrreport.select_data(i[0], i[1], env)
-
-                if j[0] == 'Quality of life':
-                    j[0] = 'Quality of Life'
-                self.slrreport.select_data(j[0], j[1], env)
-
-                self.click("view_picos_button", env)
-                time.sleep(1)
-
-                view_picos_data = self.get_texts("view_picos_data", env)
-
-                picos_data_comparison = self.slrreport.list_comparison_between_reports_data(protocol_picos_data,
-                                                                                            view_picos_data)
-
-                if len(picos_data_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS data under Search LiveSLR -> View PICOS section "
-                                                              f"is matching with PICOS data under Protocol -> PICOS "
-                                                              f"and Inc-Exc criteria page for Population -> {i[0]}, "
-                                                              f"Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS data under Search LiveSLR -> "
-                                                              f"View PICOS section with PICOS data under Protocol -> "
-                                                              f"PICOS and Inc-Exc criteria page for Population -> "
-                                                              f"{i[0]}, Study Type -> {j[0]}. Mismatch values are "
-                                                              f"arranged in following order -> Protocol PICOS Data, "
-                                                              f"View PICOS Data. {col_header_comparison}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Mismatch found in PICOS data under Search LiveSLR -> View PICOS section with "
-                                    f"PICOS data under Protocol -> PICOS and Inc-Exc criteria page for Population -> "
-                                    f"{i[0]}, Study Type -> {j[0]}.")
-                self.refreshpage()
-
-    def validate_view_picos_nononcology(self, locatorname, filepath, env):
-        expected_status_text = "Saved successfully"
-
-        # Read population data values
-        pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
-        # Read slrtype data values
-        slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
-
-        expected_row_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Row_headers')
-        expected_col_headers = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Col_headers')
-        # data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data')
-
-        for i in pop_list:
-            for index, j in enumerate(slrtype):
-                if j[0] == 'Clinical-Interventional':
-                    data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data_intervention')
-                elif j[0] == 'Clinical-RWE':
-                    data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'data_rwe')                
-                self.base.presence_of_admin_page_option("protocol_link", env)
-                self.base.go_to_nested_page("protocol_link", "picos", env)
-
-                selected_pop_val = self.base.selectbyvisibletext("picos_pop_dropdown", i[0], env)
-                time.sleep(1)
-
-                if j[0] == 'Quality of Life':
-                    j[0] = 'Quality of life'
-                selected_slr_val = self.base.selectbyvisibletext("picos_study_type_dropdown", j[0], env)
-                time.sleep(1)
-
-                actual_row_headers = self.get_texts("row_header_values", env)
-
-                actual_col_headers = self.get_texts("col_header_values", env)
-                # Removing the empty column name
-                actual_col_headers.pop(0)
-
-                row_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_row_headers,
-                                                                                            actual_row_headers)
-
-                if len(row_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page row headers are displayed as expected for"
-                                                              f" Population -> {i[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page row headers for "
-                                                              f"Population -> {i[0]}, Study Type -> {j[0]}. "
-                                                              f"Mismatch values are arranged in following order -> "
-                                                              f"Expected row headers, Actual row headers. "
-                                                              f"{row_header_comparison}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
-                                    f"Study Type -> {j[0]}.")
-
-                col_header_comparison = self.slrreport.list_comparison_between_reports_data(expected_col_headers,
-                                                                                            actual_col_headers)
-
-                if len(col_header_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS page col headers are displayed as expected for "
-                                                              f"Population -> {i[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS page col headers for "
-                                                              f"Population -> {i[0]}, Study Type -> {j[0]}. "
-                                                              f"Mismatch values are arranged in following order -> "
-                                                              f"Expected col headers, Actual col headers. "
-                                                              f"{col_header_comparison}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
-                                    f"Study Type -> {j[0]}.")
-
-                # Enter values in PICOS page
-                picos_data = []
-                data_eles = self.select_elements('row_data', env)
-                idx = 0
-                for locator in data_eles:
-                    if idx > 3:
-                        idx = 0
-                    locator.clear()
-                    locator.send_keys(f"{data[idx]}")
-                    picos_data.append(data[idx].split('\n'))
-                    idx += 1
-                
-                # This will give one single list with all the picos data added
-                protocol_picos_data = list(np.concatenate(picos_data))
-
-                self.scrollback('picos_page_heading', env)
-                self.jsclick("picos_save_btn", env)
-                time.sleep(1)
-
-                actual_status_text = self.get_status_text("prisma_excel_status_text", env)
-
-                if actual_status_text == expected_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"Addition of PICOS data is success for Population -> "
-                                                              f"{i[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding PICOS data "
-                                                              f"for Population -> {i[0]}, Study Type -> {j[0]}. "
-                                                              f"Actual status message is {actual_status_text} and "
-                                                              f"Expected status message is {expected_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
-                                    f"{i[0]}, Study Type -> {j[0]}.")                
-                self.refreshpage()
-                time.sleep(2)                
-
-                self.base.go_to_page("SLR_Homepage", env)
-                self.slrreport.select_data(i[0], i[1], env)
-
-                temp = j[0]
-                if j[0] == 'Clinical-Interventional' or j[0] == 'Clinical-RWE':
-                    j[0] = 'Clinical'
-                if j[0] == 'Quality of life':
-                    j[0] = 'Quality of Life'
-                self.slrreport.select_data(j[0], j[1], env)
-
-                self.click("view_picos_button", env)
-                time.sleep(1)
-
-                if temp == 'Clinical-Interventional':
-                    self.click("view_picos_clinical_intervention_tab", env)                   
-                if temp == 'Clinical-RWE':
-                    self.click("view_picos_clinical_rwe_tab", env)
-
-                view_picos_data = self.get_texts("view_picos_active_tab_data", env)
-
-                picos_data_comparison = self.slrreport.list_comparison_between_reports_data(protocol_picos_data,
-                                                                                            view_picos_data)
-
-                if len(picos_data_comparison) == 0:
-                    self.LogScreenshot.fLogScreenshot(message=f"PICOS data under Search LiveSLR -> View PICOS section "
-                                                              f"is matching with PICOS data under Protocol -> PICOS "
-                                                              f"and Inc-Exc criteria page for Population -> {i[0]}, "
-                                                              f"Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in PICOS data under Search LiveSLR -> "
-                                                              f"View PICOS section with PICOS data under Protocol -> "
-                                                              f"PICOS and Inc-Exc criteria page for Population -> "
-                                                              f"{i[0]}, Study Type -> {j[0]}. Mismatch values are "
-                                                              f"arranged in following order -> Protocol PICOS Data, "
-                                                              f"View PICOS Data. {col_header_comparison}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Mismatch found in PICOS data under Search LiveSLR -> View PICOS section with "
-                                    f"PICOS data under Protocol -> PICOS and Inc-Exc criteria page for Population -> "
-                                    f"{i[0]}, Study Type -> {j[0]}.")
-                self.refreshpage()
-
-    def add_valid_search_strategy_details(self, locatorname, filepath, env, project):
+    def add_valid_search_strategy_details(self, locatorname, filepath, pop_data, stdy_data, env, project):
         expected_excel_upload_status_text = "Search strategy updated successfully"
 
         today = date.today()
@@ -705,81 +532,101 @@ class ProtocolPage(Base):
             day_val = (today - timedelta(10)).strftime("%d")
         else:
             day_val = today.day
-
-        # Read population details from data sheet
-        pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
-        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Files_to_upload',
-                                                   'db_search_val', 'Template_name')
+        
+        df = pd.read_excel(filepath)
         template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
 
         self.refreshpage()
         time.sleep(2)
         try:
-            for j in stdy_data:
-                # pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
-                # select = Select(pop_ele)
-                # select.select_by_visible_text(pop_data[0])
-                selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", pop_data[0], env)
-                time.sleep(1)
+            for i in pop_data:
+                for j in stdy_data:
+                    # Get StudyType and Files path to upload Managae QA Data
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
+                    fileupload = data1_val["Files_to_upload"]
+                    fileupload = [item for item in fileupload if str(item) != 'nan']
+                    db_val = data1_val["db_search_val"]
+                    db_val = [item for item in db_val if str(item) != 'nan']
+                    template = data1_val["Template_name"]
+                    template = [item for item in template if str(item) != 'nan']
 
-                # stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
-                # select = Select(stdy_ele)
-                # select.select_by_visible_text(j[0])
-                selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown", j[0], env)
-                time.sleep(1)
+                    upload_data = [[stdytype[i], fileupload[i], db_val[i], template[i]] for i in
+                                   range(0, len(stdytype))]
+                    table_data = []
+                    entered_db_value = []
 
-                self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
-                # Renaming the filename because there is an issue in downloading filenames with same name multiple
-                # times in headless mode. So as an alternative renaming the file after downloading in each iteration
-                self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
-                                 f"{j[0]}_search-strategy-template_{project}.xlsx")
-                downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
-                if downloaded_template_name == j[3]:
-                    self.LogScreenshot.fLogScreenshot(message=f"Correct Template is downloaded. Template name is "
-                                                              f"{downloaded_template_name}",
-                                                      pass_=True, log=True, screenshot=False)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Mismatch in search strategy template name. Expected "
-                                                              f"Template name is {template_name[0]} and Actual "
-                                                              f"Template name is {downloaded_template_name}",
-                                                      pass_=False, log=True, screenshot=False)
-                    raise Exception(f"Mismatch in search strategy template name.")
+                    for k in upload_data:
+                        selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", i[0], env)
+                        time.sleep(1)
 
-                self.click("searchstrategy_date", env)
-                self.select_calendar_date(day_val)
+                        selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown",
+                                                                         k[0], env)
+                        time.sleep(1)
 
-                self.input_text("searchstrategy_dbsearch", j[2], env)
+                        self.slrreport.generate_download_report("searchstrategy_template_download_btn", env)
+                        # Renaming the filename because there is an issue in downloading filenames with same name
+                        # multiple times in headless mode. So as an alternative renaming the file after downloading
+                        # in each iteration
+                        self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
+                                         f"{k[0]}_search-strategy-template_{project}.xlsx")
+                        downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
+                        if downloaded_template_name == k[3]:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Mismatch in search strategy template name. Expected Template name is "
+                                        f"{template_name[0]} and Actual Template name is {downloaded_template_name}",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception(f"Mismatch in search strategy template name.")
 
-                jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
-                self.jsclick_hide(jscmd)
-                self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env)  # f"{os.getcwd()} + {j[1]}"
+                        self.click("searchstrategy_date", env)
+                        self.select_calendar_date(day_val)
 
-                self.jsclick("searchstrategy_upload_btn", env)
-                time.sleep(2)
+                        self.input_text("searchstrategy_dbsearch", k[2], env)
 
-                actual_excel_upload_status_text = self.get_status_text("searchstrategy_status_text", env)
-                # time.sleep(2)
+                        jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
+                        self.jsclick_hide(jscmd)
+                        self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+k[1], env)
 
-                if actual_excel_upload_status_text == expected_excel_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"Addition of Search strategy data is success for "
-                                                              f"Population -> {pop_data[0]}, Study Type -> {j[0]}.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                              f"Search strategy data for Population -> {pop_data[0]}, "
-                                                              f"Study Type -> {j[0]}. Actual message is "
-                                                              f"{actual_excel_upload_status_text} and Expected "
-                                                              f"message is {expected_excel_upload_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding Search strategy data for "
-                                    f"Population -> {pop_data[0]}, Study Type -> {j[0]}.")
-                
-                self.refreshpage()
-                time.sleep(2)
+                        self.jsclick("searchstrategy_upload_btn", env)
+                        time.sleep(2)
+
+                        actual_excel_upload_status_text = self.get_status_text("searchstrategy_status_text", env)
+                        # time.sleep(2)
+
+                        if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Addition of Search strategy data is success for Population -> {i[0]}, "
+                                        f"Study Type -> {k[0]}.",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while adding Search strategy data for "
+                                        f"Population -> {i[0]}, Study Type -> {k[0]}. Actual message is "
+                                        f"{actual_excel_upload_status_text} and Expected message is "
+                                        f"{expected_excel_upload_status_text}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Unable to find status message while adding Search strategy data for "
+                                            f"Population -> {i[0]}, Study Type -> {k[0]}.")
+                        
+                        uploaded_tabledata = self.export_web_table(
+                            "table table-bordered table-striped table-sm search-terms",
+                            f"uploadedsearchstrategydata_{k[0]}_{project}")
+                        self.refreshpage()
+                        time.sleep(2)
+                        table_data.append(uploaded_tabledata)
+                        entered_db_value.append(k[2])                    
+                    res = [[table_data[i], entered_db_value[i]] for i in range(0, len(table_data))]
+                    return res
         except Exception:
             raise Exception("Unable to add Search strategy data")
-
-    def add_invalid_search_strategy_details(self, locatorname, filepath, env):
+            
+    def add_invalid_search_strategy_details(self, locatorname, filepath, pop_data, stdy_data, env):
         expected_error_text = "Error while updating search strategy: The file extension should belong to this " \
                               "list: [.xls, .xlsx]"
 
@@ -789,187 +636,309 @@ class ProtocolPage(Base):
             day_val = (today - timedelta(10)).strftime("%d")
         else:
             day_val = today.day
+        
+        df = pd.read_excel(filepath)
 
-        # Read population details from data sheet
-        pop_data = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Population')
-        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Invalid_Files',
-                                                   'db_search_val', 'Template_name')
-        template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
-
-        time.sleep(2)
-        try:
-            for j in stdy_data:
-                # pop_ele = self.select_element("searchstrategy_pop_dropdown", env)
-                # select = Select(pop_ele)
-                # select.select_by_visible_text(pop_data[0])
-                selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", pop_data[0], env)
-                time.sleep(1)
-
-                # stdy_ele = self.select_element("searchstrategy_study_type_dropdown", env)
-                # select = Select(stdy_ele)
-                # select.select_by_visible_text(j[0])
-                selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown", j[0], env)
-                self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
-                                                  pass_=True, log=True, screenshot=True)
-                time.sleep(1)
-
-                self.click("searchstrategy_date", env)
-                self.select_calendar_date(day_val)
-
-                self.input_text("searchstrategy_dbsearch", j[2], env)
-
-                jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
-                self.jsclick_hide(jscmd)
-                self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[1], env)
-
-                self.jsclick("searchstrategy_upload_btn", env)
-                time.sleep(2)
-
-                actual_error_text = self.get_status_text("searchstrategy_status_text", env)
-                # time.sleep(2)
-
-                if actual_error_text == expected_error_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"File with invalid format is not uploaded as expected. "
-                                                              f"Invalid file is '{os.path.basename(j[1])}'",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while adding "
-                                                              f"Search strategy data for Population -> {pop_data[0]}, "
-                                                              f"Study Type -> {j[0]}. Actual status message is "
-                                                              f"{actual_error_text} and Expected status message is "
-                                                              f"{expected_error_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception(f"Unable to find status message while adding Search strategy data for Population "
-                                    f"-> {pop_data[0]}, Study Type -> {j[0]}.")
-                
-                self.refreshpage()
-                time.sleep(2)
-        except Exception:
-            raise Exception("Unable to add Search strategy data")
-
-    def validate_view_search_strategy(self, locatorname, filepath, env, prjname):
-        expected_excel_upload_status_text = "Search strategy updated successfully"
-
-        today = date.today()
-        # Manipulating the date values when day point to month end
-        if today.day in [30, 31]:
-            day_val = (today - timedelta(10)).strftime("%d")
-        else:
-            day_val = today.day        
-
-        # Read population details from data sheet
-        pop_data = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
-        stdy_data = self.exbase.get_four_cols_data(filepath, locatorname, 'Sheet1', 'Study_Types',
-                                                   'slrtype_Radio_button', 'Files_to_upload', 'db_search_val')
-
+        self.refreshpage()
         time.sleep(2)
         try:
             for i in pop_data:
                 for j in stdy_data:
-                    self.base.presence_of_admin_page_option("protocol_link", env)
-                    self.base.go_to_nested_page("protocol_link", "searchstrategy", env)
+                    # Get StudyType and Files path to upload Managae QA Data
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
+                    fileupload = data1_val["Invalid_Files"]
+                    fileupload = [item for item in fileupload if str(item) != 'nan']
+                    db_val = data1_val["db_search_val"]
+                    db_val = [item for item in db_val if str(item) != 'nan']
+                    template = data1_val["Template_name"]
+                    template = [item for item in template if str(item) != 'nan']
 
-                    selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", i[0], env)
-                    time.sleep(1)
+                    upload_data = [[stdytype[i], fileupload[i], db_val[i], template[i]] for i in
+                                   range(0, len(stdytype))]
+            
+                    for k in upload_data:
+                        selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", i[0], env)
+                        time.sleep(1)
 
-                    selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown", j[0], env)
-                    time.sleep(1)
+                        selected_slr_val = self.base.selectbyvisibletext("searchstrategy_study_type_dropdown",
+                                                                         k[0], env)
+                        self.LogScreenshot.fLogScreenshot(message=f"Selected Population and SLR Type Details: ",
+                                                          pass_=True, log=True, screenshot=True)
+                        time.sleep(1)
 
-                    self.click("searchstrategy_date", env)
-                    self.select_calendar_date(day_val)
+                        self.click("searchstrategy_date", env)
+                        self.select_calendar_date(day_val)
 
-                    self.input_text("searchstrategy_dbsearch", j[3], env)
+                        self.input_text("searchstrategy_dbsearch", k[2], env)
 
-                    jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
-                    self.jsclick_hide(jscmd)
-                    self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+j[2], env)
+                        jscmd = ReadConfig.get_remove_att_JScommand(17, 'hidden')
+                        self.jsclick_hide(jscmd)
+                        self.input_text("searchstrategy_upload_file", os.getcwd()+"\\"+k[1], env)
 
-                    self.jsclick("searchstrategy_upload_btn", env)
-                    time.sleep(2)
+                        self.jsclick("searchstrategy_upload_btn", env)
+                        time.sleep(2)
 
-                    actual_excel_upload_status_text = self.get_status_text("searchstrategy_status_text", env)
-                    # time.sleep(2)
+                        actual_error_text = self.get_status_text("searchstrategy_status_text", env)
+                        # time.sleep(2)
 
-                    if actual_excel_upload_status_text == expected_excel_upload_status_text:
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"Addition of Search strategy data is success for Population -> {i[0]}, "
-                                    f"Study Type -> {j[0]}.", pass_=True, log=True, screenshot=True)
-                    else:
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"Unable to find status message while adding Search strategy data for "
-                                    f"Population -> {i[0]}, Study Type -> {j[0]}. Actual message is "
-                                    f"{actual_excel_upload_status_text} and Expected message is "
-                                    f"{expected_excel_upload_status_text}", pass_=False, log=True, screenshot=True)
-                        raise Exception(f"Unable to find status message while adding Search strategy data for "
-                                        f"Population -> {i[0]}, Study Type -> {j[0]}.")
-                    
-                    uploaded_filename = self.export_web_table(
-                        "table table-bordered table-striped table-sm search-terms",
-                        f"uploadedsearchstrategydata_{j[0]}_{prjname}")
+                        if actual_error_text == expected_error_text:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"File with invalid format is not uploaded as expected. Invalid file is "
+                                        f"'{os.path.basename(k[1])}'",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while adding Search strategy data for "
+                                        f"Population -> {i[0]}, Study Type -> {k[0]}. Actual status message is "
+                                        f"{actual_error_text} and Expected status message is {expected_error_text}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Unable to find status message while adding Search strategy data for "
+                                            f"Population -> {i[0]}, Study Type -> {k[0]}.")
+                        
+                        self.refreshpage()
+                        time.sleep(2)
+        except Exception:
+            raise Exception("Unable to add Search strategy data")
 
-                    self.refreshpage()
-                    time.sleep(2)
+    def validate_view_search_strategy(self, locatorname, filepath, pop_data, stdy_data, env, prjname):
+        try:
+            for i in pop_data:
+                for j in stdy_data:
+                    self.go_to_nested_page("protocol_link", "searchstrategy", env)
+                    pop = [[i[k]] for k in range(0, len(i))]
+                    stdy = [[j[k]] for k in range(0, len(j))]
+                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy,
+                                                                           env, prjname)
 
                     self.base.go_to_page("SLR_Homepage", env)
                     self.slrreport.select_data(i[0], i[1], env)
-
-                    temp = j[0]
-                    if j[0] == 'Clinical-Interventional' or j[0] == 'Clinical-RWE':
-                        j[0] = 'Clinical'
-                    if j[0] == 'Quality of life':
-                        j[0] = 'Quality of Life'
                     self.slrreport.select_data(j[0], j[1], env)
 
                     self.click("view_searchstrategy_button", env)
                     time.sleep(1)
 
-                    if temp == 'Clinical-Interventional':
-                        self.click("view_search_clinical_intervention_tab", env)                   
-                    if temp == 'Clinical-RWE':
-                        self.click("view_search_clinical_rwe_tab", env)
-
-                    if temp == 'Clinical-Interventional' or temp == 'Clinical-RWE':
-                        j[0] = temp
+                    if prjname == "Non-Oncology" and self.isdisplayed("view_search_clinical_intervention_tab", env):
+                        self.click("view_search_clinical_intervention_tab", env)
                         view_date_val = self.get_text("view_search_date_active_tab_data", env)
-                        database_search_val = self.get_text("view_search_database_active_tab_data", env)
+                        database_search_val_intvn = self.get_text("view_search_database_active_tab_data", env)
+                    
+                        nononco_view_strategy_filename_intvn = self.export_web_table(
+                            "table table-bordered table-striped table-sm search-term",
+                            f"viewsearchstrategydata_Clinical-Interventional_{prjname}")
+
+                        nononco_searchstrategy_data_intvn = pd.read_excel(
+                            f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}', usecols='B:D')
+                        nononco_view_searchstrategy_data_intvn = pd.read_excel(
+                            f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_intvn}', usecols='B:D')
+
+                        nononco_view_searchstrategy_data_intvn.rename(columns={'Unnamed: 0': 'Line'}, inplace=True)
+
+                        if nononco_searchstrategy_data_intvn.equals(nononco_view_searchstrategy_data_intvn) and \
+                                uploaded_data[0][1] == database_search_val_intvn:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-Interventional File contents between Uploaded Search "
+                                        f"Strategy File "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}' "
+                                        f"and View Search Strategy Data "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_intvn}').name}' " 
+                                        f"are matching", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-Interventional Strategy DB value : "
+                                        f"{uploaded_data[0][1]} and View DB value : {database_search_val_intvn}",
+                                pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-Interventional File contents between Uploaded Search "
+                                        f"Strategy File "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}' "
+                                        f"and View Search Strategy Data "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_intvn}').name}' "
+                                        f"are not matching", pass_=False, log=True, screenshot=True)
+                            raise Exception(f"Non-Oncology Clinical-Interventional File contents between Uploaded "
+                                            f"Search Strategy File "
+                                            f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}'"
+                                            f"and View Search Strategy Data "
+                                            f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_intvn}').name}' "
+                                            f"are not matching")                            
+                    if prjname == "Non-Oncology" and self.isdisplayed("view_search_clinical_rwe_tab", env):
+                        self.click("view_search_clinical_rwe_tab", env)
+                        view_date_val = self.get_text("view_search_date_active_tab_data", env)
+                        database_search_val_rwe = self.get_text("view_search_database_active_tab_data", env)
+                    
+                        nononco_view_strategy_filename_rwe = self.export_web_table(
+                            "table table-bordered table-striped table-sm search-term",
+                            f"viewsearchstrategydata_Clinical-RWE_{prjname}")
+
+                        nononco_searchstrategy_data_rwe = pd.read_excel(
+                            f'ActualOutputs//web_table_exports//{uploaded_data[1][0]}', usecols='B:D')
+                        nononco_view_searchstrategy_data_rwe = pd.read_excel(
+                            f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_rwe}', usecols='B:D')
+
+                        nononco_view_searchstrategy_data_rwe.rename(columns={'Unnamed: 0': 'Line'}, inplace=True)
+
+                        if nononco_searchstrategy_data_rwe.equals(nononco_view_searchstrategy_data_rwe) and \
+                                uploaded_data[1][1] == database_search_val_rwe:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-RWE File contents between Uploaded Search "
+                                        f"Strategy File "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[1][0]}').name}' "
+                                        f"and View Search Strategy Data "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_rwe}').name}' "
+                                        f"are matching", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-RWE Strategy DB value : {uploaded_data[1][1]} "
+                                        f"and View DB value : {database_search_val_rwe}",
+                                pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Non-Oncology Clinical-RWE File contents between Uploaded Search Strategy File"
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[1][0]}').name}' "
+                                        f"and View Search Strategy Data "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_rwe}').name}' "
+                                        f"are not matching", pass_=False, log=True, screenshot=True)
+                            raise Exception(f"File contents between Uploaded Search Strategy File "
+                                            f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[1][0]}').name}'"
+                                            f"and View Search Strategy Data "
+                                            f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_rwe}').name}' "
+                                            f"are not matching")
                     else:
                         view_date_val = self.get_text("view_search_date", env)
                         database_search_val = self.get_text("view_search_database", env)
 
-                    view_strategy_filename = self.export_web_table(
-                        "table table-bordered table-striped table-sm search-term",
-                        f"viewsearchstrategydata_{j[0]}_{prjname}")
+                        onco_view_strategy_filename = self.export_web_table(
+                            "table table-bordered table-striped table-sm search-term",
+                            f"viewsearchstrategydata_{j[0]}_{prjname}")
 
-                    searchstrategy_data = pd.read_excel(
-                        f'ActualOutputs//web_table_exports//{uploaded_filename}', usecols='B:D')
-                    view_searchstrategy_data = pd.read_excel(
-                        f'ActualOutputs//web_table_exports//{view_strategy_filename}', usecols='B:D')
+                        onco_searchstrategy_data = pd.read_excel(
+                            f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}', usecols='B:D')
+                        onco_view_searchstrategy_data = pd.read_excel(
+                            f'ActualOutputs//web_table_exports//{onco_view_strategy_filename}', usecols='B:D')
 
-                    view_searchstrategy_data.rename(columns={'Unnamed: 0': 'Line'}, inplace=True)
+                        onco_view_searchstrategy_data.rename(columns={'Unnamed: 0': 'Line'}, inplace=True)
 
-                    if searchstrategy_data.equals(view_searchstrategy_data) and j[3] == database_search_val:
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"File contents between Uploaded Search Strategy File "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').name}' and "
-                                    f"View Search Strategy Data "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').name}' "
-                                    f"are matching", pass_=True, log=True, screenshot=True)
-                    else:
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"Strategy DB value : {j[3]} and View DB value : {database_search_val}",
-                            pass_=False, log=True, screenshot=True)
-                        self.LogScreenshot.fLogScreenshot(
-                            message=f"File contents between Uploaded Search Strategy File "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').name}' and "
-                                    f"View Search Strategy Data "
-                                    f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').name}' "
-                                    f"are not matching", pass_=False, log=True, screenshot=True)
-                        raise Exception(f"File contents between Uploaded Search Strategy File "
-                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_filename}').name}' "
+                        if onco_searchstrategy_data.equals(onco_view_searchstrategy_data) and \
+                                uploaded_data[0][1] == database_search_val:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"File contents between Uploaded Search Strategy File "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}' "
                                         f"and View Search Strategy Data "
-                                        f"'{Path(f'ActualOutputs//web_table_exports//{view_strategy_filename}').name}' "
-                                        f"are not matching")
-                    
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{onco_view_strategy_filename}').name}' "
+                                        f"are matching", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Strategy DB value : {uploaded_data[0][1]} and View DB value : "
+                                        f"{database_search_val}",
+                                pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"File contents between Uploaded Search Strategy File "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}' "
+                                        f"and View Search Strategy Data "
+                                        f"'{Path(f'ActualOutputs//web_table_exports//{onco_view_strategy_filename}').name}' "
+                                        f"are not matching", pass_=False, log=True, screenshot=True)
+                            raise Exception(f"File contents between Uploaded Search Strategy File "
+                                            f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}'"
+                                            f"and View Search Strategy Data "
+                                            f"'{Path(f'ActualOutputs//web_table_exports//{onco_view_strategy_filename}').name}' "
+                                            f"are not matching")
                     self.refreshpage()
         except Exception:
             raise Exception("Unable to add Search strategy data")
+
+    def download_protocol_file(self, locatorname, filepath, pop_data, stdy_data, env, project):
+        expected_data_filepath = self.exbase.get_template_file_details(filepath, locatorname,
+                                                                       "ExpectedSourceTemplateFile")
+
+        try:
+            for i in pop_data:
+                for j in stdy_data:
+                    self.go_to_page("SLR_Dashboard", env)
+                    pop = [[i[k]] for k in range(0, len(i))]
+                    stdy = [[j[k]] for k in range(0, len(j))]
+
+                    self.go_to_nested_page("protocol_link", "picos", env)
+                    picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
+
+                    self.go_to_page("searchstrategy", env)
+                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy, env, project)
+
+                    # Go to live slr page
+                    self.go_to_page("SLR_Homepage", env)
+                    self.slrreport.select_data(f"{i[0]}", f"{i[1]}", env)
+                    self.slrreport.select_data(f"{j[0]}", f"{j[1]}", env)
+                    self.slrreport.generate_download_report("Download_protocol_btn", env)
+                    protocol_filename = self.slrreport.get_and_validate_filename(filepath)
+
+                    self.slrreport.generate_download_report("excel_report", env)
+                    excel_filename = self.slrreport.get_and_validate_filename(filepath)
+
+                    expected_workbook = openpyxl.load_workbook(f'{expected_data_filepath}')
+
+                    for sheet in expected_workbook.sheetnames:
+                        expecteddata = pd.read_excel(f'{expected_data_filepath}', sheet_name=sheet)
+                        actualdata_protocolfile = pd.read_excel(f'ActualOutputs//{protocol_filename}', sheet_name=sheet)
+                        if project == "Non-Oncology" and sheet == "Search Strategies":
+                            sheet = "Search Strategy(ies)"
+                        elif sheet == "Search Strategies":
+                            sheet = "SEARCH STRATEGIES"
+                        actualdata_compexcelfile = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet)
+
+                        # Removing the 'Back To Toc' column from complete excel report to compare the exact data
+                        # with expected file
+                        actualdata_compexcelfile = actualdata_compexcelfile.iloc[:, :-1]
+
+                        if expecteddata.equals(actualdata_protocolfile):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                        f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
+                                        f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are matching",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                        f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
+                                        f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception(
+                                f"From '{sheet}' sheet -> File contents between Expected File "
+                                f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel Report "
+                                f"'{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching")
+
+                        '''Renaming the Column name as there is slight difference in Column header in Complete 
+                        Excel report for INC-EXC and SEARCH STRATEGIES sheets'''
+                        if project == "Oncology":
+                            if sheet == "INC-EXC":
+                                expecteddata.rename(columns={'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1': f'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1 {j[0]}'}, inplace=True)
+                            if sheet == "SEARCH STRATEGIES":
+                                expecteddata.rename(columns={'SEARCH STRATEGY: Test_Automation_1': f'SEARCH STRATEGY: Test_Automation_1 {j[0]}'}, inplace=True)
+                        
+                        if project == "Non-Oncology":
+                            if sheet == "PICOS":
+                                expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3': 'PICOS: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
+                                expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3.1': 'PICOS: Test_NonOncology_Automation_3 Clinical.1'}, inplace=True)
+                            if sheet == "Inclusion Exclusion Criteria":
+                                expecteddata.rename(columns={'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3': 'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
+                            if sheet == "Search Strategy(ies)":
+                                expecteddata.rename(columns={'Search Strategy(ies): Test_NonOncology_Automation_3': 'Search Strategy(ies): Test_NonOncology_Automation_3 Clinical'}, inplace=True)
+                        
+                        if expecteddata.equals(actualdata_compexcelfile):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                        f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
+                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are matching",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                        f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
+                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are not matching",
+                                pass_=False, log=True, screenshot=False)
+                            raise Exception(
+                                f"From '{sheet}' sheet -> File contents between Expected File "
+                                f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel Report "
+                                f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching")
+
+        except Exception:
+            raise Exception("Error while validating Protocol Excel File")
