@@ -137,7 +137,8 @@ class ExcludedStudiesPage(Base):
                     # expected_table_values.append(selected_update_val)
                     # time.sleep(1)
 
-                    '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for 
+                    '''Workaround for LIVEHTA-2410 bug. 
+                    Below JavaScript command is to manipulate the input type='file' tag to make it visible for 
                     selenium to upload the file'''
                     cmd = "document.getElementsByTagName('style')[7].textContent='.file-input[_ngcontent-org-c124]" \
                         "{display:visible}'"
@@ -207,7 +208,8 @@ class ExcludedStudiesPage(Base):
                         # expected_table_values.append(selected_update_val)
                         # time.sleep(1)
 
-                        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible 
+                        '''Workaround for LIVEHTA-2410 bug. 
+                        Below JavaScript command is to manipulate the input type='file' tag to make it visible 
                         for selenium to upload the file'''
                         cmd = "document.getElementsByTagName('style')[7].textContent='.file-input" \
                               "[_ngcontent-org-c124]{display:visible}'"
@@ -311,7 +313,8 @@ class ExcludedStudiesPage(Base):
                         # expected_table_values.append(selected_update_val)
                         # time.sleep(1)
 
-                        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible 
+                        '''Workaround for LIVEHTA-2410 bug.
+                        Below JavaScript command is to manipulate the input type='file' tag to make it visible 
                         for selenium to upload the file'''
                         cmd = "document.getElementsByTagName('style')[7].textContent='.file-input" \
                               "[_ngcontent-org-c124]{display:visible}'"
@@ -498,7 +501,8 @@ class ExcludedStudiesPage(Base):
                         # expected_table_values.append(selected_update_val)
                         # time.sleep(1)
 
-                        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible 
+                        '''Workaround for LIVEHTA-2410 bug.
+                        Below JavaScript command is to manipulate the input type='file' tag to make it visible 
                         for selenium to upload the file'''
                         cmd = "document.getElementsByTagName('style')[7].textContent='.file-input" \
                               "[_ngcontent-org-c124]{display:visible}'"
