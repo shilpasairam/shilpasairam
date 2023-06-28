@@ -165,7 +165,7 @@ class Test_ProtocolPage:
 
     @pytest.mark.C37883
     @pytest.mark.C38341
-    def test_nononcology_upload_prisma_details(self, extra, env, request, caseid):
+    def test_nononcology_prisma_details(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -180,10 +180,10 @@ class Test_ProtocolPage:
         prismapage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology : Validate Uploading PRISMA details under Protocol -> PRISMA Page"
+        request.node._title = "Non-Oncology : Validate PRISMA functionalities details under Protocol -> PRISMA Page"
 
-        LogScreenshot.fLogScreenshot(message=f"***Protocol -> PRISMAs page functionality validation for "
-                                             f"Non-Oncology population is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Upload and Deletion of PRISMA details validation for Non-Oncology "
+                                             f"population is completed***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -203,51 +203,7 @@ class Test_ProtocolPage:
                 prismapage.upload_prisma_image(i, filepath, index+1, env)
 
                 prismapage.override_prisma_details(i, filepath, index+1, env)
-                
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Error in accessing PRISMA page")
-        
-        LogScreenshot.fLogScreenshot(message=f"***Uploading PRISMA details validation for Non-Oncology "
-                                             f"population is completed***",
-                                     pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C37883
-    @pytest.mark.C38341
-    def test_nononcology_del_prisma_details(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
-        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
-        # Creating object of ExtendedBase class
-        exbase = ExtendedBase(self.driver, extra)        
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of ImportPublicationPage class
-        prismapage = ProtocolPage(self.driver, extra)
-
-        request.node._tcid = caseid
-        request.node._title = "Non-Oncology : Validate Deleting PRISMA details under Protocol -> PRISMA Page"
-
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology "
-                                             f"population is started***",
-                                     pass_=True, log=True, screenshot=False)
-        
-        loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-
-        filepath = exbase.get_testdata_filepath(basefile, "nononcology_prisma")
-        
-        base.presence_of_admin_page_option("protocol_link", env)
-        base.go_to_nested_page("protocol_link", "prismas", env)
-
-        pop_val = ['pop1']
-
-        for i in pop_val:
-            try:
                 prismapage.del_prisma_excel_file(i, "prisma_excel_delete_btn", "prisma_excel_delete_popup",
                                                  filepath, env)
                 
@@ -256,7 +212,7 @@ class Test_ProtocolPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing PRISMA page")
         
-        LogScreenshot.fLogScreenshot(message=f"***Deletion of PRISMA details validation for Non-Oncology "
+        LogScreenshot.fLogScreenshot(message=f"***Upload and Deletion of PRISMA details validation for Non-Oncology "
                                              f"population is completed***",
                                      pass_=True, log=True, screenshot=False)
 
@@ -390,7 +346,9 @@ class Test_ProtocolPage:
         
         filepath = exbase.get_testdata_filepath(basefile, "download_protocol_excel")
 
-        pop_val = ['pop1', 'pop2', 'pop3', 'pop4', 'pop5']
+        '''As part of LIVEHTA-2544 this is applicable only for Non-Oncology projects, Hence commenting out
+        the Validation related to Oncology projects'''
+        pop_val = ['pop5'] # ['pop1', 'pop2', 'pop3', 'pop4', 'pop5']
 
         for i in pop_val:
             try:
