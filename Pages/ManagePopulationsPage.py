@@ -95,7 +95,9 @@ class ManagePopulationsPage(Base):
         for j in new_pop_data:
             self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
-        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+        '''Workaround for LIVEHTA-2410 bug.
+        Below JavaScript command is to manipulate the input type='file' tag to make it visible 
+        for selenium to upload the file'''
         cmd = "document.getElementsByTagName('style')[7].textContent='.file-input[_ngcontent-yaf-c116]" \
               "{display:visible}'"
         self.jsclick_hide(cmd)
@@ -173,7 +175,9 @@ class ManagePopulationsPage(Base):
         for j in edit_pop_data:
             self.input_text(j[0], f'{j[1]}', env, UnivWaitFor=10)
             
-        '''Below JavaScript command is to manipulate the input type='file' tag to make it visible for selenium to upload the file'''
+        '''Workaround for LIVEHTA-2410 bug.
+        Below JavaScript command is to manipulate the input type='file' tag to make it visible 
+        for selenium to upload the file'''
         cmd = "document.getElementsByTagName('style')[7].textContent='.file-input[_ngcontent-slh-c124]" \
               "{display:visible}'"
         self.jsclick_hide(cmd)

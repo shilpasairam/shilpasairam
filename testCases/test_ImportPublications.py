@@ -340,7 +340,7 @@ class Test_ImportPublicationPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38858
-    def test_nononcology_upload_template_failure_for_invaid_col_mapping(self, extra, env, request, caseid):
+    def test_nononcology_upload_template_failure_for_invalid_col_mapping(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -383,7 +383,7 @@ class Test_ImportPublicationPage:
                                      pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C39016
-    def test_nononcology_upload_template_failure_for_invaid_data(self, extra, env, request, caseid):
+    def test_nononcology_upload_template_failure_for_invalid_data(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
