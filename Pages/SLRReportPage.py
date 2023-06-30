@@ -2260,6 +2260,51 @@ class SLRReport(Base):
         self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Study Designs in LiveSLR -> Select Study Design section "
                                                   f"is completed***", pass_=True, log=True, screenshot=False)
 
+    def validate_content_with_multiple_extractions_upload(self, locatorname, filepath, pop_data, stdy_data, env, project):
+        source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)
+
+        try:
+            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Uploading the Second extraction file**", pass_=True, log=True, screenshot=False)
+            if project == 'Non-Oncology':
+                self.imppubpage.upload_file_with_success('scenario1_1', filepath, env)
+            if project == 'Oncology':
+                self.imppubpage.upload_file_with_success('scenario2_1', filepath, env)
+
+            self.refreshpage()
+            time.sleep(2)
+            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Content validation from downloaded reports is started**", pass_=True, log=True, screenshot=False)
+            self.go_to_page("SLR_Homepage", env)
+            for i in pop_data:
+                self.select_data(i[0], i[1], env)
+                for index, j in enumerate(stdy_data):
+                    self.select_data(j[0], j[1], env)
+
+                    self.generate_download_report("excel_report", env)
+                    excel_filename = self.get_and_validate_filename(filepath)
+
+                    self.preview_result("preview_results", env)
+                    self.table_display_check("Table", env)
+                    self.generate_download_report("Export_as_excel", env)
+                    webexcel_filename = self.get_and_validate_filename(filepath)
+                    self.back_to_report_page("Back_to_search_page", env)
+
+                    if project == "Oncology":
+                        colname = "Study Identifier"
+                    if project == "Non-Oncology":
+                        colname = "LiveSLR Study ID"
+                    self.excel_content_validation(source_template, index, webexcel_filename, excel_filename, colname)
+            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Content validation from downloaded reports is completed**", pass_=True, log=True, screenshot=False)
+
+            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Removing the Second uploaded extraction file**", pass_=True, log=True, screenshot=False)
+            self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+            if project == 'Non-Oncology':
+                self.imppubpage.delete_file('scenario1_1', filepath, "file_status_popup_text", "upload_table_rows", env)
+            if project == 'Oncology':
+                self.imppubpage.delete_file('scenario2_1', filepath, "file_status_popup_text", "upload_table_rows", env)
+            
+        except Exception:
+            raise Exception("Unable to select element")
+
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",

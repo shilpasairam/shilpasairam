@@ -122,7 +122,7 @@ class LiveNMA(Base):
             self.LogScreenshot.fLogScreenshot(message=f"LiveNMA Page Opened successfully",
                                               pass_=True, log=True, screenshot=True)
         except Exception:
-            self.LogScreenshot.fLogScreenshot(message=f"LiveNMA Page load is not successful. Please try againa",
+            self.LogScreenshot.fLogScreenshot(message=f"LiveNMA Page load is not successful. Please try again",
                                               pass_=False, log=True, screenshot=True)
             raise Exception("Login Unsuccessful")
 
