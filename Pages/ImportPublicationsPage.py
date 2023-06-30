@@ -23,7 +23,7 @@ class ImportPublicationPage(Base):
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
         # Creating object of ExtendedBase class
-        self.exbase = ExtendedBase(self.driver, extra)        
+        self.exbase = ExtendedBase(self.driver, extra)       
         # Instantiate the logger class
         self.logger = LogGen.loggen()
         # Instantiate the logScreenshot class
@@ -34,7 +34,7 @@ class ImportPublicationPage(Base):
     # Reading Population data for Excluded Studies Page
     def get_file_details_to_upload(self, filepath, locatorname):
         df = pd.read_excel(filepath)
-        pop_name = df.loc[df['Name'] == locatorname]['Population_name'].dropna().to_list()
+        pop_name = df.loc[df['Name'] == locatorname]['Population'].dropna().to_list()
         path = df.loc[df['Name'] == locatorname]['Files_to_upload'].dropna().to_list()
         filename = df.loc[df['Name'] == locatorname]['Expected_File_names'].dropna().to_list()
         result = [[pop_name[i], os.getcwd() + path[i], filename[i]] for i in range(0, len(pop_name))]
@@ -46,10 +46,6 @@ class ImportPublicationPage(Base):
         pop_data = self.get_file_details_to_upload(filepath, locatorname)
 
         for i in pop_data:
-            # ele = self.select_element("select_update_dropdown", env)
-            # time.sleep(2)
-            # select = Select(ele)
-            # select.select_by_visible_text(i[0])
             selected_update_val = self.base.selectbyvisibletext("select_update_dropdown", i[0], env)
 
             # Fetching total rows count before uploading a new file
@@ -64,9 +60,8 @@ class ImportPublicationPage(Base):
             try:
                 self.jsclick("upload_button", env)
                 time.sleep(2)
-                # actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+
                 actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
-                # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
@@ -90,10 +85,7 @@ class ImportPublicationPage(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the "
                                                               f"extraction file.",
                                                       pass_=True, log=True, screenshot=False)
-                    # result = []
-                    # td1 = self.select_elements('upload_table_row_1', env)
-                    # for m in td1:
-                    #     result.append(m.text)
+
                     result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
@@ -119,7 +111,9 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                     self.click("back_to_view_action_btn", env, UnivWaitFor=10)
                 else:
-                    raise Exception("Error while uploading the extraction file")
+                    self.LogScreenshot.fLogScreenshot(message=f'Unable to find the File uploading status icon.',
+                                                      pass_=True, log=True, screenshot=True)
+                    raise Exception("Unable to find the File uploading status icon")
                 self.refreshpage()
                 time.sleep(5)
             except Exception:
@@ -140,10 +134,6 @@ class ImportPublicationPage(Base):
         expected_err_msg = [[col1_data[i], col2_data[i]] for i in range(0, len(col1_data))]        
 
         for i in pop_data:
-            # ele = self.select_element("select_update_dropdown", env)
-            # time.sleep(2)
-            # select = Select(ele)
-            # select.select_by_visible_text(i[0])
             selected_update_val = self.base.selectbyvisibletext("select_update_dropdown", i[0], env)
 
             # Fetching total rows count before uploading a new file
@@ -158,9 +148,8 @@ class ImportPublicationPage(Base):
             try:
                 self.jsclick("upload_button", env)
                 time.sleep(2)
-                # actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
+
                 actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
-                # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
@@ -181,10 +170,6 @@ class ImportPublicationPage(Base):
                                                   pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
-                    # result = []
-                    # td1 = self.select_elements('upload_table_row_1', env)
-                    # for m in td1:
-                    #     result.append(m.text)
                     result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
@@ -201,18 +186,10 @@ class ImportPublicationPage(Base):
                                                       pass_=True, log=True, screenshot=True)
                     self.click("view_action", env, UnivWaitFor=10)
                     time.sleep(2)
-                    # td1 = self.select_elements('error_data_table_col1', env)
-                    # error_data_col1 = []
-                    # for k in td1:
-                    #     error_data_col1.append(k.text)
                     error_data_col1 = self.get_texts('error_data_table_col1', env)
                     # Converting list values from string to int
                     error_data_col1 = [int(x) for x in error_data_col1]
 
-                    # td2 = self.select_elements('error_data_table_col2', env)
-                    # error_data_col2 = []
-                    # for v in td2:
-                    #     error_data_col2.append(v.text)
                     error_data_col2 = self.get_texts('error_data_table_col2', env)
                     
                     actual_err_msg = [[error_data_col1[i], error_data_col2[i]] for i in range(0, len(error_data_col1))]
@@ -260,10 +237,6 @@ class ImportPublicationPage(Base):
         time.sleep(5)
 
         for i in pop_data:
-            # result = []
-            # td1 = self.select_elements('upload_table_row_1', env)
-            # for m in td1:
-            #     result.append(m.text)
             result = self.get_texts('upload_table_row_1', env)
             
             # Check the uploaded filename before deleting the record
@@ -277,7 +250,6 @@ class ImportPublicationPage(Base):
                 self.click("delete_file_popup", env)
                 time.sleep(4)
 
-                # actual_delete_status_text = self.get_text(msg_popup, env, UnivWaitFor=30)
                 actual_delete_status_text = self.get_status_text(msg_popup, env)
                 
                 if actual_delete_status_text == expected_delete_status_text:
@@ -316,63 +288,10 @@ class ImportPublicationPage(Base):
     def upload_file_for_same_population(self, locatorname, filepath, env):
         self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
                                                   f"is started***", pass_=True, log=True, screenshot=False)
-        # expected_err_msg = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'error_msg')
-        
-        # # Read population details from data sheet
-        # pop_data = self.get_file_details_to_upload(filepath, locatorname)
 
         try:
             self.upload_file_with_errors(locatorname, filepath, env)
             self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
-            # for i in pop_data:
-            #     ele = self.select_element("select_update_dropdown", env)
-            #     time.sleep(2)
-            #     select = Select(ele)
-            #     select.select_by_visible_text(i[0])
-
-            #     time.sleep(1)
-            #     actual_status_text = self.get_status_text("file_status_popup_text", env)                                                    
-
-            #     if actual_status_text == expected_err_msg[0]:
-            #         self.LogScreenshot.fLogScreenshot(message=f"User is not allowed to upload extraction file for "
-            #                                                   f"existing population with same update.",
-            #                                           pass_=True, log=True, screenshot=True)
-            #     else:
-            #         self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-            #                                                   f"Extraction File for existing Population : {i[0]}. "
-            #                                                   f"Actual status message is {actual_status_text} and "
-            #                                                   f"Expected status message is {expected_err_msg[0]}",
-            #                                           pass_=False, log=True, screenshot=True)
-            #         raise Exception("Unable to find status message while uploading Extraction File for existing "
-            #                         "Population with same update")
-                
-            #     jscmd = ReadConfig.get_remove_att_JScommand(16, 'hidden')
-            #     self.jsclick_hide(jscmd)
-            #     self.input_text("add_file", i[1], env)
-            
-            #     if not self.isenabled("upload_button", env):
-            #         self.LogScreenshot.fLogScreenshot(message=f"Upload file button is not clickable while trying to "
-            #                                                   f"upload extraction file for existing population with "
-            #                                                   f"same update as expected.",
-            #                                           pass_=True, log=True, screenshot=True)
-            #         self.LogScreenshot.fLogScreenshot(message=f"*****Hence Performing the delete operation for the "
-            #                                                   f"successfully uploaded record and trying to re-upload "
-            #                                                   f"the extraction for the same population.*****",
-            #                                           pass_=True, log=True, screenshot=False)
-            #         self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
-            #         self.upload_file_with_success(locatorname, filepath, env)
-            #     else:
-            #         self.jsclick("upload_button", env)
-            #         time.sleep(2)
-            #         actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
-            #         self.LogScreenshot.fLogScreenshot(message=f"Upload file button is clickable. File is uploaded "
-            #                                                   f"with success toaster message "
-            #                                                   f"'{actual_upload_status_text}'",
-            #                                           pass_=False, log=True, screenshot=True)
-            #         raise Exception(f"Upload file button is clickable for the Population which has already update "
-            #                         f"which is not expected")
-            #     self.refreshpage()
-            #     time.sleep(5)
         except Exception:
             raise Exception("Error while uploading")
         

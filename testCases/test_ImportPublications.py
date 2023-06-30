@@ -4,22 +4,23 @@ Test will validate the Import publications page
 
 import os
 import pytest
+import openpyxl
+import pandas as pd
 from Pages.Base import Base
 from Pages.ExtendedBasePage import ExtendedBase
 from Pages.ImportPublicationsPage import ImportPublicationPage
 
 from Pages.LoginPage import LoginPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
+from Pages.SLRReportPage import SLRReport
 from utilities.logScreenshot import cLogScreenshot
 from utilities.readProperties import ReadConfig
 
 
 @pytest.mark.usefixtures("init_driver")
 class Test_ImportPublicationPage:
-    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    # filepath = ReadConfig.getimportpublicationsdata()
 
     @pytest.mark.C30246
     def test_upload_extraction_template_validdata(self, extra, env, request, caseid):
@@ -253,6 +254,116 @@ class Test_ImportPublicationPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
     '''
+
+    @pytest.mark.C39864
+    def test_upload_extraction_template_with_invalid_date_value(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)        
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Invalid data for Update Date column."
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Invalid data for Update Date"
+                                             f" validation is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.presence_of_admin_page_option("importpublications_button", env)
+        base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+
+        pop_list = ['pop6']
+
+        for i in pop_list:
+            try:
+                imppubpage.upload_file_with_errors(i, filepath, env)
+                imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+        
+        LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Invalid data for Update Date"
+                                             f" validation is completed***",
+                                     pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C39873
+    def test_upload_template_and_excel_content_validation(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Oncology - Validate Update date under Study Characteristics"
+
+        LogScreenshot.fLogScreenshot(message=f"***Validation of Update date for Oncology projects is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        scenarios = ['pop1']
+
+        for scenario in scenarios:
+            try:
+                # Read population data values
+                pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
+                # Read slrtype data values
+                slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
+                # Sorting the SLR Type data to execute orderwise
+                slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
+                # Source File which is needed for comparison
+                source_template = slrreport.get_source_template(filepath, 'ExpectedSourceTemplateFile')
+
+                base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+                imppubpage.upload_file_with_success(scenario, filepath, env)
+
+                base.go_to_page("SLR_Homepage", env)
+                for i in pop_list:
+                    slrreport.select_data(i[0], i[1], env)
+                    for index, j in enumerate(slrtype_):
+                        slrreport.select_data(j[0], j[1], env)
+
+                        slrreport.generate_download_report("excel_report", env)
+                        excel_filename = slrreport.get_and_validate_filename(filepath)
+
+                        slrreport.preview_result("preview_results", env)
+                        slrreport.table_display_check("Table", env)
+                        slrreport.generate_download_report("Export_as_excel", env)
+                        webexcel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.back_to_report_page("Back_to_search_page", env)
+
+                        slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "Study Identifier")
+
+                base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+                imppubpage.delete_file(scenario, filepath, "file_status_popup_text", "upload_table_rows", env)
+                
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error while validating Update date for Oncology projects",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error while validating Update date for Oncology projects")
+        
+        LogScreenshot.fLogScreenshot(message=f"***Validation of Update date for Oncology projects is completed***",
+                                     pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38840
     def test_nononcology_upload_and_del_extraction_template_success(self, extra, env, request, caseid):

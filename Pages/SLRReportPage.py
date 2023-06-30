@@ -410,14 +410,25 @@ class SLRReport(Base):
                 raise Exception(f"'Back To Toc' option is not present in '{i}' sheet")
             
             # Check the presence of column names at row 4
-            df = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=i, skiprows=3)
-            if first_col in df.columns.values:
-                self.LogScreenshot.fLogScreenshot(message=f"Column names are present at row 4.",
+            # df = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=i, skiprows=3)
+            df1 = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=i, skiprows=3)
+            df2 = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=i, skiprows=3)
+            if first_col in df1.columns.values and first_col in df2.columns.values:
+                self.LogScreenshot.fLogScreenshot(message=f"Column names are present at row 4 in Standard Excel and Complete Excel Report.",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Column names are not present at row 4",
+                self.LogScreenshot.fLogScreenshot(message=f"Column names are not present at row 4 in Standard Excel and Complete Excel Report.",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Column names are not present at row 4")           
+                raise Exception(f"Column names are not present at row 4 in Standard Excel and Complete Excel Report")
+
+            # Check the presence of Update date column as part of LIVEHTA-1820 story
+            if "Update date (yyyy-mm-dd)" in df1.columns.values and "Update date (yyyy-mm-dd)" in df2.columns.values:
+                self.LogScreenshot.fLogScreenshot(message=f"'Update date (yyyy-mm-dd)' Column is present in Standard Excel and Complete Excel Report.",
+                                                pass_=True, log=True, screenshot=False)
+            else:
+                self.LogScreenshot.fLogScreenshot(message=f"'Update date (yyyy-mm-dd)' Column is absent in Standard Excel and Complete Excel Report.",
+                                                pass_=False, log=True, screenshot=False)
+                raise Exception(f"'Update date (yyyy-mm-dd)' Column is absent in Standard Excel and Complete Excel Report")           
 
         # Actual excel content validation step starts here
         source_data = openpyxl.load_workbook(f'{source_template[0]}')
