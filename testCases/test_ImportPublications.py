@@ -536,8 +536,8 @@ class Test_ImportPublicationPage:
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C37416
-    def test_nononcology_upload_extraction_template_for_same_update(self, extra, env, request, caseid):
+    @pytest.mark.C39841
+    def test_upload_extraction_template_for_same_update(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
         # Instantiate the Base class
@@ -552,11 +552,7 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology Import Tool - Validate No duplicate uploads have been made for the same " \
-                              "update in the same Non-Oncology population "
-
-        LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
-                                     pass_=True, log=True, screenshot=False)
+        request.node._title = "Import Tool - Validate duplicate uploads have been made for the same update in the same Oncology or Non-Oncology population "
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -565,13 +561,20 @@ class Test_ImportPublicationPage:
         base.presence_of_admin_page_option("importpublications_button", env)
         base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
 
-        pop_list = ['pop5']
+        pop_list = ['pop5', 'pop6']
 
         for i in pop_list:
             try:
+                # Read Project name
+                project_name = exbase.get_individual_col_data(filepath, i, 'Sheet1', 'Project')
+
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is started***", pass_=True, log=True, screenshot=False)
+
                 imppubpage.upload_file_with_success(i, filepath, env)
-                imppubpage.upload_file_for_same_population(i, filepath, env)
+                imppubpage.upload_file_for_same_population(i, filepath, env, project_name[0])
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
+
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is completed***", pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                              pass_=False, log=True, screenshot=True)

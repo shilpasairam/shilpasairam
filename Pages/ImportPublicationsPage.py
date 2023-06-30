@@ -93,7 +93,9 @@ class ImportPublicationPage(Base):
                                                                   f'uploaded: {i[2]}',
                                                           pass_=True, log=True, screenshot=False)
                     else:
-                        raise Exception("Wrong file is uploaded")
+                        self.LogScreenshot.fLogScreenshot(message=f'Expected filename is not found. Expected filename is: {i[2]}',
+                                                          pass_=True, log=True, screenshot=False)
+                        raise Exception(f"Expected filename is not found. Expected filename is: {i[2]}")
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"Record count is not incremented after uploading the "
                                                               f"extraction file.",
@@ -170,6 +172,10 @@ class ImportPublicationPage(Base):
                                                   pass_=True, log=True, screenshot=False)
 
                 if len(table_rows_after) > len(table_rows_before) != len(table_rows_after):
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the "
+                                                              f"extraction file.",
+                                                      pass_=True, log=True, screenshot=False)
+
                     result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
@@ -177,7 +183,14 @@ class ImportPublicationPage(Base):
                                                                   f'being uploaded: {i[2]}',
                                                           pass_=True, log=True, screenshot=False)
                     else:
-                        raise Exception("Wrong file is uploaded")
+                        self.LogScreenshot.fLogScreenshot(message=f'Expected filename is not found. Expected filename is: {i[2]}',
+                                                          pass_=True, log=True, screenshot=False)
+                        raise Exception(f"Expected filename is not found. Expected filename is: {i[2]}")
+                else:
+                    self.LogScreenshot.fLogScreenshot(message=f"Record count is not incremented after uploading the "
+                                                              f"extraction file.",
+                                                      pass_=False, log=True, screenshot=False)
+                    raise Exception(f"Record count is not incremented after uploading the extraction file.")
 
                 # Validating the upload status icon
                 time.sleep(10)
@@ -285,15 +298,19 @@ class ImportPublicationPage(Base):
                                                   pass_=False, log=True, screenshot=True)                
                 raise Exception(f"Unable to find the uploaded Filename '{i[2]}' in first row of the table.")
 
-    def upload_file_for_same_population(self, locatorname, filepath, env):
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
-                                                  f"is started***", pass_=True, log=True, screenshot=False)
+    def upload_file_for_same_population(self, locatorname, filepath, env, project):
+        self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Upload Extraction File for the existing population validation "
+                                                  f"is started**", pass_=True, log=True, screenshot=False)
 
         try:
-            self.upload_file_with_errors(locatorname, filepath, env)
-            self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+            if project == 'Oncology':
+                self.upload_file_with_success(locatorname, filepath, env)
+                self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+            if project == 'Non-Oncology':
+                self.upload_file_with_errors(locatorname, filepath, env)
+                self.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
         except Exception:
             raise Exception("Error while uploading")
         
-        self.LogScreenshot.fLogScreenshot(message=f"***Upload Extraction File for the existing population validation "
-                                                  f"is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Upload Extraction File for the existing population validation "
+                                                  f"is completed**", pass_=True, log=True, screenshot=False)
