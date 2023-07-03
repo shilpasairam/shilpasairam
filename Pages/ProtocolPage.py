@@ -534,7 +534,6 @@ class ProtocolPage(Base):
             day_val = today.day
         
         df = pd.read_excel(filepath)
-        template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
 
         self.refreshpage()
         time.sleep(2)
@@ -572,15 +571,16 @@ class ProtocolPage(Base):
                         # in each iteration
                         self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
                                          f"{k[0]}_search-strategy-template_{project}_{fname}.xlsx")
+                        expected_template_name = f"{k[3]}_{fname}.xlsx"
                         downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
-                        if downloaded_template_name == k[3]:
+                        if downloaded_template_name == expected_template_name:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
                                 pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"Mismatch in search strategy template name. Expected Template name is "
-                                        f"{template_name[0]} and Actual Template name is {downloaded_template_name}",
+                                        f"{expected_template_name} and Actual Template name is {downloaded_template_name}",
                                 pass_=False, log=True, screenshot=False)
                             raise Exception(f"Mismatch in search strategy template name.")
 
