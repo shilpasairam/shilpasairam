@@ -16,21 +16,19 @@ from utilities.logScreenshot import cLogScreenshot
 
 @pytest.mark.usefixtures("init_driver")
 class Test_Search_LiveSLR:
-    # baseURL = ReadConfig.getApplicationURL()
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    # filepath = ReadConfig.getslrtestdata()
     testdata_723 = ReadConfig.getTestdata("livehta_723_data")
     testdata_931 = ReadConfig.getTestdata("livehta_931_data")
 
     @pytest.mark.C40493
-    def test_Oncology_SLRreports_Download(self, extra, env, request, caseid):
+    def test_Smoketest_SLRreports_Download(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getsmoketestdata(env)
         # Instantiate the Base class
         base = Base(self.driver, extra)
         # Creating object of ExtendedBase class
-        exbase = ExtendedBase(self.driver, extra)                  
+        exbase = ExtendedBase(self.driver, extra)
         # Creating object of loginpage class
         loginPage = LoginPage(self.driver, extra)
         # Creating object of slrreport class
@@ -42,13 +40,13 @@ class Test_Search_LiveSLR:
 
         request.node._tcid = caseid
         request.node._title = "Smoke Test -> Validate Search LIVESLR Page Navigation, download the reports and " \
-                              "verify the downloaded filename for Oncology Population"
+                              "verify the downloaded filename for Oncology and Non-Oncology Population"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
 
-        scenarios = ['scenario1']
+        scenarios = ['scenario1', 'scenario2']
 
         for scenario in scenarios:
             try:
@@ -57,86 +55,29 @@ class Test_Search_LiveSLR:
                 # Read slrtype data values
                 slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
                 add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, scenario)
+                # Read Project name
+                project_name = exbase.get_individual_col_data(filepath, scenario, 'Sheet1', 'Project')
 
                 for i in pop_list:
-                        slrreport.select_data(i[0], i[1], env)
-                        for index, j in enumerate(slrtype):
-                            slrreport.select_data(j[0], j[1], env)                          
-                            if len(add_criteria) != 0:
-                                for k in add_criteria:
-                                    slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
+                    slrreport.select_data(i[0], i[1], env)
+                    for index, j in enumerate(slrtype):
+                        slrreport.select_data(j[0], j[1], env)                          
+                        if len(add_criteria) != 0:
+                            for k in add_criteria:
+                                slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
 
-                            slrreport.generate_download_report("excel_report", env)
-                            excel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.generate_download_report("excel_report", env)
+                        excel_filename = slrreport.get_and_validate_filename(filepath)
 
+                        if project_name[0] == 'Oncology':
                             slrreport.generate_download_report("word_report", env)
                             word_filename = slrreport.get_and_validate_filename(filepath)
 
-                            slrreport.preview_result("preview_results", env)
-                            slrreport.table_display_check("Table", env)
-                            slrreport.generate_download_report("Export_as_excel", env)
-                            webexcel_filename = slrreport.get_and_validate_filename(filepath)
-                            slrreport.back_to_report_page("Back_to_search_page", env)
-                
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
-
-    @pytest.mark.C40493
-    def test_NonOncology_SLRreports_Download(self, extra, env, request, caseid):
-        baseURL = ReadConfig.getLiveSLRAppURL(env)
-        filepath = ReadConfig.getsmoketestdata(env)
-        # Instantiate the Base class
-        base = Base(self.driver, extra)
-        # Creating object of ExtendedBase class
-        exbase = ExtendedBase(self.driver, extra)                  
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)
-        # Creating object of slrreport class
-        slrreport = SLRReport(self.driver, extra)
-        # Creating object of ExcludedStudies_liveSLR class
-        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)        
-        # Instantiate the logScreenshot class
-        LogScreenshot = cLogScreenshot(self.driver, extra)
-
-        request.node._tcid = caseid
-        request.node._title = "Smoke Test -> Validate Search LIVESLR Page Navigation, download the reports and " \
-                              "verify the downloaded filename for Non-Oncology Population"
-
-        loginPage.driver.get(baseURL)
-        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-        base.go_to_page("SLR_Homepage", env)
-
-        scenarios = ['scenario2']
-
-        for scenario in scenarios:
-            try:
-                # Read population data values
-                pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
-                # Read slrtype data values
-                slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
-                add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, scenario)
-
-                for i in pop_list:
-                        slrreport.select_data(i[0], i[1], env)
-                        for index, j in enumerate(slrtype):
-                            slrreport.select_data(j[0], j[1], env)                          
-                            if len(add_criteria) != 0:
-                                for k in add_criteria:
-                                    slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
-
-                            slrreport.generate_download_report("excel_report", env)
-                            excel_filename = slrreport.get_and_validate_filename(filepath)
-
-                            # slrreport.generate_download_report("word_report", env)
-                            # word_filename = slrreport.get_and_validate_filename(filepath)
-
-                            slrreport.preview_result("preview_results", env)
-                            slrreport.table_display_check("Table", env)
-                            slrreport.generate_download_report("Export_as_excel", env)
-                            webexcel_filename = slrreport.get_and_validate_filename(filepath)
-                            slrreport.back_to_report_page("Back_to_search_page", env)
+                        slrreport.preview_result("preview_results", env)
+                        slrreport.table_display_check("Table", env)
+                        slrreport.generate_download_report("Export_as_excel", env)
+                        webexcel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.back_to_report_page("Back_to_search_page", env)
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
@@ -170,8 +111,8 @@ class Test_Search_LiveSLR:
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         base.go_to_page("SLR_Homepage", env)
-        for i in pop_list:
-            try:
+        try:
+            for i in pop_list:
                 slrreport.select_data(i[0], i[1], env)
                 for index, j in enumerate(slrtype):
                     slrreport.select_data(j[0], j[1], env)
@@ -179,23 +120,14 @@ class Test_Search_LiveSLR:
                         slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
 
                     slrreport.generate_download_report("excel_report", env)
-                    # time.sleep(5)
-                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     excel_filename = slrreport.get_and_validate_filename(filepath)
 
                     slrreport.generate_download_report("word_report", env)
-                    # time.sleep(5)
-                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     word_filename = slrreport.get_and_validate_filename(filepath)
 
                     slrreport.preview_result("preview_results", env)
                     slrreport.table_display_check("Table", env)
                     slrreport.generate_download_report("Export_as_excel", env)
-                    # time.sleep(5)
-                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     webexcel_filename = slrreport.get_and_validate_filename(filepath)
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
@@ -204,8 +136,8 @@ class Test_Search_LiveSLR:
                     slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "Study Identifier")
 
                     slrreport.word_content_validation(filepath, index, word_filename)
-            except Exception:
-                raise Exception("Unable to select element")
+        except Exception:
+            raise Exception("Unable to select element")
 
     @pytest.mark.C28728
     def test_presencof_publicationtype_col_in_wordreport(self, extra, env, request, caseid):
@@ -238,23 +170,14 @@ class Test_Search_LiveSLR:
             slrreport.select_sub_section(rpt_data[3], rpt_data_chkbox[3], env, "reported_variable_section")
 
             slrreport.generate_download_report("excel_report", env)
-            # time.sleep(5)
-            # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-            # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
             excel_filename = slrreport.get_and_validate_filename(filepath)
 
             slrreport.generate_download_report("word_report", env)
-            # time.sleep(5)
-            # word_filename1 = self.slrreport.getFilenameAndValidate(180)
-            # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
             word_filename = slrreport.get_and_validate_filename(filepath)
 
             slrreport.preview_result("preview_results", env)
             slrreport.table_display_check("Table", env)
             slrreport.generate_download_report("Export_as_excel", env)
-            # time.sleep(5)
-            # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-            # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
             webexcel_filename = slrreport.get_and_validate_filename(filepath)
             slrreport.back_to_report_page("Back_to_search_page", env)
 
@@ -299,11 +222,12 @@ class Test_Search_LiveSLR:
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         scenarios = ['scenario1', 'scenario2']
-        for i in scenarios:
-            try:
+        
+        try:
+            for i in scenarios:
                 slrreport.validate_population_col_in_wordreport(self.testdata_723, i, env)
-            except Exception:
-                raise Exception("Unable to select element")
+        except Exception:
+            raise Exception("Unable to select element")
 
     @pytest.mark.C31565
     def test_validate_control_chars_in_wordreport(self, extra, env, request, caseid):
@@ -319,11 +243,12 @@ class Test_Search_LiveSLR:
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
         scenarios = ['scenario1']
-        for i in scenarios:
-            try:
+        
+        try:
+            for i in scenarios:
                 slrreport.validate_control_chars_in_wordreport(self.testdata_931, i, env)
-            except Exception:
-                raise Exception("Unable to select element")
+        except Exception:
+            raise Exception("Unable to select element")
 
     @pytest.mark.C37775
     def test_nononcology_validate_ep_details_liveslr_page(self, extra, env, request, caseid):
@@ -349,13 +274,13 @@ class Test_Search_LiveSLR:
 
         scenarios = ['scenario1']
 
-        for i in scenarios:
-            try:
+        try:
+            for i in scenarios:
                 slrreport.validate_presence_of_ep_details_in_liveslr_page(i, filepath, env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
 
     @pytest.mark.C35127
     # @pytest.mark.C35150
@@ -382,13 +307,13 @@ class Test_Search_LiveSLR:
 
         scenarios = ['scenario1']
 
-        for i in scenarios:
-            try:
+        try:
+            for i in scenarios:
                 slrreport.validate_presence_of_uniquestudies_in_liveslr_page(i, filepath, env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
 
     @pytest.mark.C38487
     # @pytest.mark.C38489
@@ -415,13 +340,13 @@ class Test_Search_LiveSLR:
 
         scenarios = ['scenario1', 'scenario2'] 
 
-        for i in scenarios:
-            try:
+        try:
+            for i in scenarios:
                 slrreport.validate_uniquestudies_reporting_outcomes(i, filepath, env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
 
     @pytest.mark.C39312
     def test_nononcology_slrreport_comparison(self, extra, env, request, caseid):
@@ -450,8 +375,8 @@ class Test_Search_LiveSLR:
 
         scenarios = ['scenario1', 'scenario2']
 
-        for scenario in scenarios:
-            try:
+        try:
+            for scenario in scenarios:
                 # Read population data values
                 pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
                 # Read slrtype data values
@@ -461,31 +386,31 @@ class Test_Search_LiveSLR:
 
                 base.go_to_page("SLR_Homepage", env)
                 for i in pop_list:
-                        slrreport.select_data(i[0], i[1], env)
-                        for index, j in enumerate(slrtype):
-                            slrreport.select_data(j[0], j[1], env)                          
-                            if len(add_criteria) != 0:
-                                for k in add_criteria:
-                                    slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
+                    slrreport.select_data(i[0], i[1], env)
+                    for index, j in enumerate(slrtype):
+                        slrreport.select_data(j[0], j[1], env)                          
+                        if len(add_criteria) != 0:
+                            for k in add_criteria:
+                                slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
 
-                            slrreport.generate_download_report("excel_report", env)
-                            excel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.generate_download_report("excel_report", env)
+                        excel_filename = slrreport.get_and_validate_filename(filepath)
 
-                            # slrreport.generate_download_report("word_report", env)
-                            # word_filename = slrreport.get_and_validate_filename(filepath)
+                        # slrreport.generate_download_report("word_report", env)
+                        # word_filename = slrreport.get_and_validate_filename(filepath)
 
-                            slrreport.preview_result("preview_results", env)
-                            slrreport.table_display_check("Table", env)
-                            slrreport.generate_download_report("Export_as_excel", env)
-                            webexcel_filename = slrreport.get_and_validate_filename(filepath)
-                            slrreport.back_to_report_page("Back_to_search_page", env)
+                        slrreport.preview_result("preview_results", env)
+                        slrreport.table_display_check("Table", env)
+                        slrreport.generate_download_report("Export_as_excel", env)
+                        webexcel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.back_to_report_page("Back_to_search_page", env)
 
-                            slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "LiveSLR Study ID")
+                        slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "LiveSLR Study ID")
                 
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
 
     @pytest.mark.C39090
     def test_nononcology_rankorder_of_extractions(self, extra, env, request, caseid):
@@ -514,8 +439,8 @@ class Test_Search_LiveSLR:
 
         scenarios = ['scenario1', 'scenario2']
 
-        for scenario in scenarios:
-            try:
+        try:
+            for scenario in scenarios:
                 # Read population data values
                 pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
                 # Read slrtype data values
@@ -525,31 +450,31 @@ class Test_Search_LiveSLR:
 
                 base.go_to_page("SLR_Homepage", env)
                 for i in pop_list:
-                        slrreport.select_data(i[0], i[1], env)
-                        for index, j in enumerate(slrtype):
-                            slrreport.select_data(j[0], j[1], env)                          
-                            if len(add_criteria) != 0:
-                                for k in add_criteria:
-                                    slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
+                    slrreport.select_data(i[0], i[1], env)
+                    for index, j in enumerate(slrtype):
+                        slrreport.select_data(j[0], j[1], env)                          
+                        if len(add_criteria) != 0:
+                            for k in add_criteria:
+                                slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
 
-                            slrreport.generate_download_report("excel_report", env)
-                            excel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.generate_download_report("excel_report", env)
+                        excel_filename = slrreport.get_and_validate_filename(filepath)
 
-                            # slrreport.generate_download_report("word_report", env)
-                            # word_filename = slrreport.get_and_validate_filename(filepath)
+                        # slrreport.generate_download_report("word_report", env)
+                        # word_filename = slrreport.get_and_validate_filename(filepath)
 
-                            slrreport.preview_result("preview_results", env)
-                            slrreport.table_display_check("Table", env)
-                            slrreport.generate_download_report("Export_as_excel", env)
-                            webexcel_filename = slrreport.get_and_validate_filename(filepath)
-                            slrreport.back_to_report_page("Back_to_search_page", env)
+                        slrreport.preview_result("preview_results", env)
+                        slrreport.table_display_check("Table", env)
+                        slrreport.generate_download_report("Export_as_excel", env)
+                        webexcel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.back_to_report_page("Back_to_search_page", env)
 
-                            slrreport.non_oncology_check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
+                        slrreport.non_oncology_check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
                 
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
 
     @pytest.mark.C40194
     def test_nononcology_validate_study_design_section(self, extra, env, request, caseid):
@@ -574,10 +499,62 @@ class Test_Search_LiveSLR:
 
         scenarios = ['scenario1', 'scenario2']
 
-        for i in scenarios:
-            try:
+        try:
+            for i in scenarios:
                 slrreport.validate_study_design_section(i, filepath, env)
-            except Exception:
-                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                             pass_=False, log=True, screenshot=True)
-                raise Exception("Element Not Found")
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")
+
+    @pytest.mark.C39828
+    def test_validate_excelreportcontent_with_multiple_extractions_upload(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)        
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)        
+
+        request.node._tcid = caseid
+        request.node._title = "Verify Admin user can upload multiple files under one project/population for Oncology or Non-Oncology, Download the reports and validate the contents"
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "livehta_1904_data")
+
+        scenarios = ['scenario1', 'scenario2']
+
+        try:
+            for scenario in scenarios:
+                # Read population data values
+                pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
+                # Read slrtype data values
+                slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
+                # Sorting the SLR Type data to execute orderwise
+                slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
+                # Read Project name
+                project_name = exbase.get_individual_col_data(filepath, scenario, 'Sheet1', 'Project')
+
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is started***", pass_=True, log=True, screenshot=False)
+                base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+                imppubpage.upload_file_with_success(scenario, filepath, env)
+
+                slrreport.validate_content_with_multiple_extractions_upload(scenario, filepath, pop_list, slrtype_, env, project_name[0])
+
+                imppubpage.delete_file(scenario, filepath, "file_status_popup_text", "upload_table_rows", env)
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Uploaded Extraction file is removed***", pass_=True, log=True, screenshot=False)
+                
+        except Exception:
+            LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
+                                            pass_=False, log=True, screenshot=True)
+            raise Exception("Element Not Found")

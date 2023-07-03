@@ -148,12 +148,12 @@ class Test_ProtocolPage:
                 pop_data = exbase.get_population_data(filepath, 'Sheet1', i)
                 # Read study types and file paths to upload
                 stdy_data = exbase.get_slrtype_data(filepath, 'Sheet1', i)
-                # Removing duplicates to get the proper length of SLR Type data
+                # Sorting the SLR Type data to execute orderwise
                 stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
 
                 srchpage.add_invalid_search_strategy_details(i, filepath, pop_data, stdy_data_, env)
                 uploaded_data = srchpage.add_valid_search_strategy_details(i, filepath, pop_data, stdy_data_, env,
-                                                                           "Oncology")
+                                                                           "Oncology", "pagelevel")
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",
@@ -310,7 +310,7 @@ class Test_ProtocolPage:
 
                 srchpage.add_invalid_search_strategy_details(i, filepath, pop_data, stdy_data_, env)
                 uploaded_data = srchpage.add_valid_search_strategy_details(i, filepath, pop_data, stdy_data_, env,
-                                                                           "Non-Oncology")
+                                                                           "Non-Oncology", "pagelevel")
                 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Search Strategy page",

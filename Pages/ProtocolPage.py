@@ -523,7 +523,7 @@ class ProtocolPage(Base):
         except Exception:   
             raise Exception("Error in accessing View PICOS")
 
-    def add_valid_search_strategy_details(self, locatorname, filepath, pop_data, stdy_data, env, project):
+    def add_valid_search_strategy_details(self, locatorname, filepath, pop_data, stdy_data, env, project, fname):
         expected_excel_upload_status_text = "Search strategy updated successfully"
 
         today = date.today()
@@ -534,7 +534,6 @@ class ProtocolPage(Base):
             day_val = today.day
         
         df = pd.read_excel(filepath)
-        template_name = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Template_name')
 
         self.refreshpage()
         time.sleep(2)
@@ -571,16 +570,17 @@ class ProtocolPage(Base):
                         # multiple times in headless mode. So as an alternative renaming the file after downloading
                         # in each iteration
                         self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
-                                         f"{k[0]}_search-strategy-template_{project}.xlsx")
+                                         f"{k[0]}_search-strategy-template_{project}_{fname}.xlsx")
+                        expected_template_name = f"{k[3]}_{fname}.xlsx"
                         downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
-                        if downloaded_template_name == k[3]:
+                        if downloaded_template_name == expected_template_name:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
                                 pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"Mismatch in search strategy template name. Expected Template name is "
-                                        f"{template_name[0]} and Actual Template name is {downloaded_template_name}",
+                                        f"{expected_template_name} and Actual Template name is {downloaded_template_name}",
                                 pass_=False, log=True, screenshot=False)
                             raise Exception(f"Mismatch in search strategy template name.")
 
@@ -616,7 +616,7 @@ class ProtocolPage(Base):
                         
                         uploaded_tabledata = self.export_web_table(
                             "table table-bordered table-striped table-sm search-terms",
-                            f"uploadedsearchstrategydata_{k[0]}_{project}")
+                            f"uploadedsearchstrategydata_{k[0]}_{project}_{fname}")
                         self.refreshpage()
                         time.sleep(2)
                         table_data.append(uploaded_tabledata)
@@ -711,7 +711,7 @@ class ProtocolPage(Base):
                     pop = [[i[k]] for k in range(0, len(i))]
                     stdy = [[j[k]] for k in range(0, len(j))]
                     uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy,
-                                                                           env, prjname)
+                                                                           env, prjname, "viewstrategy")
 
                     self.base.go_to_page("SLR_Homepage", env)
                     self.slrreport.select_data(i[0], i[1], env)
@@ -862,7 +862,7 @@ class ProtocolPage(Base):
                     picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
 
                     self.go_to_page("searchstrategy", env)
-                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy, env, project)
+                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy, env, project, "downloadprotocol")
 
                     # Go to live slr page
                     self.go_to_page("SLR_Homepage", env)
