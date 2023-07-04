@@ -2305,6 +2305,35 @@ class SLRReport(Base):
         except Exception:
             raise Exception("Unable to select element")
 
+    def upload_extraction_file_and_excel_content_validation(self, locatorname, filepath, pop_list, slrtype, env):
+        # Source File which is needed for comparison
+        source_template = self.get_source_template(filepath, 'ExpectedSourceTemplateFile')
+        try:
+            self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+            self.imppubpage.upload_file_with_success(locatorname, filepath, env)
+
+            self.go_to_page("SLR_Homepage", env)
+            for i in pop_list:
+                self.select_data(i[0], i[1], env)
+                for index, j in enumerate(slrtype):
+                    self.select_data(j[0], j[1], env)
+
+                    self.generate_download_report("excel_report", env)
+                    excel_filename = self.get_and_validate_filename(filepath)
+
+                    self.preview_result("preview_results", env)
+                    self.table_display_check("Table", env)
+                    self.generate_download_report("Export_as_excel", env)
+                    webexcel_filename = self.get_and_validate_filename(filepath)
+                    self.back_to_report_page("Back_to_search_page", env)
+
+                    self.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "Study Identifier")
+
+            self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+            self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
+        except Exception:
+            raise Exception("Unable to select element")
+
     # # ############## Using Openpyxl library #################
     # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
     #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",

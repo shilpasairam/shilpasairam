@@ -8,6 +8,7 @@ import pytest
 from re import search
 from Pages.Base import Base
 from Pages.ApplicationVersionCheck import AppVersion
+from Pages.ExtendedBasePage import ExtendedBase
 from Pages.LoginPage import LoginPage
 from selenium.webdriver import ActionChains
 
@@ -17,65 +18,97 @@ from utilities.readProperties import ReadConfig
 
 @pytest.mark.usefixtures("init_driver")
 class Test_AppAccess:
-    testdata = ReadConfig.getTestdata("app_access_data")
+    # testdata = ReadConfig.getTestdata("app_access_data")
 
-    @pytest.mark.parametrize(
-        "scenarios, name",
-        [
-            ("scenario1", "Admin User"),
-            ("scenario2", "Staff User"),
-            ("scenario3", "Client User")
-        ]
-    )
+    # @pytest.mark.parametrize(
+    #     "scenarios, name",
+    #     [
+    #         ("scenario1", "Admin User"),
+    #         ("scenario2", "Staff User"),
+    #         ("scenario3", "Client User")
+    #     ]
+    # )
     @pytest.mark.C37915
-    def test_liveslr_application_access(self, scenarios, name, extra, env, request, caseid):
+    def test_liveslr_application_access(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         testdata = ReadConfig.getappaccesstestdata(env)
         # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)        
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)        
         # Creating object of AppVersion class
         appver = AppVersion(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)        
 
         request.node._tcid = caseid
-        request.node._title = f"Validate LiveSLR Application Access - {scenarios} - {name}"
+        request.node._title = f"Validate LiveHTA Application Access for Admin, Staff and Client users"
 
         # Invoking the methods from loginpage
         loginPage.driver.get(baseURL)
+
+        scenarios = ['scenario1', 'scenario2', 'scenario3']
+
+        for scenario in scenarios:
+            # Read Type of User details
+            usertype1 = exbase.get_individual_col_data(testdata, scenario, 'Sheet1', 'Usertype')
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveSLR Application Access for {usertype1[0]} is Started***",
+                                         pass_=True, log=True, screenshot=False)
+            # Validating the application version
+            appver.validate_liveslr_page_access(scenario, testdata, baseURL, env)
+
+            # Logging out from the application
+            loginPage.logout("liveslr_logout_button", env)
+            loginPage.driver.close()
+            loginPage.driver.switch_to.window(self.driver.window_handles[0])
+            loginPage.logout("portal_logout_button", env)
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveSLR Application Access for {usertype1[0]} is Completed***",
+                                         pass_=True, log=True, screenshot=False)
+
+        for scenario in scenarios:
+            # Read Type of User details
+            usertype2 = exbase.get_individual_col_data(testdata, scenario, 'Sheet1', 'Usertype')
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveRef Application Access for {usertype2[0]} is Started***",
+                                         pass_=True, log=True, screenshot=False)
+            # Validating the application version
+            appver.validate_liveref_page_access(scenario, testdata, baseURL, env)
+
+            # Logging out from the application
+            loginPage.logout("liveref_logout_button", env)
+            loginPage.driver.close()
+            loginPage.driver.switch_to.window(self.driver.window_handles[0])
+            loginPage.logout("portal_logout_button", env)
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveRef Application Access for {usertype2[0]} is Completed***",
+                                         pass_=True, log=True, screenshot=False)
+
+    # @pytest.mark.parametrize(
+    #     "scenarios, name",
+    #     [
+    #         ("scenario1", "Admin User"),
+    #         ("scenario2", "Staff User"),
+    #         ("scenario3", "Client User")
+    #     ]
+    # )
+    # # @pytest.mark.C37915
+    # def test_liveref_application_access(self, scenarios, name, extra, env, request, caseid):
+    #     baseURL = ReadConfig.getPortalURL(env)
+    #     testdata = ReadConfig.getappaccesstestdata(env)
+    #     # Creating object of loginpage class
+    #     loginPage = LoginPage(self.driver, extra)        
+    #     # Creating object of AppVersion class
+    #     appver = AppVersion(self.driver, extra)
+
+    #     request.node._tcid = caseid
+    #     request.node._title = f"Validate LiveRef Application Access - {scenarios} - {name}"
+
+    #     # Invoking the methods from loginpage
+    #     loginPage.driver.get(baseURL)
         
-        # Validating the application version
-        appver.validate_liveslr_page_access(scenarios, testdata, baseURL, env)
+    #     # Validating the application version
+    #     appver.validate_liveref_page_access(scenarios, testdata, baseURL, env)
 
-        # Logging out from the application
-        loginPage.logout("liveslr_logout_button", env)
-
-    @pytest.mark.parametrize(
-        "scenarios, name",
-        [
-            ("scenario1", "Admin User"),
-            ("scenario2", "Staff User"),
-            ("scenario3", "Client User")
-        ]
-    )
-    @pytest.mark.C37915
-    def test_liveref_application_access(self, scenarios, name, extra, env, request, caseid):
-        baseURL = ReadConfig.getPortalURL(env)
-        testdata = ReadConfig.getappaccesstestdata(env)
-        # Creating object of loginpage class
-        loginPage = LoginPage(self.driver, extra)        
-        # Creating object of AppVersion class
-        appver = AppVersion(self.driver, extra)
-
-        request.node._tcid = caseid
-        request.node._title = f"Validate LiveRef Application Access - {scenarios} - {name}"
-
-        # Invoking the methods from loginpage
-        loginPage.driver.get(baseURL)
-        
-        # Validating the application version
-        appver.validate_liveref_page_access(scenarios, testdata, baseURL, env)
-
-        # Logging out from the application
-        loginPage.logout("liveref_logout_button", env)
+    #     # Logging out from the application
+    #     loginPage.logout("liveref_logout_button", env)
 
     @pytest.mark.parametrize(
         "scenarios, name",

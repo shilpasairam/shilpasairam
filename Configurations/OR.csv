@@ -7,6 +7,8 @@ PSEPortal,launch_live_slr,XPATH,"//a[@class='btn btn-primary' and @href=""https:
 PSEPortal,liveslr_logout_button,XPATH,"//a[@title=""Sign out""]",
 PSEPortal,get_user_name,XPATH,//span[@class='user-block-name'],
 PSEPortal,admin_option_dropdown,XPATH,//a[@id='navbarDropdown' and @role='button'],
+PSEPortal,contact_btn,LINK_TEXT,Contact,
+PSEPortal,contact_info,TAG_NAME,address,
 SLRPAGE,SLR_Dashboard,LINK_TEXT,Dashboard,
 SLRPAGE,SLR_Homepage,LINK_TEXT,Search LiveSLR,
 SLRPAGE,about_live_slr,XPATH,"//a[@class=""nav-link"" and contains(text(), ""About LiveSLR"")]",

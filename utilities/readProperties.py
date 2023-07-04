@@ -54,6 +54,16 @@ class ReadConfig:
         return password
 
     @staticmethod
+    def getClientUserName():
+        username = config.get('commonInfo', 'clientusername')
+        return username
+
+    @staticmethod
+    def getClientPassword():
+        password = config.get('commonInfo', 'clientpassword')
+        return password
+
+    @staticmethod
     def getORFilePath(env):
         # env = config.get('commonInfo', 'environment')
         if env == 'test':
