@@ -631,7 +631,7 @@ class Test_Search_LiveSLR:
         LogScreenshot = cLogScreenshot(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Smoke Test for Client User -> Validate access for Oncology and Non-Oncology Population"
+        request.node._title = "Client User -> Validate access for Oncology and Non-Oncology Population"
 
         loginPage.driver.get(baseURL)
         loginPage.complete_login(clientusername, clientpassword, "launch_live_slr", "Cytel LiveSLR", baseURL, env)

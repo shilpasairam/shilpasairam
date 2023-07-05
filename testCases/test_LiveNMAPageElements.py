@@ -21,7 +21,7 @@ class Test_LiveNMA:
     password = ReadConfig.getPassword()
 
     @pytest.mark.C42375
-    def test_live_nma_smoketest(self, extra, env, request, caseid):
+    def test_live_nma(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         filepath = ReadConfig.getnmatestdata(env)
         # Instantiate the Base class
