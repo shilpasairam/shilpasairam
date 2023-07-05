@@ -39,7 +39,8 @@ class Test_ManageSourceData:
         request.node._tcid = caseid
         request.node._title = "Validate by Manage Source of Data Functionality under LiveRef"
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion, Edit and Deletion of Manage Source Data validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion, Edit and Deletion of Manage Source Data validation is "
+                                             f"started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -69,7 +70,8 @@ class Test_ManageSourceData:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
         
-        LogScreenshot.fLogScreenshot(message=f"**Addtion, Edit and Deletion of Manage Source Data validation is completed**",
+        LogScreenshot.fLogScreenshot(message=f"**Addtion, Edit and Deletion of Manage Source Data validation is "
+                                             f"completed**",
                                      pass_=True, log=True, screenshot=False)
 
     # @pytest.mark.C28989

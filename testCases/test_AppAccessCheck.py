@@ -52,7 +52,8 @@ class Test_AppAccess:
         for scenario in scenarios:
             # Read Type of User details
             usertype1 = exbase.get_individual_col_data(testdata, scenario, 'Sheet1', 'Usertype')
-            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveSLR Application Access for {usertype1[0]} is Started***",
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveSLR Application Access for {usertype1[0]} "
+                                                 f"is Started***",
                                          pass_=True, log=True, screenshot=False)
             # Validating the application version
             appver.validate_liveslr_page_access(scenario, testdata, baseURL, env)
@@ -62,13 +63,15 @@ class Test_AppAccess:
             loginPage.driver.close()
             loginPage.driver.switch_to.window(self.driver.window_handles[0])
             loginPage.logout("portal_logout_button", env)
-            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveSLR Application Access for {usertype1[0]} is Completed***",
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveSLR Application Access for {usertype1[0]} "
+                                                 f"is Completed***",
                                          pass_=True, log=True, screenshot=False)
 
         for scenario in scenarios:
             # Read Type of User details
             usertype2 = exbase.get_individual_col_data(testdata, scenario, 'Sheet1', 'Usertype')
-            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveRef Application Access for {usertype2[0]} is Started***",
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveRef Application Access for {usertype2[0]} "
+                                                 f"is Started***",
                                          pass_=True, log=True, screenshot=False)
             # Validating the application version
             appver.validate_liveref_page_access(scenario, testdata, baseURL, env)
@@ -78,7 +81,8 @@ class Test_AppAccess:
             loginPage.driver.close()
             loginPage.driver.switch_to.window(self.driver.window_handles[0])
             loginPage.logout("portal_logout_button", env)
-            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveRef Application Access for {usertype2[0]} is Completed***",
+            LogScreenshot.fLogScreenshot(message=f"***Validation of LiveRef Application Access for {usertype2[0]} "
+                                                 f"is Completed***",
                                          pass_=True, log=True, screenshot=False)
 
     # @pytest.mark.parametrize(

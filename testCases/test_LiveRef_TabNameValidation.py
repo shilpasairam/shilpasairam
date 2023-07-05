@@ -49,11 +49,11 @@ class Test_TabNames:
                 page_name = base.get_text(i, env)
                 base.assertPageTitle("Cytel LiveRef", UnivWaitFor=10)
                 LogScreenshot.fLogScreenshot(message=f"Tab Name for '{page_name}' page is as expected.",
-                                                  pass_=True, log=True, screenshot=True)
+                                             pass_=True, log=True, screenshot=True)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in during validation of tab names",
-                                                  pass_=False, log=True, screenshot=False)
+                                             pass_=False, log=True, screenshot=False)
                 raise Exception("Error in during validation of tab names")
 
         # Logging out from the application
@@ -84,15 +84,15 @@ class Test_TabNames:
             admin_eles_text = base.get_texts("liveref_admin_panel_list", env)
             if len(admin_eles_text) == len(set(admin_eles_text)):
                 LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
-                                                  pass_=True, log=True, screenshot=True)
+                                             pass_=True, log=True, screenshot=True)
             else:
                 LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. "
-                                                          f"Values are : {admin_eles_text}",
-                                                  pass_=False, log=True, screenshot=True)
+                                                     f"Values are : {admin_eles_text}",
+                                             pass_=False, log=True, screenshot=True)
 
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in during validation of presence of navigation links",
-                                              pass_=False, log=True, screenshot=False)
+                                         pass_=False, log=True, screenshot=False)
             raise Exception("Error in during validation of presence of navigation links")
 
         # Logging out from the application

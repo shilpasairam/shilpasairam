@@ -93,7 +93,8 @@ class ImportPublicationPage(Base):
                                                                   f'uploaded: {i[2]}',
                                                           pass_=True, log=True, screenshot=False)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f'Expected filename is not found. Expected filename is: {i[2]}',
+                        self.LogScreenshot.fLogScreenshot(message=f'Expected filename is not found. Expected '
+                                                                  f'filename is: {i[2]}',
                                                           pass_=True, log=True, screenshot=False)
                         raise Exception(f"Expected filename is not found. Expected filename is: {i[2]}")
                 else:
@@ -183,7 +184,8 @@ class ImportPublicationPage(Base):
                                                                   f'being uploaded: {i[2]}',
                                                           pass_=True, log=True, screenshot=False)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f'Expected filename is not found. Expected filename is: {i[2]}',
+                        self.LogScreenshot.fLogScreenshot(message=f'Expected filename is not found. Expected '
+                                                                  f'filename is: {i[2]}',
                                                           pass_=True, log=True, screenshot=False)
                         raise Exception(f"Expected filename is not found. Expected filename is: {i[2]}")
                 else:
@@ -299,8 +301,9 @@ class ImportPublicationPage(Base):
                 raise Exception(f"Unable to find the uploaded Filename '{i[2]}' in first row of the table.")
 
     def upload_file_for_same_population(self, locatorname, filepath, env, project):
-        self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Upload Extraction File for the existing population validation "
-                                                  f"is started**", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Upload Extraction File for the "
+                                                  f"existing population validation is started**",
+                                          pass_=True, log=True, screenshot=False)
 
         try:
             if project == 'Oncology':
@@ -312,5 +315,6 @@ class ImportPublicationPage(Base):
         except Exception:
             raise Exception("Error while uploading")
         
-        self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Upload Extraction File for the existing population validation "
-                                                  f"is completed**", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Upload Extraction File for the "
+                                                  f"existing population validation is completed**",
+                                          pass_=True, log=True, screenshot=False)

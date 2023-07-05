@@ -303,9 +303,11 @@ class Test_PRISMA_Elements:
         LogScreenshot = cLogScreenshot(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology - Validate PRISMA elements comparison between Complete Excel, UI and Expected Count"
+        request.node._title = "Non-Oncology - Validate PRISMA elements comparison between Complete Excel, UI and " \
+                              "Expected Count"
 
-        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel, UI and Expected Count for Non-Oncology Population*****",
+        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel, UI and "
+                                             f"Expected Count for Non-Oncology Population*****",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)

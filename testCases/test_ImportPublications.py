@@ -269,7 +269,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Invalid data for Update Date column."
+        request.node._title = "Oncology Import Tool - Validate Upload Extraction Template with Invalid data for " \
+                              "Update Date column."
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Extraction Template with Invalid data for Update Date"
                                              f" validation is started***",
@@ -525,7 +526,8 @@ class Test_ImportPublicationPage:
         imppubpage = ImportPublicationPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Import Tool - Validate duplicate uploads have been made for the same update in the same Oncology or Non-Oncology population "
+        request.node._title = "Import Tool - Validate duplicate uploads have been made for the same update in the " \
+                              "same Oncology or Non-Oncology population "
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -541,13 +543,17 @@ class Test_ImportPublicationPage:
                 # Read Project name
                 project_name = exbase.get_individual_col_data(filepath, i, 'Sheet1', 'Project')
 
-                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is started***", pass_=True, log=True, screenshot=False)
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is "
+                                                     f"started***",
+                                             pass_=True, log=True, screenshot=False)
                 imppubpage.upload_file_with_success(i, filepath, env)
 
                 imppubpage.upload_file_for_same_population(i, filepath, env, project_name[0])
 
                 imppubpage.delete_file(i, filepath, "file_status_popup_text", "upload_table_rows", env)
-                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Uploaded Extraction file is removed***", pass_=True, log=True, screenshot=False)
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Uploaded "
+                                                     f"Extraction file is removed***",
+                                             pass_=True, log=True, screenshot=False)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                              pass_=False, log=True, screenshot=True)

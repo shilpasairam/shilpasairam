@@ -22,14 +22,14 @@ class ProtocolPage(Base):
     """Constructor of the Protocol Page class"""
     def __init__(self, driver, extra):
         # initializing the driver from base class
-        super().__init__(driver, extra)  
+        super().__init__(driver, extra)
         self.extra = extra
         # Instantiate the Base class
         self.base = Base(self.driver, self.extra)
         # Creating object of ExtendedBase class
         self.exbase = ExtendedBase(self.driver, extra)
         # Creating object of slrreport class
-        self.slrreport = SLRReport(self.driver, extra)                 
+        self.slrreport = SLRReport(self.driver, extra)
         # Instantiate the logger class
         self.logger = LogGen.loggen()
         # Instantiate the logScreenshot class
@@ -42,12 +42,12 @@ class ProtocolPage(Base):
         df = pd.read_excel(filepath)
         pop = df.loc[df['Name'] == locatorname]['Prisma_Population'].dropna().to_list()
         return pop
-    
+
     def get_prisma_excelfile_details(self, filepath, locatorname, column_name):
         df = pd.read_excel(filepath)
         sheet_name = os.getcwd()+(df.loc[df['Name'] == locatorname][column_name].to_list()[0])
         return sheet_name
-    
+
     def get_prisma_data_details(self, filepath, locatorname):
         df = pd.read_excel(filepath)
         sheet_name = df.loc[df['Name'] == locatorname]['Study_Types'].to_list()
@@ -65,13 +65,8 @@ class ProtocolPage(Base):
 
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
-        
-        # self.refreshpage()
-        # time.sleep(3)
+
         try:
-            # pop_ele = self.select_element("prisma_pop_dropdown", env)
-            # select = Select(pop_ele)
-            # select.select_by_visible_text(pop_name[0])
             selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
 
             # Read the PRISMA file path required to upload
@@ -80,9 +75,8 @@ class ProtocolPage(Base):
             self.input_text("prisma_excel_file", prisma_excel, env, UnivWaitFor=10)
             self.click("prisma_excel_upload_btn", env)
             time.sleep(2)
-            # actual_excel_upload_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
+            
             actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
-            # time.sleep(2)
 
             if actual_excel_upload_status_text == expected_excel_upload_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Upload is success.",
@@ -96,19 +90,16 @@ class ProtocolPage(Base):
                 raise Exception("Unable to find status message while uploading PRISMA Excel File.")
         except Exception:
             raise Exception("Unable to upload PRISMA Excel file")
-    
+
     def del_prisma_excel_file(self, locatorname, excel_del_locator, excel_del_popup, filepath, env):
         expected_excel_del_status_text = "PRISMA excel file successfully deleted"
 
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
-        
+
         self.refreshpage()
         time.sleep(3)
         try:
-            # pop_ele = self.select_element("prisma_pop_dropdown", env)
-            # select = Select(pop_ele)
-            # select.select_by_visible_text(pop_name[0])
             selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
 
             self.del_prisma_image(locatorname, filepath, "prisma_image_delete_btn", "prisma_image_delete_popup", env)
@@ -119,9 +110,7 @@ class ProtocolPage(Base):
             self.click(excel_del_popup, env)
             time.sleep(2)
 
-            # actual_excel_del_status_text = self.get_text("prisma_excel_status_text", env, UnivWaitFor=30)
             actual_excel_del_status_text = self.get_status_text("prisma_excel_status_text", env)
-            # time.sleep(2)
 
             if actual_excel_del_status_text == expected_excel_del_status_text:
                 self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Delete is success.",
@@ -147,32 +136,17 @@ class ProtocolPage(Base):
 
         try:
             for i in stdy_data:
-                # stdy_ele = self.select_element("prisma_study_type_dropdown", env)
-                # select = Select(stdy_ele)
-                # select.select_by_visible_text(i[0])
                 selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
-                # self.input_text("original_studies", i[1]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("records_number", i[2]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("fulltext_review", i[3]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("total_record_number", i[4]+index, env, UnivWaitFor=5)
-                # time.sleep(1)
-                # self.input_text("prisma_image", i[5], env, UnivWaitFor=5)
-                # time.sleep(1)
                 for j in prisma_numbers:
                     self.input_text(j[0], j[1]+index, env, UnivWaitFor=5)
 
                 self.input_text("prisma_image", os.getcwd()+i[1], env, UnivWaitFor=5)
                 self.click("prisma_image_save_btn", env)
                 time.sleep(2)
-                
-                # actual_image_upload_status_text = self.get_text("prisma_image_status_text", env, UnivWaitFor=30)
+
                 actual_image_upload_status_text = self.get_status_text("prisma_image_status_text", env)
-                # time.sleep(2)
 
                 if actual_image_upload_status_text == expected_image_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success.",
@@ -186,14 +160,12 @@ class ProtocolPage(Base):
                     raise Exception("Unable to find status message while uploading PRISMA Image File.")
         except Exception:
             raise Exception("Unable to upload PRISMA image")
-    
+
     def del_prisma_image(self, locatorname, filepath, del_locator, del_popup, env):
         expected_image_del_status_text = "PRISMA successfully deleted"
 
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
-
-        # stdy_data = self.get_prisma_data_details(filepath, locatorname)
 
         stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
 
@@ -201,15 +173,9 @@ class ProtocolPage(Base):
             for i in stdy_data:
                 self.refreshpage()
                 time.sleep(3)
-                # pop_ele = self.select_element("prisma_pop_dropdown", env)
-                # select = Select(pop_ele)
-                # select.select_by_visible_text(pop_name[0])
                 selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
                 time.sleep(1)
 
-                # stdy_ele = self.select_element("prisma_study_type_dropdown", env)
-                # select = Select(stdy_ele)
-                # select.select_by_visible_text(i[0])
                 selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(1)
 
@@ -217,10 +183,8 @@ class ProtocolPage(Base):
                 time.sleep(2)
                 self.click(del_popup, env)
                 time.sleep(2)
-                
-                # actual_image_del_status_text = self.get_text("prisma_image_status_text", env, UnivWaitFor=30)
+
                 actual_image_del_status_text = self.get_status_text("prisma_image_status_text", env)
-                # time.sleep(2)
 
                 if actual_image_del_status_text == expected_image_del_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success.",
@@ -242,22 +206,17 @@ class ProtocolPage(Base):
 
         expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. " \
                                             "Please delete the existing file before uploading a new one"
-        
+
         # Read population details from data sheet
         pop_name = self.get_prisma_pop_data(filepath, locatorname)
 
-        # Read the Data required to upload for study types
-        # stdy_data = self.get_prisma_data_details(filepath, locatorname)
         stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
         prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
                                                          'stdy_type_values')
 
         self.refreshpage()
-        
+
         try:
-            # pop_ele = self.select_element("prisma_pop_dropdown", env)
-            # select = Select(pop_ele)
-            # select.select_by_visible_text(pop_name[0])
             selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
 
             # Read the PRISMA file path required to upload
@@ -266,7 +225,7 @@ class ProtocolPage(Base):
             self.input_text("prisma_excel_file", prisma_excel, env, UnivWaitFor=10)
             self.click("prisma_excel_upload_btn", env)
             time.sleep(2)
-            
+
             actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
 
             if actual_excel_upload_status_text == expected_excel_upload_status_text:
@@ -281,9 +240,6 @@ class ProtocolPage(Base):
                 raise Exception("Unable to find status message while uploading PRISMA Excel File.")
 
             for i in stdy_data:
-                # stdy_ele = self.select_element("prisma_study_type_dropdown", env)
-                # select = Select(stdy_ele)
-                # select.select_by_visible_text(i[0])
                 selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
                 time.sleep(2)
 
@@ -382,11 +338,6 @@ class ProtocolPage(Base):
                             raise Exception(f"Mismatch found in PICOS page row headers for Population -> {i[0]}, "
                                             f"Study Type -> {k}.")
 
-                        # # Enter values in PICOS page
-                        # data_eles = self.select_elements('row_data', env)
-                        # for index, locator in enumerate(data_eles):
-                        #     locator.clear()
-                        #     locator.send_keys(f"Test_Automation_{index}")
                         # Enter values in PICOS page
                         picos_data = []
                         data_eles = self.select_elements('row_data', env)
@@ -402,7 +353,7 @@ class ProtocolPage(Base):
                             locator.send_keys(f"{data[idx]}")
                             picos_data.append(data[idx].split('\n'))
                             idx += 1
-                        
+
                         # This will give one single list with all the picos data added
                         added_picos_data = list(np.concatenate(picos_data))
 
@@ -425,7 +376,7 @@ class ProtocolPage(Base):
                                 pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while adding PICOS data for Population -> "
                                             f"{i[0]}, Study Type -> {k}.")
-                        
+
                         self.refreshpage()
                         time.sleep(2)
                         protocol_picos_data.append(added_picos_data)
@@ -439,7 +390,7 @@ class ProtocolPage(Base):
                 for j in stdy_data:
                     self.go_to_nested_page("protocol_link", "picos", env)
                     pop = [[i[k]] for k in range(0, len(i))]
-                    stdy = [[j[k]] for k in range(0, len(j))]                    
+                    stdy = [[j[k]] for k in range(0, len(j))]
                     protocol_picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
 
                     self.base.go_to_page("SLR_Homepage", env)
@@ -472,7 +423,7 @@ class ProtocolPage(Base):
                             raise Exception(f"Non-Oncology Clinical-Interventional Mismatch found in PICOS data "
                                             f"under Search LiveSLR -> View PICOS section with PICOS data under "
                                             f"Protocol -> PICOS and Inc-Exc criteria page for Population -> "
-                                            f"{i[0]}, Study Type -> {j[0]}.")    
+                                            f"{i[0]}, Study Type -> {j[0]}.")
                     if project == "Non-Oncology" and self.isdisplayed("view_picos_clinical_rwe_tab", env):
                         self.click("view_picos_clinical_rwe_tab", env)
                         view_picos_data = self.get_texts("view_picos_active_tab_data", env)
@@ -498,7 +449,7 @@ class ProtocolPage(Base):
                                             f"PICOS and Inc-Exc criteria page for Population -> "
                                             f"{i[0]}, Study Type -> {j[0]}.")
                     else:
-                        view_picos_data = self.get_texts("view_picos_data", env) 
+                        view_picos_data = self.get_texts("view_picos_data", env)
                         picos_data_comparison = self.slrreport.list_comparison_between_reports_data(
                             protocol_picos_data[0], view_picos_data)
 
@@ -520,7 +471,7 @@ class ProtocolPage(Base):
                                             f"section with PICOS data under Protocol -> PICOS and Inc-Exc criteria "
                                             f"page for Population -> {i[0]}, Study Type -> {j[0]}.")
                     self.refreshpage()
-        except Exception:   
+        except Exception:
             raise Exception("Error in accessing View PICOS")
 
     def add_valid_search_strategy_details(self, locatorname, filepath, pop_data, stdy_data, env, project, fname):
@@ -532,7 +483,7 @@ class ProtocolPage(Base):
             day_val = (today - timedelta(10)).strftime("%d")
         else:
             day_val = today.day
-        
+
         df = pd.read_excel(filepath)
 
         self.refreshpage()
@@ -572,7 +523,7 @@ class ProtocolPage(Base):
                         self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
                                          f"{k[0]}_search-strategy-template_{project}_{fname}.xlsx")
                         expected_template_name = f"{k[3]}_{fname}.xlsx"
-                        downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)                
+                        downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
                         if downloaded_template_name == expected_template_name:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
@@ -580,7 +531,8 @@ class ProtocolPage(Base):
                         else:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"Mismatch in search strategy template name. Expected Template name is "
-                                        f"{expected_template_name} and Actual Template name is {downloaded_template_name}",
+                                        f"{expected_template_name} and Actual Template name is "
+                                        f"{downloaded_template_name}",
                                 pass_=False, log=True, screenshot=False)
                             raise Exception(f"Mismatch in search strategy template name.")
 
@@ -613,19 +565,19 @@ class ProtocolPage(Base):
                                 pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while adding Search strategy data for "
                                             f"Population -> {i[0]}, Study Type -> {k[0]}.")
-                        
+
                         uploaded_tabledata = self.export_web_table(
                             "table table-bordered table-striped table-sm search-terms",
                             f"uploadedsearchstrategydata_{k[0]}_{project}_{fname}")
                         self.refreshpage()
                         time.sleep(2)
                         table_data.append(uploaded_tabledata)
-                        entered_db_value.append(k[2])                    
+                        entered_db_value.append(k[2])
                     res = [[table_data[i], entered_db_value[i]] for i in range(0, len(table_data))]
                     return res
         except Exception:
             raise Exception("Unable to add Search strategy data")
-            
+
     def add_invalid_search_strategy_details(self, locatorname, filepath, pop_data, stdy_data, env):
         expected_error_text = "Error while updating search strategy: The file extension should belong to this " \
                               "list: [.xls, .xlsx]"
@@ -636,7 +588,7 @@ class ProtocolPage(Base):
             day_val = (today - timedelta(10)).strftime("%d")
         else:
             day_val = today.day
-        
+
         df = pd.read_excel(filepath)
 
         self.refreshpage()
@@ -658,7 +610,7 @@ class ProtocolPage(Base):
 
                     upload_data = [[stdytype[i], fileupload[i], db_val[i], template[i]] for i in
                                    range(0, len(stdytype))]
-            
+
                     for k in upload_data:
                         selected_pop_val = self.base.selectbyvisibletext("searchstrategy_pop_dropdown", i[0], env)
                         time.sleep(1)
@@ -697,7 +649,7 @@ class ProtocolPage(Base):
                                 pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while adding Search strategy data for "
                                             f"Population -> {i[0]}, Study Type -> {k[0]}.")
-                        
+
                         self.refreshpage()
                         time.sleep(2)
         except Exception:
@@ -724,7 +676,7 @@ class ProtocolPage(Base):
                         self.click("view_search_clinical_intervention_tab", env)
                         view_date_val = self.get_text("view_search_date_active_tab_data", env)
                         database_search_val_intvn = self.get_text("view_search_database_active_tab_data", env)
-                    
+
                         nononco_view_strategy_filename_intvn = self.export_web_table(
                             "table table-bordered table-striped table-sm search-term",
                             f"viewsearchstrategydata_Clinical-Interventional_{prjname}")
@@ -762,12 +714,12 @@ class ProtocolPage(Base):
                                             f"'{Path(f'ActualOutputs//web_table_exports//{uploaded_data[0][0]}').name}'"
                                             f"and View Search Strategy Data "
                                             f"'{Path(f'ActualOutputs//web_table_exports//{nononco_view_strategy_filename_intvn}').name}' "
-                                            f"are not matching")                            
+                                            f"are not matching")
                     if prjname == "Non-Oncology" and self.isdisplayed("view_search_clinical_rwe_tab", env):
                         self.click("view_search_clinical_rwe_tab", env)
                         view_date_val = self.get_text("view_search_date_active_tab_data", env)
                         database_search_val_rwe = self.get_text("view_search_database_active_tab_data", env)
-                    
+
                         nononco_view_strategy_filename_rwe = self.export_web_table(
                             "table table-bordered table-striped table-sm search-term",
                             f"viewsearchstrategydata_Clinical-RWE_{prjname}")
@@ -862,7 +814,8 @@ class ProtocolPage(Base):
                     picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
 
                     self.go_to_page("searchstrategy", env)
-                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy, env, project, "downloadprotocol")
+                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy, env,
+                                                                           project, "downloadprotocol")
 
                     # Go to live slr page
                     self.go_to_page("SLR_Homepage", env)
@@ -913,7 +866,7 @@ class ProtocolPage(Base):
                                 expecteddata.rename(columns={'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1': f'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1 {j[0]}'}, inplace=True)
                             if sheet == "SEARCH STRATEGIES":
                                 expecteddata.rename(columns={'SEARCH STRATEGY: Test_Automation_1': f'SEARCH STRATEGY: Test_Automation_1 {j[0]}'}, inplace=True)
-                        
+
                         if project == "Non-Oncology":
                             if sheet == "PICOS":
                                 expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3': 'PICOS: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
@@ -922,7 +875,7 @@ class ProtocolPage(Base):
                                 expecteddata.rename(columns={'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3': 'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
                             if sheet == "Search Strategy(ies)":
                                 expecteddata.rename(columns={'Search Strategy(ies): Test_NonOncology_Automation_3': 'Search Strategy(ies): Test_NonOncology_Automation_3 Clinical'}, inplace=True)
-                        
+
                         if expecteddata.equals(actualdata_compexcelfile):
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"From '{sheet}' sheet -> File contents between Expected File "

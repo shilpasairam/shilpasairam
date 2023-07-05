@@ -414,21 +414,28 @@ class SLRReport(Base):
             df1 = pd.read_excel(f'ActualOutputs//{webexcel_filename}', sheet_name=i, skiprows=3)
             df2 = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=i, skiprows=3)
             if first_col in df1.columns.values and first_col in df2.columns.values:
-                self.LogScreenshot.fLogScreenshot(message=f"Column names are present at row 4 in Standard Excel and Complete Excel Report.",
-                                                  pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"Column names are present at row 4 in Standard Excel and Complete Excel Report.",
+                    pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Column names are not present at row 4 in Standard Excel and Complete Excel Report.",
-                                                  pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"Column names are not present at row 4 in Standard Excel and Complete Excel Report.",
+                    pass_=False, log=True, screenshot=False)
                 raise Exception(f"Column names are not present at row 4 in Standard Excel and Complete Excel Report")
 
             # Check the presence of Update date column as part of LIVEHTA-1820 story
             if "Update date (yyyy-mm-dd)" in df1.columns.values and "Update date (yyyy-mm-dd)" in df2.columns.values:
-                self.LogScreenshot.fLogScreenshot(message=f"'Update date (yyyy-mm-dd)' Column is present in Standard Excel and Complete Excel Report.",
-                                                pass_=True, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"'Update date (yyyy-mm-dd)' Column is present in Standard Excel and Complete Excel "
+                            f"Report.",
+                    pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"'Update date (yyyy-mm-dd)' Column is absent in Standard Excel and Complete Excel Report.",
-                                                pass_=False, log=True, screenshot=False)
-                raise Exception(f"'Update date (yyyy-mm-dd)' Column is absent in Standard Excel and Complete Excel Report")           
+                self.LogScreenshot.fLogScreenshot(
+                    message=f"'Update date (yyyy-mm-dd)' Column is absent in Standard Excel and Complete Excel "
+                            f"Report.",
+                    pass_=False, log=True, screenshot=False)
+                raise Exception(f"'Update date (yyyy-mm-dd)' Column is absent in Standard Excel and Complete "
+                                f"Excel Report")
 
         # Actual excel content validation step starts here
         source_data = openpyxl.load_workbook(f'{source_template[0]}')
@@ -1137,7 +1144,7 @@ class SLRReport(Base):
                             f"table count is {word}")
 
     def prisma_ele_comparison_between_Excel_and_UI(self, locatorname, pop_data, slr_type, add_criteria, sheet,
-                                                        filepath, env, prj_name):
+                                                   filepath, env, prj_name):
 
         # Read expected categoris from data sheet
         expected_prisma_count = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
@@ -1455,7 +1462,8 @@ class SLRReport(Base):
         # pop_ele = self.select_element("select_pop_dropdown", env)
         # select1 = Select(pop_ele)
         # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
-        selected_pop_val = self.base.selectbyvisibletext("select_pop_dropdown", "NewImportLogic_1 - Test_Automation_1", env)
+        selected_pop_val = self.base.selectbyvisibletext("select_pop_dropdown",
+                                                         "NewImportLogic_1 - Test_Automation_1", env)
 
         stdy_ele = self.select_element("select_stdy_type_dropdown", env)
         select2 = Select(stdy_ele)
@@ -2156,8 +2164,9 @@ class SLRReport(Base):
                                           pass_=True, log=True, screenshot=False)
 
     def validate_study_design_section(self, locatorname, filepath, env):
-        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Study Designs in LiveSLR -> Select Study Design section "
-                                                  f"is started***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Study Designs in LiveSLR -> "
+                                                  f"Select Study Design section is started***",
+                                          pass_=True, log=True, screenshot=False)
 
         # Read population data values
         pop_list = self.exbase.get_population_data(filepath, 'Sheet1', locatorname)
@@ -2167,8 +2176,10 @@ class SLRReport(Base):
         source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)
 
         # Read expected Study Design Values
-        expected_dsgn_val = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Expected_Study_Design_vals')
-        expected_rwe_dsgn_val = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1', 'Expected_Study_Design_RWE_vals')
+        expected_dsgn_val = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
+                                                                'Expected_Study_Design_vals')
+        expected_rwe_dsgn_val = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
+                                                                    'Expected_Study_Design_RWE_vals')
 
         # Read extraction file path
         # extraction_file = self.exbase.get_template_file_details(filepath, locatorname, 'Files_to_upload')
@@ -2198,41 +2209,66 @@ class SLRReport(Base):
                                                           f"section : ", pass_=True, log=True, screenshot=True)
                 
                 if self.isselected("study_design_selectall_checkbox", env):
-                    self.LogScreenshot.fLogScreenshot(message=f"By default 'Select all' checkbox is selected as expected.", pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"By default 'Select all' checkbox is selected as expected.",
+                        pass_=True, log=True, screenshot=True)
                     actual_dsgn_val = self.get_texts('study_design_interventional_values', env)
                     actual_dsgn_val_res = []
                     for xy in actual_dsgn_val:
                         actual_dsgn_val_res.append(xy.splitlines())
                     actual_dsgn_val_res = list(list(zip(*actual_dsgn_val_res))[0])
 
-                    comparison_result = self.list_comparison_between_reports_data(expected_dsgn_val, actual_dsgn_val_res)
+                    comparison_result = self.list_comparison_between_reports_data(expected_dsgn_val,
+                                                                                  actual_dsgn_val_res)
 
                     if len(comparison_result) == 0:
-                        self.LogScreenshot.fLogScreenshot(message=f"'Study Design' section values are matching with expected values.", pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"'Study Design' section values are matching with expected values.",
+                            pass_=True, log=True, screenshot=True)
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"'Study Design' section values are not matching with expected values. Mismatch values are arranged in following order -> Expected Values and Actual Values. {comparison_result}", pass_=False, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"'Study Design' section values are not matching with expected values. Mismatch "
+                                    f"values are arranged in following order -> Expected Values and Actual Values. "
+                                    f"{comparison_result}",
+                            pass_=False, log=True, screenshot=True)
                         raise Exception(f"'Study Design' section values are not matching with expected values.")
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"By default 'Select all' checkbox is not selected which is not expected.", pass_=False, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"By default 'Select all' checkbox is not selected which is not expected.",
+                        pass_=False, log=True, screenshot=True)
                     raise Exception(f"By default 'Select all' checkbox is not selected which is not expected.")
 
                 if self.isdisplayed('study_design_selectall_rwe', env):
                     if self.isselected("study_design_selectall_rwe_checkbox", env):
-                        self.LogScreenshot.fLogScreenshot(message=f"By default 'Select all RWE' checkbox is selected as expected.", pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"By default 'Select all RWE' checkbox is selected as expected.",
+                            pass_=True, log=True, screenshot=True)
                         actual_rwe_dsgn_val = self.get_attribute_val('study_design_rwe_values', 'title', env)
 
-                        comparison_result = self.list_comparison_between_reports_data(expected_rwe_dsgn_val, actual_rwe_dsgn_val)
+                        comparison_result = self.list_comparison_between_reports_data(expected_rwe_dsgn_val,
+                                                                                      actual_rwe_dsgn_val)
 
                         if len(comparison_result) == 0:
-                            self.LogScreenshot.fLogScreenshot(message=f"RWE Study Design values are matching with expected values.", pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"RWE Study Design values are matching with expected values.",
+                                pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"RWE Study Design values are not matching with expected values. Mismatch values are arranged in following order -> Expected Values and Actual Values. {comparison_result}", pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"RWE Study Design values are not matching with expected values. Mismatch "
+                                        f"values are arranged in following order -> Expected Values and Actual "
+                                        f"Values. {comparison_result}",
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"RWE Study Design values are not matching with expected values.")
                     else:
-                        self.LogScreenshot.fLogScreenshot(message=f"By default 'Select all' checkbox is not selected which is not expected.", pass_=False, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"By default 'Select all' checkbox is not selected which is not expected.",
+                            pass_=False, log=True, screenshot=True)
                         raise Exception(f"By default 'Select all' checkbox is not selected which is not expected.")
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f"'Select all RWE' section is not present as the extraction file doesnot contains value related to RWE Study Design", pass_=True, log=True, screenshot=True)
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"'Select all RWE' section is not present as the extraction file doesnot contains "
+                                f"value related to RWE Study Design",
+                        pass_=True, log=True, screenshot=True)
                 
                 if len(add_criteria) != 0:
                     for k in add_criteria:
@@ -2252,19 +2288,25 @@ class SLRReport(Base):
                 webexcel_filename = self.get_and_validate_filename(filepath)
                 self.back_to_report_page("Back_to_search_page", env)
 
-                self.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "LiveSLR Study ID")
+                self.excel_content_validation(source_template, index, webexcel_filename, excel_filename,
+                                              "LiveSLR Study ID")
 
         self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
         self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
 
-        self.LogScreenshot.fLogScreenshot(message=f"***Validation of presence of Study Designs in LiveSLR -> Select Study Design section "
-                                                  f"is completed***", pass_=True, log=True, screenshot=False)
+        self.LogScreenshot.fLogScreenshot(
+            message=f"***Validation of presence of Study Designs in LiveSLR -> Select Study Design section is "
+                    f"completed***",
+            pass_=True, log=True, screenshot=False)
 
-    def validate_content_with_multiple_extractions_upload(self, locatorname, filepath, pop_data, stdy_data, env, project):
+    def validate_content_with_multiple_extractions_upload(self, locatorname, filepath, pop_data, stdy_data, env,
+                                                          project):
         source_template = self.exbase.get_source_template(filepath, 'Sheet1', locatorname)
 
         try:
-            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Uploading the Second extraction file**", pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(
+                message=f"**For '{project}' project -> Uploading the Second extraction file**",
+                pass_=True, log=True, screenshot=False)
             if project == 'Non-Oncology':
                 self.imppubpage.upload_file_with_success('scenario1_1', filepath, env)
             if project == 'Oncology':
@@ -2272,7 +2314,9 @@ class SLRReport(Base):
 
             self.refreshpage()
             time.sleep(2)
-            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Content validation from downloaded reports is started**", pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(
+                message=f"**For '{project}' project -> Content validation from downloaded reports is started**",
+                pass_=True, log=True, screenshot=False)
             self.go_to_page("SLR_Homepage", env)
             for i in pop_data:
                 self.select_data(i[0], i[1], env)
@@ -2293,9 +2337,13 @@ class SLRReport(Base):
                     if project == "Non-Oncology":
                         colname = "LiveSLR Study ID"
                     self.excel_content_validation(source_template, index, webexcel_filename, excel_filename, colname)
-            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Content validation from downloaded reports is completed**", pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(
+                message=f"**For '{project}' project -> Content validation from downloaded reports is completed**",
+                pass_=True, log=True, screenshot=False)
 
-            self.LogScreenshot.fLogScreenshot(message=f"**For '{project}' project -> Removing the Second uploaded extraction file**", pass_=True, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(
+                message=f"**For '{project}' project -> Removing the Second uploaded extraction file**",
+                pass_=True, log=True, screenshot=False)
             self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
             if project == 'Non-Oncology':
                 self.imppubpage.delete_file('scenario1_1', filepath, "file_status_popup_text", "upload_table_rows", env)
@@ -2327,7 +2375,8 @@ class SLRReport(Base):
                     webexcel_filename = self.get_and_validate_filename(filepath)
                     self.back_to_report_page("Back_to_search_page", env)
 
-                    self.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "Study Identifier")
+                    self.excel_content_validation(source_template, index, webexcel_filename, excel_filename,
+                                                  "Study Identifier")
 
             self.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
             self.imppubpage.delete_file(locatorname, filepath, "file_status_popup_text", "upload_table_rows", env)
