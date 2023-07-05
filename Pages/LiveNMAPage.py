@@ -115,7 +115,7 @@ class LiveNMA(Base):
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not clickable",
                                               pass_=False, log=True, screenshot=False)
         # Switch the driver to LiveNMA tab
-        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.switch_to.window(self.driver.window_handles[1])
         try:
             self.presence_of_element("live_nma_data_table", env)
             self.assertPageTitle("Live NMA", UnivWaitFor=30)
