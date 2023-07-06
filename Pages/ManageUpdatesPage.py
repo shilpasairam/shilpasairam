@@ -47,7 +47,7 @@ class ManageUpdatesPage(Base):
         expected_status_text = "Update added successfully"
         # Read population details from data sheet
         pop_details = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'population_name',
-                                                   'indication_type')
+                                                      'indication_type')
 
         # Fetching total rows count before adding a new update
         table_rows_before = self.mngpoppage.get_table_length("manage_update_table_rows_info",
@@ -67,7 +67,7 @@ class ManageUpdatesPage(Base):
         self.select_calendar_date(date_val)
 
         self.LogScreenshot.fLogScreenshot(message=f"Entered update details are : ",
-                                            pass_=True, log=True, screenshot=True)         
+                                          pass_=True, log=True, screenshot=True)
 
         '''As per LIVEHTA-1657 changes commenting the below section'''
         # self.click("sel_update_type")
@@ -113,8 +113,9 @@ class ManageUpdatesPage(Base):
                     update_data = f"{result[0]} - {result[2]}"
                     return update_data
                 else:
-                    self.LogScreenshot.fLogScreenshot(message=f'Population update data is not added. Actual update data is : {result}',
-                                                    pass_=False, log=True, screenshot=False)                    
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f'Population update data is not added. Actual update data is : {result}',
+                        pass_=False, log=True, screenshot=False)
                     raise Exception("Population update data is not added")
             self.clear("manage_update_search_box", env)
         except Exception:
@@ -125,7 +126,7 @@ class ManageUpdatesPage(Base):
 
         self.input_text("manage_update_search_box", current_data, env)
         self.LogScreenshot.fLogScreenshot(message=f"Population opted for performing the edit operation is : ",
-                                            pass_=True, log=True, screenshot=True)        
+                                          pass_=True, log=True, screenshot=True)
         self.click(edit_upd_button, env, UnivWaitFor=10)
 
         pop_ele = self.select_element("sel_pop_update_dropdown", env)
@@ -182,8 +183,9 @@ class ManageUpdatesPage(Base):
                 update_data = f"{result[0]} - {result[2]}"
                 return update_data
             else:
-                self.LogScreenshot.fLogScreenshot(message=f'Population update data is not edited. Actual update data is : {result}',
-                                    pass_=False, log=True, screenshot=False)
+                self.LogScreenshot.fLogScreenshot(
+                    message=f'Population update data is not edited. Actual update data is : {result}',
+                    pass_=False, log=True, screenshot=False)
                 raise Exception("Population update data is not edited")
         except Exception:
             raise Exception("Error while editing the population updates")
@@ -200,7 +202,7 @@ class ManageUpdatesPage(Base):
         self.scroll("manageupdates_page_heading", env)
         self.input_text("manage_update_search_box", added_update_val, env)
         self.LogScreenshot.fLogScreenshot(message=f"Population opted for performing the delete operation is : ",
-                                            pass_=True, log=True, screenshot=True)        
+                                          pass_=True, log=True, screenshot=True)
         
         self.click(del_locator, env)
         time.sleep(2)

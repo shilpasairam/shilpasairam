@@ -133,7 +133,8 @@ class Test_Search_LiveSLR:
 
                     slrreport.check_sorting_order_in_excel_report(webexcel_filename, excel_filename)
 
-                    slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "Study Identifier")
+                    slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename,
+                                                       "Study Identifier")
 
                     slrreport.word_content_validation(filepath, index, word_filename)
         except Exception:
@@ -279,7 +280,7 @@ class Test_Search_LiveSLR:
                 slrreport.validate_presence_of_ep_details_in_liveslr_page(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
 
     @pytest.mark.C35127
@@ -312,7 +313,7 @@ class Test_Search_LiveSLR:
                 slrreport.validate_presence_of_uniquestudies_in_liveslr_page(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
 
     @pytest.mark.C38487
@@ -345,7 +346,7 @@ class Test_Search_LiveSLR:
                 slrreport.validate_uniquestudies_reporting_outcomes(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
 
     @pytest.mark.C39312
@@ -405,11 +406,12 @@ class Test_Search_LiveSLR:
                         webexcel_filename = slrreport.get_and_validate_filename(filepath)
                         slrreport.back_to_report_page("Back_to_search_page", env)
 
-                        slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename, "LiveSLR Study ID")
+                        slrreport.excel_content_validation(source_template, index, webexcel_filename, excel_filename,
+                                                           "LiveSLR Study ID")
                 
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
 
     @pytest.mark.C39090
@@ -430,7 +432,8 @@ class Test_Search_LiveSLR:
         exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)        
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology - Validate Rank order of extractions in Complete Excel and Standard Excel Reports"
+        request.node._title = "Non-Oncology - Validate Rank order of extractions in Complete Excel and Standard " \
+                              "Excel Reports"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -473,7 +476,7 @@ class Test_Search_LiveSLR:
                 
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
 
     @pytest.mark.C40194
@@ -504,7 +507,7 @@ class Test_Search_LiveSLR:
                 slrreport.validate_study_design_section(i, filepath, env)
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
 
     @pytest.mark.C39828
@@ -525,7 +528,8 @@ class Test_Search_LiveSLR:
         slrreport = SLRReport(self.driver, extra)        
 
         request.node._tcid = caseid
-        request.node._title = "Verify Admin user can upload multiple files under one project/population for Oncology or Non-Oncology, Download the reports and validate the contents"
+        request.node._title = "Verify Admin user can upload multiple files under one project/population for " \
+                              "Oncology or Non-Oncology, Download the reports and validate the contents"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -545,16 +549,128 @@ class Test_Search_LiveSLR:
                 # Read Project name
                 project_name = exbase.get_individual_col_data(filepath, scenario, 'Sheet1', 'Project')
 
-                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is started***", pass_=True, log=True, screenshot=False)
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is "
+                                                     f"started***", pass_=True, log=True, screenshot=False)
                 base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
                 imppubpage.upload_file_with_success(scenario, filepath, env)
 
-                slrreport.validate_content_with_multiple_extractions_upload(scenario, filepath, pop_list, slrtype_, env, project_name[0])
+                slrreport.validate_content_with_multiple_extractions_upload(scenario, filepath, pop_list, slrtype_,
+                                                                            env, project_name[0])
 
                 imppubpage.delete_file(scenario, filepath, "file_status_popup_text", "upload_table_rows", env)
-                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Uploaded Extraction file is removed***", pass_=True, log=True, screenshot=False)
+                LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Uploaded "
+                                                     f"Extraction file is removed***",
+                                             pass_=True, log=True, screenshot=False)
                 
         except Exception:
             LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page",
-                                            pass_=False, log=True, screenshot=True)
+                                         pass_=False, log=True, screenshot=True)
             raise Exception("Element Not Found")
+
+    @pytest.mark.C39873
+    def test_upload_extraction_file_and_excel_content_validation(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        filepath = ReadConfig.getimportpublicationsdata(env)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Oncology - Validate Update date under Study Characteristics"
+
+        LogScreenshot.fLogScreenshot(message=f"***Validation of Update date for Oncology projects is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        scenarios = ['pop1']
+
+        for scenario in scenarios:
+            try:
+                # Read population data values
+                pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
+                # Read slrtype data values
+                slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
+                # Sorting the SLR Type data to execute orderwise
+                slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
+
+                slrreport.upload_extraction_file_and_excel_content_validation(scenario, filepath, pop_list,
+                                                                              slrtype_, env)
+                
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error while validating Update date for Oncology projects",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error while validating Update date for Oncology projects")
+        
+        LogScreenshot.fLogScreenshot(message=f"***Validation of Update date for Oncology projects is completed***",
+                                     pass_=True, log=True, screenshot=False)
+
+    @pytest.mark.C41160
+    def test_Smoketest_client_user(self, extra, env, request, caseid):
+        clientusername = ReadConfig.getClientUserName()
+        clientpassword = ReadConfig.getClientPassword()
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        filepath = ReadConfig.getsmoketestdata(env)
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+        # Creating object of ExcludedStudies_liveSLR class
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)        
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Client User -> Validate access for Oncology and Non-Oncology Population"
+
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(clientusername, clientpassword, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        base.go_to_page("SLR_Homepage", env)
+
+        scenarios = ['scenario1', 'scenario2']
+
+        for scenario in scenarios:
+            try:
+                # Read population data values
+                pop_list = exbase.get_population_data(filepath, 'Sheet1', scenario)
+                # Read slrtype data values
+                slrtype = exbase.get_slrtype_data(filepath, 'Sheet1', scenario)
+                add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, scenario)
+                # Read Project name
+                project_name = exbase.get_individual_col_data(filepath, scenario, 'Sheet1', 'Project')
+
+                for i in pop_list:
+                    slrreport.select_data(i[0], i[1], env)
+                    for j in slrtype:
+                        slrreport.select_data(j[0], j[1], env)                          
+                        if len(add_criteria) != 0:
+                            for k in add_criteria:
+                                slrreport.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")
+
+                        slrreport.generate_download_report("excel_report", env)
+                        excel_filename = slrreport.get_and_validate_filename(filepath)
+
+                        if project_name[0] == 'Oncology':
+                            slrreport.generate_download_report("word_report", env)
+                            word_filename = slrreport.get_and_validate_filename(filepath)
+
+                        slrreport.preview_result("preview_results", env)
+                        slrreport.table_display_check("Table", env)
+                        slrreport.generate_download_report("Export_as_excel", env)
+                        webexcel_filename = slrreport.get_and_validate_filename(filepath)
+                        slrreport.back_to_report_page("Back_to_search_page", env)
+                
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing LiveSLR Page with Client User",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing LiveSLR Page with Client User")

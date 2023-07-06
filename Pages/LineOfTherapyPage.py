@@ -82,11 +82,14 @@ class LineofTherapyPage(Base):
         pagedetails = [self.get_text("managelot_page_heading", env), self.get_text("managelot_pagecontent", env)]
 
         if expected_data == pagedetails:
-            self.LogScreenshot.fLogScreenshot(message=f"Population filter 2 Page name and page content is present in UI",
+            self.LogScreenshot.fLogScreenshot(message=f"Population filter 2 Page name and page content is present "
+                                                      f"in UI",
                                               pass_=True, log=True, screenshot=True)
         else:
-            self.LogScreenshot.fLogScreenshot(message=f"Population filter 2 Page name and page content is not present in "
-                                                      f"UI. Expected Page name: '{expected_data}'. Actual Page name: '{pagedetails}'", pass_=False, log=True, screenshot=False)
+            self.LogScreenshot.fLogScreenshot(message=f"Population filter 2 Page name and page content is not "
+                                                      f"present in UI. Expected Page name: '{expected_data}'. "
+                                                      f"Actual Page name: '{pagedetails}'",
+                                              pass_=False, log=True, screenshot=False)
             raise Exception(f"Population filter 2 Page name and page content is not present in UI")            
 
         if self.isdisplayed("add_lot_btn", env) and self.isdisplayed("managelot_resultpanel_heading", env):

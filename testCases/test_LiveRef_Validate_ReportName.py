@@ -49,5 +49,5 @@ class Test_SearchPublications_DownloadedFilename:
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in during validation of downloaded filename",
-                                                  pass_=False, log=True, screenshot=False)
+                                             pass_=False, log=True, screenshot=False)
                 raise Exception("Error in during validation of downloaded filename")

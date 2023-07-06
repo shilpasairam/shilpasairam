@@ -80,7 +80,7 @@ class ManageQADataPage(Base):
 
         # Read slrtype data values
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
-		# Removing duplicates to get the proper length of SLR Type data
+        # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
@@ -104,14 +104,16 @@ class ManageQADataPage(Base):
                         self.refreshpage()
                         time.sleep(3)
                         self.click("select_pop_dropdown", env)
-                        self.LogScreenshot.fLogScreenshot(message=f"Population dropdown is accessible. Listed elements are:",
-                                                  pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(message=f"Population dropdown is accessible. Listed "
+                                                                  f"elements are:",
+                                                          pass_=True, log=True, screenshot=True)
                         pop_value = self.base.selectbyvisibletext("select_pop_dropdown", i[0], env)
                         time.sleep(1)
                         
                         self.click("select_stdy_type_dropdown", env)
-                        self.LogScreenshot.fLogScreenshot(message=f"SLR Type dropdown is accessible. Listed elements are:",
-                                                  pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(message=f"SLR Type dropdown is accessible. Listed "
+                                                                  f"elements are:",
+                                                          pass_=True, log=True, screenshot=True)
                         selected_slr_val = self.base.selectbyvisibletext("select_stdy_type_dropdown", k[0], env)
                         time.sleep(1)
 
@@ -121,15 +123,16 @@ class ManageQADataPage(Base):
                         self.input_text("qa_excel_file_upload", k[1], env)
                         time.sleep(2)
                         self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : '
-                                                                f'{i[0]} -> SLR Type : {selected_slr_val}',
-                                                        pass_=True, log=True, screenshot=True)
+                                                                  f'{i[0]} -> SLR Type : {selected_slr_val}',
+                                                          pass_=True, log=True, screenshot=True)
                         
                         self.presence_of_elements("upload_save_button", env)
                         self.presence_of_elements("delete_file_button", env)
                         time.sleep(2)
                         self.LogScreenshot.fLogScreenshot(message=f"ManageQAData Page elements are accessible for "
-                                                                f"Population : {pop_value} -> SLR Type : {selected_slr_val}.",
-                                                        pass_=True, log=True, screenshot=True)
+                                                                  f"Population : {pop_value} -> SLR Type : "
+                                                                  f"{selected_slr_val}.",
+                                                          pass_=True, log=True, screenshot=True)
         except Exception:
             raise Exception("Unable to access the Manage QA Data page elements")
 
@@ -141,7 +144,7 @@ class ManageQADataPage(Base):
 
         # Read slrtype data values
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
-		# Removing duplicates to get the proper length of SLR Type data
+        # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
@@ -176,8 +179,8 @@ class ManageQADataPage(Base):
                         self.input_text("qa_excel_file_upload", k[1], env)
                         time.sleep(2)
                         self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : '
-                                                                f'{i[0]} -> SLR Type : {selected_slr_val}',
-                                                        pass_=True, log=True, screenshot=True)
+                                                                  f'{i[0]} -> SLR Type : {selected_slr_val}',
+                                                          pass_=True, log=True, screenshot=True)
 
                         self.click("upload_save_button", env)
                         time.sleep(3)
@@ -186,17 +189,17 @@ class ManageQADataPage(Base):
                         # time.sleep(2)
 
                         if actual_error_text == expected_error_text:
-                            self.LogScreenshot.fLogScreenshot(message=f"File with invalid format is not uploaded as expected. "
-                                                                    f"Invalid file is '{Path(f'{k[1]}').name}'",
-                                                            pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"File with invalid format is not uploaded as expected. Invalid file is "
+                                        f"'{Path(f'{k[1]}').name}'",
+                                pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading File "
-                                                                    f"with invalid format for Population : {pop_value} -> "
-                                                                    f"SLR Type : {selected_slr_val}. Invalid file is "
-                                                                    f"'{Path(f'{k[1]}').name}'. Actual status message is "
-                                                                    f"{actual_error_text} and Expected status message is "
-                                                                    f"{expected_error_text}",
-                                                            pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while uploading File with invalid format "
+                                        f"for Population : {pop_value} -> SLR Type : {selected_slr_val}. Invalid "
+                                        f"file is '{Path(f'{k[1]}').name}'. Actual status message is "
+                                        f"{actual_error_text} and Expected status message is {expected_error_text}",
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while uploading File with invalid format "
                                             f"for Population : {pop_value} -> SLR Type : {selected_slr_val}. "
                                             f"Invalid file is '{Path(f'{i[1]}').name}'")
@@ -211,7 +214,7 @@ class ManageQADataPage(Base):
 
         # Read slrtype data values
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
-		# Removing duplicates to get the proper length of SLR Type data
+        # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
@@ -246,8 +249,8 @@ class ManageQADataPage(Base):
                         self.input_text("qa_excel_file_upload", k[1], env)
                         time.sleep(2)
                         self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : '
-                                                                f'{i[0]} -> SLR Type : {selected_slr_val}',
-                                                        pass_=True, log=True, screenshot=True)
+                                                                  f'{i[0]} -> SLR Type : {selected_slr_val}',
+                                                          pass_=True, log=True, screenshot=True)
 
                         self.click("upload_save_button", env)
                         time.sleep(2)
@@ -256,16 +259,17 @@ class ManageQADataPage(Base):
                         # time.sleep(2)
 
                         if actual_upload_status_text == expected_upload_status_text:
-                            self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success for Population : '
-                                                                    f'{pop_value} -> SLR Type : {selected_slr_val}.',
-                                                            pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'QA File upload is success for Population : {pop_value} -> SLR Type : '
+                                        f'{selected_slr_val}.',
+                                pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading QA File '
-                                                                    f'for Population : {pop_value} -> SLR Type : {selected_slr_val}. '
-                                                                    f'Actual status message is {actual_upload_status_text} '
-                                                                    f'and Expected status message is '
-                                                                    f'{expected_upload_status_text}',
-                                                            pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Unable to find status message while uploading QA File for Population : '
+                                        f'{pop_value} -> SLR Type : {selected_slr_val}. Actual status message is '
+                                        f'{actual_upload_status_text} and Expected status message is '
+                                        f'{expected_upload_status_text}',
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while uploading QA File for Population : "
                                             f"{pop_value} -> SLR Type : {selected_slr_val}.")
         except Exception:
@@ -279,7 +283,7 @@ class ManageQADataPage(Base):
 
         # Read slrtype data values
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
-		# Removing duplicates to get the proper length of SLR Type data
+        # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
@@ -313,9 +317,10 @@ class ManageQADataPage(Base):
                         self.input_text("qa_checklist_reference", f"QAReference_{i[0]}_{k[0]}_Override", env)
                         self.input_text("qa_excel_file_upload", k[1], env)
                         time.sleep(2)
-                        self.LogScreenshot.fLogScreenshot(message=f'User is able to override the details for Population : '
-                                                                f'{pop_value} -> SLR Type : {selected_slr_val}',
-                                                        pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f'User is able to override the details for Population : {pop_value} -> '
+                                    f'SLR Type : {selected_slr_val}',
+                            pass_=True, log=True, screenshot=True)
 
                         self.click("upload_save_button", env)
                         time.sleep(2)
@@ -324,16 +329,17 @@ class ManageQADataPage(Base):
                         # time.sleep(2)
 
                         if actual_upload_status_text == expected_upload_status_text:
-                            self.LogScreenshot.fLogScreenshot(message=f'Updating the existing QA File is success for '
-                                                                    f'Population : {pop_value} -> SLR Type : {selected_slr_val}.',
-                                                            pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Updating the existing QA File is success for Population : {pop_value} -> '
+                                        f'SLR Type : {selected_slr_val}.',
+                                pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while Updating the '
-                                                                    f'existing QA File for Population : {pop_value} -> '
-                                                                    f'SLR Type : {selected_slr_val}. Actual status message is '
-                                                                    f'{actual_upload_status_text} and Expected status '
-                                                                    f'message is {expected_upload_status_text}',
-                                                            pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Unable to find status message while Updating the existing QA File for '
+                                        f'Population : {pop_value} -> SLR Type : {selected_slr_val}. Actual status '
+                                        f'message is {actual_upload_status_text} and Expected status message '
+                                        f'is {expected_upload_status_text}',
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while Updating the existing QA File for "
                                             f"Population : {pop_value} -> SLR Type : {selected_slr_val}")
         except Exception:
@@ -347,7 +353,7 @@ class ManageQADataPage(Base):
 
         # Read slrtype data values
         slrtype = self.exbase.get_slrtype_data(filepath, 'Sheet1', locatorname)
-		# Removing duplicates to get the proper length of SLR Type data
+        # Removing duplicates to get the proper length of SLR Type data
         slrtype_ = sorted(list(set(tuple(sorted(sub)) for sub in slrtype)), key=lambda x: x[1])
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
@@ -376,7 +382,7 @@ class ManageQADataPage(Base):
                         selected_slr_val = self.base.selectbyvisibletext("select_stdy_type_dropdown", k[0], env)
                         time.sleep(1)
                         self.LogScreenshot.fLogScreenshot(message=f'Selected Data For Deletion :',
-                                                        pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
 
                         self.click("delete_file_button", env)
                         time.sleep(2)
@@ -388,16 +394,17 @@ class ManageQADataPage(Base):
                         # time.sleep(2)
 
                         if actual_delete_status_text == expected_delete_status_text:
-                            self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success for Population : '
-                                                                    f'{pop_value} -> SLR Type : {selected_slr_val}.',
-                                                            pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'QA File Deletion is success for Population : {pop_value} -> SLR Type : '
+                                        f'{selected_slr_val}.',
+                                pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting QA File '
-                                                                    f'for Population : {pop_value} -> SLR Type : {selected_slr_val}. '
-                                                                    f'Actual status message is {actual_delete_status_text} '
-                                                                    f'and Expected status message is '
-                                                                    f'{expected_delete_status_text}',
-                                                            pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Unable to find status message while deleting QA File for Population : '
+                                        f'{pop_value} -> SLR Type : {selected_slr_val}. Actual status message is '
+                                        f'{actual_delete_status_text} and Expected status message is '
+                                        f'{expected_delete_status_text}',
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while deleting QA File for Population : "
                                             f"{pop_value} -> SLR Type : {selected_slr_val}.")
         except Exception:
@@ -445,22 +452,23 @@ class ManageQADataPage(Base):
                         self.input_text("qa_checklist_reference", f"QAReference_{i[0]}_{k[0]}", env)
                         self.input_text("qa_excel_file_upload", k[1], env)
                         time.sleep(3)
-                        self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population : '
-                                                                f'{i[0]} -> SLR Type : {k[0]}',
-                                                        pass_=True, log=True, screenshot=True)
+                        self.LogScreenshot.fLogScreenshot(message=f'User is able to enter the details for Population '
+                                                                  f': {i[0]} -> SLR Type : {k[0]}',
+                                                          pass_=True, log=True, screenshot=True)
 
                         self.click("upload_save_button", env)
                         time.sleep(3)
                         actual_upload_status_text = self.get_status_text("get_status_text", env, UnivWaitFor=10)
 
                         if actual_upload_status_text == expected_upload_status_text:
-                            self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success for Population : '
-                                                                    f'{i[0]} -> SLR Type : {k[0]}.',
-                                                            pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(message=f'QA File upload is success for Population :'
+                                                                      f' {i[0]} -> SLR Type : {k[0]}.',
+                                                              pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while uploading QA File '
-                                                                    f'for Population : {i[0]} -> SLR Type : {k[0]}.',
-                                                            pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Unable to find status message while uploading QA File for Population : '
+                                        f'{i[0]} -> SLR Type : {k[0]}.',
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while uploading QA File for Population : "
                                             f"{i[0]} -> SLR Type : {k[0]}.")
                     
@@ -478,28 +486,30 @@ class ManageQADataPage(Base):
                         expected_sheet_names = ['Quality Assessment-Intervtnl', 'Quality Assessment-RWE']
                         for index, sheet in enumerate(expected_sheet_names):
                             if sheet in excel_data.sheetnames:
-                                self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' sheet is present in complete "
-                                                                        f"excel report",
-                                                                pass_=True, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'{sheet}' sheet is present in complete excel report",
+                                    pass_=True, log=True, screenshot=False)
 
                                 excel_sheet = excel_data[sheet]
                                 if excel_sheet['A1'].value == 'Back To Toc':
                                     self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present",
-                                                                    pass_=True, log=True, screenshot=False)
+                                                                      pass_=True, log=True, screenshot=False)
                                 else:
                                     self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present",
-                                                                    pass_=False, log=True, screenshot=False)
+                                                                      pass_=False, log=True, screenshot=False)
                                     raise Exception(f"'Back To Toc' option is not present")
                                 
-                                toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
+                                toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC",
+                                                          skiprows=3)
                                 col_data = list(toc_sheet.iloc[:, 1])
                                 if sheet in col_data:
                                     self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' is present in TOC sheet.",
-                                                                    pass_=True, log=True, screenshot=False)
+                                                                      pass_=True, log=True, screenshot=False)
                                 else:
-                                    self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' is not present in TOC sheet. "
-                                                                            f"Available Data from TOC sheet: {col_data}",
-                                                                    pass_=False, log=True, screenshot=False)
+                                    self.LogScreenshot.fLogScreenshot(
+                                        message=f"'{sheet}' is not present in TOC sheet. Available Data from TOC "
+                                                f"sheet: {col_data}",
+                                        pass_=False, log=True, screenshot=False)
                                     raise Exception(f"'{sheet}' is present in TOC sheet which is not expected. "
                                                     f"Available Data from TOC sheet: {col_data}")
                                 
@@ -510,70 +520,77 @@ class ManageQADataPage(Base):
                                 excelfile = excelfile.iloc[:, 1:]
                                 
                                 if qafile.equals(excelfile):
-                                    self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
-                                                                            f"'{Path(f'{(os.getcwd()+stdyfile[index])}').name}' and Complete Excel Report "
-                                                                            f"'{Path(f'ActualOutputs//{excel_filename}').name}' "
-                                                                            f"are matching",
-                                                                    pass_=True, log=True, screenshot=False)
+                                    self.LogScreenshot.fLogScreenshot(
+                                        message=f"File contents between QA File "
+                                                f"'{Path(f'{(os.getcwd()+stdyfile[index])}').name}' and Complete "
+                                                f"Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
+                                                f"are matching",
+                                        pass_=True, log=True, screenshot=False)
                                 else:
-                                    self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
-                                                                            f"'{Path({(os.getcwd()+stdyfile[index])}).name}' and Complete Excel Report "
-                                                                            f"'{Path(f'ActualOutputs//{excel_filename}').name}' "
-                                                                            f"are not matching",
-                                                                    pass_=False, log=True, screenshot=False)
-                                    raise Exception(f"File contents between QA File '{Path({(os.getcwd()+stdyfile[index])}).name}' "
-                                                    f"and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
+                                    self.LogScreenshot.fLogScreenshot(
+                                        message=f"File contents between QA File "
+                                                f"'{Path(f'{(os.getcwd()+stdyfile[index])}').name}' and Complete "
+                                                f"Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
+                                                f"are not matching",
+                                        pass_=False, log=True, screenshot=False)
+                                    raise Exception(f"File contents between QA File "
+                                                    f"'{Path(f'{(os.getcwd()+stdyfile[index])}').name}' and Complete "
+                                                    f"Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
                                                     f"are not matching")
                             else:
                                 raise Exception(f"'{sheet}' sheet is not present in complete excel report")
                     else:
                         if 'Quality Assessment' in excel_data.sheetnames:
-                            self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' sheet is present in complete "
-                                                                    f"excel report",
-                                                            pass_=True, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Quality Assessment' sheet is present in complete excel report",
+                                pass_=True, log=True, screenshot=False)
 
                             excel_sheet = excel_data['Quality Assessment']
                             if excel_sheet['A1'].value == 'Back To Toc':
                                 self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is present",
-                                                                pass_=True, log=True, screenshot=False)
+                                                                  pass_=True, log=True, screenshot=False)
                             else:
                                 self.LogScreenshot.fLogScreenshot(message=f"'Back To Toc' option is not present",
-                                                                pass_=False, log=True, screenshot=False)
+                                                                  pass_=False, log=True, screenshot=False)
                                 raise Exception(f"'Back To Toc' option is not present")
                             
                             toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                             col_data = list(toc_sheet.iloc[:, 1])
                             if 'Quality Assessment' in col_data:
-                                self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' is present in TOC sheet.",
-                                                                pass_=True, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'Quality Assessment' is present in TOC sheet.",
+                                    pass_=True, log=True, screenshot=False)
                             else:
-                                self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' is not present in TOC sheet. "
-                                                                        f"Available Data from TOC sheet: {col_data}",
-                                                                pass_=False, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'Quality Assessment' is not present in TOC sheet. Available Data from "
+                                            f"TOC sheet: {col_data}",
+                                    pass_=False, log=True, screenshot=False)
                                 raise Exception(f"'Quality Assessment' is present in TOC sheet which is not expected. "
                                                 f"Available Data from TOC sheet: {col_data}")
                             
                             qafile = pd.read_excel((os.getcwd()+stdyfile[0]))
-                            excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="Quality Assessment")
+                            excelfile = pd.read_excel(f'ActualOutputs//{excel_filename}',
+                                                      sheet_name="Quality Assessment")
 
                             # Removing the 'Back To Toc' column to compare the exact data with uploaded file
                             excelfile = excelfile.iloc[:, 1:]
                             
                             if qafile.equals(excelfile):
-                                self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
-                                                                        f"'{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
-                                                                        f"'{Path(f'ActualOutputs//{excel_filename}').name}' "
-                                                                        f"are matching",
-                                                                pass_=True, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"File contents between QA File "
+                                            f"'{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
+                                            f"'{Path(f'ActualOutputs//{excel_filename}').name}' are matching",
+                                    pass_=True, log=True, screenshot=False)
                             else:
-                                self.LogScreenshot.fLogScreenshot(message=f"File contents between QA File "
-                                                                        f"'{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
-                                                                        f"'{Path(f'ActualOutputs//{excel_filename}').name}' "
-                                                                        f"are not matching",
-                                                                pass_=False, log=True, screenshot=False)
-                                raise Exception(f"File contents between QA File '{Path(f'{(os.getcwd()+stdyfile[0])}').name}' "
-                                                f"and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
-                                                f"are not matching")
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"File contents between QA File "
+                                            f"'{Path(f'{(os.getcwd()+stdyfile[0])}').name}' and Complete Excel Report "
+                                            f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching",
+                                    pass_=False, log=True, screenshot=False)
+                                raise Exception(
+                                    f"File contents between QA File '{Path(f'{(os.getcwd()+stdyfile[0])}').name}' "
+                                    f"and Complete Excel Report '{Path(f'ActualOutputs//{excel_filename}').name}' "
+                                    f"are not matching")
                         else:
                             raise Exception("'Quality Assessment' sheet is not present in complete excel report")
         except Exception:
@@ -617,7 +634,7 @@ class ManageQADataPage(Base):
                         time.sleep(1)
 
                         self.LogScreenshot.fLogScreenshot(message=f'Selected Data For Deletion :',
-                                                        pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
 
                         self.click("delete_file_button", env)
                         time.sleep(2)
@@ -628,13 +645,15 @@ class ManageQADataPage(Base):
                         # time.sleep(2)
 
                         if actual_delete_status_text == expected_delete_status_text:
-                            self.LogScreenshot.fLogScreenshot(message=f'QA File Deletion is success for Population : '
-                                                                    f'{pop_value} -> SLR Type : {selected_slr_val}.',
-                                                            pass_=True, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'QA File Deletion is success for Population : {pop_value} -> SLR Type : '
+                                        f'{selected_slr_val}.',
+                                pass_=True, log=True, screenshot=True)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f'Unable to find status message while deleting QA File '
-                                                                    f'for Population : {pop_value} -> SLR Type : {selected_slr_val}.',
-                                                            pass_=False, log=True, screenshot=True)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f'Unable to find status message while deleting QA File for Population : '
+                                        f'{pop_value} -> SLR Type : {selected_slr_val}.',
+                                pass_=False, log=True, screenshot=True)
                             raise Exception(f"Unable to find status message while deleting QA File for Population : "
                                             f"{pop_value} -> SLR Type : {selected_slr_val}.")
                 
@@ -650,52 +669,55 @@ class ManageQADataPage(Base):
                         expected_sheet_names = ['Quality Assessment-Intervtnl', 'Quality Assessment-RWE']
                         for sheet in expected_sheet_names:
                             if sheet not in excel_data.sheetnames:
-                                self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' sheet is not present in complete "
-                                                                        f"excel report as expected",
-                                                                pass_=True, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'{sheet}' sheet is not present in complete excel report as expected",
+                                    pass_=True, log=True, screenshot=False)
                             else:
-                                self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' sheet is present in complete "
-                                                                        f"excel report which is not expected",
-                                                                pass_=True, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'{sheet}' sheet is present in complete excel report which is not "
+                                            f"expected",
+                                    pass_=True, log=True, screenshot=False)
                                 raise Exception(f"'{sheet}' sheet is present in complete excel report which is not "
                                                 f"expected")
                             
                             toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                             col_data = list(toc_sheet.iloc[:, 1])
                             if sheet not in col_data:
-                                self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' is not present in TOC sheet "
-                                                                        f"as expected",
-                                                                pass_=True, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'{sheet}' is not present in TOC sheet as expected",
+                                    pass_=True, log=True, screenshot=False)
                             else:
-                                self.LogScreenshot.fLogScreenshot(message=f"'{sheet}' is present in TOC sheet which "
-                                                                        f"is not expected. Available Data from "
-                                                                        f"TOC sheet: {col_data}",
-                                                                pass_=False, log=True, screenshot=False)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"'{sheet}' is present in TOC sheet which is not expected. Available "
+                                            f"Data from TOC sheet: {col_data}",
+                                    pass_=False, log=True, screenshot=False)
                                 raise Exception(f"'{sheet}' is present in TOC sheet which is not expected. "
                                                 f"Available Data from TOC sheet: {col_data}")
                     else:
                         if 'Quality Assessment' not in excel_data.sheetnames:
-                            self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' sheet is not present in complete "
-                                                                    f"excel report as expected",
-                                                            pass_=True, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Quality Assessment' sheet is not present in complete excel report as "
+                                        f"expected",
+                                pass_=True, log=True, screenshot=False)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' sheet is present in complete "
-                                                                    f"excel report which is not expected",
-                                                            pass_=True, log=True, screenshot=False)
-                            raise Exception(f"'Quality Assessment' sheet is present in complete excel report which is not "
-                                            f"expected")
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Quality Assessment' sheet is present in complete excel report which is "
+                                        f"not expected",
+                                pass_=True, log=True, screenshot=False)
+                            raise Exception(f"'Quality Assessment' sheet is present in complete excel report "
+                                            f"which is not expected")
                         
                         toc_sheet = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name="TOC", skiprows=3)
                         col_data = list(toc_sheet.iloc[:, 1])
                         if 'Quality Assessment' not in col_data:
-                            self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' is not present in TOC sheet "
-                                                                    f"as expected",
-                                                            pass_=True, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Quality Assessment' is not present in TOC sheet as expected",
+                                pass_=True, log=True, screenshot=False)
                         else:
-                            self.LogScreenshot.fLogScreenshot(message=f"'Quality Assessment' is present in TOC sheet which "
-                                                                    f"is not expected. Available Data from "
-                                                                    f"TOC sheet: {col_data}",
-                                                            pass_=False, log=True, screenshot=False)
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"'Quality Assessment' is present in TOC sheet which is not expected. "
+                                        f"Available Data from TOC sheet: {col_data}",
+                                pass_=False, log=True, screenshot=False)
                             raise Exception(f"'Quality Assessment' is present in TOC sheet which is not expected. "
                                             f"Available Data from TOC sheet: {col_data}")
         except Exception:

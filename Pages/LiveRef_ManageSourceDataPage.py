@@ -65,7 +65,8 @@ class ManageSourceDataPage(Base):
         source_data, source_value = self.get_details(locatorname, filepath, 'Add_source_field', 'Add_source_value')
 
         # Read filepaths to upload
-        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo', 'Source_Template_invalid')
+        logo_path, template_path = self.get_file_details(locatorname, filepath, 'Source_Logo',
+                                                         'Source_Template_invalid')
 
         self.click("add_sourcedata_btn", env, UnivWaitFor=10)
         time.sleep(1)

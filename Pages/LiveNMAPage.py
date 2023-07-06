@@ -115,7 +115,7 @@ class LiveNMA(Base):
             self.LogScreenshot.fLogScreenshot(message=f"{locator} is not clickable",
                                               pass_=False, log=True, screenshot=False)
         # Switch the driver to LiveNMA tab
-        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.switch_to.window(self.driver.window_handles[1])
         try:
             self.presence_of_element("live_nma_data_table", env)
             self.assertPageTitle("Live NMA", UnivWaitFor=30)
@@ -188,59 +188,59 @@ class LiveNMA(Base):
                 self.presence_of_element("network_section", env)
                 if self.isdisplayed("network_section", env, UnivWaitFor=30):
                     self.LogScreenshot.fLogScreenshot(message=f"'Network Section' is displayed",
-                                              pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
                     
                     # panel_ele = self.select_elements("network_panel_txt", env)
                     panel_txt = self.get_texts("network_panel_txt", env)
                     self.LogScreenshot.fLogScreenshot(message=f"Panel text from Network section is '{panel_txt}'",
-                                              pass_=True, log=True, screenshot=True)
+                                                      pass_=True, log=True, screenshot=True)
 
                     if self.clickable("run_nma", env):
                         self.LogScreenshot.fLogScreenshot(message=f"Run NMA Button is clickable",
-                                                        pass_=True, log=True, screenshot=False)
+                                                          pass_=True, log=True, screenshot=False)
                         self.click("run_nma", env)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Run NMA Button is not clickable",
-                                                        pass_=False, log=True, screenshot=False)
+                                                          pass_=False, log=True, screenshot=False)
                         raise Exception("Run NMA Button is not clickable")
                     
                     if self.isdisplayed("result_forestplot", env, UnivWaitFor=30):
                         self.LogScreenshot.fLogScreenshot(message=f"'Forest plot' is displayed in Result section.",
-                                                    pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"'Forest plot' is not displayed in Result section.",
-                                                    pass_=False, log=True, screenshot=True)
+                                                          pass_=False, log=True, screenshot=True)
                         raise Exception("'Forest plot' is not displayed in Result section.")
 
                     if self.isdisplayed("result_userstudy", env, UnivWaitFor=30):
                         self.LogScreenshot.fLogScreenshot(message=f"'User Study' is displayed in Result section.",
-                                                    pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"'User Study' is not displayed in Result section.",
-                                                    pass_=False, log=True, screenshot=True)
+                                                          pass_=False, log=True, screenshot=True)
                         raise Exception("'User Study' is not displayed in Result section.")
 
                     if self.isdisplayed("result_network", env, UnivWaitFor=30):
                         self.LogScreenshot.fLogScreenshot(message=f"'Network' is displayed in Result section.",
-                                                    pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"'Network' is not displayed in Result section.",
-                                                    pass_=False, log=True, screenshot=True)
+                                                          pass_=False, log=True, screenshot=True)
                         raise Exception("'Network' is not displayed in Result section.")
 
                     if self.clickable("print_screen", env):
                         self.LogScreenshot.fLogScreenshot(message=f"Print Screen Button is clickable",
-                                                        pass_=True, log=True, screenshot=False)
+                                                          pass_=True, log=True, screenshot=False)
                         self.scroll("print_screen", env)
                         self.LogScreenshot.fLogScreenshot(message=f"Print Screen Details : ",
-                                                        pass_=True, log=True, screenshot=True)
+                                                          pass_=True, log=True, screenshot=True)
                     else:
                         self.LogScreenshot.fLogScreenshot(message=f"Print Screen Button is not clickable",
-                                                        pass_=False, log=True, screenshot=False)
+                                                          pass_=False, log=True, screenshot=False)
                         raise Exception("Print Screen Button is not clickable")
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f"'Network Section' is not displayed",
-                                              pass_=False, log=True, screenshot=True)
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("'Network Section' is not displayed")
         except Exception:
             raise Exception("Failed in adding new study data to table")

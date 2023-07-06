@@ -39,7 +39,8 @@ class Test_LineofTherapyPage:
         request.node._tcid = caseid
         request.node._title = "Validate Manage Population filter 2 page functionalities for Oncology Population"
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion, Update and Deletion of Population filter 2 validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion, Update and Deletion of Population filter 2 validation is "
+                                             f"started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -72,5 +73,6 @@ class Test_LineofTherapyPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion, Update and Deletion of Population filter 2 validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion, Update and Deletion of Population filter 2 validation is "
+                                             f"completed***",
                                      pass_=True, log=True, screenshot=False)

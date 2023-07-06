@@ -346,9 +346,7 @@ class Test_ProtocolPage:
         
         filepath = exbase.get_testdata_filepath(basefile, "download_protocol_excel")
 
-        '''As part of LIVEHTA-2544 this is applicable only for Non-Oncology projects, Hence commenting out
-        the Validation related to Oncology projects'''
-        pop_val = ['pop5'] # ['pop1', 'pop2', 'pop3', 'pop4', 'pop5']
+        pop_val = ['pop1', 'pop2', 'pop3', 'pop4', 'pop5']
 
         for i in pop_val:
             try:

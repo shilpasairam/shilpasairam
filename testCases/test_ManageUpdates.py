@@ -41,7 +41,8 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Manage Update page functionality for selected Oncology population"
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Oncology Population Manageupdates validation is started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Oncology Population Manageupdates "
+                                             f"validation is started***",
                                      pass_=True, log=True, screenshot=False)
 
         today = date.today()
@@ -71,7 +72,8 @@ class Test_ManageUpdatesPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Oncology Population Manageupdates validation is completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Oncology Population Manageupdates "
+                                             f"validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     '''
@@ -123,45 +125,6 @@ class Test_ManageUpdatesPage:
         LogScreenshot.fLogScreenshot(message=f"***Edit Population Manageupdates validation is completed***",
                                      pass_=True, log=True, screenshot=False)
     '''
-    
-    # @pytest.mark.C38951
-    # def test_delete_updates(self, extra, env, request, caseid):
-    #     baseURL = ReadConfig.getPortalURL(env)
-    #     # Instantiate the Base class
-    #     base = Base(self.driver, extra)         
-    #     # Instantiate the logScreenshot class
-    #     LogScreenshot = cLogScreenshot(self.driver, extra)
-    #     # Creating object of loginpage class
-    #     loginPage = LoginPage(self.driver, extra)
-    #     # Creating object of ManagePopulationsPage class
-    #     mngupdpage = ManageUpdatesPage(self.driver, extra)
-
-    #     request.node._tcid = caseid
-    #     request.node._title = "Validate Deletion of existing Manage Update data for selected Oncology population"
-
-    #     LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is started***",
-    #                                  pass_=True, log=True, screenshot=False)
-
-    #     # today = date.today()
-    #     # dateval = today.strftime("%m/%d/%Y").replace('/', '')
-        
-    #     loginPage.driver.get(baseURL)
-    #     loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-    #     base.presence_of_admin_page_option("manageupdates_button", env)
-    #     base.go_to_page("manageupdates_button", env)
-
-    #     for i in self.added_updates_data:
-    #         try:
-    #             mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup",
-    #                                                       "manage_update_table_rows", env)
-
-    #         except Exception:
-    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-    #                                          pass_=False, log=True, screenshot=True)
-    #             raise Exception("Element Not Found")
-
-    #     LogScreenshot.fLogScreenshot(message=f"***Deletion of Population Manageupdates validation is "
-    #                                          f"completed***", pass_=True, log=True, screenshot=False)
 
     @pytest.mark.C38950
     def test_nononcology_manage_updates(self, extra, env, request, caseid):
@@ -181,8 +144,8 @@ class Test_ManageUpdatesPage:
         request.node._tcid = caseid
         request.node._title = "Validate Manage Update page functionality for selected Non-Oncology population"
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Non-Oncology Population Manageupdates validation is "
-                                             f"started***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Non-Oncology Population Manageupdates "
+                                             f"validation is started***",
                                      pass_=True, log=True, screenshot=False)
 
         today = date.today()
@@ -215,8 +178,8 @@ class Test_ManageUpdatesPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
 
-        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Non-Oncology Population Manageupdates validation is "
-                                             f"completed***",
+        LogScreenshot.fLogScreenshot(message=f"***Addtion and Deletion of Non-Oncology Population Manageupdates "
+                                             f"validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
     '''
@@ -270,43 +233,3 @@ class Test_ManageUpdatesPage:
                                              f"completed***",
                                      pass_=True, log=True, screenshot=False)
     '''
-    
-    # @pytest.mark.C38950
-    # def test_nononcology_delete_updates(self, extra, env, request, caseid):
-    #     baseURL = ReadConfig.getPortalURL(env)
-    #     # Instantiate the Base class
-    #     base = Base(self.driver, extra)         
-    #     # Instantiate the logScreenshot class
-    #     LogScreenshot = cLogScreenshot(self.driver, extra)
-    #     # Creating object of loginpage class
-    #     loginPage = LoginPage(self.driver, extra)
-    #     # Creating object of ManagePopulationsPage class
-    #     mngupdpage = ManageUpdatesPage(self.driver, extra)
-
-    #     request.node._tcid = caseid
-    #     request.node._title = "Validate Deletion of existing Manage Update data for selected Non-Oncology population"
-
-    #     LogScreenshot.fLogScreenshot(message=f"***Deletion of Non-Oncology Population Manageupdates validation is "
-    #                                          f"started***",
-    #                                  pass_=True, log=True, screenshot=False)
-
-    #     # today = date.today()
-    #     # dateval = today.strftime("%m/%d/%Y").replace('/', '')
-        
-    #     loginPage.driver.get(baseURL)
-    #     loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-    #     base.presence_of_admin_page_option("manageupdates_button", env)
-    #     base.go_to_page("manageupdates_button", env)
-
-    #     for i in self.non_onco_added_updates_data:
-    #         try:
-    #             mngupdpage.delete_multiple_manage_updates(i, "delete_updates", "delete_updates_popup",
-    #                                                       "manage_update_table_rows", env)
-
-    #         except Exception:
-    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Manage Updates page",
-    #                                          pass_=False, log=True, screenshot=True)
-    #             raise Exception("Element Not Found")
-
-    #     LogScreenshot.fLogScreenshot(message=f"***Deletion of Non-Oncology Population Manageupdates validation is "
-    #                                          f"completed***", pass_=True, log=True, screenshot=False)

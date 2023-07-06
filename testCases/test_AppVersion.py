@@ -78,11 +78,11 @@ class Test_AppVersion:
         
         if len(admin_eles_text) == len(set(admin_eles_text)):
             LogScreenshot.fLogScreenshot(message=f"There are no duplicate navigation links on the left panel",
-                                                pass_=True, log=True, screenshot=True)
+                                         pass_=True, log=True, screenshot=True)
         else:
             LogScreenshot.fLogScreenshot(message=f"Found duplicate navigation links on the left panel. "
-                                                        f"Values are : {admin_eles_text}",
-                                                pass_=False, log=True, screenshot=True)
+                                                 f"Values are : {admin_eles_text}",
+                                         pass_=False, log=True, screenshot=True)
             raise Exception(f"Found duplicate navigation links on the left panel.")    
 
         # Logging out from the application
