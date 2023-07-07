@@ -18,6 +18,7 @@ parameters:
 
 steps:
   - script: |
+     python.exe -m pip install --upgrade pip
      python -m pip install -r requirements.txt
      python -m pytest -v -m ${{ parameters.testcase }} --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\ --env=${{ parameters.env }}
      
