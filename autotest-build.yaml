@@ -42,9 +42,11 @@ steps:
         $(System.DefaultWorkingDirectory)\*.zip
         $(System.DefaultWorkingDirectory)\*.pdf
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    condition: succeededOrFailed()
   
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/'
       ArtifactName: 'test-automation'
+    condition: succeededOrFailed()
