@@ -4,7 +4,7 @@ This repository contains the automation scripts related to LiveSLR application.
 
 Framework: Python Pytest framework with Selenium
 
-### How do I get set up? ###
+### How do I set up? ###
 
 The setup for Python pytest automation framework
 

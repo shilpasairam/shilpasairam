@@ -1,0 +1,122 @@
+pr:
+- hotfix/*
+- feature/*
+- master
+- bugfix/*
+
+parameters:
+- name: env
+  displayName: Environment
+  type: string
+  default: 'test'
+  values:
+    - test
+    - staging
+    - production
+
+- name: testcase
+  displayName: Test Case ID
+  type: string
+  default: 'C40493'
+
+jobs:
+  - job: AutomationTest
+    displayName: 'Automation Test'
+    condition: |
+      and(ne(variables['Build.Reason'], 'PullRequest'), ne(variables['Build.Reason'], 'IndividualCI'))
+    pool:
+      name: cyt-vs2019-eastus
+    steps:
+      - script: |
+         python -m pip install -r requirements.txt
+         python -m pytest -v -m ${{ parameters.testcase }} --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\ --env=${{ parameters.env }}
+         
+         echo "FETCH LOG FILE - DISPLAY CONTENT"
+         cd $(Build.BinariesDirectory)\logs\
+         type testlog.log
+        displayName: '${{ parameters.env }}_script'
+      
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        inputs:
+          testResultsFormat: NUnit
+          testResultsFiles: '**/nunit-*.xml'
+          failTaskOnFailedTests: true
+          searchFolder: '$(System.DefaultWorkingDirectory)'
+          testRunTitle: 'Py Result - ${{ parameters.env }} - environment'
+    
+      - task: CopyFiles@2
+        displayName: 'Copy Files ArtifactStagingDirectory'
+        inputs:
+          Contents: |
+            $(System.DefaultWorkingDirectory)\*.zip
+            $(System.DefaultWorkingDirectory)\*.pdf
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        condition: succeededOrFailed()
+      
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/'
+          ArtifactName: 'test-automation'
+        condition: succeededOrFailed()
+
+  - job: PullRequest
+    displayName: 'Pull Request Validation'
+    condition: |
+      or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.Reason'], 'IndividualCI'))
+    pool:
+      name: cyt-solaris-eastus
+    steps:
+      - task: NodeTool@0
+        displayName: 'Use Node 16.x'
+        inputs:
+          versionSpec: 16.x
+      
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.x'
+          addToPath: true
+          
+      - script: |
+          python3.8 -m pip install --upgrade pip
+          python3.8 -m pip install -r requirements.txt
+        displayName: 'Install dependencies'
+    
+      - task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
+        displayName: 'Analysis on SonarCloud'
+        inputs:
+          SonarCloud: 'Cytel-PSE-SonarCloud'
+          organization: 'cytel-solaris'
+          scannerMode: CLI
+          configMode: manual
+          cliProjectKey: 'pse-test-automation'
+          cliProjectName: 'pse-test-automation'
+          extraProperties: |
+           sonar.python.version=3
+           sonar.inclusions=*.py
+           sonar.test.inclusions=*.py
+           sonar.core.codeCoveragePlugin=cobertura
+           sonar.python.coverage.reportPaths=*coverage*.xml
+           sonar.python.xunit.reportPath=xunit-result*.xml
+           
+      - script: |
+         #python3.8 -m pytest --cov-report=xml --cov=Pages testCases utilities
+         python3.8 -m coverage run -m pytest
+         python3.8 -m coverage report
+         python3.8 -m coverage xml
+        displayName: 'Tests & Code Coverage'
+        continueOnError: true
+          
+      - task: PublishCodeCoverageResults@1
+        displayName: 'Publish code coverage'
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: '$(Build.SourcesDirectory)/**/*coverage*.xml'
+          reportDirectory: Reports
+    
+      - task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
+        displayName: 'Run Code Analysis'
+        
+      - task: SonarSource.sonarcloud.38b27399-a642-40af-bb7d-9971f69712e8.SonarCloudPublish@1
+        displayName: 'Publish Quality Gate Result'
