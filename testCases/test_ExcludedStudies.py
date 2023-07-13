@@ -88,7 +88,7 @@ class Test_ExcludedStudiesPage:
 
     '''Addition and Deletion of Excluded Publications File'''
     @pytest.mark.C29760
-    @pytest.mark.C29764
+    # @pytest.mark.C29764
     def test_add_and_delete_excluded_study(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getexcludedstudiespath(env)
@@ -129,7 +129,7 @@ class Test_ExcludedStudiesPage:
 
     '''Addition, Updation and Deletion of Excluded Publications File'''
     @pytest.mark.C29761
-    @pytest.mark.C29765
+    # @pytest.mark.C29765
     def test_update_and_delete_excluded_study(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getexcludedstudiespath(env)

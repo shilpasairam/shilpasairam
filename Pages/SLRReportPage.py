@@ -584,8 +584,8 @@ class SLRReport(Base):
                                                                           f"Column '{col_name}' are not matching "
                                                                           f"between Expected Excel and Word Report.\n "
                                                                           f"Mismatch values are arranged in "
-                                                                          f"following order -> Word, Complete Excel "
-                                                                          f"and WebExcel Report. {comparison_result}",
+                                                                          f"following order -> Expected Excel "
+                                                                          f"and Word Report. {comparison_result}",
                                                                   pass_=False, log=True, screenshot=False)
                                 raise Exception("Elements are not matching between Expected Excel "
                                                 "and Word Reports")

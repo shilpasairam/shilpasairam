@@ -20,10 +20,10 @@ from utilities.readProperties import ReadConfig
 class Test_ManageUpdatesPage:
     username = ReadConfig.getUserName()
     password = ReadConfig.getPassword()
-    added_updates_data = []
-    edited_updates_data = []
-    non_onco_added_updates_data = []
-    non_onco_edited_updates_data = []    
+    # added_updates_data = []
+    # edited_updates_data = []
+    # non_onco_added_updates_data = []
+    # non_onco_edited_updates_data = []    
 
     @pytest.mark.C38951
     def test_oncology_manage_updates(self, extra, env, request, caseid):

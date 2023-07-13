@@ -32,8 +32,7 @@ class Test_ProtocolPage:
         prismapage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate PRISMA functionalities details under Protocol -> PRISMA Page for " \
-                              "Oncology Population"
+        request.node._title = "Oncology : Validate PRISMA functionalities details under Protocol -> PRISMA Page"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload and Deletion of PRISMA details validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -80,7 +79,7 @@ class Test_ProtocolPage:
         picospage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate PICOS functionality under Protocol -> PICOS Page"
+        request.node._title = "Oncology : Validate PICOS functionality under Protocol -> PICOS Page"
 
         LogScreenshot.fLogScreenshot(message=f"***PICOS page validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -129,8 +128,8 @@ class Test_ProtocolPage:
         srchpage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate SearchStrategy functionality under Protocol -> Search " \
-                              "Strategy Page for Oncology Population"
+        request.node._title = "Oncology : Validate SearchStrategy functionality under Protocol -> " \
+                              "Search Strategy Page"
 
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -282,8 +281,8 @@ class Test_ProtocolPage:
         srchpage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate SearchStrategy functionality under Protocol -> Search " \
-                              "Strategy Page for Non-Oncology Population"
+        request.node._title = "Non-Oncology : Validate SearchStrategy functionality under Protocol -> " \
+                              "Search Strategy Page"
 
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation for Non-Oncology population "
                                              f"is started***",
