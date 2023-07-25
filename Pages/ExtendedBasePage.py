@@ -226,14 +226,8 @@ class ExtendedBase(Base):
     
     def upload_file(self, pop_data, env):
         expected_upload_status_text = "File(s) uploaded successfully"
-        # Read population details from data sheet
-        # pop_data = self.get_extraction_file_to_upload(filepath, 'prodfix', locatorname)
 
         for i in pop_data:
-            # ele = self.select_element("select_update_dropdown", env)
-            # time.sleep(2)
-            # select = Select(ele)
-            # select.select_by_visible_text(i[0])
             selected_update_val = self.base.selectbyvisibletext("select_update_dropdown", i[0], env)
 
             # Fetching total rows count before uploading a new file
@@ -248,9 +242,7 @@ class ExtendedBase(Base):
             try:
                 self.jsclick("upload_button", env)
                 time.sleep(2)
-                # actual_upload_status_text = self.get_text("file_status_popup_text", env, UnivWaitFor=30)
                 actual_upload_status_text = self.get_status_text("file_status_popup_text", env)
-                # time.sleep(2)
 
                 if actual_upload_status_text == expected_upload_status_text:
                     self.LogScreenshot.fLogScreenshot(message=f'File upload is success for Population : {i[0]}.',
@@ -274,10 +266,6 @@ class ExtendedBase(Base):
                     self.LogScreenshot.fLogScreenshot(message=f"Record count is incremented after uploading the "
                                                               f"extraction file.",
                                                       pass_=True, log=True, screenshot=False)
-                    # result = []
-                    # td1 = self.select_elements('upload_table_row_1', env)
-                    # for m in td1:
-                    #     result.append(m.text)
                     result = self.get_texts('upload_table_row_1', env)
                     
                     if i[2] in result:
@@ -321,10 +309,6 @@ class ExtendedBase(Base):
         time.sleep(5)
 
         for i in pop_data:
-            # result = []
-            # td1 = self.select_elements('upload_table_row_1', env)
-            # for m in td1:
-            #     result.append(m.text)
             result = self.get_texts('upload_table_row_1', env)
             
             # Check the uploaded filename before deleting the record
@@ -352,6 +336,7 @@ class ExtendedBase(Base):
                                                       pass_=False, log=True, screenshot=True)
                     raise Exception("Error during Extraction File Deletion")
 
+                self.refreshpage()
                 # Fetching total rows count after deleting a file from top of the table
                 table_rows_after = self.select_elements(tablerows, env)
                 self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: '

@@ -24,7 +24,7 @@ from selenium import webdriver
 def pytest_addoption(parser):
     config = configparser.ConfigParser()
     config.read(os.getcwd()+"\\Configurations\\config.ini")
-    parser.addoption("--env", action="store", default=config.get('commonInfo', 'environment'))
+    parser.addoption("--env", action="store")
 
 
 @pytest.fixture()
@@ -221,10 +221,10 @@ def pytest_sessionfinish(session, exitstatus):
                         file.write(text)
                         file.close()
 
-                        property2 = doc.createElement('property')
-                        property2.setAttribute('name', 'testrail_attachment')
-                        property2.setAttribute('value', f'exception_file_{index}.txt')
-                        properties.appendChild(property2)
+                        property3 = doc.createElement('property')
+                        property3.setAttribute('name', 'testrail_attachment')
+                        property3.setAttribute('value', f'exception_file_{index}.txt')
+                        properties.appendChild(property3)
 
                         xy.attributes['message'].value = "**Test is Failed**"
                         xy.childNodes[0].nodeValue = f"Actual results does not meet with Expected results. Hence " \
@@ -235,8 +235,11 @@ def pytest_sessionfinish(session, exitstatus):
 
     xml_str = doc.toprettyxml(indent="\t")
     save_path_file = f"Reports/junit-results.xml"
+    save_path_file1 = f"{session.config.getoption('-m')}-junit-results.xml"
 
     with open(save_path_file, "w") as f:
+        f.write(xml_str)
+    with open(save_path_file1, "w") as f:
         f.write(xml_str)
 
     dir_list = ['ActualOutputs', 'Logs', 'Reports']
