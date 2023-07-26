@@ -376,7 +376,8 @@ class Test_ProtocolPage:
                                                      f"project is started***",
                                              pass_=True, log=True, screenshot=False)
 
-                picospage.download_protocol_file(i, filepath, index, pop_data, stdy_data_, env, add_criteria, project_name[0])
+                picospage.download_protocol_file(i, filepath, index, pop_data, stdy_data_, env, add_criteria,
+                                                 project_name[0])
 
                 LogScreenshot.fLogScreenshot(message=f"***Protocol Excel file validation for '{project_name[0]}' "
                                                      f"project is completed***",
@@ -501,8 +502,8 @@ class Test_ProtocolPage:
         picospage = ProtocolPage(self.driver, extra)
 
         request.node._tcid = caseid
-        request.node._title = "Validate View PRISMA functionality and Download Protocol Excel File data for Oncology and " \
-                              "Non-Oncology Population"
+        request.node._title = "Validate View PRISMA functionality and Download Protocol Excel File data for " \
+                              "Oncology and Non-Oncology Population"
         
         loginPage.driver.get(baseURL)
         loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
@@ -527,9 +528,11 @@ class Test_ProtocolPage:
                                                      f"project is started***",
                                              pass_=True, log=True, screenshot=False)
 
-                picospage.validate_viewprisma_and_prisma_protocol_file(i, filepath, index+1, pop_data, stdy_data_, env, add_criteria, project_name[0])
+                picospage.validate_viewprisma_and_prisma_protocol_file(i, filepath, index+1, pop_data, stdy_data_,
+                                                                       env, add_criteria, project_name[0])
 
-                picospage.validate_viewprisma_and_prisma_protocol_file_withoutdata(i, filepath, pop_data, stdy_data_, env, add_criteria, project_name[0])
+                picospage.validate_viewprisma_and_prisma_protocol_file_withoutdata(i, filepath, pop_data, stdy_data_,
+                                                                                   env, add_criteria, project_name[0])
 
                 LogScreenshot.fLogScreenshot(message=f"***View PRISMA validation for '{project_name[0]}' "
                                                      f"project is completed***",
@@ -539,60 +542,3 @@ class Test_ProtocolPage:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing View PRISMA page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing View PRISMA page")
-
-    # @pytest.mark.C405555
-    # def test_download_protocol_excel(self, extra, env, request, caseid):
-    #     baseURL = ReadConfig.getLiveSLRAppURL(env)
-    #     basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
-    #     # Instantiate the Base class
-    #     base = Base(self.driver, extra)
-    #     # Creating object of ExtendedBase class
-    #     exbase = ExtendedBase(self.driver, extra)
-    #     # Creating object of ExcludedStudies_liveSLR class
-    #     exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
-    #     # Instantiate the logScreenshot class
-    #     LogScreenshot = cLogScreenshot(self.driver, extra)
-    #     # Creating object of loginpage class
-    #     loginPage = LoginPage(self.driver, extra)
-    #     # Creating object of ImportPublicationPage class
-    #     picospage = ProtocolPage(self.driver, extra)
-
-    #     request.node._tcid = caseid
-    #     request.node._title = "Validate Downloading Protocol Excel file for Oncology and Non-Oncology population " \
-    #                           "from Search LiveSLR Page"
-        
-    #     loginPage.driver.get(baseURL)
-    #     loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
-    #     base.presence_of_admin_page_option("protocol_link", env)
-        
-    #     filepath = exbase.get_testdata_filepath(basefile, "download_protocol_excel")
-
-    #     pop_val = ['pop1', 'pop2', 'pop3', 'pop4', 'pop5', 'pop6', 'pop7']
-
-    #     for index, i in enumerate(pop_val):
-    #         try:
-    #             # Read population details from data sheet
-    #             pop_data = exbase.get_population_data(filepath, 'Sheet1', i)
-    #             # Read study types and file paths to upload
-    #             stdy_data = exbase.get_slrtype_data(filepath, 'Sheet1', i)
-    #             # Removing duplicates to get the proper length of SLR Type data
-    #             stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
-    #             add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, i)
-    #             # Read Project name
-    #             project_name = exbase.get_individual_col_data(filepath, i, 'Sheet1', 'Project')
-
-    #             LogScreenshot.fLogScreenshot(message=f"***Protocol Excel file validation for '{project_name[0]}' "
-    #                                                  f"project is started***",
-    #                                          pass_=True, log=True, screenshot=False)
-
-    #             picospage.download_protocol_file(i, filepath, index, pop_data, stdy_data_, env, add_criteria, project_name[0])
-
-    #             picospage.download_protocol_file_without_prisma_data(i, filepath, pop_data, stdy_data_, env, add_criteria, project_name[0])
-
-    #             LogScreenshot.fLogScreenshot(message=f"***Protocol Excel file validation for '{project_name[0]}' "
-    #                                                  f"project is completed***",
-    #                                          pass_=True, log=True, screenshot=False)
-    #         except Exception:
-    #             LogScreenshot.fLogScreenshot(message=f"Error in accessing Protocol Excel file",
-    #                                          pass_=False, log=True, screenshot=True)
-    #             raise Exception("Error in accessing Protocol Excel file")
