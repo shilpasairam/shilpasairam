@@ -485,7 +485,7 @@ class Test_ProtocolPage:
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing View Search Strategy page")
 
-    @pytest.mark.C411367
+    @pytest.mark.C42537
     def test_viewprisma_and_prisma_protocol_file(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")

@@ -966,11 +966,18 @@ class ProtocolPage(Base):
 
                     '''Validating the absence of data in PRISMA Protocol file and Complete Excel Report when Excel file is deleted in Protocol->PRISMA page'''
                     time.sleep(1)
-                    self.slrreport.generate_download_report("Download_protocol_btn", env)
-                    protocol_filename = self.slrreport.get_and_validate_filename(filepath)
+                    if self.clickable('Download_protocol_btn', env):
+                        self.LogScreenshot.fLogScreenshot(message=f"Download Protocol button is enabled after selecting the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=True, log=True, screenshot=True)
+                        self.slrreport.generate_download_report("Download_protocol_btn", env)
+                        protocol_filename = self.slrreport.get_and_validate_filename(filepath)
 
-                    self.slrreport.generate_download_report("excel_report", env)
-                    excel_filename = self.slrreport.get_and_validate_filename(filepath)
+                        self.slrreport.generate_download_report("excel_report", env)
+                        excel_filename = self.slrreport.get_and_validate_filename(filepath)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Download Protocol button is not enabled after selecting the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=True, log=True, screenshot=True)
+                        raise Exception(f"Download Protocol button is not enabled after selecting the Population '{i[0]}' -> SLR Type '{j[0]}'")
 
                     expected_workbook = openpyxl.load_workbook(f'{expected_data_filepath}')
 
@@ -1058,7 +1065,9 @@ class ProtocolPage(Base):
                     time.sleep(2)
 
                     # Checking the presence of View Updated Prisma button when additional criteria has been selected
-                    if self.isdisplayed("view_updated_prisma_btn", env):
+                    if self.isdisplayed("view_updated_prisma_btn", env) and self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(message=f"View Updated Prisma button is displayed and enabled after selecting the additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=True, log=True, screenshot=True)
                         self.click("view_updated_prisma_btn", env)
 
                         if project == "Non-Oncology" and self.isdisplayed("view_updated_prisma_clinical_intervention_tab", env) and 'Clinical-Interventional' in stdytype:
@@ -1093,6 +1102,10 @@ class ProtocolPage(Base):
                     
                         # Closing the View Updated Prisma window
                         self.click("view_updated_prisma_close_btn", env)
+                    elif self.isdisplayed("view_updated_prisma_btn", env) and not self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(message=f"View Updated Prisma button is displayed and not enabled after selecting the additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=False, log=True, screenshot=True)
+                        raise Exception(f"View Updated Prisma button is displayed and not enabled after selecting the additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'")
 
                     self.refreshpage()
         except Exception:
@@ -1126,11 +1139,18 @@ class ProtocolPage(Base):
 
                     '''Validating the PRISMA Protocol file and Complete Excel Report data'''
                     time.sleep(1)
-                    self.slrreport.generate_download_report("Download_protocol_btn", env)
-                    protocol_filename = self.slrreport.get_and_validate_filename(filepath)
+                    if self.clickable('Download_protocol_btn', env):
+                        self.LogScreenshot.fLogScreenshot(message=f"Download Protocol button is enabled after selecting the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=True, log=True, screenshot=True)
+                        self.slrreport.generate_download_report("Download_protocol_btn", env)
+                        protocol_filename = self.slrreport.get_and_validate_filename(filepath)
 
-                    self.slrreport.generate_download_report("excel_report", env)
-                    excel_filename = self.slrreport.get_and_validate_filename(filepath)
+                        self.slrreport.generate_download_report("excel_report", env)
+                        excel_filename = self.slrreport.get_and_validate_filename(filepath)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(message=f"Download Protocol button is not enabled after selecting the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=True, log=True, screenshot=True)
+                        raise Exception(f"Download Protocol button is not enabled after selecting the Population '{i[0]}' -> SLR Type '{j[0]}'")
 
                     expected_workbook = openpyxl.load_workbook(f'{expected_data_filepath}')
 
@@ -1219,7 +1239,9 @@ class ProtocolPage(Base):
                     time.sleep(2)
 
                     # Checking the presence of View Updated Prisma button when additional criteria has been selected
-                    if self.isdisplayed("view_updated_prisma_btn", env):
+                    if self.isdisplayed("view_updated_prisma_btn", env) and self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(message=f"View Updated Prisma button is displayed and enabled after selecting the additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=True, log=True, screenshot=True)
                         self.click("view_updated_prisma_btn", env)
 
                         if project == "Non-Oncology" and self.isdisplayed("view_updated_prisma_clinical_intervention_tab", env) and 'Clinical-Interventional' in stdytype:
@@ -1254,6 +1276,10 @@ class ProtocolPage(Base):
                     
                         # Closing the View Updated Prisma window
                         self.click("view_updated_prisma_close_btn", env)
+                    elif self.isdisplayed("view_updated_prisma_btn", env) and not self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(message=f"View Updated Prisma button is displayed and not enabled after selecting the additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                                                        pass_=False, log=True, screenshot=True)
+                        raise Exception(f"View Updated Prisma button is displayed and not enabled after selecting the additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'")
 
                     self.refreshpage()
         except Exception:
