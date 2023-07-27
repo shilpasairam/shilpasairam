@@ -65,8 +65,7 @@ class ProtocolPage(Base):
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
-        # Read the Data required to upload for study types
-        # stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
+        # This variable will hold the values which can be used to enter in PRISMA page
         prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
                                                          'stdy_type_values')
 
@@ -190,6 +189,7 @@ class ProtocolPage(Base):
 
         # This Dataframe will be used to read the study type and study files based on the given SLR Type
         df = pd.read_excel(filepath)
+        # This variable will hold the values which can be used to enter in PRISMA page
         prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
                                                          'stdy_type_values')
 
@@ -783,6 +783,7 @@ class ProtocolPage(Base):
                 for j in stdy_data:
                     self.go_to_page("SLR_Dashboard", env)
 
+                    # Navigate to PICOS page which resided under Protocol section
                     self.go_to_nested_page("protocol_link", "picos", env)
                     picos_data = self.add_picos_details(locatorname, filepath, pop_data, stdy_data, env, project)
 
@@ -817,6 +818,7 @@ class ProtocolPage(Base):
                             expecteddata = pd.read_excel(f'{expected_data_filepath}', sheet_name=sheet)
                             actualdata_protocolfile = pd.read_excel(f'ActualOutputs//{protocol_filename}',
                                                                     sheet_name=sheet)
+                            '''Once LIVEHTA-3302 is fixed, then the below if condition can be removed'''
                             if project == "Non-Oncology" and sheet == "Search Strategies":
                                 sheet = "Search Strategy(ies)"
                             elif sheet == "Search Strategies":
@@ -847,7 +849,8 @@ class ProtocolPage(Base):
                                     f"'{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching")
 
                             '''Renaming the Column name as there is slight difference in Column header in Complete 
-                            Excel report for INC-EXC and SEARCH STRATEGIES sheets'''
+                            Excel report for INC-EXC and SEARCH STRATEGIES sheets. Once LIVEHTA-3302 is fixed, 
+                            then the below if condition can be removed'''
                             if project == "Oncology":
                                 if sheet == "INC-EXC":
                                     expecteddata.rename(columns={'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1': f'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1 {j[0]}'}, inplace=True)
