@@ -71,7 +71,7 @@ def init_driver(request):
     options.add_experimental_option("prefs", prefs)
     options.add_experimental_option("detach", True)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    web_driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735").install()), options=options)
+    web_driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=options)
     params = {'behavior': 'allow', 'downloadPath': f"{os.getcwd()}\\ActualOutputs"}
     web_driver.execute_cdp_cmd('Page.setDownloadBehavior', params)
 
