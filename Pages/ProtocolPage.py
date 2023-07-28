@@ -60,211 +60,185 @@ class ProtocolPage(Base):
                         (os.getcwd()+sheet5[i])) for i in range(0, len(sheet_name))]
         return prisma_data
 
-    def add_prisma_excel_file(self, locatorname, filepath, env):
-        expected_excel_upload_status_text = "PRISMA successfully uploaded"
+    def upload_prisma_excel(self, locatorname, filepath, pop_data, stdy_data, env, project, fname):
+        expected_excel_upload_status_text = "PRISMA successfully updated"
 
-        # Read population details from data sheet
-        pop_name = self.get_prisma_pop_data(filepath, locatorname)
-
-        try:
-            selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
-
-            # Read the PRISMA file path required to upload
-            prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
-
-            self.input_text("prisma_excel_file", prisma_excel, env, UnivWaitFor=10)
-            self.click("prisma_excel_upload_btn", env)
-            time.sleep(2)
-            
-            actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
-
-            if actual_excel_upload_status_text == expected_excel_upload_status_text:
-                self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Upload is success.",
-                                                  pass_=True, log=True, screenshot=True)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                          f"PRISMA Excel File. Actual status message is "
-                                                          f"{actual_excel_upload_status_text} and Expected status "
-                                                          f"message is {expected_excel_upload_status_text}",
-                                                  pass_=False, log=True, screenshot=True)
-                raise Exception("Unable to find status message while uploading PRISMA Excel File.")
-        except Exception:
-            raise Exception("Unable to upload PRISMA Excel file")
-
-    def del_prisma_excel_file(self, locatorname, excel_del_locator, excel_del_popup, filepath, env):
-        expected_excel_del_status_text = "PRISMA excel file successfully deleted"
-
-        # Read population details from data sheet
-        pop_name = self.get_prisma_pop_data(filepath, locatorname)
-
-        self.refreshpage()
-        time.sleep(3)
-        try:
-            selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
-
-            self.del_prisma_image(locatorname, filepath, "prisma_image_delete_btn", "prisma_image_delete_popup", env)
-            time.sleep(2)
-
-            self.click(excel_del_locator, env)
-            time.sleep(2)
-            self.click(excel_del_popup, env)
-            time.sleep(2)
-
-            actual_excel_del_status_text = self.get_status_text("prisma_excel_status_text", env)
-
-            if actual_excel_del_status_text == expected_excel_del_status_text:
-                self.LogScreenshot.fLogScreenshot(message=f"PRISMA Excel File Delete is success.",
-                                                  pass_=True, log=True, screenshot=True)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
-                                                          f"PRISMA Excel File. Actual status message is "
-                                                          f"{actual_excel_del_status_text} and Expected status "
-                                                          f"message is {expected_excel_del_status_text}",
-                                                  pass_=False, log=True, screenshot=True)
-                raise Exception("Unable to find status message while deleting PRISMA Excel File.")
-            time.sleep(5)
-        except Exception:
-            raise Exception("Unable to delete PRISMA Excel file")
-
-    def upload_prisma_image(self, locatorname, filepath, index, env):
-        expected_image_upload_status_text = "PRISMA successfully updated"
-
-        # Read the Data required to upload for study types
-        stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
+        df = pd.read_excel(filepath)
+        # This variable will hold the values which can be used to enter in PRISMA page
         prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
                                                          'stdy_type_values')
 
         try:
-            for i in stdy_data:
-                selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
-                time.sleep(2)
+            for i in pop_data:
+                for j in stdy_data:
+                    # Get StudyType and Files path to upload PRISMA Data
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
+                    excel = data1_val["Prisma_Excel_File"]
+                    excel = [item for item in excel if str(item) != 'nan']
+                    template = data1_val["Template_name_prisma"]
+                    template = [item for item in template if str(item) != 'nan']
 
-                for j in prisma_numbers:
-                    self.input_text(j[0], j[1]+index, env, UnivWaitFor=5)
+                    upload_data = [[stdytype[i], excel[i], template[i]] for i in range(0, len(stdytype))]
 
-                self.input_text("prisma_image", os.getcwd()+i[1], env, UnivWaitFor=5)
-                self.click("prisma_image_save_btn", env)
-                time.sleep(2)
+                    for k in upload_data:
+                        self.refreshpage()
+                        selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", i[0], env)
+                        time.sleep(1)
 
-                actual_image_upload_status_text = self.get_status_text("prisma_image_status_text", env)
+                        selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", k[0], env)
+                        time.sleep(1)
 
-                if actual_image_upload_status_text == expected_image_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Upload is success.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                              f"PRISMA Image File. Actual status message is "
-                                                              f"{actual_image_upload_status_text} and Expected "
-                                                              f"status message is {expected_image_upload_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception("Unable to find status message while uploading PRISMA Image File.")
+                        self.slrreport.generate_download_report("prisma_template_download_btn", env)
+                        # Renaming the filename because there is an issue in downloading filenames with same name
+                        # multiple times in headless mode. So as an alternative renaming the file after downloading
+                        # in each iteration
+                        self.file_rename(self.slrreport.get_latest_filename(UnivWaitFor=180),
+                                         f"{k[0]}_PRISMA-File-Template_{project}_{fname}.xlsx")
+                        expected_template_name = f"{k[2]}_{fname}.xlsx"
+                        downloaded_template_name = self.slrreport.get_latest_filename(UnivWaitFor=180)
+                        if downloaded_template_name == expected_template_name:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Correct Template is downloaded. Template name is {downloaded_template_name}",
+                                pass_=True, log=True, screenshot=False)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Mismatch in search strategy template name. Expected Template name is "
+                                        f"{expected_template_name} and Actual Template name is "
+                                        f"{downloaded_template_name}",
+                                pass_=False, log=True, screenshot=False)
+
+                        for num in prisma_numbers:
+                            self.input_text(num[0], int(num[1]), env, UnivWaitFor=5)
+
+                        self.input_text("prisma_image", os.getcwd()+"\\"+k[1], env, UnivWaitFor=5)
+                        self.click("prisma_image_save_btn", env)
+                        time.sleep(3)
+
+                        actual_excel_upload_status_text = self.get_status_text("prisma_image_status_text", env)
+
+                        if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Excel File Upload is success for Population '{i[0]}' -> SLR "
+                                        f"Type '{k[0]}'.", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while uploading PRISMA Excel File for "
+                                        f"Population '{i[0]}' -> SLR Type '{k[0]}'. Actual status message is "
+                                        f"{actual_excel_upload_status_text} and Expected status message is "
+                                        f"{expected_excel_upload_status_text}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception("Unable to find status message while uploading PRISMA Excel File.")
         except Exception:
-            raise Exception("Unable to upload PRISMA image")
+            raise Exception("Unable to upload PRISMA Excel")
 
-    def del_prisma_image(self, locatorname, filepath, del_locator, del_popup, env):
-        expected_image_del_status_text = "PRISMA successfully deleted"
+    def del_prisma_excel(self, locatorname, filepath, pop_data, stdy_data, env):
+        expected_excel_del_status_text = "PRISMA successfully deleted"
 
-        # Read population details from data sheet
-        pop_name = self.get_prisma_pop_data(filepath, locatorname)
-
-        stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
+        df = pd.read_excel(filepath)
 
         try:
-            for i in stdy_data:
-                self.refreshpage()
-                time.sleep(3)
-                selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
-                time.sleep(1)
+            for i in pop_data:
+                for j in stdy_data:
+                    # Get StudyType and Files path to upload PRISMA Data
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
 
-                selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
-                time.sleep(1)
+                    upload_data = [[stdytype[i]] for i in range(0, len(stdytype))]
 
-                self.click(del_locator, env)
-                time.sleep(2)
-                self.click(del_popup, env)
-                time.sleep(2)
+                    for k in upload_data:
+                        self.refreshpage()
+                        selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", i[0], env)
+                        time.sleep(1)
 
-                actual_image_del_status_text = self.get_status_text("prisma_image_status_text", env)
+                        selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", k[0], env)
+                        time.sleep(1)
 
-                if actual_image_del_status_text == expected_image_del_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"PRISMA Image File Delete is success.",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while deleting "
-                                                              f"PRISMA Image File. Actual status message is "
-                                                              f"{actual_image_del_status_text} and Expected status "
-                                                              f"message is {expected_image_del_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception("Unable to find status message while deleting PRISMA Image File.")
-                time.sleep(5)
+                        self.click("prisma_image_delete_btn", env)
+                        time.sleep(2)
+                        self.click("prisma_image_delete_popup", env)
+                        time.sleep(2)
+
+                        actual_excel_del_status_text = self.get_status_text("prisma_image_status_text", env)
+
+                        if actual_excel_del_status_text == expected_excel_del_status_text:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Excel File Delete is success for Population '{i[0]}' -> SLR "
+                                        f"Type '{k[0]}'.", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while deleting PRISMA Excel File for "
+                                        f"Population '{i[0]}' -> SLR Type '{k[0]}'. Actual status message is "
+                                        f"{actual_excel_del_status_text} and Expected status message is "
+                                        f"{expected_excel_del_status_text}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception("Unable to find status message while deleting PRISMA Excel File.")
+                        time.sleep(5)
         except Exception:
-            raise Exception("Unable to delete PRISMA image")
+            raise Exception("Unable to delete PRISMA Excel")
 
-    def override_prisma_details(self, locatorname, filepath, index, env):
-        expected_excel_upload_status_text = "There is an existing PRISMA Excel file for this population. " \
+    def override_prisma_details(self, locatorname, filepath, index, pop_data, stdy_data, env):
+        expected_excel_upload_status_text = "There is an existing PRISMA file for this population. " \
                                             "Please delete the existing file before uploading a new one"
 
-        expected_image_upload_status_text = "There is an existing PRISMA Image file for this population. " \
-                                            "Please delete the existing file before uploading a new one"
-
-        # Read population details from data sheet
-        pop_name = self.get_prisma_pop_data(filepath, locatorname)
-
-        stdy_data = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'Study_Types', 'Prisma_Image')
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
+        df = pd.read_excel(filepath)
+        # This variable will hold the values which can be used to enter in PRISMA page
         prisma_numbers = self.exbase.get_double_col_data(filepath, locatorname, 'Sheet1', 'stdy_type_locators',
                                                          'stdy_type_values')
 
-        self.refreshpage()
-
         try:
-            selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", pop_name[0], env)
+            for i in pop_data:
+                for j in stdy_data:
+                    # Get StudyType and Files path to upload PRISMA Data
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
+                    excel = data1_val["Prisma_Excel_File"]
+                    excel = [item for item in excel if str(item) != 'nan']
+                    template = data1_val["Template_name_prisma"]
+                    template = [item for item in template if str(item) != 'nan']
 
-            # Read the PRISMA file path required to upload
-            prisma_excel = self.get_prisma_excelfile_details(filepath, locatorname, 'Prisma_Excel_File')
+                    upload_data = [[stdytype[i], excel[i], template[i]] for i in range(0, len(stdytype))]
 
-            self.input_text("prisma_excel_file", prisma_excel, env, UnivWaitFor=10)
-            self.click("prisma_excel_upload_btn", env)
-            time.sleep(2)
+                    for k in upload_data:
+                        self.refreshpage()
+                        selected_pop_val = self.base.selectbyvisibletext("prisma_pop_dropdown", i[0], env)
+                        time.sleep(1)
 
-            actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
+                        selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", k[0], env)
+                        time.sleep(1)
 
-            if actual_excel_upload_status_text == expected_excel_upload_status_text:
-                self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Excel file for Population : "
-                                                          f"'{pop_name[0]}'", pass_=True, log=True, screenshot=True)
-            else:
-                self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                          f"PRISMA Excel File. Actual status message is "
-                                                          f"{actual_excel_upload_status_text} and Expected status "
-                                                          f"message is {expected_excel_upload_status_text}",
-                                                  pass_=False, log=True, screenshot=True)
-                raise Exception("Unable to find status message while uploading PRISMA Excel File.")
+                        for num in prisma_numbers:
+                            self.input_text(num[0], int(num[1])+index, env, UnivWaitFor=5)
 
-            for i in stdy_data:
-                selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", i[0], env)
-                time.sleep(2)
+                        self.input_text("prisma_image", os.getcwd()+"\\"+k[1], env, UnivWaitFor=5)
+                        self.click("prisma_image_save_btn", env)
+                        time.sleep(2)
 
-                for j in prisma_numbers:
-                    self.input_text(j[0], j[1]+index, env, UnivWaitFor=5)
+                        actual_excel_upload_status_text = self.get_status_text("prisma_excel_status_text", env)
 
-                self.input_text("prisma_image", os.getcwd()+i[1], env, UnivWaitFor=5)
-                self.click("prisma_image_save_btn", env)
-                time.sleep(2)
-
-                actual_image_upload_status_text = self.get_status_text("prisma_image_status_text", env)
-
-                if actual_image_upload_status_text == expected_image_upload_status_text:
-                    self.LogScreenshot.fLogScreenshot(message=f"There is an existing PRISMA Image file for Population "
-                                                              f": '{pop_name[0]}' -> SLR Type : '{i[0]}'",
-                                                      pass_=True, log=True, screenshot=True)
-                else:
-                    self.LogScreenshot.fLogScreenshot(message=f"Unable to find status message while uploading "
-                                                              f"PRISMA Image File. Actual status message is "
-                                                              f"{actual_image_upload_status_text} and Expected "
-                                                              f"status message is {expected_image_upload_status_text}",
-                                                      pass_=False, log=True, screenshot=True)
-                    raise Exception("Unable to find status message while uploading PRISMA Image File.")
+                        if actual_excel_upload_status_text == expected_excel_upload_status_text:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"There is an existing PRISMA Excel file for Population : '{i[0]}' -> SLR "
+                                        f"Type '{k[0]}'", pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"Unable to find status message while overriding PRISMA Excel File for "
+                                        f"Population '{i[0]}' -> SLR Type '{k[0]}'. Actual status message is "
+                                        f"{actual_excel_upload_status_text} and Expected status message is "
+                                        f"{expected_excel_upload_status_text}",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception("Unable to find status message while overriding PRISMA Excel File.")
         except Exception:
-            raise Exception("Unable to upload PRISMA Excel file")
+            raise Exception("Unable to Override PRISMA Excel file")
 
     def add_picos_details(self, locatorname, filepath, pop_data, stdy_data, env, project):
         expected_status_text = "Saved successfully"
@@ -391,7 +365,8 @@ class ProtocolPage(Base):
                     self.go_to_nested_page("protocol_link", "picos", env)
                     pop = [[i[k]] for k in range(0, len(i))]
                     stdy = [[j[k]] for k in range(0, len(j))]
-                    protocol_picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
+                    protocol_picos_data = self.add_picos_details(locatorname, filepath, pop_data, stdy_data, env,
+                                                                 project)
 
                     self.base.go_to_page("SLR_Homepage", env)
                     self.slrreport.select_data(i[0], i[1], env)
@@ -500,7 +475,7 @@ class ProtocolPage(Base):
                     fileupload = [item for item in fileupload if str(item) != 'nan']
                     db_val = data1_val["db_search_val"]
                     db_val = [item for item in db_val if str(item) != 'nan']
-                    template = data1_val["Template_name"]
+                    template = data1_val["Template_name_strategy"]
                     template = [item for item in template if str(item) != 'nan']
 
                     upload_data = [[stdytype[i], fileupload[i], db_val[i], template[i]] for i in
@@ -605,7 +580,7 @@ class ProtocolPage(Base):
                     fileupload = [item for item in fileupload if str(item) != 'nan']
                     db_val = data1_val["db_search_val"]
                     db_val = [item for item in db_val if str(item) != 'nan']
-                    template = data1_val["Template_name"]
+                    template = data1_val["Template_name_strategy"]
                     template = [item for item in template if str(item) != 'nan']
 
                     upload_data = [[stdytype[i], fileupload[i], db_val[i], template[i]] for i in
@@ -662,7 +637,7 @@ class ProtocolPage(Base):
                     self.go_to_nested_page("protocol_link", "searchstrategy", env)
                     pop = [[i[k]] for k in range(0, len(i))]
                     stdy = [[j[k]] for k in range(0, len(j))]
-                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy,
+                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop_data, stdy_data,
                                                                            env, prjname, "viewstrategy")
 
                     self.base.go_to_page("SLR_Homepage", env)
@@ -799,7 +774,7 @@ class ProtocolPage(Base):
         except Exception:
             raise Exception("Unable to add Search strategy data")
 
-    def download_protocol_file(self, locatorname, filepath, pop_data, stdy_data, env, project):
+    def download_protocol_file(self, locatorname, filepath, index, pop_data, stdy_data, env, add_criteria, project):
         expected_data_filepath = self.exbase.get_template_file_details(filepath, locatorname,
                                                                        "ExpectedSourceTemplateFile")
 
@@ -807,20 +782,24 @@ class ProtocolPage(Base):
             for i in pop_data:
                 for j in stdy_data:
                     self.go_to_page("SLR_Dashboard", env)
-                    pop = [[i[k]] for k in range(0, len(i))]
-                    stdy = [[j[k]] for k in range(0, len(j))]
 
+                    # Navigate to PICOS page which resided under Protocol section
                     self.go_to_nested_page("protocol_link", "picos", env)
-                    picos_data = self.add_picos_details(locatorname, filepath, pop, stdy, env, project)
+                    picos_data = self.add_picos_details(locatorname, filepath, pop_data, stdy_data, env, project)
 
                     self.go_to_page("searchstrategy", env)
-                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop, stdy, env,
-                                                                           project, "downloadprotocol")
+                    uploaded_data = self.add_valid_search_strategy_details(locatorname, filepath, pop_data, stdy_data,
+                                                                           env, project, f"downloadprotocol_{index}")
 
                     # Go to live slr page
                     self.go_to_page("SLR_Homepage", env)
                     self.slrreport.select_data(f"{i[0]}", f"{i[1]}", env)
                     self.slrreport.select_data(f"{j[0]}", f"{j[1]}", env)
+                    if len(add_criteria) != 0:
+                        for v in add_criteria:
+                            self.slrreport.select_sub_section(f"{v[0]}", f"{v[1]}", env, f"{v[2]}")
+
+                    time.sleep(1)
                     self.slrreport.generate_download_report("Download_protocol_btn", env)
                     protocol_filename = self.slrreport.get_and_validate_filename(filepath)
 
@@ -829,69 +808,550 @@ class ProtocolPage(Base):
 
                     expected_workbook = openpyxl.load_workbook(f'{expected_data_filepath}')
 
+                    if project == 'Oncology':
+                        expected_sheets = ['PICOS', 'INC-EXC', 'Search Strategies']
+                    elif project == 'Non-Oncology':
+                        expected_sheets = ['PICOS', 'Inclusion Exclusion Criteria', 'Search Strategies']
+
+                    for sheet in expected_sheets:
+                        if sheet in expected_workbook.sheetnames:
+                            expecteddata = pd.read_excel(f'{expected_data_filepath}', sheet_name=sheet)
+                            actualdata_protocolfile = pd.read_excel(f'ActualOutputs//{protocol_filename}',
+                                                                    sheet_name=sheet)
+                            '''Once LIVEHTA-3302 is fixed, then the below if condition can be removed'''
+                            if project == "Non-Oncology" and sheet == "Search Strategies":
+                                sheet = "Search Strategy(ies)"
+                            elif sheet == "Search Strategies":
+                                sheet = "SEARCH STRATEGIES"
+                            actualdata_compexcelfile = pd.read_excel(f'ActualOutputs//{excel_filename}',
+                                                                     sheet_name=sheet)
+
+                            # Removing the 'Back To Toc' column from complete excel report to compare the exact data
+                            # with expected file
+                            actualdata_compexcelfile = actualdata_compexcelfile.iloc[:, :-1]
+
+                            if expecteddata.equals(actualdata_protocolfile):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
+                                            f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are matching",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
+                                            f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are not "
+                                            f"matching",
+                                    pass_=False, log=True, screenshot=False)
+                                raise Exception(
+                                    f"From '{sheet}' sheet -> File contents between Expected File "
+                                    f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel Report "
+                                    f"'{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching")
+
+                            '''Renaming the Column name as there is slight difference in Column header in Complete 
+                            Excel report for INC-EXC and SEARCH STRATEGIES sheets. Once LIVEHTA-3302 is fixed, 
+                            then the below if condition can be removed'''
+                            if project == "Oncology":
+                                if sheet == "INC-EXC":
+                                    expecteddata.rename(columns={'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1': f'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1 {j[0]}'}, inplace=True)
+                                if sheet == "SEARCH STRATEGIES":
+                                    expecteddata.rename(columns={'SEARCH STRATEGY: Test_Automation_1': f'SEARCH STRATEGY: Test_Automation_1 {j[0]}'}, inplace=True)
+
+                            if project == "Non-Oncology":
+                                if sheet == "PICOS":
+                                    expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3': 'PICOS: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
+                                    expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3.1': 'PICOS: Test_NonOncology_Automation_3 Clinical.1'}, inplace=True)
+                                if sheet == "Inclusion Exclusion Criteria":
+                                    expecteddata.rename(columns={'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3': 'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
+                                if sheet == "Search Strategy(ies)":
+                                    expecteddata.rename(columns={'Search Strategy(ies): Test_NonOncology_Automation_3': 'Search Strategy(ies): Test_NonOncology_Automation_3 Clinical'}, inplace=True)
+
+                            if expecteddata.equals(actualdata_compexcelfile):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
+                                            f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are matching",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
+                                            f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are not "
+                                            f"matching",
+                                    pass_=False, log=True, screenshot=False)
+                                raise Exception(
+                                    f"From '{sheet}' sheet -> File contents between Expected File "
+                                    f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel Report "
+                                    f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching")
+
+        except Exception:
+            raise Exception("Error while validating Protocol Excel File")
+
+    def validate_viewprisma_and_prisma_protocol_file(self, locatorname, filepath, index, pop_data, stdy_data, env,
+                                                     add_criteria, project):
+        expected_data_filepath = self.exbase.get_template_file_details(filepath, locatorname,
+                                                                       "ExpectedSourceTemplateFile")
+
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
+        df = pd.read_excel(filepath)
+
+        try:
+            for i in pop_data:
+                for j in stdy_data:
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
+
+                    self.go_to_nested_page("protocol_link", "prismas", env)
+                    self.upload_prisma_excel(locatorname, filepath, pop_data, stdy_data, env, project,
+                                             f"viewprisma_{index}")
+
+                    self.base.go_to_page("SLR_Homepage", env)
+                    self.refreshpage()
+                    self.slrreport.select_data(i[0], i[1], env)
+                    self.slrreport.select_data(j[0], j[1], env)
+                    if len(add_criteria) != 0:
+                        for v in add_criteria:
+                            self.slrreport.select_sub_section(f"{v[0]}", f"{v[1]}", env, f"{v[2]}")
+
+                    '''Validating the PRISMA Protocol file and Complete Excel Report data'''
+                    time.sleep(1)
+                    if self.clickable('Download_protocol_btn', env):
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Download Protocol button is enabled after selecting the Population '{i[0]}' -> "
+                                    f"SLR Type '{j[0]}'",
+                            pass_=True, log=True, screenshot=True)
+                        self.slrreport.generate_download_report("Download_protocol_btn", env)
+                        protocol_filename = self.slrreport.get_and_validate_filename(filepath)
+
+                        self.slrreport.generate_download_report("excel_report", env)
+                        excel_filename = self.slrreport.get_and_validate_filename(filepath)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Download Protocol button is not enabled after selecting the Population "
+                                    f"'{i[0]}' -> SLR Type '{j[0]}'",
+                            pass_=True, log=True, screenshot=True)
+                        raise Exception(f"Download Protocol button is not enabled after selecting the "
+                                        f"Population '{i[0]}' -> SLR Type '{j[0]}'")
+
+                    expected_workbook = openpyxl.load_workbook(f'{expected_data_filepath}')
+
+                    if project == 'Oncology':
+                        expected_sheets = ['PRISMA']
+                    elif project == 'Non-Oncology':
+                        expected_sheets = ['PRISMA-Intervtnl', 'PRISMA-RWE']
+
+                    for sheet in expected_sheets:
+                        if sheet in expected_workbook.sheetnames:
+                            expecteddata = pd.read_excel(f'{expected_data_filepath}', sheet_name=sheet, skiprows=1)
+                            actualdata_protocolfile = pd.read_excel(f'ActualOutputs//{protocol_filename}',
+                                                                    sheet_name=sheet, skiprows=1)
+                            actualdata_compexcelfile = pd.read_excel(f'ActualOutputs//{excel_filename}',
+                                                                     sheet_name=sheet, skiprows=1)
+
+                            if expecteddata.equals(actualdata_protocolfile):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
+                                            f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are matching",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
+                                            f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are not "
+                                            f"matching",
+                                    pass_=False, log=True, screenshot=False)
+                                raise Exception(
+                                    f"From '{sheet}' sheet -> File contents between Expected File "
+                                    f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel Report "
+                                    f"'{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching")
+                            
+                            if expecteddata.equals(actualdata_compexcelfile):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
+                                            f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are matching",
+                                    pass_=True, log=True, screenshot=False)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"From '{sheet}' sheet -> File contents between Expected File "
+                                            f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
+                                            f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are not "
+                                            f"matching",
+                                    pass_=False, log=True, screenshot=False)
+                                raise Exception(
+                                    f"From '{sheet}' sheet -> File contents between Expected File "
+                                    f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel Report "
+                                    f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching")
+                    
+                    '''Validationg the View PRISMA functionality'''
+                    self.click("view_prisma_button", env)
+                    time.sleep(1)
+
+                    if project == "Non-Oncology" and self.isdisplayed("view_prisma_clinical_intervention_tab", env) \
+                            and 'Clinical-Interventional' in stdytype:
+                        self.click("view_prisma_clinical_intervention_tab", env)
+                        if self.isdisplayed("view_prisma_clinical_intvtn_tab_data", env):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-Interventional' "
+                                        f"is present in View Original PRISMA section",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-Interventional' "
+                                        f"is not present in View Original PRISMA section",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                            f"'Clinical-Interventional' is not present in View Original PRISMA section")
+                    time.sleep(2)
+                    if project == "Non-Oncology" and self.isdisplayed("view_prisma_clinical_rwe_tab", env) and \
+                            'Clinical-RWE' in stdytype:
+                        self.click("view_prisma_clinical_rwe_tab", env)
+                        if self.isdisplayed("view_prisma_clinical_rwe_tab_data", env):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is "
+                                        f"present in View Original PRISMA section",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is not "
+                                        f"present in View Original PRISMA section",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is "
+                                            f"not present in View Original PRISMA section")
+                    if project == "Oncology":
+                        if self.isdisplayed("view_prisma_data", env):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is present in "
+                                        f"View Original PRISMA section",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is not present "
+                                        f"in View Original PRISMA section",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is not "
+                                            f"present in View Original PRISMA section")
+
+                    # Closing the View Prisma window
+                    self.click("view_prisma_close_button", env)
+                    time.sleep(2)
+
+                    # Checking the presence of View Updated Prisma button when additional criteria has been selected
+                    if self.isdisplayed("view_updated_prisma_btn", env) and self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"View Updated Prisma button is displayed and enabled after selecting the "
+                                    f"additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                            pass_=True, log=True, screenshot=True)
+                        self.click("view_updated_prisma_btn", env)
+
+                        if project == "Non-Oncology" and self.isdisplayed(
+                                "view_updated_prisma_clinical_intervention_tab", env) and \
+                                'Clinical-Interventional' in stdytype:
+                            self.click("view_updated_prisma_clinical_intervention_tab", env)
+                            if self.isdisplayed("view_updated_prisma_clinical_intvtn_tab_data", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                            f"'Clinical-Interventional' is present in View Updated PRISMA section",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                            f"'Clinical-Interventional' is not present in View Updated PRISMA section",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                                f"'Clinical-Interventional' is not present in View Updated "
+                                                f"PRISMA section")
+                        if project == "Non-Oncology" and self.isdisplayed("view_updated_prisma_clinical_rwe_tab", env) \
+                                and 'Clinical-RWE' in stdytype:
+                            self.click("view_updated_prisma_clinical_rwe_tab", env)
+                            if self.isdisplayed("view_updated_prisma_clinical_rwe_tab_data", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is "
+                                            f"present in View Updated PRISMA section",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is not "
+                                            f"present in View Updated PRISMA section",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' "
+                                                f"is not present in View Updated PRISMA section")
+                        if project == "Oncology":
+                            if self.isdisplayed("view_updated_prisma_data", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is present "
+                                            f"in View Updated PRISMA section",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is not "
+                                            f"present in View Updated PRISMA section",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is not "
+                                                f"present in View Updated PRISMA section")
+                    
+                        # Closing the View Updated Prisma window
+                        self.click("view_updated_prisma_close_btn", env)
+                    elif self.isdisplayed("view_updated_prisma_btn", env) and not self.clickable(
+                            "view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"View Updated Prisma button is displayed and not enabled after selecting the "
+                                    f"additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                            pass_=False, log=True, screenshot=True)
+                        raise Exception(f"View Updated Prisma button is displayed and not enabled after selecting "
+                                        f"the additional criteria options for the Population '{i[0]}' -> "
+                                        f"SLR Type '{j[0]}'")
+
+                    self.refreshpage()
+        except Exception:
+            raise Exception("Unable to View Original PRISMA data")
+
+    def validate_viewprisma_and_prisma_protocol_file_withoutdata(self, locatorname, filepath, pop_data, stdy_data,
+                                                                 env, add_criteria, project):
+        expected_data_filepath = self.exbase.get_template_file_details(filepath, locatorname,
+                                                                       "ExpectedSourceTemplateFile_withoutdata")
+
+        # This Dataframe will be used to read the study type and study files based on the given SLR Type
+        df = pd.read_excel(filepath)
+
+        try:
+            for i in pop_data:
+                for j in stdy_data:
+                    data1 = df[df["Name"] == locatorname]
+                    data1_val = data1[data1["slrtype"] == j[0]]
+                    stdytype = data1_val["Study_Types"]
+                    stdytype = [item for item in stdytype if str(item) != 'nan']
+
+                    self.go_to_nested_page("protocol_link", "prismas", env)
+                    self.del_prisma_excel(locatorname, filepath, pop_data, stdy_data, env)
+
+                    self.base.go_to_page("SLR_Homepage", env)
+                    self.slrreport.select_data(i[0], i[1], env)
+                    self.slrreport.select_data(j[0], j[1], env)
+                    if len(add_criteria) != 0:
+                        for v in add_criteria:
+                            self.slrreport.select_sub_section(f"{v[0]}", f"{v[1]}", env, f"{v[2]}")
+
+                    '''Validating the absence of data in PRISMA Protocol file and Complete Excel Report when Excel 
+                    file is deleted in Protocol->PRISMA page'''
+                    time.sleep(1)
+                    if self.clickable('Download_protocol_btn', env):
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Download Protocol button is enabled after selecting the Population '{i[0]}' -> "
+                                    f"SLR Type '{j[0]}'",
+                            pass_=True, log=True, screenshot=True)
+                        self.slrreport.generate_download_report("Download_protocol_btn", env)
+                        protocol_filename = self.slrreport.get_and_validate_filename(filepath)
+
+                        self.slrreport.generate_download_report("excel_report", env)
+                        excel_filename = self.slrreport.get_and_validate_filename(filepath)
+                    else:
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"Download Protocol button is not enabled after selecting the Population "
+                                    f"'{i[0]}' -> SLR Type '{j[0]}'",
+                            pass_=True, log=True, screenshot=True)
+                        raise Exception(f"Download Protocol button is not enabled after selecting the Population "
+                                        f"'{i[0]}' -> SLR Type '{j[0]}'")
+
+                    expected_workbook = openpyxl.load_workbook(f'{expected_data_filepath}')
+
                     for sheet in expected_workbook.sheetnames:
                         expecteddata = pd.read_excel(f'{expected_data_filepath}', sheet_name=sheet)
                         actualdata_protocolfile = pd.read_excel(f'ActualOutputs//{protocol_filename}', sheet_name=sheet)
-                        if project == "Non-Oncology" and sheet == "Search Strategies":
-                            sheet = "Search Strategy(ies)"
-                        elif sheet == "Search Strategies":
-                            sheet = "SEARCH STRATEGIES"
                         actualdata_compexcelfile = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet)
 
                         # Removing the 'Back To Toc' column from complete excel report to compare the exact data
                         # with expected file
-                        actualdata_compexcelfile = actualdata_compexcelfile.iloc[:, :-1]
+                        actualdata_compexcelfile = actualdata_compexcelfile.iloc[:, 1:]
+                        actualdata_compexcelfile.rename(columns={'Unnamed: 1': 'Unnamed: 0'}, inplace=True)
 
                         if expecteddata.equals(actualdata_protocolfile):
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"From '{sheet}' sheet -> File contents between Expected File "
                                         f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
-                                        f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are matching",
+                                        f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are "
+                                        f"matching when PRISMA Excel file is deleted in Protocol->PRISMA page",
                                 pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"From '{sheet}' sheet -> File contents between Expected File "
                                         f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel "
-                                        f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching",
+                                        f"Report '{Path(f'ActualOutputs//{protocol_filename}').name}' are not "
+                                        f"matching when PRISMA Excel file is deleted in Protocol->PRISMA page",
                                 pass_=False, log=True, screenshot=False)
                             raise Exception(
                                 f"From '{sheet}' sheet -> File contents between Expected File "
                                 f"'{Path(f'{expected_data_filepath}').name}' and Protocol Excel Report "
-                                f"'{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching")
-
-                        '''Renaming the Column name as there is slight difference in Column header in Complete 
-                        Excel report for INC-EXC and SEARCH STRATEGIES sheets'''
-                        if project == "Oncology":
-                            if sheet == "INC-EXC":
-                                expecteddata.rename(columns={'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1': f'INCLUSION AND EXCLUSION CRITERIA: Test_Automation_1 {j[0]}'}, inplace=True)
-                            if sheet == "SEARCH STRATEGIES":
-                                expecteddata.rename(columns={'SEARCH STRATEGY: Test_Automation_1': f'SEARCH STRATEGY: Test_Automation_1 {j[0]}'}, inplace=True)
-
-                        if project == "Non-Oncology":
-                            if sheet == "PICOS":
-                                expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3': 'PICOS: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
-                                expecteddata.rename(columns={'PICOS: Test_NonOncology_Automation_3.1': 'PICOS: Test_NonOncology_Automation_3 Clinical.1'}, inplace=True)
-                            if sheet == "Inclusion Exclusion Criteria":
-                                expecteddata.rename(columns={'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3': 'Inclusion and Exclusion Criteria: Test_NonOncology_Automation_3 Clinical'}, inplace=True)
-                            if sheet == "Search Strategy(ies)":
-                                expecteddata.rename(columns={'Search Strategy(ies): Test_NonOncology_Automation_3': 'Search Strategy(ies): Test_NonOncology_Automation_3 Clinical'}, inplace=True)
-
+                                f"'{Path(f'ActualOutputs//{protocol_filename}').name}' are not matching when "
+                                f"PRISMA Excel file is deleted in Protocol->PRISMA page")
+                        
                         if expecteddata.equals(actualdata_compexcelfile):
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"From '{sheet}' sheet -> File contents between Expected File "
                                         f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
-                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are matching",
+                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are matching "
+                                        f"when PRISMA Excel file is deleted in Protocol->PRISMA page",
                                 pass_=True, log=True, screenshot=False)
                         else:
                             self.LogScreenshot.fLogScreenshot(
                                 message=f"From '{sheet}' sheet -> File contents between Expected File "
                                         f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel "
-                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are not matching",
+                                        f"Report '{Path(f'ActualOutputs//{excel_filename}').name}' are not "
+                                        f"matching when PRISMA Excel file is deleted in Protocol->PRISMA page",
                                 pass_=False, log=True, screenshot=False)
                             raise Exception(
                                 f"From '{sheet}' sheet -> File contents between Expected File "
                                 f"'{Path(f'{expected_data_filepath}').name}' and Complete Excel Report "
-                                f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching")
+                                f"'{Path(f'ActualOutputs//{excel_filename}').name}' are not matching when PRISMA "
+                                f"Excel file is deleted in Protocol->PRISMA page")
 
+                    '''Validating the absence of data in View PRISMA when Excel file is deleted in 
+                    Protocol->PRISMA page'''
+                    self.click("view_prisma_button", env)
+                    time.sleep(1)
+
+                    if project == "Non-Oncology" and self.isdisplayed("view_prisma_clinical_intervention_tab", env) \
+                            and 'Clinical-Interventional' in stdytype:
+                        self.click("view_prisma_clinical_intervention_tab", env)
+                        if not self.isdisplayed("view_prisma_clinical_intvtn_tab_data", env):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-Interventional' "
+                                        f"is not present in View Original PRISMA section as expected because the "
+                                        f"PRISMA excel file has been removed from Protocol -> PRISMA page",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-Interventional' "
+                                        f"is present in View Original PRISMA section though PRISMA excel file is "
+                                        f"removed from Protocol -> PRISMA page which is not expected.",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                            f"'Clinical-Interventional' is present in View Original PRISMA section "
+                                            f"though PRISMA excel file is removed from Protocol -> PRISMA page "
+                                            f"which is not expected.")
+                    time.sleep(2)
+                    if project == "Non-Oncology" and self.isdisplayed("view_prisma_clinical_rwe_tab", env) \
+                            and 'Clinical-RWE' in stdytype:
+                        self.click("view_prisma_clinical_rwe_tab", env)
+                        if not self.isdisplayed("view_prisma_clinical_rwe_tab_data", env):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is not "
+                                        f"present in View Original PRISMA section as expected because the PRISMA "
+                                        f"excel file has been removed from Protocol -> PRISMA page",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is "
+                                        f"present in View Original PRISMA section though PRISMA excel file is "
+                                        f"removed from Protocol -> PRISMA page which is not expected.",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' "
+                                            f"is present in View Original PRISMA section though PRISMA excel file "
+                                            f"is removed from Protocol -> PRISMA page which is not expected.")
+                    if project == "Oncology": 
+                        if not self.isdisplayed("view_prisma_data", env):
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is not present "
+                                        f"in View Original PRISMA section as expected because the PRISMA excel "
+                                        f"file has been removed from Protocol -> PRISMA page",
+                                pass_=True, log=True, screenshot=True)
+                        else:
+                            self.LogScreenshot.fLogScreenshot(
+                                message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is present in "
+                                        f"View Original PRISMA section though PRISMA excel file is removed from "
+                                        f"Protocol -> PRISMA page which is not expected.",
+                                pass_=False, log=True, screenshot=True)
+                            raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is "
+                                            f"present in View Original PRISMA section though PRISMA excel file is "
+                                            f"removed from Protocol -> PRISMA page which is not expected.")
+
+                    # Closing the View Prisma window
+                    self.click("view_prisma_close_button", env)
+                    time.sleep(2)
+
+                    # Checking the presence of View Updated Prisma button when additional criteria has been selected
+                    if self.isdisplayed("view_updated_prisma_btn", env) and \
+                            self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"View Updated Prisma button is displayed and enabled after selecting the "
+                                    f"additional criteria options for the Population '{i[0]}' -> SLR Type '{j[0]}'",
+                            pass_=True, log=True, screenshot=True)
+                        self.click("view_updated_prisma_btn", env)
+
+                        if project == "Non-Oncology" and \
+                                self.isdisplayed("view_updated_prisma_clinical_intervention_tab", env) and \
+                                'Clinical-Interventional' in stdytype:
+                            self.click("view_updated_prisma_clinical_intervention_tab", env)
+                            if not self.isdisplayed("view_updated_prisma_clinical_intvtn_tab_data", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                            f"'Clinical-Interventional' is not present in View Updated PRISMA "
+                                            f"section as expected because the PRISMA excel file has been removed "
+                                            f"from Protocol -> PRISMA page",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                            f"'Clinical-Interventional' is present in View Updated PRISMA section "
+                                            f"though PRISMA excel file is removed from Protocol -> PRISMA page "
+                                            f"which is not expected.",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type "
+                                                f"'Clinical-Interventional' is present in View Updated PRISMA "
+                                                f"section though PRISMA excel file is removed from Protocol -> "
+                                                f"PRISMA page which is not expected.")
+                        if project == "Non-Oncology" and \
+                                self.isdisplayed("view_updated_prisma_clinical_rwe_tab", env) \
+                                and 'Clinical-RWE' in stdytype:
+                            self.click("view_updated_prisma_clinical_rwe_tab", env)
+                            if not self.isdisplayed("view_updated_prisma_clinical_rwe_tab_data", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is "
+                                            f"not present in View Updated PRISMA section as expected because the "
+                                            f"PRISMA excel file has been removed from Protocol -> PRISMA page",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' is "
+                                            f"present in View Updated PRISMA section though PRISMA excel file is "
+                                            f"removed from Protocol -> PRISMA page which is not expected.",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type 'Clinical-RWE' "
+                                                f"is present in View Updated PRISMA section though PRISMA excel file "
+                                                f"is removed from Protocol -> PRISMA page which is not expected.")
+                        if project == "Oncology":
+                            if not self.isdisplayed("view_updated_prisma_data", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is not "
+                                            f"present in View Updated PRISMA section as expected because the "
+                                            f"PRISMA excel file has been removed from Protocol -> PRISMA page",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is present "
+                                            f"in View Updated PRISMA section though PRISMA excel file is removed "
+                                            f"from Protocol -> PRISMA page which is not expected.",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"PRISMA Image for Population '{i[0]}' -> SLR Type '{j[0]}' is "
+                                                f"present in View Updated PRISMA section though PRISMA excel file "
+                                                f"is removed from Protocol -> PRISMA page which is not expected.")
+                    
+                        # Closing the View Updated Prisma window
+                        self.click("view_updated_prisma_close_btn", env)
+                    elif self.isdisplayed("view_updated_prisma_btn", env) and not \
+                            self.clickable("view_updated_prisma_btn", env):
+                        self.LogScreenshot.fLogScreenshot(
+                            message=f"View Updated Prisma button is displayed and not enabled after selecting "
+                                    f"the additional criteria options for the Population '{i[0]}' -> "
+                                    f"SLR Type '{j[0]}'",
+                            pass_=False, log=True, screenshot=True)
+                        raise Exception(f"View Updated Prisma button is displayed and not enabled after selecting "
+                                        f"the additional criteria options for the Population '{i[0]}' -> "
+                                        f"SLR Type '{j[0]}'")
+
+                    self.refreshpage()
         except Exception:
-            raise Exception("Error while validating Protocol Excel File")
+            raise Exception("Unable to View Original PRISMA data")

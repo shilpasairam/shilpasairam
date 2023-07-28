@@ -76,6 +76,7 @@ class ImportPublicationPage(Base):
                     raise Exception("Unable to find status message during Extraction file uploading")
 
                 # Fetching total rows count after uploading a new file
+                time.sleep(2)
                 table_rows_after = self.select_elements("upload_table_rows", env)
                 self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: '
                                                           f'{len(table_rows_after)}',
@@ -115,7 +116,7 @@ class ImportPublicationPage(Base):
                     self.click("back_to_view_action_btn", env, UnivWaitFor=10)
                 else:
                     self.LogScreenshot.fLogScreenshot(message=f'Unable to find the File uploading status icon.',
-                                                      pass_=True, log=True, screenshot=True)
+                                                      pass_=False, log=True, screenshot=True)
                     raise Exception("Unable to find the File uploading status icon")
                 self.refreshpage()
                 time.sleep(5)
@@ -167,6 +168,7 @@ class ImportPublicationPage(Base):
                     raise Exception("Unable to find status message during Extraction file uploading")
 
                 # Fetching total rows count after uploading a new file
+                time.sleep(2)
                 table_rows_after = self.select_elements("upload_table_rows", env)
                 self.LogScreenshot.fLogScreenshot(message=f'Table length after uploading a new file: '
                                                           f'{len(table_rows_after)}',
@@ -279,6 +281,7 @@ class ImportPublicationPage(Base):
                     raise Exception("Error during Extraction File Deletion")
 
                 # Fetching total rows count after deleting a file from top of the table
+                time.sleep(2)
                 table_rows_after = self.select_elements(tablerows, env)
                 self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a file: '
                                                           f'{len(table_rows_after)}',
