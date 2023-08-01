@@ -169,8 +169,9 @@ class Test_ProtocolPage:
         LogScreenshot.fLogScreenshot(message=f"***Search Strategy page validation is completed***",
                                      pass_=True, log=True, screenshot=False)
 
-    @pytest.mark.C37883
-    @pytest.mark.C38341
+    # @pytest.mark.C37883
+    # @pytest.mark.C38341
+    @pytest.mark.C41850
     def test_nononcology_prisma_details(self, extra, env, request, caseid):
         baseURL = ReadConfig.getLiveSLRAppURL(env)
         basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")

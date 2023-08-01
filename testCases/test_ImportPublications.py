@@ -578,7 +578,8 @@ class Test_ImportPublicationPage:
         mngpoppage = ManagePopulationsPage(self.driver, extra)        
 
         request.node._tcid = caseid
-        request.node._title = "Non-Oncology - Validate Editing the existing Non-Oncology Population and Validate Upload Extraction File with Failure Icon for Invalid Data"
+        request.node._title = "Non-Oncology - Validate Editing the existing Non-Oncology Population and " \
+                              "Validate Upload Extraction File with Failure Icon for Invalid Data"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
                                      pass_=True, log=True, screenshot=False)
@@ -598,12 +599,14 @@ class Test_ImportPublicationPage:
                 mngpoppage.\
                     non_onocolgy_edit_population_by_uploading_invalid_template(i,
                                                                                'Test_NonOncology_Automation_1',
-                                                                               'edit_population', livehta_2532_template_data,
+                                                                               'edit_population',
+                                                                               livehta_2532_template_data,
                                                                                'Categorical', env)
 
                 base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
                 imppubpage.upload_file_with_errors(i, livehta_2532_importool_data, env)
-                imppubpage.delete_file(i, livehta_2532_importool_data, "file_status_popup_text", "upload_table_rows", env)
+                imppubpage.delete_file(i, livehta_2532_importool_data, "file_status_popup_text", "upload_table_rows",
+                                       env)
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                              pass_=False, log=True, screenshot=True)
