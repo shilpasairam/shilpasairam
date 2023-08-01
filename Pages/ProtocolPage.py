@@ -571,7 +571,7 @@ class ProtocolPage(Base):
         try:
             for i in pop_data:
                 for j in stdy_data:
-                    # Get StudyType and Files path to upload Managae QA Data
+                    # Get StudyType and Files path to upload Search Strategy Data
                     data1 = df[df["Name"] == locatorname]
                     data1_val = data1[data1["slrtype"] == j[0]]
                     stdytype = data1_val["Study_Types"]

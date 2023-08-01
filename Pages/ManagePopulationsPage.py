@@ -133,9 +133,6 @@ class ManagePopulationsPage(Base):
                 # result = []
                 self.scroll("managepopulation_page_heading", env)
                 self.input_text("search_button", f'{new_pop_val[1]}', env)
-                # td1 = self.select_elements('manage_pop_table_row_1', env)
-                # for m in td1:
-                #     result.append(m.text)
                 result = self.get_texts('manage_pop_table_row_1', env)
 
                 self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
@@ -202,11 +199,7 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Unable to find status message while editing the Population data")
 
         try:
-            # result = []
             self.input_text("search_button", f'{edit_pop_val[1]}', env)
-            # td1 = self.select_elements('manage_pop_table_row_1', env)
-            # for m in td1:
-            #     result.append(m.text)
             result = self.get_texts('manage_pop_table_row_1', env)
 
             self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the existing population: {result}',
@@ -247,10 +240,6 @@ class ManagePopulationsPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f"Selected Population for Deletion is : ",
                                           pass_=True, log=True, screenshot=True)
         
-        # result = []
-        # td1 = self.select_elements('manage_pop_table_row_1', env)
-        # for m in td1:
-        #     result.append(m.text)
         result = self.get_texts('manage_pop_table_row_1', env)
         
         expected_popup_msg = f"Are you sure you want to delete population '{result[0]} - {result[2]}' ?"
@@ -387,10 +376,6 @@ class ManagePopulationsPage(Base):
             raise Exception('Add Endpoint button is present after adding 3 Endpoints')
 
         # Read the field level error messages from all the fields
-        # actual_field_level_err_msg = []
-        # err_eles = self.select_elements("field_level_err_msgs", env)
-        # for i in err_eles:
-        #     actual_field_level_err_msg.append(i.text)
         actual_field_level_err_msg = self.get_texts('field_level_err_msgs', env)
 
         comparison_result = self.exbase.list_comparison_between_reports_data(expected_field_level_err_msg,
@@ -476,10 +461,6 @@ class ManagePopulationsPage(Base):
         for i in pop_locs:
             self.input_text(i[0], i[1], env, UnivWaitFor=10)
 
-        # client_ele = self.select_element("non_oncology_clientid_drpdwn", env)
-        # select = Select(client_ele)
-        # select.select_by_visible_text('LIVEHTA Automation')
-        # sel_client_val = select.first_selected_option.text
         selected_client_val = self.base.selectbyvisibletext("non_oncology_clientid_drpdwn", 'LIVEHTA Automation', env)
 
         self.LogScreenshot.fLogScreenshot(message=f'Details entered for Name, Client and Description are :',
@@ -561,12 +542,8 @@ class ManagePopulationsPage(Base):
 
         try:
             if table_rows_after > table_rows_before != table_rows_after:
-                # result = []
                 self.scroll("managepopulation_page_heading", env)
                 self.input_text("search_button", f'{pop_locs[0][1]}', env)
-                # td1 = self.select_elements('manage_pop_table_row_1', env)
-                # for m in td1:
-                #     result.append(m.text)
                 result = self.get_texts('manage_pop_table_row_1', env)
                 
                 if result[0] == f'{pop_locs[0][1]}' and result[3] == f'{pop_locs[1][1]}':
@@ -618,10 +595,6 @@ class ManagePopulationsPage(Base):
         for i in pop_locs:
             self.input_text(i[0], i[1], env, UnivWaitFor=10)
 
-        # client_ele = self.select_element("non_oncology_clientid_drpdwn", env)
-        # select = Select(client_ele)
-        # select.select_by_visible_text('LIVEHTA Automation')
-        # sel_client_val = select.first_selected_option.text
         selected_client_val = self.base.selectbyvisibletext("non_oncology_clientid_drpdwn", 'LIVEHTA Automation', env)
 
         self.LogScreenshot.fLogScreenshot(message=f'Details entered for Name, Client and Description are :',
@@ -770,11 +743,7 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Unable to find status message while editing the Non-Oncology Population data")
 
         try:
-            # result = []
             self.input_text("search_button", f'{pop_locs[0][1]}', env)
-            # td1 = self.select_elements('manage_pop_table_row_1', env)
-            # for m in td1:
-            #     result.append(m.text)
             result = self.get_texts('manage_pop_table_row_1', env)
             
             if result[0] == f'{pop_locs[0][1]}' and result[3] == f'{pop_locs[1][1]}':
@@ -919,10 +888,6 @@ class ManagePopulationsPage(Base):
                                                    'indication_type', 'endpoints', nafilter=False)
 
         for i in testdata:
-            # col_name = []
-            # col_eles = self.select_elements('manage_pop_table_col_names', env)
-            # for m in col_eles:
-            #     col_name.append(m.text)
             col_name = self.get_texts('manage_pop_table_col_names', env)
             
             if col_name[1] == 'Oncology/Non-oncology' and col_name[4] == 'Custom Endpoints':
@@ -939,11 +904,7 @@ class ManagePopulationsPage(Base):
                                 f"the desired position. Kindy recheck the table column names under Manage "
                                 f"Population page")
             
-            # result = []
             self.input_text("search_button", f'{i[0]}', env)
-            # td1 = self.select_elements('manage_pop_table_row_1', env)
-            # for n in td1:
-            #     result.append(n.text)
             result = self.get_texts('manage_pop_table_row_1', env)
             
             if result[1] == f'{i[1]}' and result[4] == f'{i[2]}':
@@ -996,10 +957,6 @@ class ManagePopulationsPage(Base):
         error_msg_heading = self.get_text('non_onco_error_msg_heading', env)
         error_msg_details = self.get_text('non_onco_error_msg_details', env)                                              
 
-        # actual_err_msg = []
-        # error_list_eles = self.select_elements('non_onco_list_of_errors', env)
-        # for k in error_list_eles:
-        #     actual_err_msg.append(k.text)
         actual_err_msg = self.get_texts('non_onco_list_of_errors', env)
         
         if error_msg_heading == 'Upload failed' and error_msg_details == f'There are {len(actual_err_msg)} columns ' \
