@@ -12,6 +12,7 @@ import datetime
 import xml.dom.minidom
 import glob
 from pyhtml2pdf import converter
+from utilities.pdfconverter import get_pdf_from_html
 from pathlib import Path
 from utilities.readProperties import ReadConfig
 from selenium.webdriver.chrome.service import Service
@@ -177,7 +178,10 @@ def pytest_sessionfinish(session, exitstatus):
     # Converting the HTML report file to PDF format
     filename = Path(glob.glob('Reports//*.html')[0]).stem
     path = os.path.abspath(f'Reports//{filename}.html')
-    converter.convert(f'file:///{path}?collapsed=Skipped', f"{filename}.pdf")
+    # converter.convert(f'file:///{path}?collapsed=Skipped', f"{filename}.pdf")
+    pdfresult = get_pdf_from_html(f'file:///{path}?collapsed=Skipped', browser_ver="114.0.5735.90", install_driver=True)
+    with open(f"{filename}.pdf", 'wb') as file:
+        file.write(pdfresult)
 
     # Modifying the xml file for testrail result upload
     doc = xml.dom.minidom.parse(f'Reports/junit-results.xml')

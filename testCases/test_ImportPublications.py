@@ -11,6 +11,7 @@ from Pages.ExtendedBasePage import ExtendedBase
 from Pages.ImportPublicationsPage import ImportPublicationPage
 
 from Pages.LoginPage import LoginPage
+from Pages.ManagePopulationsPage import ManagePopulationsPage
 from Pages.OpenLiveSLRPage import LiveSLRPage
 from Pages.SLRReportPage import SLRReport
 from utilities.logScreenshot import cLogScreenshot
@@ -558,3 +559,58 @@ class Test_ImportPublicationPage:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Element Not Found")
+
+    @pytest.mark.C41860
+    def test_nononcology_validate_C1toC5_column_in_extractionfile(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getPortalURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)                
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        imppubpage = ImportPublicationPage(self.driver, extra)
+        # Creating object of ManagePopulationsPage class
+        mngpoppage = ManagePopulationsPage(self.driver, extra)        
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology - Validate Editing the existing Non-Oncology Population and " \
+                              "Validate Upload Extraction File with Failure Icon for Invalid Data"
+
+        LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is started***",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_portal_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        livehta_2532_template_data = exbase.get_testdata_filepath(basefile, "livehta_2532_template_validation")
+        livehta_2532_importool_data = exbase.get_testdata_filepath(basefile, "livehta_2532_importool_validation")        
+
+        scenarios = ['scenario1', 'scenario2']
+
+        for i in scenarios:
+            try:
+                base.refreshpage()
+                base.go_to_page("managepopulations_button", env)
+                mngpoppage.\
+                    non_onocolgy_edit_population_by_uploading_invalid_template(i,
+                                                                               'Test_NonOncology_Automation_1',
+                                                                               'edit_population',
+                                                                               livehta_2532_template_data,
+                                                                               'Categorical', env)
+
+                base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)
+                imppubpage.upload_file_with_errors(i, livehta_2532_importool_data, env)
+                imppubpage.delete_file(i, livehta_2532_importool_data, "file_status_popup_text", "upload_table_rows",
+                                       env)
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing Import publications page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Element Not Found")
+        
+        LogScreenshot.fLogScreenshot(message=f"***Upload Non-Oncology Extraction Template validation is completed***",
+                                     pass_=True, log=True, screenshot=False)

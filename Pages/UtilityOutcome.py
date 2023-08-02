@@ -1167,7 +1167,7 @@ class UtilityOutcome(Base):
                         f"{sourcefile_col1}, SortedExpectedExcelfile: {sorted(sourcefile_col1)}, ActualExcel: "
                         f"{actualexcel_col1}, SortedActualExcel: {sorted(actualexcel_col1)}, ActualWebExcel: "
                         f"{actualwebexcel_col1}, SortedActualWebExcel: {sorted(actualwebexcel_col1)}",
-                pass_=True, log=True, screenshot=False)
+                pass_=False, log=True, screenshot=False)
             raise Exception("Contents in column 'Study Identifier' are not in Sorted order")
         
         self.LogScreenshot.fLogScreenshot(
