@@ -1,5 +1,5 @@
 """
-Test case deals with Application version check for LiveSLR and LiveRef.
+Test case deals with Application version check for LiveSLR and LiveRef
 """
 
 import pytest
