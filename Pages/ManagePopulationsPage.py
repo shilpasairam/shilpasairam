@@ -136,11 +136,11 @@ class ManagePopulationsPage(Base):
                 result = self.get_texts('manage_pop_table_row_1', env)
 
                 self.LogScreenshot.fLogScreenshot(message=f'Table data after adding a new population: {result}',
-                                                  pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=True)
                 
                 if result[2] == f'{new_pop_val[1]}':
                     self.LogScreenshot.fLogScreenshot(message=f'Population data is present in table',
-                                                      pass_=True, log=True, screenshot=False)
+                                                      pass_=True, log=True, screenshot=True)
                     population = f"{result[2]}"
                     return population
                 else:
@@ -203,11 +203,11 @@ class ManagePopulationsPage(Base):
             result = self.get_texts('manage_pop_table_row_1', env)
 
             self.LogScreenshot.fLogScreenshot(message=f'Table data after editing the existing population: {result}',
-                                              pass_=True, log=True, screenshot=False)
+                                              pass_=True, log=True, screenshot=True)
             
             if result[2] == f'{edit_pop_val[1]}':
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Population data is present in table',
-                                                  pass_=True, log=True, screenshot=False)
+                                                  pass_=True, log=True, screenshot=True)
                 population = f"{result[2]}"
                 return population
             
@@ -457,7 +457,7 @@ class ManagePopulationsPage(Base):
         # Select Non-oncology tab
         self.click("non_oncology_tab", env)
 
-        # Navigate through all fields without entering any values
+        # Navigate through all fields to enter the values
         for i in pop_locs:
             self.input_text(i[0], i[1], env, UnivWaitFor=10)
 
@@ -466,7 +466,7 @@ class ManagePopulationsPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Details entered for Name, Client and Description are :',
                                           pass_=True, log=True, screenshot=True)
 
-        # Navigate through all fields without entering any values
+        # Navigate through all fields to enter the values
         for j in ep1_locs:
             self.input_text(j[0], j[1], env, UnivWaitFor=10)
         
@@ -477,7 +477,7 @@ class ManagePopulationsPage(Base):
         
         self.click("add_ep_btn", env)       
         
-        # Navigate through all fields without entering any values
+        # Navigate through all fields to enter the values
         for k in ep2_locs:
             self.input_text(k[0], k[1], env, UnivWaitFor=10)
 
@@ -488,7 +488,7 @@ class ManagePopulationsPage(Base):
         
         self.click("add_ep_btn", env)
 
-        # Navigate through all fields without entering any values
+        # Navigate through all fields to enter the values
         for v in ep3_locs:
             self.input_text(v[0], v[1], env, UnivWaitFor=10)
 
