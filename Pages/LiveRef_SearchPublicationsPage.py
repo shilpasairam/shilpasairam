@@ -34,12 +34,12 @@ class SearchPublicationsPage(Base):
                                               pass_=True, log=True, screenshot=True)
 
     def select_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env, UnivWaitFor=20):            
+        if self.scroll_and_click(scroll, env, UnivWaitFor=20):            
             self.jsclick(locator, env, UnivWaitFor=10)
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                   pass_=True, log=True, screenshot=True)
-            self.scrollback("searchpublications_page_header", env)
+            self.scroll("searchpublications_page_header", env)
     
     def get_indication_details(self, locatorname, filepath, element_locator, button_locator):
         df = pd.read_excel(filepath)

@@ -117,7 +117,7 @@ class Base:
 
     # Check the presence of Admin page options in Admin section
     def presence_of_admin_page_option(self, locator, env):
-        self.scrollback(locator, env)
+        self.scroll(locator, env)
         self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
                                                         self.locatorpath(locator, env))))
         self.LogScreenshot.fLogScreenshot(message=f'{self.locatorpath(locator, env)} option is present in Admin page.',
@@ -311,7 +311,7 @@ class Base:
 
     # Scroll to the element using locatorname
     @fWaitFor
-    def scroll(self, locator, env, UnivWaitFor=0):
+    def scroll_and_click(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """
@@ -328,7 +328,7 @@ class Base:
 
     # Scroll back to the element using locatorname
     @fWaitFor
-    def scrollback(self, locator, env, UnivWaitFor=0):
+    def scroll(self, locator, env, UnivWaitFor=0):
         """
         Given locator, identify the locator type and path from the OR file and scroll to the element
         """

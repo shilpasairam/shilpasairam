@@ -134,7 +134,7 @@ class LineofTherapyPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new LoT: {table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
         
-        self.scroll("managelot_page_heading", env)
+        self.scroll_and_click("managelot_page_heading", env)
         self.click(add_lot_button, env, UnivWaitFor=10)
 
         self.input_text("lot_name", lot_name[0], env)
@@ -249,7 +249,7 @@ class LineofTherapyPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a LoT: {table_rows_before}',
                                           pass_=True, log=True, screenshot=True)
 
-        self.scroll("managelot_page_heading", env)
+        self.scroll_and_click("managelot_page_heading", env)
         self.input_text("managelot_search_box", added_update_val, env)
         self.LogScreenshot.fLogScreenshot(message=f'LoT option selected for deletion is : ',
                                           pass_=True, log=True, screenshot=True)        

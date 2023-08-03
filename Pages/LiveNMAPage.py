@@ -45,7 +45,7 @@ class LiveNMA(Base):
                                                   pass_=True, log=True, screenshot=True)
 
     def select_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env):
+        if self.scroll_and_click(scroll, env):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=False)
@@ -54,10 +54,10 @@ class LiveNMA(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=False)
-            self.scrollback("SLR_page_header", env)
+            self.scroll("SLR_page_header", env)
 
     def select_all_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env):
+        if self.scroll_and_click(scroll, env):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=False)
@@ -66,7 +66,7 @@ class LiveNMA(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=False)
-            self.scrollback("SLR_page_header", env)
+            self.scroll("SLR_page_header", env)
 
     def table_display_check(self, nma_data_loc, locator, env):
         self.jsclick(nma_data_loc, env, UnivWaitFor=10)
@@ -231,7 +231,7 @@ class LiveNMA(Base):
                     if self.clickable("print_screen", env):
                         self.LogScreenshot.fLogScreenshot(message=f"Print Screen Button is clickable",
                                                           pass_=True, log=True, screenshot=False)
-                        self.scroll("print_screen", env)
+                        self.scroll_and_click("print_screen", env)
                         self.LogScreenshot.fLogScreenshot(message=f"Print Screen Details : ",
                                                           pass_=True, log=True, screenshot=True)
                     else:

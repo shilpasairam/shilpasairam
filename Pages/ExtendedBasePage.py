@@ -44,7 +44,7 @@ class ExtendedBase(Base):
                                                   pass_=True, log=True, screenshot=True)
 
     def select_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env, UnivWaitFor=20):
+        if self.scroll_and_click(scroll, env, UnivWaitFor=20):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -53,10 +53,10 @@ class ExtendedBase(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header", env)
+            self.scroll("SLR_page_header", env)
 
     def select_all_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env, UnivWaitFor=20):
+        if self.scroll_and_click(scroll, env, UnivWaitFor=20):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -65,7 +65,7 @@ class ExtendedBase(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header", env)
+            self.scroll("SLR_page_header", env)
 
     # Read individual column data using locatorname and column name
     def get_testdata_filepath(self, filepath, locatorname):

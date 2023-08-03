@@ -55,7 +55,7 @@ class ManageUpdatesPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new update: {table_rows_before}',
                                           pass_=True, log=True, screenshot=True)
 
-        self.scroll("manageupdates_page_heading", env)
+        self.scroll_and_click("manageupdates_page_heading", env)
         self.click(add_upd_button, env, UnivWaitFor=10)
 
         # pop_ele = self.select_element("sel_pop_update_dropdown", env)
@@ -199,7 +199,7 @@ class ManageUpdatesPage(Base):
         self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a update: {table_rows_before}',
                                           pass_=True, log=True, screenshot=True)
 
-        self.scroll("manageupdates_page_heading", env)
+        self.scroll_and_click("manageupdates_page_heading", env)
         self.input_text("manage_update_search_box", added_update_val, env)
         self.LogScreenshot.fLogScreenshot(message=f"Population opted for performing the delete operation is : ",
                                           pass_=True, log=True, screenshot=True)
