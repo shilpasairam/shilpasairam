@@ -570,13 +570,13 @@ class Test_ProtocolPage:
         base.presence_of_admin_page_option("protocol_link", env)
         base.go_to_nested_page("protocol_link", "prismas", env)
 
-        pop_val = ['pop1', 'pop2']
+        pop_val = ['pop1', 'pop2', 'pop3']
 
         for i in pop_val:
             try:
                 LogScreenshot.fLogScreenshot(message=f"***Field Level Error Message validation for Non-Oncology "
-                                        f"population is started***",
-                                pass_=True, log=True, screenshot=False)
+                                                     f"population is started***",
+                                             pass_=True, log=True, screenshot=False)
                 # Read population details from data sheet
                 pop_data = exbase.get_population_data(filepath, 'Sheet1', i)
                 # Read study types and file paths to upload
@@ -587,8 +587,8 @@ class Test_ProtocolPage:
                 prismapage.upload_prisma_check_field_level_err_msg(i, filepath, pop_data, stdy_data_, env)
 
                 LogScreenshot.fLogScreenshot(message=f"***Field Level Error Message validation for Non-Oncology "
-                                        f"population is completed***",
-                                pass_=True, log=True, screenshot=False)
+                                                     f"population is completed***",
+                                             pass_=True, log=True, screenshot=False)
 
             except Exception:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",

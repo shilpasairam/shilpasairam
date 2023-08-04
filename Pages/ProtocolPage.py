@@ -272,7 +272,7 @@ class ProtocolPage(Base):
                         selected_slr_val = self.base.selectbyvisibletext("prisma_study_type_dropdown", k, env)
                         time.sleep(1)
 
-                        if len(prisma_values) != 0:
+                        if len(prisma_values) == 10:
                             # Validating the text boxes by entering valid values
                             for index, loc in enumerate(prisma_locators):
                                 self.input_text(loc, int(prisma_values[index]), env, UnivWaitFor=5)
@@ -283,14 +283,62 @@ class ProtocolPage(Base):
                                             f"Type '{k}'.", pass_=True, log=True, screenshot=True)
                             if self.isenabled("prisma_image_save_btn", env):
                                 self.LogScreenshot.fLogScreenshot(
-                                    message=f"Save button is enabled after entering the valid values under PRISMA page for Population '{i[0]}' -> SLR "
-                                            f"Type '{k}'.", pass_=True, log=True, screenshot=True)
+                                    message=f"Save button is enabled after entering the valid values under PRISMA "
+                                            f"page for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=True, log=True, screenshot=True)
                             else:
                                 self.LogScreenshot.fLogScreenshot(
-                                    message=f"Save button is not enabled after entering the valid values under PRISMA page for Population '{i[0]}' -> SLR "
-                                            f"Type '{k}'.", pass_=False, log=True, screenshot=True)
-                                raise Exception(f"Save button is not enabled after entering the valid values under PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.")
-                        else:
+                                    message=f"Save button is not enabled after entering the valid values under "
+                                            f"PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"Save button is not enabled after entering the valid values under "
+                                                f"PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.")
+                        elif len(prisma_values) == 9:
+                            # Validating the text boxes by entering invalid values for number fields
+                            for index, loc in enumerate(prisma_locators):
+                                self.input_text(loc, prisma_values[index], env, UnivWaitFor=5)
+
+                            self.LogScreenshot.fLogScreenshot(
+                                    message=f"Details entered under PRISMA page for Population '{i[0]}' -> SLR "
+                                            f"Type '{k}'.", pass_=True, log=True, screenshot=True)
+
+                            # Read the field level error messages from all the fields
+                            actual_field_level_err_msg = self.get_texts('field_level_err_msgs', env)
+
+                            comparison_result = self.exbase.\
+                                list_comparison_between_reports_data(expected_field_level_err_msg,
+                                                                     actual_field_level_err_msg)
+
+                            if len(comparison_result) == 0:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"Field Level Error Messages displayed correctly when user enter value "
+                                            f"other than number under PRISMA page for Population '{i[0]}' -> SLR "
+                                            f"Type '{k}'.",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"Mismatch found in Field Level Error Messages when user entered value "
+                                            f"other than number for Population '{i[0]}' -> SLR Type '{k}'. Mismatch "
+                                            f"values are arranged in following order -> Expected Error Message, "
+                                            f"Actual Error Message. {comparison_result}",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"Mismatch found in Field Level Error Messages when user entered "
+                                                f"value other than number")
+                            
+                            self.scroll("prisma_image_save_btn", env)
+                            if not self.isenabled("prisma_image_save_btn", env):
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"Save button is not enabled when user enter value other than number "
+                                            f"under PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"Save button is enabled when user enter value other than number "
+                                            f"under PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"Save button is enabled when user enter value other than number "
+                                                f"under PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.")
+                        elif len(prisma_values) == 0:
                             # Validating the text boxes without entering the values
                             for v in prisma_locators:
                                 self.input_text(v, f'{Keys.TAB}', env, UnivWaitFor=10)
@@ -298,30 +346,36 @@ class ProtocolPage(Base):
                             # Read the field level error messages from all the fields
                             actual_field_level_err_msg = self.get_texts('field_level_err_msgs', env)
 
-                            comparison_result = self.exbase.list_comparison_between_reports_data(expected_field_level_err_msg,
-                                                                             actual_field_level_err_msg)
+                            comparison_result = self.exbase.\
+                                list_comparison_between_reports_data(expected_field_level_err_msg,
+                                                                     actual_field_level_err_msg)
 
                             if len(comparison_result) == 0:
                                 self.LogScreenshot.fLogScreenshot(
-                                    message=f"Field Level Error Messages displayed correctly under PRISMA page for Population '{i[0]}' -> SLR "
-                                            f"Type '{k}'.", pass_=True, log=True, screenshot=True)
+                                    message=f"Field Level Error Messages displayed correctly under PRISMA page "
+                                            f"for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=True, log=True, screenshot=True)
                             else:
-                                self.LogScreenshot.fLogScreenshot(message=f"Mismatch found in Field Level Error Messages for Population '{i[0]}' -> SLR Type '{k}'. Mismatch values "
-                                                                        f"are arranged in following order -> Expected Error Message, "
-                                                                        f"Actual Error Message. {comparison_result}",
-                                                                pass_=False, log=True, screenshot=True)
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"Mismatch found in Field Level Error Messages for Population '{i[0]}' "
+                                            f"-> SLR Type '{k}'. Mismatch values are arranged in following order "
+                                            f"-> Expected Error Message, Actual Error Message. {comparison_result}",
+                                    pass_=False, log=True, screenshot=True)
                                 raise Exception(f"Mismatch found in Field Level Error Messages")
                             
                             self.scroll("prisma_image_save_btn", env)
                             if not self.isenabled("prisma_image_save_btn", env):
                                 self.LogScreenshot.fLogScreenshot(
-                                    message=f"Save button is not enabled when values are not entered under PRISMA page for Population '{i[0]}' -> SLR "
-                                            f"Type '{k}'.", pass_=True, log=True, screenshot=True)
+                                    message=f"Save button is not enabled when values are not entered under PRISMA "
+                                            f"page for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=True, log=True, screenshot=True)
                             else:
                                 self.LogScreenshot.fLogScreenshot(
-                                    message=f"Save button is enabled when values are not entered under PRISMA page for Population '{i[0]}' -> SLR "
-                                            f"Type '{k}'.", pass_=False, log=True, screenshot=True)
-                                raise Exception(f"Save button is enabled when values are not entered under PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.")
+                                    message=f"Save button is enabled when values are not entered under PRISMA "
+                                            f"page for Population '{i[0]}' -> SLR Type '{k}'.",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception(f"Save button is enabled when values are not entered under "
+                                                f"PRISMA page for Population '{i[0]}' -> SLR Type '{k}'.")
 
         except Exception:
             raise Exception("Unable to upload PRISMA Excel")
