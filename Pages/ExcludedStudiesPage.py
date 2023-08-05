@@ -81,7 +81,7 @@ class ExcludedStudiesPage(Base):
 
     # Check the presence of Manage Excluded Publications option in Admin page
     def presence_of_elements(self, locator, env):
-        self.scroll(locator, env)
+        self.scroll_and_click(locator, env)
         self.wait.until(ec.presence_of_element_located((getattr(By, self.locatortype(locator, env)),
                                                         self.locatorpath(locator, env))))
         self.LogScreenshot.fLogScreenshot(message=f'Manage Excluded Publications option is present in Admin page.',

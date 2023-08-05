@@ -84,7 +84,7 @@ class ManagePopulationsPage(Base):
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
 
-        self.scroll("managepopulation_page_heading", env)
+        self.scroll_and_click("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
 
         # Read the file name and path required to upload
@@ -131,7 +131,7 @@ class ManagePopulationsPage(Base):
         try:
             if table_rows_after > table_rows_before != table_rows_after:
                 # result = []
-                self.scroll("managepopulation_page_heading", env)
+                self.scroll_and_click("managepopulation_page_heading", env)
                 self.input_text("search_button", f'{new_pop_val[1]}', env)
                 result = self.get_texts('manage_pop_table_row_1', env)
 
@@ -234,7 +234,7 @@ class ManagePopulationsPage(Base):
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
 
-        self.scroll("managepopulation_page_heading", env)
+        self.scroll_and_click("managepopulation_page_heading", env)
         self.input_text("search_button", pop_value, env)
 
         self.LogScreenshot.fLogScreenshot(message=f"Selected Population for Deletion is : ",
@@ -326,7 +326,7 @@ class ManagePopulationsPage(Base):
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
 
-        self.scroll("managepopulation_page_heading", env)
+        self.scroll_and_click("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
 
         # Select Non-oncology tab
@@ -451,7 +451,7 @@ class ManagePopulationsPage(Base):
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
 
-        self.scroll("managepopulation_page_heading", env)
+        self.scroll_and_click("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
 
         # Select Non-oncology tab
@@ -542,7 +542,7 @@ class ManagePopulationsPage(Base):
 
         try:
             if table_rows_after > table_rows_before != table_rows_after:
-                self.scroll("managepopulation_page_heading", env)
+                self.scroll_and_click("managepopulation_page_heading", env)
                 self.input_text("search_button", f'{pop_locs[0][1]}', env)
                 result = self.get_texts('manage_pop_table_row_1', env)
                 
@@ -585,7 +585,7 @@ class ManagePopulationsPage(Base):
                                                   f'{table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
 
-        self.scroll("managepopulation_page_heading", env)
+        self.scroll_and_click("managepopulation_page_heading", env)
         self.click(add_locator, env, UnivWaitFor=10)
 
         # Select Non-oncology tab
@@ -721,7 +721,7 @@ class ManagePopulationsPage(Base):
             raise Exception(f"Downloaded Filename is : {template_name}, Expectedname is : "
                             f"LIVEHTA Automation-{popname[0]}-Master Template")
             
-        self.scrollback("non_onco_template_file_upload", env)
+        self.scroll("non_onco_template_file_upload", env)
         self.input_text("non_onco_template_file_upload", f'{os.getcwd()}//ActualOutputs//{template_name}', env)
         self.LogScreenshot.fLogScreenshot(message=f'File upload details are :',
                                           pass_=True, log=True, screenshot=True)
@@ -952,7 +952,7 @@ class ManagePopulationsPage(Base):
         self.input_text("non_onco_template_file_upload", f'{invalid_template}', env)
         self.click("submit_button", env)
         time.sleep(1)
-        self.scrollback("non_onco_error_msg_heading", env)
+        self.scroll("non_onco_error_msg_heading", env)
 
         error_msg_heading = self.get_text('non_onco_error_msg_heading', env)
         error_msg_details = self.get_text('non_onco_error_msg_details', env)                                              

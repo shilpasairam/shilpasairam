@@ -1,75 +1,28 @@
-python -m pytest -v -s -n=2 --html=Reports\report.html  .\testCases\test_LoginPage.py
+Points to remembers:
+1. We need to pass environment to run individual or multiple test cases. 
+   Acceptable values are : 'test', 'staging', 'production'
+2. We need to pass TC ID if we are running individual test case
+ 
+# Sample Command to run individual Testcase. (Remember to update the TC ID based on your requirement)
+python -m pytest -v -m C40493 --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\ --env="test"
 
-python -m pytest -v -s --html=Reports\report.html  .\testCases\test_LoginPage.py
+# Sample Command to run all testcases present in one test file. (Remember to update the testcase filename based on your requirement)
+python -m pytest -v --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\test_LoginPage.py --env="test"
 
-python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
-
-python -m pytest -v --html=Reports\LoginPage_report.html --self-contained-html  .\testCases\test_LoginPage.py
-
-python -m pytest -v --html=Reports\AppVersion_report.html --self-contained-html .\testCases\test_AppVersion.py
-
-python -m pytest -v --html=Reports\LiveSLRPageElements_report.html --self-contained-html  .\testCases\test_LiveSLRPageElements.py
-
-python -m pytest -v --html=Reports\SLRCustomReport.html --self-contained-html  .\testCases\test_SLRCustomReport.py
-
-python -m pytest -v --html=Reports\LiveNMAPageElements_report.html --self-contained-html  .\testCases\test_LiveNMAPageElements.py
-
-python -m pytest -v --html=Reports\PrismaElementsValidation_report.html --self-contained-html  .\testCases\test_PrismaElementsValidation.py
-
-python -m pytest -v --html=Reports\ManagePopulations_workflow_report.html --self-contained-html  .\testCases\test_ManagePopulations_workflow.py
-
-python -m pytest -v --html=Reports\Importpublications_report.html --self-contained-html .\testCases\test_ImportPublications.py
-
-python -m pytest -v --html=Reports\ManagePopulations_report.html --self-contained-html .\testCases\test_Manage_Populations.py
-
-python -m pytest -v --html=Reports\ManageLineofTherapy_report.html --self-contained-html .\testCases\test_LineofTherapy.py
-
-python -m pytest -v --html=Reports\ManageUpdates_report.html --self-contained-html .\testCases\test_ManageUpdates.py
-
-python -m pytest -v --html=Reports\ManageQAData_report.html --self-contained-html .\testCases\test_ManageQAData.py
-
-python -m pytest -v --html=Reports\Prisma_report.html --self-contained-html .\testCases\test_Prisma.py
-
-python -m pytest -v --html=Reports\Utilityoutcome_QOL_report.html --self-contained-html .\testCases\test_UtilityOutcome_QOL.py
-
-python -m pytest -v --html=Reports\Utilityoutcome_ECON_report.html --self-contained-html .\testCases\test_UtilityOutcome_ECON.py
-
-python -m pytest -v --html=Reports\Excluded_Studies_report.html --self-contained-html .\testCases\test_ExcludedStudies.py
-
-python -m pytest -v --html=Reports\ExcludedStudies_liveSLR_report.html --self-contained-html .\testCases\test_ExcludedStudies_liveSLR.py
-
-python -m pytest -v --html=Reports\LiveRef_loginpage_report.html --self-contained-html .\testCases\test_LiveRef_LoginPage.py
-
-python -m pytest -v --html=Reports\LiveRef_ManageSourceData_report.html --self-contained-html .\testCases\test_LiveRef_ManageSourceData.py
-
-python -m pytest -v -s --html=Reports\LiveRef_ManageSourceData_report.html --css=Reports\assets\style.css .\testCases\test_LiveRef_ManageSourceData.py
-
-python -m pytest -v --html=Reports\LiveRef_SearchPublications_report.html --self-contained-html .\testCases\test_LiveRef_SearchPublications.py
-
-python -m pytest -v --html=Reports\LiveRef_TabNameValidation_report.html --self-contained-html .\testCases\test_LiveRef_TabNameValidation.py
-
-python -m pytest -v --html=Reports\LiveRef_Validate_ReportName_report.html --self-contained-html .\testCases\test_LiveRef_Validate_ReportName.py
-
-python -m pytest -v --html=Reports\LiveRef_Rebrand_report.html --self-contained-html .\testCases\test_LiveRef_Rebrand_validation.py
-
-# log in report 
-python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
-
-# no log
-python -m pytest -v -s -p no:logging --html=Reports\report.html --self-contained-html .\testCases\test_LoginPage.py
-
-python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\assets\style.css .\testCases\test_LoginPage.py
-
-# Run multiple test cases using pytest.mark for methods
-python -m pytest -v -m smoketest --html=Reports\report.html --self-contained-html  .\testCases
-python -m pytest -v -m {Use CASE ID} --html=Reports\{Use CASE ID}_report.html --self-contained-html .\testCases
-
-# Run test cases in specific environment
-python -m pytest -v -s --html=Reports\AppAccessCheck_report.html --self-contained-html --nunitxml=Reports/test-results.xml .\testCases\test_AppAccessCheck.py --env="test"
-
-# To run the whole regression suite
-python -m pytest -v --html=Reports\complete_suite_report.html --self-contained-html  .\testCases
-
+# Sample Command to run the complete regression suite
+python -m pytest -v --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\ --env="test"
 
 # To run the testrail result update command related to trcli
 trcli -y --config testrail_config.yaml --username "enter user name" --key "enter auth token" parse_junit --title "enter test run title" --run-id "enter test run id" -f "enter xml result report path"
+
+# Sample Command for parallel execution
+python -m pytest -v -n=2 -m C40493 --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\ --env="test"
+
+
+# log in report 
+python -m pytest -v -s --capture=tee-sys --html=Reports\report.html --self-contained-html --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\test_LoginPage.py
+
+# no log
+python -m pytest -v -s -p no:logging --html=Reports\report.html --self-contained-html --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\test_LoginPage.py
+
+python -m pytest -v -s -p no:logging --html=Reports\report.html --css=Reports\assets\style.css --nunitxml=Reports/nunit-results.xml --junitxml=Reports/junit-results.xml .\testCases\test_LoginPage.py

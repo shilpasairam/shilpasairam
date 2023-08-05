@@ -190,7 +190,7 @@ class Test_ProtocolPage:
         request.node._title = "Non-Oncology : Validate PRISMA functionalities details under Protocol -> PRISMA Page"
 
         LogScreenshot.fLogScreenshot(message=f"***Upload and Deletion of PRISMA details validation for Non-Oncology "
-                                             f"population is completed***",
+                                             f"population is started***",
                                      pass_=True, log=True, screenshot=False)
         
         loginPage.driver.get(baseURL)
@@ -543,3 +543,55 @@ class Test_ProtocolPage:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing View PRISMA page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing View PRISMA page")
+
+    @pytest.mark.C41848
+    def test_nononcology_prisma_ui_validation(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Instantiate the Base class
+        base = Base(self.driver, extra)
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)        
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of ImportPublicationPage class
+        prismapage = ProtocolPage(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology : Validate Field Level Error Messages under Protocol -> PRISMA Page"
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+
+        filepath = exbase.get_testdata_filepath(basefile, "nononcology_prisma")
+        
+        base.presence_of_admin_page_option("protocol_link", env)
+        base.go_to_nested_page("protocol_link", "prismas", env)
+
+        pop_val = ['pop1', 'pop2', 'pop3']
+
+        for i in pop_val:
+            try:
+                LogScreenshot.fLogScreenshot(message=f"***Field Level Error Message validation for Non-Oncology "
+                                                     f"population is started***",
+                                             pass_=True, log=True, screenshot=False)
+                # Read population details from data sheet
+                pop_data = exbase.get_population_data(filepath, 'Sheet1', i)
+                # Read study types and file paths to upload
+                stdy_data = exbase.get_slrtype_data(filepath, 'Sheet1', i)
+                # Removing duplicates to get the proper length of SLR Type data
+                stdy_data_ = sorted(list(set(tuple(sorted(sub)) for sub in stdy_data)), key=lambda x: x[1])
+
+                prismapage.upload_prisma_check_field_level_err_msg(i, filepath, pop_data, stdy_data_, env)
+
+                LogScreenshot.fLogScreenshot(message=f"***Field Level Error Message validation for Non-Oncology "
+                                                     f"population is completed***",
+                                             pass_=True, log=True, screenshot=False)
+
+            except Exception:
+                LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
+                                             pass_=False, log=True, screenshot=True)
+                raise Exception("Error in accessing PRISMA page")
+                

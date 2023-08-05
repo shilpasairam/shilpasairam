@@ -60,7 +60,7 @@ class SLRReport(Base):
                                                   pass_=True, log=True, screenshot=True)
 
     def select_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env, UnivWaitFor=60):
+        if self.scroll_and_click(scroll, env, UnivWaitFor=60):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -69,10 +69,10 @@ class SLRReport(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header", env)
+            self.scroll("SLR_page_header", env)
 
     def select_all_sub_section(self, locator, locator_button, env, scroll=None):
-        if self.scroll(scroll, env, UnivWaitFor=20):
+        if self.scroll_and_click(scroll, env, UnivWaitFor=20):
             if self.isselected(locator_button, env):
                 self.LogScreenshot.fLogScreenshot(message=f"{locator} already selected",
                                                   pass_=True, log=True, screenshot=True)
@@ -81,7 +81,7 @@ class SLRReport(Base):
                 if self.isselected(locator_button, env):
                     self.LogScreenshot.fLogScreenshot(message=f"{locator} selected",
                                                       pass_=True, log=True, screenshot=True)
-            self.scrollback("SLR_page_header", env)
+            self.scroll("SLR_page_header", env)
 
     def get_additional_criteria_values(self, locator_study, locator_var, env):
         ele1 = self.select_elements(locator_study, env)
@@ -224,7 +224,7 @@ class SLRReport(Base):
                                                       f"Records are not matching",
                                               pass_=False, log=True, screenshot=False)
             raise Exception("Prisma count values are mismatching")
-        self.scrollback("SLR_page_header", env)
+        self.scroll("SLR_page_header", env)
 
     def collect_selected_area_details(self, locator1, locator2, env):
         x = self.get_text(locator1, env)
@@ -1165,11 +1165,11 @@ class SLRReport(Base):
 
         '''This condition is written as locators is changed after LIVEHTA-2473 implementation'''
         if prj_name == "Oncology":
-            self.scroll("New_total_selected_Onco", env)
+            self.scroll_and_click("New_total_selected_Onco", env)
             locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
                         'Study_Design_Count', 'Reported_Var_Count_Onco', 'New_total_selected_Onco']
         elif prj_name == "Non-Oncology":
-            self.scroll("New_total_selected_nononco", env)
+            self.scroll_and_click("New_total_selected_nononco", env)
             locators = ['Original_SLR_Count', 'Sub_Pop_Count', 'Line_of_Therapy_Count', 'Intervention_Count',
                         'Study_Design_Count', 'Reported_Var_Count_nononco', 'New_total_selected_nononco']            
         ui_add_critera_values = []
@@ -2062,7 +2062,7 @@ class SLRReport(Base):
             for index, j in enumerate(slrtype):
                 self.select_data(j[0], j[1], env)
 
-                self.scroll("reported_variable_section", env)
+                self.scroll_and_click("reported_variable_section", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Values under 'Select Studies Reporting Outcome(s)' "
                                                           f"section : ", pass_=True, log=True, screenshot=True)
 
@@ -2204,7 +2204,7 @@ class SLRReport(Base):
             for index, j in enumerate(slrtype):
                 self.select_data(j[0], j[1], env)
 
-                self.scroll("study_design_section", env)
+                self.scroll_and_click("study_design_section", env)
                 self.LogScreenshot.fLogScreenshot(message=f"Values under 'Select Study Design' "
                                                           f"section : ", pass_=True, log=True, screenshot=True)
                 
