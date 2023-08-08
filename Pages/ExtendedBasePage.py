@@ -224,6 +224,21 @@ class ExtendedBase(Base):
         result = [[criteria[i], criteria_btn[i], section_name[i]] for i in range(0, len(criteria))]
         return result
     
+    def validate_additional_criteria_val(self, filepath, col_name, locator, sectionname, env):
+        # Read expected data values
+        expected_val = self.get_data_values(filepath, col_name)
+        # Get the actual webelement
+        elements = self.select_elements(locator, env)
+        try:
+            for k in elements:
+                if k.text in expected_val:
+                    self.LogScreenshot.fLogScreenshot(
+                        message=f"Correct '{sectionname}' Value is displayed under Additional Criteria section: "
+                                f"{k.text}",
+                        pass_=True, log=True, screenshot=False)
+        except Exception:
+            raise Exception("Unable to validate Additional Criteria Values")
+    
     def upload_file(self, pop_data, env):
         expected_upload_status_text = "File(s) uploaded successfully"
 
