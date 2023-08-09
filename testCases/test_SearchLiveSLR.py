@@ -549,6 +549,7 @@ class Test_Search_LiveSLR:
                 # Read Project name
                 project_name = exbase.get_individual_col_data(filepath, scenario, 'Sheet1', 'Project')
 
+                base.go_to_page("SLR_Dashboard", env)
                 LogScreenshot.fLogScreenshot(message=f"***For '{project_name[0]}' project -> First Upload is "
                                                      f"started***", pass_=True, log=True, screenshot=False)
                 base.go_to_nested_page("importpublications_button", "extraction_upload_btn", env)

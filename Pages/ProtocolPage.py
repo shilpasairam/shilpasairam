@@ -115,6 +115,26 @@ class ProtocolPage(Base):
                         for num in prisma_numbers:
                             self.input_text(num[0], int(num[1]), env, UnivWaitFor=5)
 
+                        # Check whether user is able to save without adding the PRISMA excel file
+                        expected_error_msg = "PRISMA excel file is mandatory"
+                        if self.isenabled("prisma_image_save_btn", env):
+                            self.click("prisma_image_save_btn", env)
+                            actual_error_msg = self.get_status_text("prisma_image_status_text", env)
+                            if actual_error_msg == expected_error_msg:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"User is not allowed to save without uploading PRISMA Excel File for "
+                                            f"Population '{i[0]}' -> SLR Type '{k[0]}'.",
+                                    pass_=True, log=True, screenshot=True)
+                            else:
+                                self.LogScreenshot.fLogScreenshot(
+                                    message=f"User is allowed to save without uploading PRISMA Excel File for "
+                                            f"Population '{i[0]}' -> SLR Type '{k[0]}'. Actual status message is "
+                                            f"{actual_error_msg} and Expected status message is "
+                                            f"{expected_error_msg}",
+                                    pass_=False, log=True, screenshot=True)
+                                raise Exception("User is allowed to save without uploading PRISMA Excel File.")
+
+                        # Uploading the valid PRISMA Excel file
                         self.input_text("prisma_image", os.getcwd()+"\\"+k[1], env, UnivWaitFor=5)
                         self.click("prisma_image_save_btn", env)
                         time.sleep(3)
