@@ -201,6 +201,7 @@ PrismaCount,New_total_selected_nononco,XPATH,"//dl[@class=""multiple-table""]/dd
 SelectedArea,selected_area_population,XPATH,//div[@class='search-selection population-selected w-100']/strong,,
 SelectedArea,selected_area_slrtype,XPATH,//div[@class='search-selection population-selected w-100']/span,,
 AdditionalUserCriteriaSelected,study_design_value,XPATH,"//div[contains(text(), 'Study Design')]//span[@class='search-selection']","//div[contains(text(), 'Study Design')]//span[@class='search-selection ng-star-inserted']",
+AdditionalUserCriteriaSelected,geographic_region_value,XPATH,"//div[contains(text(), 'Geographical Region')]//span[@class='search-selection']",,
 AdditionalUserCriteriaSelected,reported_variable_value,XPATH,"//div[contains(text(), 'Reported Variables')]//span[@class='search-selection']","//div[contains(text(), 'Reported Variables')]//span[@class='search-selection ng-star-inserted']",
 LiveNMA,launch_live_nma,XPATH,//button[@type='button' and text()='Launch LiveNMA'],,
 LiveNMA,live_nma_data_table,XPATH,//tbody[@class='scrollbar'],,

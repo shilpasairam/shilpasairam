@@ -594,4 +594,3 @@ class Test_ProtocolPage:
                 LogScreenshot.fLogScreenshot(message=f"Error in accessing PRISMA page",
                                              pass_=False, log=True, screenshot=True)
                 raise Exception("Error in accessing PRISMA page")
-                
