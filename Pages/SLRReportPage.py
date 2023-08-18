@@ -1082,7 +1082,18 @@ class SLRReport(Base):
                                 raise Exception(f"For '{m}' in 'LiveSLR Study ID' -> '{n}' in 'Analysis Type', "
                                                 f"corresponding contents in column 'Update date (yyyy-mm-dd)' are "
                                                 f"not in sorted order in Standard Excel report")
-
+    
+    def get_and_validate_downloaded_file(self, actualname,expectedname):
+        if actualname in expectedname:
+            self.LogScreenshot.fLogScreenshot(message=f"Downloaded file is matching with expected filename. Filename is {actualname}",
+                                                  pass_=True, log=True, screenshot=False)
+            return actualname
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Filename is not present in the expected list. Expected "
+                                                      f"Filenames are {expectedname} and Actual "
+                                                      f"Filename is {actualname}",
+                                                      pass_=False, log=True, screenshot=False)
+            
     def test_prisma_ele_comparison_between_Excel_and_Word_Report(self, pop_data, slr_type, add_criteria, filepath, env):
 
         # Go to live slr page

@@ -402,3 +402,8 @@ class Base:
         table = tables[0]
         table.to_excel(f"ActualOutputs/web_table_exports/{filename}.xlsx", na_rep='NA')
         return f"{filename}.xlsx"
+    
+    @fWaitFor
+    def evidenceOfDataInUI(self,val):
+        self.LogScreenshot.fLogScreenshot(message=f"values present on the UI is {val}",
+                                             pass_=True, log=True, screenshot=True)
