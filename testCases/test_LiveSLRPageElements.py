@@ -51,7 +51,7 @@ class Test_LiveSLRPageElements:
             raise Exception("Element Not Found")
 
     @pytest.mark.C37558
-    @pytest.mark.C38492
+    # @pytest.mark.C38492
     def test_validate_liveslrpage_tooltip(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         filepath = ReadConfig.getsmoketestdata(env)

@@ -1227,12 +1227,144 @@ class SLRReport(Base):
             raise Exception(f"Count seen in excel report under 'Updated Prisma tab' and 'Updated PRISMA table' "
                             f"Count in UI is not matching with Expected PRISMA Count")
 
+    def nononco_prisma_count_validation(self, locatorname, pop_data, slr_type, add_criteria, sheet,
+                                        filepath, env):
+
+        # Read expected categoris from data sheet
+        expected_prisma_count = self.exbase.get_individual_col_data(filepath, locatorname, 'Sheet1',
+                                                                    'ExpectedPrismaCount')
+
+        # Converting list values from float to int
+        expected_prisma_count = [int(x) for x in expected_prisma_count]      
+
+        # Go to live slr page
+        self.go_to_page("SLR_Homepage", env)
+        self.refreshpage()
+        time.sleep(2)
+        self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
+        self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
+        for k in add_criteria:
+            self.select_sub_section(f"{k[0]}", f"{k[1]}", env, f"{k[2]}")        
+
+        self.exbase.validate_additional_criteria_val(filepath, 'PopulationFilter1ExpectedValue',
+                                                     'population_filter1_value', 'Population Filter1', env)
+        self.exbase.validate_additional_criteria_val(filepath, 'PopulationFilter2ExpectedValue',
+                                                     'population_filter2_value', 'Population Filter2', env)
+        self.exbase.validate_additional_criteria_val(filepath, 'InterventionExpectedValue',
+                                                     'intervention_value', 'Intervention / Comparators', env)
+        self.exbase.validate_additional_criteria_val(filepath, 'GeographicRegionExpectedValue',
+                                                     'geographic_region_value', 'Geographical Regions', env)
+
+        self.scroll_and_click("New_total_selected_nononco", env)
+        ui_add_critera_values = self.get_texts('ui_prisma_counts', env)
+        # Converting list values from str to int
+        ui_add_critera_values = [int(x) for x in ui_add_critera_values]
+
+        self.LogScreenshot.fLogScreenshot(
+            message=f"Expected PRISMA Count Values are: Original SLR Count : {expected_prisma_count[0]}, "
+                    f"Sub Pop Count : {expected_prisma_count[1]}, LOT Count : {expected_prisma_count[2]}, "
+                    f"Intervention Count : {expected_prisma_count[3]}, Study Design Count : "
+                    f"{expected_prisma_count[4]}, Geographical Region Count: {expected_prisma_count[5]}, "
+                    f"Reported Variable Count : {expected_prisma_count[6]}, Total Selected Count : "
+                    f"{expected_prisma_count[7]}",
+            pass_=True, log=True, screenshot=False)
+
+        self.LogScreenshot.fLogScreenshot(
+            message=f"Actual PRISMA Count Values are: Original SLR Count : {ui_add_critera_values[0]}, "
+                    f"Sub Pop Count : {ui_add_critera_values[1]}, LOT Count : {ui_add_critera_values[2]}, "
+                    f"Intervention Count : {ui_add_critera_values[3]}, Study Design Count : "
+                    f"{ui_add_critera_values[4]}, Geographical Region Count: {ui_add_critera_values[5]}, "
+                    f"Reported Variable Count : {ui_add_critera_values[6]}, Total Selected Count : "
+                    f"{ui_add_critera_values[7]}",
+            pass_=True, log=True, screenshot=True)
+
+        self.generate_download_report("excel_report", env)
+        excel_filename = self.get_and_validate_filename(filepath)
+        
+        self.preview_result("preview_results", env)
+        self.table_display_check("Table", env)
+        uploaded_tabledata = self.export_web_table(
+                            "table-scrollable report",
+                            f"previewresults_{pop_data[0][0]}_{slr_type[0][0]}_webtable")
+        self.generate_download_report("Export_as_excel", env)
+        webexcel_filename = self.get_and_validate_filename(filepath)
+        self.back_to_report_page("Back_to_search_page", env)
+
+        webtable = pd.read_excel(f'ActualOutputs//web_table_exports//{uploaded_tabledata}', skiprows=[0, 1, 2, 4])
+        standard_excel = pd.read_excel(f'ActualOutputs//{webexcel_filename}', skiprows=3)
+
+        webtableval = webtable['LiveSLR Study ID']
+        # Removing duplicates to get the proper length of LiveSLR Study ID data
+        webtable_col = []
+        [webtable_col.append(x) for x in list(flatten(webtableval)) if x not in webtable_col]
+
+        standard_excelval = standard_excel['LiveSLR Study ID']
+        # Removing NAN values
+        standard_excelval = [item for item in standard_excelval if str(item) != 'nan']
+        # Converting list values from float to int
+        standard_excelval = [int(x) for x in standard_excelval]
+        # Removing duplicates to get the proper length of LiveSLR Study ID data
+        standard_excel_col = []
+        [standard_excel_col.append(x) for x in list(flatten(standard_excelval)) if x not in standard_excel_col]
+
+        if len(webtable_col) == ui_add_critera_values[7] == len(standard_excel_col):
+            self.LogScreenshot.fLogScreenshot(
+                message=f"Number of records displayed in WebTable and Standard Excel Report is matching with "
+                        f"'Updated PRISMA table' -> New Total Selected Count in UI",
+                pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(
+                message=f"Number of records displayed in WebTable and Standard Excel Report is not matching "
+                        f"with 'Updated PRISMA table' -> New Total Selected Count in UI. WebTable record "
+                        f"count is {len(webtable_col)}, Standard Excel record count is {len(standard_excel_col)}, "
+                        f"New Total Selected Count is {ui_add_critera_values[7]}",
+                pass_=False, log=True, screenshot=False)
+            raise Exception(f"Number of records displayed in WebTable and Standard Excel Report "
+                            f"is not matching with 'Updated PRISMA table' -> New Total Selected Count in UI.")
+
+        excel_data = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
+        excel_sheet = excel_data[sheet]
+        if search('Geographical Region', excel_sheet['B9'].value) and \
+                search('Geographical Region', excel_sheet['B21'].value):
+            self.LogScreenshot.fLogScreenshot(
+                message=f"'Geographical Region' is present in 'Additional LiveSLR Criteria' and in "
+                        f"'Updated PRISMA' table under '{sheet}' sheet",
+                pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(
+                message=f"'Geographical Region' is not present in 'Additional LiveSLR Criteria' and in "
+                        f"'Updated PRISMA' table under '{sheet}' sheet",
+                pass_=False, log=True, screenshot=False)
+            raise Exception(f"'Geographical Region' is not present in 'Additional LiveSLR Criteria' and in "
+                            f"'Updated PRISMA' table under '{sheet}' sheet")
+        
+        excel = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name=sheet, usecols='C', skiprows=12)
+        excel_studies_col = excel['Unique studies']
+        # Removing NAN values
+        excel_studies_col = [item for item in excel_studies_col if str(item) != 'nan']
+        # Converting list values from float to int
+        excel_studies_col = [int(x) for x in excel_studies_col]
+
+        prisma_count_comparison = self.list_comparison_between_reports_data(expected_prisma_count, excel_studies_col,
+                                                                            ui_add_critera_values)
+
+        if len(prisma_count_comparison) == 0:
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' and "
+                                                      f"'Updated PRISMA table' Count in UI is matching with Expected "
+                                                      f"PRISMA Count.", pass_=True, log=True, screenshot=False)
+        else:
+            self.LogScreenshot.fLogScreenshot(message=f"Count seen in excel report under 'Updated Prisma tab' and "
+                                                      f"'Updated PRISMA table' Count in UI is not matching with "
+                                                      f"Expected PRISMA Count. Mismatch values are arranged in "
+                                                      f"following order -> Expected count, Excel count, UI count. "
+                                                      f"{prisma_count_comparison}",
+                                              pass_=False, log=True, screenshot=False)
+            raise Exception(f"Count seen in excel report under 'Updated Prisma tab' and 'Updated PRISMA table' "
+                            f"Count in UI is not matching with Expected PRISMA Count")
+
     def test_prisma_count_comparison_between_prismatab_and_excludedstudiesliveslr(self, pop_data, slr_type,
                                                                                   add_criteria, filepath, env):
 
-        # Go to live slr page
-        # self.go_to_page("SLR_Homepage", env)
-        # self.click("liveslr_reset_filter", env)
         self.refreshpage()
         time.sleep(2)
         self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
@@ -1243,9 +1375,6 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
         prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='C',
@@ -1296,9 +1425,6 @@ class SLRReport(Base):
 
     def test_prisma_tab_format_changes(self, pop_data, slr_type, add_criteria, filepath, env):
 
-        # Go to live slr page
-        # self.go_to_page("SLR_Homepage", env)
-        # self.click("liveslr_reset_filter", env)
         self.refreshpage()
         time.sleep(2)
         self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
@@ -1309,9 +1435,6 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
         # Read PRISMA value from Complete Excel Sheet
@@ -1434,9 +1557,6 @@ class SLRReport(Base):
                  ['prismas', 'prisma_pop_dropdown', 'prisma_study_type_dropdown']]
         for i in pages:
             self.click(i[0], env)
-            # pop_ele = self.select_element(i[1], env)
-            # select1 = Select(pop_ele)
-            # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
             selected_pop_val = self.base.selectbyvisibletext(i[1], "NewImportLogic_1 - Test_Automation_1", env)
 
             stdy_ele = self.select_element(i[2], env)
@@ -1459,9 +1579,6 @@ class SLRReport(Base):
 
         self.click("manage_qa_data_button", env)
         time.sleep(1)
-        # pop_ele = self.select_element("select_pop_dropdown", env)
-        # select1 = Select(pop_ele)
-        # select1.select_by_visible_text("NewImportLogic_1 - Test_Automation_1")
         selected_pop_val = self.base.selectbyvisibletext("select_pop_dropdown",
                                                          "NewImportLogic_1 - Test_Automation_1", env)
 
@@ -1623,9 +1740,6 @@ class SLRReport(Base):
 
     def test_publication_identifier_count_in_updated_prisma_tab(self, pop_data, slr_type, add_criteria, filepath, env):
 
-        # Go to live slr page
-        # self.go_to_page("SLR_Homepage", env)
-        # self.click("liveslr_reset_filter", env)
         self.refreshpage()
         self.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
         self.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
@@ -1635,9 +1749,6 @@ class SLRReport(Base):
         self.select_sub_section(f"{add_criteria[3][0]}", f"{add_criteria[3][1]}", env, f"{add_criteria[3][2]}")
 
         self.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.getFilenameAndValidate(180)
-        # excel_filename = self.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.get_and_validate_filename(filepath)
 
         prisma_tab = pd.read_excel(f'ActualOutputs//{excel_filename}', sheet_name='Updated PRISMA', usecols='D',
@@ -2055,8 +2166,6 @@ class SLRReport(Base):
         self.imppubpage.upload_file_with_success(locatorname, filepath, env)
 
         self.go_to_page("SLR_Homepage", env)
-        # self.select_data(pop_list[0][0], pop_list[0][1], env)
-        # self.select_data(slrtype[0][0], slrtype[0][1], env)
         for i in pop_list:
             self.select_data(i[0], i[1], env)
             for index, j in enumerate(slrtype):
@@ -2468,106 +2577,3 @@ class SLRReport(Base):
 
                 self.excel_content_validation(source_template, index, webexcel_filename, excel_filename,
                                               "LiveSLR Study ID")
-
-    # # ############## Using Openpyxl library #################
-    # def excel_content_validation(self, webexcel_filename, excel_filename, slrtype):
-    #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: {webexcel_filename} and \n{excel_filename}",
-    #                                       pass_=True, log=True, screenshot=False)
-    #     sheet_names = ReadConfig.get_sheetname_as_per_slrtype(slrtype)
-    #     self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {sheet_names}",
-    #                                       pass_=True, log=True, screenshot=False)
-    #     for sheet in sheet_names:
-    #         webex = []
-    #         compex = []
-    #         webexcel = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
-    #         webexcel_sheet = webexcel[sheet]
-    #         excel = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-    #         excel_sheet = excel[sheet]
-    #
-    #         try:
-    #             for i in webexcel_sheet.rows:
-    #                 webex.append(i[0].value)
-    #
-    #             for j in excel_sheet.rows:
-    #                 compex.append(j[0].value)
-    #
-    #             # Removing None values from the lists
-    #             webex = list(filter(None, webex))
-    #             compex = list(filter(None, compex))
-    #
-    #             # Comparison and Merging with regular expressions
-    #             res = [ele for ele in compex if (ele in webex)]
-    #             self.LogScreenshot.fLogScreenshot(message=f"Regular Expression output: {res}",
-    #                                               pass_=True, log=True, screenshot=False)
-    #             if str(bool(res)):
-    #                 # Extracting numbers from the lists
-    #                 ele1 = [x for x in webex if isinstance(x, numbers.Number)]
-    #                 ele2 = [x for x in compex if isinstance(x, numbers.Number)]
-    #                 if ele1 == sorted(ele1) and ele2 == sorted(ele2):
-    #                     if ele1 == ele2:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are matching between "
-    #                                                                   f"WebExcel and Complete Excel report. \n"
-    #                                                                   f"Compared Element values are: {ele1} "
-    #                                                                   f"and \n{ele2}",
-    #                                                           pass_=True, log=True, screenshot=False)
-    #                     else:
-    #                         self.LogScreenshot.fLogScreenshot(message=f"Study Identifier are not matching between "
-    #                                                                   f"WebExcel and Complete Excel report. \n"
-    #                                                                   f"Compared Element values are: {ele1} "
-    #                                                                   f"and \n{ele2}",
-    #                                                           pass_=False, log=True, screenshot=False)
-    #                         raise Exception("Study Identifier are not matching")
-    #                 else:
-    #                     raise Exception("Study Identifier Elements are not in sorted order")
-    #         except Exception:
-    #             raise Exception("Error in Excel sheet content validation")
-    #
-    # def excel_to_word_content_validation(self, webexcel_filename, excel_filename, word_filename, slrtype):
-    #     self.LogScreenshot.fLogScreenshot(message=f"FileNames are: "
-    #                                               f"{webexcel_filename}, \n{excel_filename}, \n{word_filename}",
-    #                                       pass_=True, log=True, screenshot=False)
-    #     # Index of Table number 6 is : 5. Starting point for word table content comparison
-    #     table_count = 5
-    #     sheet_names = ReadConfig.get_sheetname_as_per_slrtype(slrtype)
-    #     self.LogScreenshot.fLogScreenshot(message=f"Sheetnames are: {sheet_names}",
-    #                                       pass_=True, log=True, screenshot=False)
-    #     for sheet in sheet_names:
-    #         webex = []
-    #         compex = []
-    #         word = []
-    #         webexcel = openpyxl.load_workbook(f'ActualOutputs//{webexcel_filename}')
-    #         webexcel_sheet = webexcel[sheet]
-    #         excel = openpyxl.load_workbook(f'ActualOutputs//{excel_filename}')
-    #         excel_sheet = excel[sheet]
-    #         docs = docx.Document(f'ActualOutputs//{word_filename}')
-    #         try:
-    #             for i in webexcel_sheet.rows:
-    #                 webex.append(i[3].value)
-    #
-    #             for j in excel_sheet.rows:
-    #                 compex.append(j[3].value)
-    #
-    #             for row in docs.tables[table_count].rows:
-    #                 word.append(row.cells[0].text)
-    #             # Incrementing the counter to switch for next table based on the number of excel sheet names
-    #             table_count += 1
-    #
-    #             # Removing None values from the lists
-    #             webex = list(filter(None, webex))
-    #             compex = list(filter(None, compex))
-    #
-    #             if compex == webex and compex == word:
-    #                 self.LogScreenshot.fLogScreenshot(message=f"Contents are matching in WebExcel, Complete "
-    #                                                           f"Excel and Complete Word Reports. "
-    #                                                           f"Short Reference values are: \n"
-    #                                                           f"{webex} \n {compex} \n {word}",
-    #                                                   pass_=True, log=True, screenshot=False)
-    #             else:
-    #                 self.LogScreenshot.fLogScreenshot(message=f"Contents are not matching in WebExcel, Complete "
-    #                                                           f"Excel and Complete Word Reports. "
-    #                                                           f"Short Reference values are: \n"
-    #                                                           f"{webex} \n {compex} \n {word}",
-    #                                                   pass_=False, log=True, screenshot=False)
-    #                 raise Exception("Word report contents are not matching")
-    #         except Exception:
-    #             raise Exception("Error in Word report content validation")

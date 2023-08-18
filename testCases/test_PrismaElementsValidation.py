@@ -71,23 +71,14 @@ class Test_PRISMA_Elements:
                     prism = base.get_text("New_total_selected_Onco", env)
                     
                     slrreport.generate_download_report("excel_report", env)
-                    # time.sleep(5)
-                    # excel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # excel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     excel_filename = slrreport.get_and_validate_filename(filepath)
 
                     slrreport.generate_download_report("word_report", env)
-                    # time.sleep(5)
-                    # word_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # word_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     word_filename = slrreport.get_and_validate_filename(filepath)
 
                     slrreport.preview_result("preview_results", env)
                     slrreport.table_display_check("Table", env)
                     slrreport.generate_download_report("Export_as_excel", env)
-                    # time.sleep(5)
-                    # webexcel_filename1 = self.slrreport.getFilenameAndValidate(180)
-                    # webexcel_filename1 = self.slrreport.get_latest_filename(UnivWaitFor=180)
                     webexcel_filename = slrreport.get_and_validate_filename(filepath)
                     slrreport.back_to_report_page("Back_to_search_page", env)
 
@@ -324,5 +315,87 @@ class Test_PRISMA_Elements:
 
                 slrreport.prisma_ele_comparison_between_Excel_and_UI(i, pop_data, slr_type, add_criteria,
                                                                      'Updated PRISMAs', filepath, env, 'Non-Oncology')
+            except Exception:
+                raise Exception("Unable to select element")
+
+    @pytest.mark.C41777
+    def test_nononco_prisma_count_validation(self, extra, env, request, caseid):
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+        # Creating object of ExcludedStudies_liveSLR class
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology - Validate PRISMA Count comparison between Standard Excel, " \
+                              "Complete Excel, UI and Expected Count for Admin User"
+
+        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel, UI and "
+                                             f"Expected Count for Non-Oncology Population*****",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(self.username, self.password, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        filepath = exbase.get_testdata_filepath(basefile, "prismacount_geographic_section")
+
+        scenarios = ['scenario1']
+
+        for i in scenarios:
+            try:
+                pop_data = exstdy_liveslr.get_population_data(filepath, i)
+                slr_type = exstdy_liveslr.get_slrtype_data(filepath, i)
+                add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, i)
+
+                slrreport.nononco_prisma_count_validation(i, pop_data, slr_type, add_criteria,
+                                                          'Updated PRISMAs', filepath, env)
+            except Exception:
+                raise Exception("Unable to select element")
+
+    @pytest.mark.C41778
+    def test_nononco_prisma_count_validation_clientuser(self, extra, env, request, caseid):
+        clientusername = ReadConfig.getClientUserName()
+        clientpassword = ReadConfig.getClientPassword()        
+        baseURL = ReadConfig.getLiveSLRAppURL(env)
+        basefile = ReadConfig.getnononcologybasefile("nononcology_basefile")
+        # Creating object of ExtendedBase class
+        exbase = ExtendedBase(self.driver, extra)
+        # Creating object of loginpage class
+        loginPage = LoginPage(self.driver, extra)
+        # Creating object of slrreport class
+        slrreport = SLRReport(self.driver, extra)
+        # Creating object of ExcludedStudies_liveSLR class
+        exstdy_liveslr = ExcludedStudies_liveSLR(self.driver, extra)
+        # Instantiate the logScreenshot class
+        LogScreenshot = cLogScreenshot(self.driver, extra)
+
+        request.node._tcid = caseid
+        request.node._title = "Non-Oncology - Validate PRISMA Count comparison between Standard Excel, " \
+                              "Complete Excel, UI and Expected Count for Client User"
+
+        LogScreenshot.fLogScreenshot(message=f"*****Prisma Elements Comparison between Complete Excel, UI and "
+                                             f"Expected Count for Non-Oncology Population*****",
+                                     pass_=True, log=True, screenshot=False)
+        
+        loginPage.driver.get(baseURL)
+        loginPage.complete_login(clientusername, clientpassword, "launch_live_slr", "Cytel LiveSLR", baseURL, env)
+        filepath = exbase.get_testdata_filepath(basefile, "prismacount_geographic_section_clientuser")
+
+        scenarios = ['scenario1']
+
+        for i in scenarios:
+            try:
+                pop_data = exstdy_liveslr.get_population_data(filepath, i)
+                slr_type = exstdy_liveslr.get_slrtype_data(filepath, i)
+                add_criteria = exstdy_liveslr.get_additional_criteria_data(filepath, i)
+
+                slrreport.nononco_prisma_count_validation(i, pop_data, slr_type, add_criteria,
+                                                          'Updated PRISMAs', filepath, env)
             except Exception:
                 raise Exception("Unable to select element")
