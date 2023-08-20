@@ -14,6 +14,7 @@ from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import Select
+from operator import itemgetter
 
 class ManageAbbreviations(Base):
     def __init__(self,driver,extra):
@@ -66,11 +67,6 @@ class ManageAbbreviations(Base):
             self.LogScreenshot.fLogScreenshot(message=f'Failed to add data to the dataframe{count1} and {count2}',
                                                       pass_=False, log=True, screenshot=False)
         
-    def selectPopulation(self,population,env):
-        locator = f"//option[text()='{population}']"
-        self.base.click("mng_abbr_population_dd",env)
-        time.sleep(1)
-        self.driver.find_element(By.XPATH,locator).click()
 
     def addingValuesToDownloadedFile(self,pathOfFile,fileName,Abbreviation,Definition):
         pathOfFile = os.getcwd()+f'\ActualOutputs\{fileName}'
@@ -84,6 +80,33 @@ class ManageAbbreviations(Base):
         self.LogScreenshot.fLogScreenshot(message=f"Data present in the updated Abbreviation template file {updatedDF}",
                                              pass_=True, log=True, screenshot=False)
         updatedDF.to_excel(pathOfFile,index=False)
+
+    def readDataFromDataFile(self,sheet):
+        # converting file data in to dictionary
+        mngAbbrKeyVals = sheet.to_dict()
+        # taking the values of populations key
+        populations = mngAbbrKeyVals['populations'].values()
+        populations = [txt for txt in populations if str(txt)!='nan']
+        Study_Types = mngAbbrKeyVals['Study_Types'].values()
+        Study_Types = [txt for txt in Study_Types if str(txt)!='nan']
+        Abbreviation = mngAbbrKeyVals['Abbreviation'].values()
+        Abbreviation = [txt for txt in Abbreviation if str(txt)!='nan']
+        Definition = mngAbbrKeyVals['Definition'].values()
+        Definition = [txt for txt in Definition if str(txt)!='nan']
+        expectedFileName = mngAbbrKeyVals['expectedFileName'].values()
+        expectedFileName = [txt for txt in expectedFileName if str(txt)!='nan']
+        
+        return populations,Study_Types,Abbreviation,Definition,expectedFileName
+    
+    
+            
+
+    
+    
+
+
+
+    
         
     
 

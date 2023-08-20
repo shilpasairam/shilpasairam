@@ -1083,8 +1083,8 @@ class SLRReport(Base):
                                                 f"corresponding contents in column 'Update date (yyyy-mm-dd)' are "
                                                 f"not in sorted order in Standard Excel report")
     
-    def get_and_validate_downloaded_file(self, actualname,expectedname):
-        if actualname in expectedname:
+    def get_and_validate_downloaded_fileName(self, actualname,expectedname):
+        if actualname == expectedname:
             self.LogScreenshot.fLogScreenshot(message=f"Downloaded file is matching with expected filename. Filename is {actualname}",
                                                   pass_=True, log=True, screenshot=False)
             return actualname
