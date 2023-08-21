@@ -1,3 +1,5 @@
+''' Manage Abbreviation Page Functionalities '''
+
 import time
 import pandas as pd
 from selenium.webdriver.support.wait import WebDriverWait
