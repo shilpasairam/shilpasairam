@@ -72,7 +72,7 @@ class ExcludedStudies_liveSLR(Base):
         self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
         self.presence_of_all_elements("slr_type_panel_eles", env)
         self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.presence_of_element("sub_pop_section", env)
+        self.presence_of_element("pop_filter1_section", env)
         self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env,
                                           f"{add_criteria[0][2]}")
         self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env,
@@ -136,7 +136,7 @@ class ExcludedStudies_liveSLR(Base):
         self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
         self.presence_of_all_elements("slr_type_panel_eles", env)
         self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.presence_of_element("sub_pop_section", env)
+        self.presence_of_element("pop_filter1_section", env)
         self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env,
                                           f"{add_criteria[0][2]}")
         self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env,
@@ -190,7 +190,7 @@ class ExcludedStudies_liveSLR(Base):
         self.slrreport.select_data(f"{pop_data[0][0]}", f"{pop_data[0][1]}", env)
         self.presence_of_all_elements("slr_type_panel_eles", env)
         self.slrreport.select_data(f"{slr_type[0][0]}", f"{slr_type[0][1]}", env)
-        self.presence_of_element("sub_pop_section", env)
+        self.presence_of_element("pop_filter1_section", env)
         self.slrreport.select_sub_section(f"{add_criteria[0][0]}", f"{add_criteria[0][1]}", env,
                                           f"{add_criteria[0][2]}")
         self.slrreport.select_sub_section(f"{add_criteria[1][0]}", f"{add_criteria[1][1]}", env,
