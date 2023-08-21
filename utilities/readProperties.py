@@ -193,14 +193,14 @@ class ReadConfig:
         elif env == 'production':
             return config.get('commonInfo', 'manageupdatesdata_prod')
 
-    # Get file containing data for LineofTherapy page actions
+    # Get file containing data for Population filter 2 page actions
     @staticmethod
-    def getmanagelotdata(env):
+    def getmanagePopulationFilter2data(env):
         # env = config.get('commonInfo', 'environment')
         if env == 'test':
-            return config.get('commonInfo', 'managelotdata_testing')
+            return config.get('commonInfo', 'managePopulationFilter2data_testing')
         elif env == 'staging':
-            return config.get('commonInfo', 'managelotdata_staging')
+            return config.get('commonInfo', 'managePopulationFilter2data_staging')
 
     # Get file containing data for PRISMAs page actions
     @staticmethod

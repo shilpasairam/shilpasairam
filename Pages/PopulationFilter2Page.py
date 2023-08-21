@@ -11,9 +11,9 @@ from utilities.customLogger import LogGen
 from utilities.logScreenshot import cLogScreenshot
 
 
-class LineofTherapyPage(Base):
+class PopulationFilter2Page(Base):
 
-    """Constructor of the LineofTherapy Page class"""
+    """Constructor of the PopulationFilter2 Page class"""
     def __init__(self, driver, extra):
         # initializing the driver from base class
         super().__init__(driver, extra)  
@@ -29,22 +29,22 @@ class LineofTherapyPage(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
     
-    # Reading Population data for LineofTherapy Page
+    # Reading Population data for PopulationFilter2 Page
     def get_updates_pop_data(self, filepath, locatorname):
         df = pd.read_excel(filepath)
         pop = df.loc[df['Name'] == locatorname]['Population'].dropna().to_list()
         return pop
 
-    # Reading Population data for LineofTherapy Page
-    def get_lot_name(self, filepath, locatorname, columnname):
+    # Reading Population data for PopulationFilter2 Page
+    def get_popfilter2_name(self, filepath, locatorname, columnname):
         df = pd.read_excel(filepath)
-        lot_name = df.loc[df['Name'] == locatorname][columnname].dropna().to_list()
-        return lot_name
+        popfilter2_name = df.loc[df['Name'] == locatorname][columnname].dropna().to_list()
+        return popfilter2_name
     
     def get_expected_data(self, filepath, columnname):
         file = pd.read_excel(filepath)
-        lot_options = list(file[columnname].dropna())
-        return lot_options    
+        popfilter2_options = list(file[columnname].dropna())
+        return popfilter2_options    
     
     # Find the total row data if data is being ordered using Pagination
     def get_table_data(self, table_info, table_next_btn, table_rows_data, env):
@@ -59,11 +59,7 @@ class LineofTherapyPage(Base):
         # Divide the total entries value with the number of records displayed in a page and round off the result to
         # next nearest integer value
         page_counter = math.ceil(total_entries/10)
-        # lot_optns_text = []
-        # options = self.select_elements(table_rows_data, env)
-        # for k in options:
-        #     lot_optns_text.append(k.text)
-        lot_optns_text = self.get_texts(table_rows_data, env)
+        popfilter2_optns_text = self.get_texts(table_rows_data, env)
         
         # Iterate over the remaining pages and append the row data
         for i in range(1, page_counter):
@@ -71,15 +67,15 @@ class LineofTherapyPage(Base):
             time.sleep(1)
             options1 = self.select_elements(table_rows_data, env)
             for v in options1:
-                lot_optns_text.append(v.text)
+                popfilter2_optns_text.append(v.text)
         
-        return lot_optns_text    
+        return popfilter2_optns_text
     
-    def check_lot_ui_elements(self, filepath, env):
+    def check_popfilter2_ui_elements(self, filepath, env):
         # Read Expected messages
         expected_data = self.get_expected_data(filepath, "Expected_ui_elements")
 
-        pagedetails = [self.get_text("managelot_page_heading", env), self.get_text("managelot_pagecontent", env)]
+        pagedetails = [self.get_text("managepopfilter2_page_heading", env), self.get_text("managepopfilter2_pagecontent", env)]
 
         if expected_data == pagedetails:
             self.LogScreenshot.fLogScreenshot(message=f"Population filter 2 Page name and page content is present "
@@ -92,7 +88,7 @@ class LineofTherapyPage(Base):
                                               pass_=False, log=True, screenshot=False)
             raise Exception(f"Population filter 2 Page name and page content is not present in UI")            
 
-        if self.isdisplayed("add_lot_btn", env) and self.isdisplayed("managelot_resultpanel_heading", env):
+        if self.isdisplayed("add_popfilter2_btn", env) and self.isdisplayed("managepopfilter2_resultpanel_heading", env):
             self.LogScreenshot.fLogScreenshot(message=f"Add Population filter 2 button and Result panel heading is "
                                                       f"present UI", pass_=True, log=True, screenshot=True)
         else:
@@ -100,158 +96,145 @@ class LineofTherapyPage(Base):
                                                       f"present UI", pass_=False, log=True, screenshot=False)
             raise Exception(f"Add Population filter 2 button and Result panel heading is not present UI")
     
-    def add_multiple_lot(self, locatorname, add_lot_button, table_rows, filepath, env):
+    def add_multiple_popfilter2(self, locatorname, add_popfilter2_button, table_rows, filepath, env):
         expected_add_status_text = "Population filter 2 added successfully"
 
-        self.go_to_page("managelot_button", env)
+        self.go_to_page("managepopfilter2_button", env)
 
-        # Read LoT name details from data sheet
-        lot_name = self.get_lot_name(filepath, locatorname, "LOT_name")
+        # Read PopulationFilter2 name details from data sheet
+        popfilter2_name = self.get_popfilter2_name(filepath, locatorname, "PopulationFilter2_name")
 
-        # Read Expected LoT options from data sheet
-        expected_lot_options = self.get_expected_data(filepath, 'Expected_lot_options')    
+        # Read Expected PopulationFilter2 options from data sheet
+        expected_popfilter2_options = self.get_expected_data(filepath, 'Expected_popfilter2_options')    
 
         # Validate the UI page elements
-        self.check_lot_ui_elements(filepath, env)
+        self.check_popfilter2_ui_elements(filepath, env)
 
-        # Fetch the complete LoT data from the table
-        complete_lot_table_data = self.get_table_data("managelot_table_rows_info", "managelot_table_next_btn",
-                                                      "managelot_table_rows_data", env)
+        # Fetch the complete PopulationFilter2 data from the table
+        complete_popfilter2_table_data = self.get_table_data("managepopfilter2_table_rows_info", "managepopfilter2_table_next_btn",
+                                                      "managepopfilter2_table_rows_data", env)
         
-        # Compare the expected mandatory lot option with actual table data
-        for j in expected_lot_options:
-            if j in complete_lot_table_data:
-                self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is present in the table.",
+        # Compare the expected mandatory popfilter2 option with actual table data
+        for j in expected_popfilter2_options:
+            if j in complete_popfilter2_table_data:
+                self.LogScreenshot.fLogScreenshot(message=f"Mandatory PopulationFilter2 '{j}' option is present in the table.",
                                                   pass_=True, log=True, screenshot=False)
             else:
-                self.LogScreenshot.fLogScreenshot(message=f"Mandatory LoT '{j}' option is absent in the table.",
+                self.LogScreenshot.fLogScreenshot(message=f"Mandatory PopulationFilter2 '{j}' option is absent in the table.",
                                                   pass_=False, log=True, screenshot=False)
-                raise Exception(f"Mandatory LoT '{j}' option is absent in the table.")            
+                raise Exception(f"Mandatory PopulationFilter2 '{j}' option is absent in the table.")            
         
-        # Fetching total rows count before adding a new LoT
-        table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                             "managelot_table_next_btn", table_rows, env)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new LoT: {table_rows_before}',
+        # Fetching total rows count before adding a new PopulationFilter2
+        table_rows_before = self.mngpoppage.get_table_length("managepopfilter2_table_rows_info",
+                                                             "managepopfilter2_table_next_btn", table_rows, env)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before adding a new PopulationFilter2: {table_rows_before}',
                                           pass_=True, log=True, screenshot=True)        
         
-        self.scroll_and_click("managelot_page_heading", env)
-        self.click(add_lot_button, env, UnivWaitFor=10)
+        self.scroll_and_click("managepopfilter2_page_heading", env)
+        self.click(add_popfilter2_button, env, UnivWaitFor=10)
 
-        self.input_text("lot_name", lot_name[0], env)
+        self.input_text("popfilter2_name", popfilter2_name[0], env)
 
-        self.click("lot_submit_btn", env)
+        self.click("popfilter2_submit_btn", env)
         time.sleep(2)
 
-        # actual_add_status_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
-        actual_add_status_text = self.get_status_text("managelot_status_text", env)
+        # actual_add_status_text = self.get_text("managepopfilter2_status_text", env, UnivWaitFor=10)
+        actual_add_status_text = self.get_status_text("managepopfilter2_status_text", env)
         # time.sleep(2)
 
         if actual_add_status_text == expected_add_status_text:
-            self.LogScreenshot.fLogScreenshot(message=f'Able to add the LoT record',
+            self.LogScreenshot.fLogScreenshot(message=f'Able to add the PopulationFilter2 record',
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(
-                message=f'Unable to find status message while adding the LoT record. Actual status message is '
+                message=f'Unable to find status message while adding the PopulationFilter2 record. Actual status message is '
                         f'{actual_add_status_text} and Expected status message is {expected_add_status_text}',
                 pass_=False, log=True, screenshot=True)
-            raise Exception("Unable to find status message while adding the LoT record")        
+            raise Exception("Unable to find status message while adding the PopulationFilter2 record")        
 
-        # Fetching total rows count after adding a new LoT
-        table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                            "managelot_table_next_btn", table_rows, env)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new LoT: {table_rows_after}',
+        # Fetching total rows count after adding a new PopulationFilter2
+        table_rows_after = self.mngpoppage.get_table_length("managepopfilter2_table_rows_info",
+                                                            "managepopfilter2_table_next_btn", table_rows, env)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after adding a new PopulationFilter2: {table_rows_after}',
                                           pass_=True, log=True, screenshot=True)        
 
         try:
             if table_rows_after > table_rows_before != table_rows_after:
                 self.refreshpage()
-                # result = []
-                self.input_text("managelot_search_box", f"{lot_name[0]}", env)
-                # td1 = self.select_elements('managelot_table_row_1', env)
-                # for n in td1:
-                #     result.append(n.text)
-                result = self.get_texts('managelot_table_row_1', env)
+                self.input_text("managepopfilter2_search_box", f"{popfilter2_name[0]}", env)
+                result = self.get_texts('managepopfilter2_table_row_1', env)
                 
-                if result[0] == lot_name[0]:
+                if result[0] == popfilter2_name[0]:
                     self.LogScreenshot.fLogScreenshot(message=f'Added Population filter 2 data is present in table',
                                                       pass_=True, log=True, screenshot=True)
-                    lot_data = f"{result[0]}"
-                    return lot_data
+                    popfilter2_data = f"{result[0]}"
+                    return popfilter2_data
                 else:
                     raise Exception("Population filter 2 data is not added")
-            self.clear("managelot_search_box")
+            self.clear("managepopfilter2_search_box")
         except Exception:
             raise Exception("Error while adding the Population filter 2")
     
-    def edit_multiple_lot(self, locatorname, current_data, edit_upd_button, filepath, env):
+    def edit_multiple_popfilter2(self, locatorname, current_data, edit_upd_button, filepath, env):
         expected_update_status_text = "Population filter 2 updated successfully"
         self.refreshpage()
         time.sleep(2)
-        self.go_to_page("managelot_button", env)
+        self.go_to_page("managepopfilter2_button", env)
 
-        # Read LoT name details from data sheet
-        lot_name = self.get_lot_name(filepath, locatorname, "LOT_name")
+        # Read PopulationFilter2 name details from data sheet
+        popfilter2_name = self.get_popfilter2_name(filepath, locatorname, "PopulationFilter2_name")
 
-        self.input_text("managelot_search_box", current_data, env)
+        self.input_text("managepopfilter2_search_box", current_data, env)
         self.click(edit_upd_button, env, UnivWaitFor=10)
 
-        self.input_text("lot_name", f"{lot_name[0]}_Update", env)
+        self.input_text("popfilter2_name", f"{popfilter2_name[0]}_Update", env)
 
         self.click("sel_update_submit", env)
         time.sleep(2)
 
-        # update_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
-        actual_update_status_text = self.get_status_text("managelot_status_text", env)
+        actual_update_status_text = self.get_status_text("managepopfilter2_status_text", env)
         time.sleep(2)
-                                          
-        # self.assertText("Population filter 2 updated successfully", update_text)
-        # self.LogScreenshot.fLogScreenshot(message=f'Able to edit the LoT record',
-        #                                   pass_=True, log=True, screenshot=True)
 
         if actual_update_status_text == expected_update_status_text:
-            self.LogScreenshot.fLogScreenshot(message=f'Able to edit the LoT record',
+            self.LogScreenshot.fLogScreenshot(message=f'Able to edit the PopulationFilter2 record',
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(
-                message=f'Unable to find status message while edit the LoT record. Actual status message is '
+                message=f'Unable to find status message while edit the PopulationFilter2 record. Actual status message is '
                         f'{actual_update_status_text} and Expected status message is {expected_update_status_text}',
                 pass_=False, log=True, screenshot=True)
-            raise Exception("Unable to find status message while edit the LoT record")
+            raise Exception("Unable to find status message while edit the PopulationFilter2 record")
 
         try:
             self.refreshpage()
-            # result = []
-            self.input_text("managelot_search_box", f"{lot_name[0]}_Update", env)
-            # td1 = self.select_elements('manage_update_table_row_1', env)
-            # for n in td1:
-            #     result.append(n.text)
+            self.input_text("managepopfilter2_search_box", f"{popfilter2_name[0]}_Update", env)
             result = self.get_texts('manage_update_table_row_1', env)
             
-            if result[0] == f"{lot_name[0]}_Update":
+            if result[0] == f"{popfilter2_name[0]}_Update":
                 self.LogScreenshot.fLogScreenshot(message=f'Edited Population filter 2 data is present in table',
                                                   pass_=True, log=True, screenshot=True)
-                lot_data = f"{result[0]}"
-                return lot_data
+                popfilter2_data = f"{result[0]}"
+                return popfilter2_data
             else:
                 raise Exception("Population filter 2 data is not edited")
         except Exception:
             raise Exception("Error while editing the Population filter 2")
 
-    def delete_multiple_manage_lot(self, added_update_val, del_locator, del_locator_popup, tablerows, env):
+    def delete_multiple_manage_popfilter2(self, added_update_val, del_locator, del_locator_popup, tablerows, env):
         expected_del_status_text = "Population filter 2 deleted successfully"
         self.refreshpage()
         time.sleep(2)
-        self.go_to_page("managelot_button", env)
+        self.go_to_page("managepopfilter2_button", env)
 
-        # Fetching total rows count before deleting a LoT
-        table_rows_before = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                             "managelot_table_next_btn", tablerows, env)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a LoT: {table_rows_before}',
+        # Fetching total rows count before deleting a PopulationFilter2
+        table_rows_before = self.mngpoppage.get_table_length("managepopfilter2_table_rows_info",
+                                                             "managepopfilter2_table_next_btn", tablerows, env)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length before deleting a PopulationFilter2: {table_rows_before}',
                                           pass_=True, log=True, screenshot=True)
 
-        self.scroll_and_click("managelot_page_heading", env)
-        self.input_text("managelot_search_box", added_update_val, env)
-        self.LogScreenshot.fLogScreenshot(message=f'LoT option selected for deletion is : ',
+        self.scroll_and_click("managepopfilter2_page_heading", env)
+        self.input_text("managepopfilter2_search_box", added_update_val, env)
+        self.LogScreenshot.fLogScreenshot(message=f'PopulationFilter2 option selected for deletion is : ',
                                           pass_=True, log=True, screenshot=True)        
         
         self.click(del_locator, env)
@@ -259,28 +242,23 @@ class LineofTherapyPage(Base):
         self.click(del_locator_popup, env)
         time.sleep(2)
 
-        # del_text = self.get_text("managelot_status_text", env, UnivWaitFor=10)
-        actual_del_status_text = self.get_status_text("managelot_status_text", env)
+        actual_del_status_text = self.get_status_text("managepopfilter2_status_text", env)
         time.sleep(2)
                                           
-        # self.assertText("Population filter 2 deleted successfully", del_text)
-        # self.LogScreenshot.fLogScreenshot(message=f'Able to delete the LoT record',
-        #                                   pass_=True, log=True, screenshot=True)
-
         if actual_del_status_text == expected_del_status_text:
-            self.LogScreenshot.fLogScreenshot(message=f'Able to delete the LoT record',
+            self.LogScreenshot.fLogScreenshot(message=f'Able to delete the PopulationFilter2 record',
                                               pass_=True, log=True, screenshot=True)
         else:
             self.LogScreenshot.fLogScreenshot(
-                message=f'Unable to find status message while delete the LoT record. Actual status message is '
+                message=f'Unable to find status message while delete the PopulationFilter2 record. Actual status message is '
                         f'{actual_del_status_text} and Expected status message is {expected_del_status_text}',
                 pass_=False, log=True, screenshot=True)
-            raise Exception("Unable to find status message while delete the LoT record")                                          
+            raise Exception("Unable to find status message while delete the PopulationFilter2 record")                                          
 
-        # Fetching total rows count after deleting a LoT
-        table_rows_after = self.mngpoppage.get_table_length("managelot_table_rows_info",
-                                                            "managelot_table_next_btn", tablerows, env)
-        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a LoT: {table_rows_after}',
+        # Fetching total rows count after deleting a PopulationFilter2
+        table_rows_after = self.mngpoppage.get_table_length("managepopfilter2_table_rows_info",
+                                                            "managepopfilter2_table_next_btn", tablerows, env)
+        self.LogScreenshot.fLogScreenshot(message=f'Table length after deleting a PopulationFilter2: {table_rows_after}',
                                           pass_=True, log=True, screenshot=True)        
 
         try:
