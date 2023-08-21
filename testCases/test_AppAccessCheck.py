@@ -29,7 +29,7 @@ class Test_AppAccess:
     #     ]
     # )
     @pytest.mark.C37915
-    def test_liveslr_application_access(self, extra, env, request, caseid):
+    def test_livehta_application_access(self, extra, env, request, caseid):
         baseURL = ReadConfig.getPortalURL(env)
         testdata = ReadConfig.getappaccesstestdata(env)
         # Creating object of loginpage class

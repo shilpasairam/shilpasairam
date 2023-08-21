@@ -83,9 +83,6 @@ class ExcludedStudies_liveSLR(Base):
                                           f"{add_criteria[3][2]}")
 
         self.slrreport.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.slrreport.getFilenameAndValidate(180)
-        # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete "
@@ -150,9 +147,6 @@ class ExcludedStudies_liveSLR(Base):
                                           f"{add_criteria[3][2]}")
 
         self.slrreport.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.slrreport.getFilenameAndValidate(180)
-        # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of expected columns in Excluded studies - "
@@ -207,9 +201,6 @@ class ExcludedStudies_liveSLR(Base):
                                           f"{add_criteria[3][2]}")
 
         self.slrreport.generate_download_report("excel_report", env)
-        # time.sleep(5)
-        # excel_filename = self.slrreport.getFilenameAndValidate(180)
-        # excel_filename = self.slrreport.get_latest_filename(UnivWaitFor=180)
         excel_filename = self.slrreport.get_and_validate_filename(filepath)
 
         self.LogScreenshot.fLogScreenshot(message=f"*****Check Presence of Excluded studies - LiveSLR Tab in Complete "

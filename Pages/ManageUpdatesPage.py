@@ -58,9 +58,6 @@ class ManageUpdatesPage(Base):
         self.scroll_and_click("manageupdates_page_heading", env)
         self.click(add_upd_button, env, UnivWaitFor=10)
 
-        # pop_ele = self.select_element("sel_pop_update_dropdown", env)
-        # select = Select(pop_ele)
-        # select.select_by_visible_text(pop_details[0][0])
         sel_pop_val = self.base.selectbyvisibletext("sel_pop_update_dropdown", pop_details[0][0], env)
 
         self.click("sel_update_date", env)

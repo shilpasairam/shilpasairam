@@ -229,13 +229,13 @@ class ReadConfig:
         elif env == 'staging':
             return config.get('commonInfo', 'searchstrategydata_staging')            
 
-    # Get JS command to hide
+    # Get JS command to removeattribute
     @staticmethod
     def get_remove_att_JScommand(index, value):
         command = f"document.getElementsByTagName('input')[{index}].removeAttribute('{value}')"
         return command
     
-    # Get JS command to hide
+    # Get JS command to setattribute
     @staticmethod
     def get_set_att_JScommand(index, name, value=None):
         command = f"document.getElementsByTagName('input')[{index}].setAttribute('{name}', '{value}')"

@@ -135,6 +135,7 @@ class ProtocolPage(Base):
                                 raise Exception("User is allowed to save without uploading PRISMA Excel File.")
 
                         # Uploading the valid PRISMA Excel file
+                        time.sleep(2)
                         self.input_text("prisma_image", os.getcwd()+"\\"+k[1], env, UnivWaitFor=5)
                         self.click("prisma_image_save_btn", env)
                         time.sleep(3)
