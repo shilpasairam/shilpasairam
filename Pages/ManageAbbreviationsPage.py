@@ -24,8 +24,6 @@ class ManageAbbreviations(Base):
         # Instantiate webdriver wait class
         self.wait = WebDriverWait(driver, 10)
 
-    def go_to_mng_abbreviation_page(self, env):
-        self.base.click("manage_abbr_link", env)
 
     def verifyFileUploadStatus(self, statusMsg, expected_upload_status_text, locator, env):
         try:
