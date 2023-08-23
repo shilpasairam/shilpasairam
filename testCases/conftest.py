@@ -72,7 +72,7 @@ def init_driver(request):
     options.add_experimental_option("prefs", prefs)
     options.add_experimental_option("detach", True)
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    web_driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=options)
+    web_driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     params = {'behavior': 'allow', 'downloadPath': f"{os.getcwd()}\\ActualOutputs"}
     web_driver.execute_cdp_cmd('Page.setDownloadBehavior', params)
 
@@ -179,7 +179,7 @@ def pytest_sessionfinish(session, exitstatus):
     filename = Path(glob.glob('Reports//*.html')[0]).stem
     path = os.path.abspath(f'Reports//{filename}.html')
     # converter.convert(f'file:///{path}?collapsed=Skipped', f"{filename}.pdf")
-    pdfresult = get_pdf_from_html(f'file:///{path}?collapsed=Skipped', browser_ver="114.0.5735.90", install_driver=True)
+    pdfresult = get_pdf_from_html(f'file:///{path}?collapsed=Skipped')
     with open(f"{filename}.pdf", 'wb') as file:
         file.write(pdfresult)
 
