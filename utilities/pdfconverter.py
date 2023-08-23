@@ -4,6 +4,7 @@ import base64
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.expected_conditions import staleness_of
@@ -23,7 +24,7 @@ def send_devtools(driver, cmd, params={}):
 
 
 def get_pdf_from_html(
-    path, browser_ver, print_options = {}, install_driver=False, exec_path=None
+    path, print_options = {}, install_driver=True, exec_path=None
 ):
     webdriver_options = Options()
     webdriver_prefs = {}
@@ -39,7 +40,7 @@ def get_pdf_from_html(
 
     if install_driver:
         driver = webdriver.Chrome(
-            ChromeDriverManager(version=browser_ver).install(), options=webdriver_options
+            service=Service(ChromeDriverManager().install()), options=webdriver_options
         )
     else:
         driver = webdriver.Chrome(executable_path=exec_path, options=webdriver_options)
